@@ -86,6 +86,7 @@ public class HelpCommand implements Command {
                          + "**{0}tattoo**: Tatted up women.\n"
                          + "**{0}yaoi**: Boy love.\n"
                          + "**{0}anal**: That ass love tho.\n"
+                         + "**{0}bdsm**: Bondage and Discipline (BD), Dominance and Submission (DS), Sadism and Masochism (SM)\n"
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
