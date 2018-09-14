@@ -32,7 +32,7 @@ public class PHGifCommand implements Command {
                             new EmbedBuilder()
                                     .setDescription(Formats.LEWD_EMOTE)
                                     .setColor(Colors.getEffectiveColor(trigger))
-                                    .setImage(makeReqAndGetResAsString("pGif","url"))
+                                    .setImage(makeReqAndGetResAsString("pGifs","url"))
                                     .setFooter(
                                     MessageFormat.format(
                                             "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
