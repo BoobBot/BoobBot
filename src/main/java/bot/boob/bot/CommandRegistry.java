@@ -1,6 +1,7 @@
 package bot.boob.bot;
 
 import bot.boob.bot.commands.bot.*;
+import bot.boob.bot.commands.nsfw.FourkCommand;
 import bot.boob.bot.commands.nsfw.SendCommand;
 import bot.boob.bot.commands.nsfw.SildeShowCommand;
 import bot.boob.bot.commands.nsfw.ThighCommand;
@@ -24,7 +25,8 @@ class CommandRegistry {
                 new InviteCommand(),
                 new EvalCommand(),
                 new NsfwToggleCommand(),
-                new SendCommand()
+                new SendCommand(),
+                new FourkCommand()
         );
     }
     private void register(Command... cmds) {
