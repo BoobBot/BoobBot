@@ -96,6 +96,7 @@ public class HelpCommand implements Command {
                          + "**{0}gay**: Got men?\n"
                          + "**{0}group**: For when 2 are not enough..\n"
                          + "**{0}lesbians**: Lesbians are sexy!\n"
+                         + "**{0}pawg**: Phat Ass White Girls!\n"
                          + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and PayPal links.\n",
