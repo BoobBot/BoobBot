@@ -48,7 +48,8 @@ class CommandRegistry {
                 new GayCommand(),
                 new GroupCommand(),
                 new LesbiansCommand(),
-                new PAWGCommand()
+                new PAWGCommand(),
+                new DickCommand()
         );
     }
     private void register(Command... cmds) {
