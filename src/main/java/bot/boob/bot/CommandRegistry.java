@@ -32,7 +32,8 @@ class CommandRegistry {
                 new FutaCommand(),
                 new GifCommand(),
                 new HentaiCommand(),
-                new PeggedCommand()
+                new PeggedCommand(),
+                new PHGifCommand()
         );
     }
     private void register(Command... cmds) {
