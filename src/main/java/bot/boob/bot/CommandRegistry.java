@@ -42,7 +42,8 @@ class CommandRegistry {
                 new AnalCommand(),
                 new BDSMCommand(),
                 new BlowJobCommand(),
-                new BottomlessCommand()
+                new BottomlessCommand(),
+                new CumSlutsCommand()
         );
     }
     private void register(Command... cmds) {
