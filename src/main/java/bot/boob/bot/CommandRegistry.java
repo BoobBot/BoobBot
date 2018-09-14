@@ -25,7 +25,8 @@ class CommandRegistry {
                 new SendCommand(),
                 new FourkCommand(),
                 new AssCommand(),
-                new BlackCommand()
+                new BlackCommand(),
+                new BoobsCommand()
         );
     }
     private void register(Command... cmds) {
