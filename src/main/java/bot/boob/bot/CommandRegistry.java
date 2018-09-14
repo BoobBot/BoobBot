@@ -44,7 +44,10 @@ class CommandRegistry {
                 new BlowJobCommand(),
                 new BottomlessCommand(),
                 new CumSlutsCommand(),
-                new EasterCommand()
+                new EasterCommand(),
+                new GayCommand(),
+                new GroupCommand(),
+                new LesbiansCommand()
         );
     }
     private void register(Command... cmds) {
