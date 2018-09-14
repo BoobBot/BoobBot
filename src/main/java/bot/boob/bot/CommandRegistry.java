@@ -40,7 +40,8 @@ class CommandRegistry {
                 new TattooCommand(),
                 new YaoiCommand(),
                 new AnalCommand(),
-                new BDSMCommand()
+                new BDSMCommand(),
+                new BlowJobCommand()
         );
     }
     private void register(Command... cmds) {
