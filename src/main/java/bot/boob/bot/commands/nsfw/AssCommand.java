@@ -17,12 +17,12 @@ import static bot.boob.bot.commons.apis.bbapi.makeReqAndGetResAsString;
 
 
 @CommandDescription(
-        name = "4k",
-        triggers = {"4k"},
+        name = "ass",
+        triggers = {"ass"},
         attributes = {@CommandAttribute(key = "dm"), @CommandAttribute(key = "nsfw")},
-        description = "4k Hotness!"
+        description = "Shows some ass."
 )
-public class FourkCommand implements Command {
+public class AssCommand implements Command {
     @Override
     public void execute(Message trigger, String args) {
         try {
@@ -32,7 +32,7 @@ public class FourkCommand implements Command {
                             new EmbedBuilder()
                                     .setDescription(Formats.LEWD_EMOTE)
                                     .setColor(Colors.getEffectiveColor(trigger))
-                                    .setImage(makeReqAndGetResAsString("4k","url"))
+                                    .setImage(makeReqAndGetResAsString("ass","url"))
                                     .setFooter(
                                     MessageFormat.format(
                                             "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),

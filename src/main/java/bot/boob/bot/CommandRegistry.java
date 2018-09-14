@@ -1,10 +1,7 @@
 package bot.boob.bot;
 
 import bot.boob.bot.commands.bot.*;
-import bot.boob.bot.commands.nsfw.FourkCommand;
-import bot.boob.bot.commands.nsfw.SendCommand;
-import bot.boob.bot.commands.nsfw.SildeShowCommand;
-import bot.boob.bot.commands.nsfw.ThighCommand;
+import bot.boob.bot.commands.nsfw.*;
 import bot.boob.bot.commands.owner.EvalCommand;
 import com.github.rainestormee.jdacommand.Command;
 
@@ -26,7 +23,8 @@ class CommandRegistry {
                 new EvalCommand(),
                 new NsfwToggleCommand(),
                 new SendCommand(),
-                new FourkCommand()
+                new FourkCommand(),
+                new AssCommand()
         );
     }
     private void register(Command... cmds) {
