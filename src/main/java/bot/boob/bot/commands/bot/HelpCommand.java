@@ -89,6 +89,7 @@ public class HelpCommand implements Command {
                          + "**{0}bdsm**: Bondage and Discipline (BD), Dominance and Submission (DS), Sadism and Masochism (SM)\n"
                          + "**{0}bj**: BlowJobs!\n"
                          + "**{0}bottomless**: Sexy!\n"
+                         + "**{0}cumsluts**: Sticky Love! <:stickylove:440557161538650113>"
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
