@@ -100,6 +100,7 @@ public class HelpCommand implements Command {
                          + "**{0}dick**: Got dick?\n"
                          + "**{0}poke**: Pokemon Porn!\n"
                          + "**{0}real**: Real girls!\n"
+                         + "**{0}toys**: Everything is better with toys \uD83D\uDE09\n"
                          + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and PayPal links.\n",

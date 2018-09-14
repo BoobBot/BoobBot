@@ -51,7 +51,8 @@ class CommandRegistry {
                 new PAWGCommand(),
                 new DickCommand(),
                 new PokeCommand(),
-                new RealCommand()
+                new RealCommand(),
+                new ToysCommand()
         );
     }
     private void register(Command... cmds) {
