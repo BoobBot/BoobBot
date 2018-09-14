@@ -28,7 +28,8 @@ class CommandRegistry {
                 new BlackCommand(),
                 new BoobsCommand(),
                 new CollaredCommand(),
-                new DPCommand()
+                new DPCommand(),
+                new FutaCommand()
         );
     }
     private void register(Command... cmds) {
