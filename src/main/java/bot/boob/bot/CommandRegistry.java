@@ -50,7 +50,8 @@ class CommandRegistry {
                 new LesbiansCommand(),
                 new PAWGCommand(),
                 new DickCommand(),
-                new PokeCommand()
+                new PokeCommand(),
+                new RealCommand()
         );
     }
     private void register(Command... cmds) {
