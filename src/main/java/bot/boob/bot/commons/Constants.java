@@ -7,11 +7,11 @@ public final class Constants {
             "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
     public static final Long HOME_GUILD = 440526421388165120L;
     public static final String RDY_WEBHOOK =
-            "https://discordapp.com/api/webhooks/486886197759836170/ygpN847u54k0l_tJrGaw2Ta2zBjfVHRjeiGaaYsXqCOnlyojhLvm5Q5BYLlIotzJma70";
+            "https://discordapp.com/api/webhooks/490218285493780480/SiwYX3k3UM7QamIgFMa7yS_aEa2H3DEvnEGD4M5su3yG6nPlaHUZ0pOxyaG_3NWP3L5B";
     public static final String GJLOG_WEBHOOK =
-            "https://discordapp.com/api/webhooks/486886521631408130/ywmeokonqcPQNk-XxIF4bz5UE6920-F7Il8bCP2roWeeF8ACxdQ-FjSGMGuTJ4zP_lub";
+            "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
     public static final String GLLOG_WEBHOOK =
-            "https://discordapp.com/api/webhooks/486886521631408130/ywmeokonqcPQNk-XxIF4bz5UE6920-F7Il8bCP2roWeeF8ACxdQ-FjSGMGuTJ4zP_lub";
+            "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
     public static String TOKEN = "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
     public static boolean IS_DEBUG = false;
 
