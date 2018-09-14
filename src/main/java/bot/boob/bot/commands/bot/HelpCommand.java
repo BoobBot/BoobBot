@@ -79,6 +79,7 @@ public class HelpCommand implements Command {
                          + "**{0}gif**: Gifs!!!\n"
                          + "**{0}hentai**: Hentai.\n"
                          + "**{0}pegged**: Strap-on love!\n"
+                         + "**{0}phgif**: PornHub gifs! (Some are trash #BlamePornHub)\n"
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
