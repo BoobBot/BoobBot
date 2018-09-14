@@ -36,7 +36,8 @@ class CommandRegistry {
                 new PHGifCommand(),
                 new PussyCommand(),
                 new TinyCommand(),
-                new TrapsCommand()
+                new TrapsCommand(),
+                new TattooCommand()
         );
     }
     private void register(Command... cmds) {
