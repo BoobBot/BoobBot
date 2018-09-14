@@ -52,7 +52,9 @@ class CommandRegistry {
                 new DickCommand(),
                 new PokeCommand(),
                 new RealCommand(),
-                new ToysCommand()
+                new ToysCommand(),
+                new VDayCommand(),
+                new XmasCommand()
         );
     }
     private void register(Command... cmds) {
