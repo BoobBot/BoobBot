@@ -24,7 +24,8 @@ class CommandRegistry {
                 new NsfwToggleCommand(),
                 new SendCommand(),
                 new FourkCommand(),
-                new AssCommand()
+                new AssCommand(),
+                new BlackCommand()
         );
     }
     private void register(Command... cmds) {

@@ -71,6 +71,7 @@ public class HelpCommand implements Command {
                          + "**{0}sendthighs**: Dms something hot! Mention a @user to send to a friend.\n"
                          + "**{0}4k**: 4k Hotness!\n"
                          + "**{0}ass**: Shows some ass.\n"
+                         + "**{0}black**: Gotta have that black love as well.\n"
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
