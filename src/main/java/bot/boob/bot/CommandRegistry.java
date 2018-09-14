@@ -41,7 +41,8 @@ class CommandRegistry {
                 new YaoiCommand(),
                 new AnalCommand(),
                 new BDSMCommand(),
-                new BlowJobCommand()
+                new BlowJobCommand(),
+                new BottomlessCommand()
         );
     }
     private void register(Command... cmds) {
