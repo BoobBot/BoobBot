@@ -84,6 +84,7 @@ public class HelpCommand implements Command {
                          + "**{0}tiny**: Tiny girls!\n"
                          + "**{0}traps**: Traps are hot!\n"
                          + "**{0}tattoo**: Tatted up women.\n"
+                         + "**{0}yaoi**: Boy love."
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
