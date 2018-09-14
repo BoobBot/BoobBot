@@ -34,7 +34,8 @@ class CommandRegistry {
                 new HentaiCommand(),
                 new PeggedCommand(),
                 new PHGifCommand(),
-                new PussyCommand()
+                new PussyCommand(),
+                new TinyCommand()
         );
     }
     private void register(Command... cmds) {
