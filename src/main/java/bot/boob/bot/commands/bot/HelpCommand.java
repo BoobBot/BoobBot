@@ -76,7 +76,8 @@ public class HelpCommand implements Command {
                          + "**{0}collared**: Play nice.\n"
                          + "**{0}dp**: Gotta get that double love!\n"
                          + "**{0}futa**: Hentai Traps.\n"
-                         + "**{0}gif**: Gifs!!!"
+                         + "**{0}gif**: Gifs!!!\n"
+                         + "**{0}hentai**: Hentai.\n"
 						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
                          + "**{0}invite**: bot, support server and paypal links.\n",
