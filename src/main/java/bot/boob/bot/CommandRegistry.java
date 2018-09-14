@@ -30,7 +30,8 @@ class CommandRegistry {
                 new CollaredCommand(),
                 new DPCommand(),
                 new FutaCommand(),
-                new GifCommand()
+                new GifCommand(),
+                new HentaiCommand()
         );
     }
     private void register(Command... cmds) {
