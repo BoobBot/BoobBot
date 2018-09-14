@@ -89,12 +89,14 @@ public class HelpCommand implements Command {
                          + "**{0}bdsm**: Bondage and Discipline (BD), Dominance and Submission (DS), Sadism and Masochism (SM)\n"
                          + "**{0}bj**: BlowJobs!\n"
                          + "**{0}bottomless**: Sexy!\n"
-                         + "**{0}cumsluts**: Sticky Love! <:stickylove:440557161538650113>\n"
-						 + "**{0}clean**: Deletes all bot messages and triggers.\n"
+                         + "**{0}cumsluts**: Sticky Love! <:stickylove:440557161538650113>\n",
+                     gp), false)
+             .addField(Formats.LEWD_EMOTE + " Commands 2", MessageFormat.format(
+                     "**{0}easter**: Easter is nice \uD83D\uDC30\n"
+                         + "**{0}clean**: Deletes all bot messages and triggers.\n"
                          + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
-                         + "**{0}invite**: bot, support server and paypal links.\n",
-                     gp),
-                 false)
+                         + "**{0}invite**: bot, support server and PayPal links.\n",
+                    gp), false)
              .addField(Formats.LINK_EMOTE + " Links", Formats.LING_MSG, false)
              .setFooter(
                  MessageFormat.format(
