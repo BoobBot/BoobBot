@@ -1,16 +1,19 @@
 package bot.boob.bot.commons;
 
+import com.google.common.collect.Lists;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.webhook.WebhookClient;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -23,6 +26,19 @@ public class Misc {
             "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
     };
 
+    public static Proxy getProxy() {
+        List<String> ps =
+                Lists.newArrayList(
+                        "5.231.237.168:3213",
+                        "94.249.224.97:2543",
+                        "185.164.57.91:4012",
+                        "185.164.57.144:9749",
+                        "185.164.57.70:5756");
+        Random rand = new Random();
+        String proxy = ps.get(rand.nextInt(ps.size()));
+        String[] parts = proxy.split(":", 2);
+        return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(parts[0], Integer.parseInt(parts[1])));
+    }
 
     public static String now() {
         DateFormat dateFormat = new SimpleDateFormat("MMMM d yyyy, h:mm:ss a");
