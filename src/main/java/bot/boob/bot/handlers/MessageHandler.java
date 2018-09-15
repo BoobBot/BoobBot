@@ -140,7 +140,7 @@ public class MessageHandler extends ListenerAdapter {
                             return;
                         }
                     }
-                    if (command.hasAttribute("PayWall") && !isDonor(event.getAuthor())) {
+                    if (command.hasAttribute("paywall") && !isDonor(event.getAuthor())) {
                         event
                                 .getChannel()
                                 .sendMessage(
