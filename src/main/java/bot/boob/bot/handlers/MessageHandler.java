@@ -10,11 +10,14 @@ import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandHandler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static bot.boob.bot.commons.checks.UserChecks.isDonor;
 
 
 public class MessageHandler extends ListenerAdapter {
@@ -136,6 +139,30 @@ public class MessageHandler extends ListenerAdapter {
                                     .queue();
                             return;
                         }
+                    }
+                    if (command.hasAttribute("PayWall") && !isDonor(event.getAuthor())) {
+                        event
+                                .getChannel()
+                                .sendMessage(
+                                        new EmbedBuilder()
+                                                .setAuthor(
+                                                        event.getJDA().getSelfUser().getName(),
+                                                        event.getJDA().asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                                                        event.getJDA().getSelfUser().getEffectiveAvatarUrl())
+                                                .setColor(Colors.getEffectiveColor(event.getMessage()))
+                                                .setDescription(
+                                                        Formats.error(
+                                                                " Sorry this command is only available to our Patrons.\n"
+                                                                        + event
+                                                                        .getJDA()
+                                                                        .asBot()
+                                                                        .getShardManager()
+                                                                        .getEmoteById(475801484282429450L)
+                                                                        .getAsMention()
+                                                                        + "[Join today]()"))
+                                                .build())
+                                .queue();
+                        return;
                     }
 
                     try {
