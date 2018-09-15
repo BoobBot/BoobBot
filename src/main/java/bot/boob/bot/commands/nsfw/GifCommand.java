@@ -20,7 +20,7 @@ import static bot.boob.bot.commons.apis.bbapi.makeReqAndGetResAsString;
         name = "gif",
         triggers = {"gif"},
         attributes = {@CommandAttribute(key = "dm"), @CommandAttribute(key = "nsfw")},
-        description = "Gifs!!!"
+        description = "Sexy gifs!"
 )
 public class GifCommand implements Command {
     @Override

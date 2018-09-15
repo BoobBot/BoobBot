@@ -62,51 +62,47 @@ public class HelpCommand implements Command {
                  trigger.getJDA().asBot().getInviteUrl(Permission.ADMINISTRATOR),
                  trigger.getJDA().getSelfUser().getEffectiveAvatarUrl())
              .setColor(Colors.getRndColor())
-             .addField(
-                 Formats.LEWD_EMOTE + " Commands",
-                 MessageFormat.format(
-                     "**{0}ping**: pong!\n"
-                         + "**{0}thigh**: Posts a random sexy thigh.\n"
-                         + "**{0}thighs**: Random thighs as a slideshow.\n"
-                         + "**{0}sendthighs**: Dms something hot! Mention a @user to send to a friend.\n"
-                         + "**{0}4k**: 4k Hotness!\n"
-                         + "**{0}ass**: Shows some ass.\n"
-                         + "**{0}black**: Gotta have that black love as well.\n"
-                         + "**{0}boobs**: Shows some boobs.\n"
-                         + "**{0}collared**: Play nice.\n"
-                         + "**{0}dp**: Gotta get that double love!\n"
-                         + "**{0}futa**: Hentai Traps.\n"
-                         + "**{0}gif**: Gifs!!!\n"
-                         + "**{0}hentai**: Hentai.\n"
-                         + "**{0}pegged**: Strap-on love!\n"
-                         + "**{0}phgif**: PornHub gifs! (Some are trash #BlamePornHub)\n"
-                         + "**{0}pussy**: Pussy!\n"
-                         + "**{0}tiny**: Tiny girls!\n"
-                         + "**{0}traps**: Traps are hot!\n"
-                         + "**{0}tattoo**: Tatted up women.\n"
-                         + "**{0}yaoi**: Boy love.\n"
-                         + "**{0}anal**: That ass love tho.\n"
-                         + "**{0}bdsm**: Bondage and Discipline (BD), Dominance and Submission (DS), Sadism and Masochism (SM)\n"
-                         + "**{0}bj**: BlowJobs!\n"
-                         + "**{0}bottomless**: Sexy!\n"
-                         + "**{0}cumsluts**: Sticky Love! <:stickylove:440557161538650113>\n",
-                     gp), false)
-             .addField(Formats.LEWD_EMOTE + " Commands 2", MessageFormat.format(
-                     "**{0}easter**: Easter is nice \uD83D\uDC30\n"
-                         + "**{0}gay**: Got men?\n"
-                         + "**{0}group**: For when 2 are not enough..\n"
-                         + "**{0}lesbians**: Lesbians are sexy!\n"
-                         + "**{0}pawg**: Phat Ass White Girls!\n"
-                         + "**{0}dick**: Got dick?\n"
-                         + "**{0}poke**: Pokemon Porn!\n"
-                         + "**{0}real**: Real girls!\n"
-                         + "**{0}toys**: Everything is better with toys \uD83D\uDE09\n"
-                         + "**{0}vday**: Valentines ❤\n"
-                         + "**{0}xmas**: Christmas \uD83C\uDF85\n"
-                         + "**{0}clean**: Deletes all bot messages and triggers.\n"
-                         + "**{0}nsfw**: Toggles the current channels nsfw setting.\n"
-                         + "**{0}invite**: bot, support server and PayPal links.\n",
-                    gp), false)
+             .addField("\uD83D\uDCF9 Video Searching", "bb**ph**: Searches PornHub for videos.\n" +
+                     "bb**rt**: Searches RedTube for videos.\n" +
+                     "bb**phgif**: PornHub gifs! (Some are trash #BlamePornHub)\n", false)
+             .addField("<:TouchMaBooty:444601938320031745> General NSFW", "bb**boobs**: Shows some boobs.\n" +
+                     "bb**ass**: Shows some ass.\n" +
+                     "bb**pussy**: Pussy!\n" +
+                     "bb**dick**: Got dick?\n" +
+                     "bb**real**: Real girls!\n" +
+                     "bb**gif**: Sexy gifs!\n" +
+                     "bb**4k**: 4k Hotness!\n" +
+                     "bb**black**: Gotta have that black love as well.\n" +
+                     "bb**bj**: BlowJobs!\n" +
+                     "bb**dp**: Gotta get that double love!\n" +
+                     "bb**cumsluts**: Sticky Love!", false)
+             .addField("<:whip:440551663804350495> Kinks", "bb**gay**: Got men?\n" +
+                     "bb**lesbians**: Lesbians are sexy!\n" +
+                     "bb**group**: For when 2 are not enough..\n" +
+                     "bb**thigh**: Posts a random sexy thigh.\n" +
+                     "bb**thighs**: Random thighs as a slideshow.\n" +
+                     "bb**collared**: Play nice.\n" +
+                     "bb**bottomless**: Sexy!\n" +
+                     "bb**toys**: Everything is better with toys \uD83D\uDE09\n" +
+                     "bb**anal**: That ass love tho.\n" +
+                     "bb**bdsm**: Bondage and Discipline (BD), Dominance and Submission (DS), Sadism and Masochism (SM)\n" +
+                     "bb**pegged**: Strap-on love!\n" +
+                     "bb**traps**: Traps are hot!\n" +
+                     "bb**pawg**: Phat Ass White Girls!\n" +
+                     "bb**tiny**: Tiny girls!\n" +
+                     "bb**tattoo**: Tatted up women.", false)
+             .addField("<:Pantsu:443870754107555842> Non real", "bb**hentai**: Hentai!\n" +
+                     "bb**futa**: Hentai traps.\n" +
+                     "bb**yaoi**: Boy love.\n" +
+                     "bb**poke**: Pokemon porn!", false)
+             .addField("\uD83C\uDF85 Holiday", "bb**xmas**: Christmas \uD83C\uDF85\n" +
+                     "bb**vday**: Valentines ❤\n" +
+                     "bb**easter**: Easter \uD83D\uDC30", false)
+             .addField("\uD83D\uDCE7 Send commands", "bb**sendthighs**: Dms something hot! Mention a @user to send to a friend.", false)
+             .addField("Misc commands", "bb**ping**: Pings the bot.\n" +
+                     "bb**clean**: Deletes all bot messages and triggers.\n" +
+                     "bb**nsfw**: Toggles the current channels nsfw setting.\n" +
+                     "bb**invite**: bot, support server and PayPal links.", false)
              .addField(Formats.LINK_EMOTE + " Links", Formats.LING_MSG, false)
              .setFooter(
                  MessageFormat.format(

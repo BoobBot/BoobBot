@@ -878,12 +878,13 @@ Total Users:
 7,541
 2018-09-14 15:30:13 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:30:13 PM: Kanin#0001 Used !bbbdsm on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
 2018-09-14 15:30:22 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:30:22 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:18:26 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 16:18:27 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 16:18:27 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 16:18:29 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 16:18:29 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 16:18:29 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+2018-09-14 15:35:47 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 15:35:47 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 15:35:48 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 15:35:48 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 15:35:53 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 15:35:53 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 15:35:53 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -898,43 +899,27 @@ Guilds:
 Shards:
 1
 Users:
-7,530
+7,522
 Bots:
 18
 Total Users:
-7,548
+7,540
 Home Guild:
 got thighs?
 Users:
-7,530
+7,522
 Bots:
 18
 Total Users:
-7,548
-2018-09-14 16:18:38 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:18:38 PM: Tails#0420 Used !bbrt on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:19:12 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 16:19:13 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 16:19:13 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 16:19:18 [JDA [0 / 1] MainWS-ReadThread] [ WARN ] [BoobBot] Disconnected on shard: 0
-2018-09-14 16:19:18 [JDA [0 / 1] MainWS-ReadThread] [ ERROR] [BoobBot] broke? 
-java.lang.NullPointerException: null
-	at bot.boob.bot.handlers.EventHandler.onDisconnect(EventHandler.java:279)
-	at net.dv8tion.jda.core.hooks.ListenerAdapter.onEvent(ListenerAdapter.java:369)
-	at net.dv8tion.jda.core.hooks.InterfacedEventManager.handle(InterfacedEventManager.java:84)
-	at net.dv8tion.jda.core.requests.WebSocketClient.onDisconnected(WebSocketClient.java:579)
-	at com.neovisionaries.ws.client.ListenerManager.callOnDisconnected(ListenerManager.java:223)
-	at com.neovisionaries.ws.client.WebSocket.finish(WebSocket.java:3638)
-	at com.neovisionaries.ws.client.WebSocket.onThreadsFinished(WebSocket.java:3608)
-	at com.neovisionaries.ws.client.WebSocket.onReadingThreadFinished(WebSocket.java:3575)
-	at com.neovisionaries.ws.client.ReadingThread.notifyFinished(ReadingThread.java:1132)
-	at com.neovisionaries.ws.client.ReadingThread.runMain(ReadingThread.java:80)
-	at com.neovisionaries.ws.client.WebSocketThread.run(WebSocketThread.java:45)
-2018-09-14 16:19:18 [SessionControllerAdapter-Worker] [ ERROR] [WebSocketClient] Encountered IDENTIFY (OP 2) Rate Limit! Waiting 5 seconds before trying again!
-2018-09-14 16:19:23 [SessionControllerAdapter-Worker] [ WARN ] [WebSocketClient] Attempting to reconnect!
-2018-09-14 16:19:23 [JDA [0 / 1] MainWS-WriteThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 16:19:26 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 16:19:26 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 16:19:27 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+7,540
+2018-09-14 15:35:56 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:35:56 PM: Kanin#0001 Used !bbbj on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 15:38:42 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 15:38:42 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 15:38:43 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 15:38:43 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 15:38:47 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 15:38:47 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 15:38:47 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -949,25 +934,27 @@ Guilds:
 Shards:
 1
 Users:
-7,531
+7,523
 Bots:
 18
 Total Users:
-7,549
+7,541
 Home Guild:
 got thighs?
 Users:
-7,531
+7,523
 Bots:
 18
 Total Users:
-7,549
-2018-09-14 16:19:29 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 16:19:30 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 16:19:30 [JDA [0 / 1] MainWS-WriteThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 16:19:32 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 16:19:32 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 16:19:32 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+7,541
+2018-09-14 15:38:50 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:38:50 PM: Kanin#0001 Used !bbbottomless on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 15:43:33 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 15:43:33 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 15:43:35 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 15:43:35 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 15:43:38 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 15:43:38 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 15:43:39 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -982,24 +969,22 @@ Guilds:
 Shards:
 1
 Users:
-7,531
+7,523
 Bots:
 18
 Total Users:
-7,549
+7,541
 Home Guild:
 got thighs?
 Users:
-7,531
+7,523
 Bots:
 18
 Total Users:
-7,549
-2018-09-14 16:19:34 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:19:34 PM: Tails#0420 Used !bbrt on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:19:35 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:19:35 PM: Tails#0420 Used !bbrt on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:19:36 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:19:36 PM: Tails#0420 Used !bbrt on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:23:36 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:23:36 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
-2018-09-14 16:23:36 [Command Pool] [ ERROR] [BoobBot] Error on command
+7,541
+2018-09-14 15:43:47 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:43:47 PM: Kanin#0001 Used !bbcumsluts on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 15:43:52 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:43:52 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 15:43:52 [Command Pool] [ ERROR] [BoobBot] Error on command
 java.lang.IllegalArgumentException: Value cannot be longer than 1024 characters.
 	at net.dv8tion.jda.core.entities.MessageEmbed$Field.<init>(MessageEmbed.java:900)
 	at net.dv8tion.jda.core.entities.MessageEmbed$Field.<init>(MessageEmbed.java:921)
@@ -1007,15 +992,16 @@ java.lang.IllegalArgumentException: Value cannot be longer than 1024 characters.
 	at bot.boob.bot.commands.bot.HelpCommand.execute(HelpCommand.java:65)
 	at com.github.rainestormee.jdacommand.CommandHandler.execute(CommandHandler.java:144)
 	at bot.boob.bot.handlers.MessageHandler.lambda$onMessageReceived$1(MessageHandler.java:143)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1135)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:844)
-2018-09-14 22:39:02 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 22:39:04 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 22:39:05 [JDA [0 / 1] MainWS-WriteThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 22:39:07 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 22:39:07 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 22:39:07 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+2018-09-14 15:52:08 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 15:52:08 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 15:52:09 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 15:52:10 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 15:52:13 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 15:52:13 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 15:52:13 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -1030,28 +1016,27 @@ Guilds:
 Shards:
 1
 Users:
-7,534
+7,525
 Bots:
 18
 Total Users:
-7,552
+7,543
 Home Guild:
 got thighs?
 Users:
-7,534
+7,525
 Bots:
 18
 Total Users:
-7,552
-2018-09-14 22:41:27 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:41:27 PM: Tails#0420 Used !bbrt on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:41:49 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:41:49 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:42:45 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:42:45 PM: Tails#0420 Used !bbrt nekos on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:53:44 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 22:53:45 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 22:53:45 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 22:53:47 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 22:53:47 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 22:53:48 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+7,543
+2018-09-14 15:52:17 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 3:52:17 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:19:12 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:19:12 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:19:13 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:19:13 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:19:18 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:19:18 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:19:18 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -1066,26 +1051,29 @@ Guilds:
 Shards:
 1
 Users:
-7,532
+7,530
 Bots:
 18
 Total Users:
-7,550
+7,548
 Home Guild:
 got thighs?
 Users:
-7,532
+7,530
 Bots:
 18
 Total Users:
-7,550
-2018-09-14 22:53:48 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:53:48 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:54:11 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 22:54:12 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 22:54:12 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 22:54:16 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 22:54:16 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 22:54:16 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+7,548
+2018-09-14 16:20:02 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:20:02 PM: Kanin#0001 Used !bbeaster on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:23:32 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:23:32 PM: Kanin#0001 Used !bbeaster on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:23:36 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:23:36 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:29:34 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:29:34 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:29:36 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:29:36 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:29:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:29:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:29:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -1100,26 +1088,27 @@ Guilds:
 Shards:
 1
 Users:
-7,532
+7,529
 Bots:
 18
 Total Users:
-7,550
+7,547
 Home Guild:
 got thighs?
 Users:
-7,532
+7,529
 Bots:
 18
 Total Users:
-7,550
-2018-09-14 22:54:16 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:54:16 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:55:53 [main] [ INFO ] [BoobBot] 3.7.1_417
-2018-09-14 22:55:54 [main] [ INFO ] [ShardManager] Login Successful!
-2018-09-14 22:55:55 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
-2018-09-14 22:55:59 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
-2018-09-14 22:55:59 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
-2018-09-14 22:55:59 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+7,547
+2018-09-14 16:29:50 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:29:50 PM: Kanin#0001 Used !bbgay on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:33:28 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:33:28 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:33:29 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:33:29 [JDA [0 / 1] MainWS-WriteThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:33:33 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:33:33 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:33:33 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
 (.Y.)
 Oauth link:
 https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
@@ -1134,23 +1123,315 @@ Guilds:
 Shards:
 1
 Users:
-7,532
+7,528
 Bots:
 18
 Total Users:
-7,550
+7,546
 Home Guild:
 got thighs?
 Users:
-7,532
+7,528
 Bots:
 18
 Total Users:
-7,550
-2018-09-14 22:56:03 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:03 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:07 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:07 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:11 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:11 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:14 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:14 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:16 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:16 PM: Tails#0420 Used !bbrt random on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:29 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:29 PM: Tails#0420 Used !bbrt nekooo on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
-2018-09-14 22:56:42 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 10:56:42 PM: Tails#0420 Used !bbrt 234 on Guild:Tails(440667148315262976) in Channel: general(440667148315262978)
+7,546
+2018-09-14 16:33:35 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:33:35 PM: Kanin#0001 Used !bbgroup on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:33:41 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:33:41 PM: Kanin#0001 Used !bbgroup on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:36:35 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:36:35 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:36:36 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:36:36 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:36:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:36:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:36:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,528
+Bots:
+18
+Total Users:
+7,546
+Home Guild:
+got thighs?
+Users:
+7,528
+Bots:
+18
+Total Users:
+7,546
+2018-09-14 16:36:45 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:36:45 PM: Kanin#0001 Used !bblesbians on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:36:53 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:36:53 PM: Kanin#0001 Used !bblesbians on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:36:57 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:36:57 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:38:28 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:38:28 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:44:33 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:44:33 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:44:34 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:44:34 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:44:40 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:44:40 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:44:40 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+Home Guild:
+got thighs?
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+2018-09-14 16:44:51 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:44:51 PM: Kanin#0001 Used !bbpawg on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:44:55 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:44:55 PM: Kanin#0001 Used !bbpawg on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:46:59 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:46:59 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:47:01 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:47:01 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:47:06 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:47:06 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:47:06 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+Home Guild:
+got thighs?
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+2018-09-14 16:47:06 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:47:06 PM: Kanin#0001 Used !bbdick on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:48:59 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:48:59 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:49:00 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:49:00 [JDA [0 / 1] MainWS-WriteThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:49:04 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:49:04 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:49:04 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+Home Guild:
+got thighs?
+Users:
+7,529
+Bots:
+18
+Total Users:
+7,547
+2018-09-14 16:49:15 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:49:15 PM: Kanin#0001 Used !bbpoke on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:49:33 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:49:33 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:51:51 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:51:51 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:51:52 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:51:52 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:51:56 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:51:56 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:51:56 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,530
+Bots:
+18
+Total Users:
+7,548
+Home Guild:
+got thighs?
+Users:
+7,530
+Bots:
+18
+Total Users:
+7,548
+2018-09-14 16:52:00 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:52:00 PM: Kanin#0001 Used !bbreal on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:52:04 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:52:04 PM: Kanin#0001 Used !bbreal on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:52:08 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:52:08 PM: Kanin#0001 Used !bbreal on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:54:39 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:54:39 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:54:40 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:54:41 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:54:45 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:54:45 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:54:45 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,530
+Bots:
+18
+Total Users:
+7,548
+Home Guild:
+got thighs?
+Users:
+7,530
+Bots:
+18
+Total Users:
+7,548
+2018-09-14 16:54:52 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:54:52 PM: Kanin#0001 Used !bbtoys on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:55:00 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:55:00 PM: Kanin#0001 Used !bbtoys on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:59:13 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-14 16:59:13 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-14 16:59:15 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-14 16:59:15 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-14 16:59:19 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-14 16:59:19 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-14 16:59:19 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,531
+Bots:
+18
+Total Users:
+7,549
+Home Guild:
+got thighs?
+Users:
+7,531
+Bots:
+18
+Total Users:
+7,549
+2018-09-14 16:59:24 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:59:24 PM: Kanin#0001 Used !bbvday on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:59:27 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:59:27 PM: Kanin#0001 Used !bbxmas on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:59:38 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:59:38 PM: Kanin#0001 Used !bbxmas on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 16:59:43 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 4:59:43 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:00:42 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:00:42 PM: Tails#0420 Used !bbping --all on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:06:53 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:06:53 PM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:07:02 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:07:02 PM: Kanin#0001 Used !bbst on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:07:05 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:07:05 PM: Kanin#0001 Used !bbst on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:07:07 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:07:07 PM: Kanin#0001 Used !bbst on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-14 17:09:11 [Command Pool] [ INFO ] [BoobBot] September 14 2018, 5:09:11 PM: Tails#0420 Used !bbthighs on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
+2018-09-15 11:13:53 [main] [ INFO ] [BoobBot] 3.7.1_417
+2018-09-15 11:13:53 [main] [ WARN ] [BoobBot] Running in debug
+2018-09-15 11:13:56 [main] [ INFO ] [ShardManager] Login Successful!
+2018-09-15 11:13:56 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [WebSocketClient] Connected to WebSocket
+2018-09-15 11:14:00 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [JDA] Finished Loading!
+2018-09-15 11:14:01 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] [0 / 1]
+2018-09-15 11:14:01 [JDA [0 / 1] MainWS-ReadThread] [ INFO ] [BoobBot] Logging in
+(.Y.)
+Oauth link:
+https://discordapp.com/oauth2/authorize?scope=bot&client_id=489056077854539782&permissions=8
+JDA Version:
+3.7.1_417
+Docs halp:
+http://home.dv8tion.net:8080/job/JDA/javadoc/
+Logged in as:
+BoobBot test(489056077854539782)
+Guilds:
+2
+Shards:
+1
+Users:
+7,536
+Bots:
+18
+Total Users:
+7,554
+Home Guild:
+got thighs?
+Users:
+7,536
+Bots:
+18
+Total Users:
+7,554
+2018-09-15 11:45:07 [Command Pool] [ INFO ] [BoobBot] September 15 2018, 11:45:07 AM: Kanin#0001 Used !bbhelp on Guild:got thighs?(440526421388165120) in Channel: dev(440545506201174016)
