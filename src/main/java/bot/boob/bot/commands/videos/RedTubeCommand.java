@@ -25,6 +25,7 @@ import java.util.Random;
         attributes = {@CommandAttribute(key = "dm"), @CommandAttribute(key = "nsfw"), @CommandAttribute(key = "paywall")},
         description = "RedTube video search"
 )
+
 public class RedTubeCommand implements Command {
     @Override
     public void execute(Message trigger, String args) {
