@@ -24,7 +24,7 @@ class CommandRegistry {
                 new InviteCommand(),
                 new EvalCommand(),
                 new NsfwToggleCommand(),
-                new SendCommand(),
+                new SendThighCommand(),
                 new FourkCommand(),
                 new AssCommand(),
                 new BlackCommand(),
@@ -56,7 +56,9 @@ class CommandRegistry {
                 new RealCommand(),
                 new ToysCommand(),
                 new VDayCommand(),
-                new XmasCommand()
+                new XmasCommand(),
+                new SendNudesCommand(),
+                new SendDickCommand()
         );
     }
     private void register(Command... cmds) {

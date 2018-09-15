@@ -7,7 +7,9 @@ import bot.boob.bot.commons.menu.ButtonMenu;
 import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandAttribute;
 import com.github.rainestormee.jdacommand.CommandDescription;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -15,17 +17,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static bot.boob.bot.commons.apis.bbapi.getThigh;
+import static bot.boob.bot.commons.apis.bbapi.makeReqAndGetResAsString;
 
 @CommandDescription(
-        name = "SendCommand",
-        triggers = {"sendthighs", "st"},
+        name = "SendDickCommand",
+        triggers = {"senddick", "sd"},
         attributes = {
                 @CommandAttribute(key = "dm", value = "no")
         },
-        description = "SendCommand"
+        description = "SendDickCommand"
 )
-public class SendCommand implements Command {
+public class SendDickCommand implements Command {
     @Override
     public void execute(Message event, String args) {
         User author = event.getAuthor();
@@ -44,7 +46,7 @@ public class SendCommand implements Command {
                                         .setColor(Colors.getEffectiveMemberColor(event.getMember()))
                                         .setDescription(
                                                 Formats.info(
-                                                        event.getMember().getEffectiveName() + " Has sent you some nsfw thighs, Are you 18+ and sure you want to continue?"))
+                                                        event.getMember().getEffectiveName() + " Has sent you some dick, Are you 18+ and sure you want to continue?"))
                                         .setChoices(
                                                 pm
                                                         .getJDA()
@@ -71,7 +73,7 @@ public class SendCommand implements Command {
                                                                             .getShardManager()
                                                                             .getEmoteById(Formats.getEmoteID("<:yes:443810942221025280>")))) {
                                                         try {
-                                                            pm.sendMessage(Formats.LEWD_EMOTE + " " + getThigh()).queue();
+                                                            pm.sendMessage(Formats.LEWD_EMOTE + " " + makeReqAndGetResAsString("penis", "url")).queue();
                                                         }catch (Exception e){
                                                            BoobBot.log.error("wtf ? " + e);
                                                         }
