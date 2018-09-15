@@ -3,6 +3,7 @@ package bot.boob.bot;
 import bot.boob.bot.commands.bot.*;
 import bot.boob.bot.commands.nsfw.*;
 import bot.boob.bot.commands.owner.EvalCommand;
+import bot.boob.bot.commands.videos.RedTubeCommand;
 import com.github.rainestormee.jdacommand.Command;
 
 import java.util.Arrays;
@@ -14,6 +15,7 @@ class CommandRegistry {
 
     CommandRegistry() {
         register(
+                new RedTubeCommand(),
                 new ThighCommand(),
                 new SildeShowCommand(),
                 new HelpCommand(),
