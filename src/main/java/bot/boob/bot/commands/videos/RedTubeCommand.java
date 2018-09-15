@@ -5,7 +5,7 @@ import bot.boob.bot.BoobBot;
 import bot.boob.bot.commons.Colors;
 import bot.boob.bot.commons.Formats;
 import bot.boob.bot.commons.Misc;
-import bot.boob.bot.commons.apis.phapi;
+import bot.boob.bot.commons.apis.RTapi;
 import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandAttribute;
 import com.github.rainestormee.jdacommand.CommandDescription;
@@ -55,7 +55,7 @@ public class RedTubeCommand implements Command {
             tag = arg[0];
         }
         try {
-            JSONObject rt = phapi.makeReqAndGetRes(tag);
+            JSONObject rt = RTapi.makeReqAndGetRes(tag);
             if (rt.has("count") & (int) rt.get("count") > 0) {
                 JSONObject video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video");
                 String duration = video.getString("duration");

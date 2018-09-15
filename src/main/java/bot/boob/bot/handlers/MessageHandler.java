@@ -64,12 +64,12 @@ public class MessageHandler extends ListenerAdapter {
                         return;
                     }
 
-                    if (!message.startsWith("!bb")) return;
+                    if (!message.toLowerCase().startsWith("!bb")) return;
 
                     String[] splitMessage = message.split("\\s+", 2);
                     String commandString;
                     try {
-                        if (message.startsWith(prefix)) {
+                        if (message.toLowerCase().startsWith(prefix.toLowerCase())) {
                             commandString = splitMessage[0].substring(prefix.length());
                         } else {
                             commandString = splitMessage[0].substring(jda.getSelfUser().getAsMention().length());
