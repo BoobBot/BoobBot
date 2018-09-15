@@ -98,7 +98,9 @@ public class HelpCommand implements Command {
              .addField("\uD83C\uDF85 Holiday", "bb**xmas**: Christmas \uD83C\uDF85\n" +
                      "bb**vday**: Valentines ❤\n" +
                      "bb**easter**: Easter \uD83D\uDC30", false)
-             .addField("\uD83D\uDCE7 Send commands", "bb**sendthighs**: Dms something hot! Mention a @user to send to a friend.", false)
+             .addField("\uD83D\uDCE7 Send commands", "bb**sendthighs**: Dms something hot! Mention a @user to send to a friend.\n" +
+                     "bb**sendnudes**: Send some love.\n" +
+                     "bb**senddick**: Send some dick.", false)
              .addField("Misc commands", "bb**ping**: Pings the bot.\n" +
                      "bb**clean**: Deletes all bot messages and triggers.\n" +
                      "bb**nsfw**: Toggles the current channels nsfw setting.\n" +
