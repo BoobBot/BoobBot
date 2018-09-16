@@ -33,7 +33,7 @@ public class MiscChecks {
 
     public static boolean isSpam(Message message) {
         return message.getJDA().getSelfUser() == message.getAuthor()
-                || message.getContentDisplay().startsWith("tb");
+                || message.getContentDisplay().startsWith("!bb");
     }
 
 }
