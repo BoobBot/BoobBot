@@ -120,7 +120,7 @@ public class MessageHandler extends ListenerAdapter {
                                     .getChannel()
                                     .sendMessage(
                                             Formats.error(
-                                                    "I do not have permission to use embeds, The fuck?"))
+                                                    "I do not have permission to use embeds, Da fuck?"))
                                     .queue();
                             return;
                         }
@@ -159,7 +159,7 @@ public class MessageHandler extends ListenerAdapter {
                                                                         .getShardManager()
                                                                         .getEmoteById(475801484282429450L)
                                                                         .getAsMention()
-                                                                        + "[Join today]()"))
+                                                                        + "[Stop being a cheap fuck and join today]()"))
                                                 .build())
                                 .queue();
                         return;
