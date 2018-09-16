@@ -58,7 +58,8 @@ class CommandRegistry {
                 new VDayCommand(),
                 new XmasCommand(),
                 new SendNudesCommand(),
-                new SendDickCommand()
+                new SendDickCommand(),
+                new MagikCommand()
         );
     }
     private void register(Command... cmds) {
