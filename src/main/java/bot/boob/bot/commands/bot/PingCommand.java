@@ -12,7 +12,6 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 
 import java.text.MessageFormat;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,20 +75,10 @@ public class PingCommand implements Command {
         }
 
         trigger
-                .getChannel()
-                .sendMessage("Ping!")
-                .queue(
-                        m1 ->
-                                m1.editMessage("Ping: \uD83C\uDFD3").queue(
-                                        m2 ->
-                                                m2.editMessage(
-                                                        "⏳ Ping: "
-                                                                + m1
-                                                                .getCreationTime()
-                                                                .until(m2.getCreationTime(), ChronoUnit.MILLIS)
-                                                                + "ms | \uD83D\uDC93 Web-socket: "
-                                                                + trigger.getJDA().getPing()
-                                                                + "ms")
-                                                        .queue()));
+                .getChannel().sendMessage(
+                "⏳ Ping: "
+                        + trigger.getJDA().getPing()
+                        + "ms")
+                .queue();
     }
 }

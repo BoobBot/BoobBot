@@ -12,7 +12,7 @@ public final class Constants {
             "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
     public static final String GLLOG_WEBHOOK =
             "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
-    public static String TOKEN = "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
+    public static String TOKEN = "Mjg1NDgwNDI0OTA0MzI3MTc5.DoBbBw.F_dXWInj91wvn2aU0sXtlJ9bY1s";
     public static boolean IS_DEBUG = false;
 
     private Constants() {
