@@ -32,11 +32,11 @@ public class TinyCommand implements Command {
                             new EmbedBuilder()
                                     .setDescription(Formats.LEWD_EMOTE)
                                     .setColor(Colors.getEffectiveColor(trigger))
-                                    .setImage(makeReqAndGetResAsString("tiny","url"))
+                                    .setImage(makeReqAndGetResAsString("tiny", "url"))
                                     .setFooter(
-                                    MessageFormat.format(
-                                            "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
-                                    trigger.getAuthor().getEffectiveAvatarUrl())
+                                            MessageFormat.format(
+                                                    "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
+                                            trigger.getAuthor().getEffectiveAvatarUrl())
                                     .build())
                     .queue();
         } catch (Exception e) {

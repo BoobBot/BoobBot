@@ -32,11 +32,11 @@ public class FourkCommand implements Command {
                             new EmbedBuilder()
                                     .setDescription(Formats.LEWD_EMOTE)
                                     .setColor(Colors.getEffectiveColor(trigger))
-                                    .setImage(makeReqAndGetResAsString("4k","url"))
+                                    .setImage(makeReqAndGetResAsString("4k", "url"))
                                     .setFooter(
-                                    MessageFormat.format(
-                                            "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
-                                    trigger.getAuthor().getEffectiveAvatarUrl())
+                                            MessageFormat.format(
+                                                    "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
+                                            trigger.getAuthor().getEffectiveAvatarUrl())
                                     .build())
                     .queue();
         } catch (Exception e) {

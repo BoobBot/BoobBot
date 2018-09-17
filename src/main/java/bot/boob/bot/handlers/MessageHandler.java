@@ -1,5 +1,5 @@
 package bot.boob.bot.handlers;
- 
+
 import bot.boob.bot.BoobBot;
 import bot.boob.bot.commons.Colors;
 import bot.boob.bot.commons.Formats;
@@ -10,14 +10,11 @@ import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandHandler;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import static bot.boob.bot.commons.checks.UserChecks.isDonor;
 
 
 public class MessageHandler extends ListenerAdapter {

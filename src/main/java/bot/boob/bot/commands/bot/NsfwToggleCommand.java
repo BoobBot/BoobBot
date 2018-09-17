@@ -47,7 +47,7 @@ public class NsfwToggleCommand implements Command {
                     .sendMessage(
                             Formats.info(
 
-                                            "I have set nsfw on this channel to False!"))
+                                    "I have set nsfw on this channel to False!"))
                     .queue();
             return;
         }
@@ -57,7 +57,7 @@ public class NsfwToggleCommand implements Command {
                     .getTextChannel()
                     .sendMessage(
                             Formats.info(
-                                            "I have set nsfw on this channel to True!"))
+                                    "I have set nsfw on this channel to True!"))
                     .queue();
         }
     }

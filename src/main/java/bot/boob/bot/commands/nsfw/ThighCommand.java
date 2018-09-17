@@ -5,8 +5,6 @@ import bot.boob.bot.BoobBot;
 import bot.boob.bot.commons.Colors;
 import bot.boob.bot.commons.Formats;
 import bot.boob.bot.commons.Misc;
-
-
 import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandAttribute;
 import com.github.rainestormee.jdacommand.CommandDescription;
@@ -15,7 +13,6 @@ import net.dv8tion.jda.core.entities.Message;
 
 import java.text.MessageFormat;
 
-import static bot.boob.bot.commons.apis.bbapi.makeReqAndGetResAsString;
 import static bot.boob.bot.commons.apis.bbapi.makeReqAndGetResAsString;
 
 
@@ -35,11 +32,11 @@ public class ThighCommand implements Command {
                             new EmbedBuilder()
                                     .setDescription(Formats.LEWD_EMOTE)
                                     .setColor(Colors.getEffectiveColor(trigger))
-                                    .setImage(makeReqAndGetResAsString("ThighBot","url"))
+                                    .setImage(makeReqAndGetResAsString("ThighBot", "url"))
                                     .setFooter(
-                                    MessageFormat.format(
-                                            "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
-                                    trigger.getAuthor().getEffectiveAvatarUrl())
+                                            MessageFormat.format(
+                                                    "Requested by {0} | {1}", trigger.getAuthor().getName(), Misc.now()),
+                                            trigger.getAuthor().getEffectiveAvatarUrl())
                                     .build())
                     .queue();
         } catch (Exception e) {

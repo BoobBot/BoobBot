@@ -7,7 +7,9 @@ import bot.boob.bot.commons.menu.ButtonMenu;
 import com.github.rainestormee.jdacommand.Command;
 import com.github.rainestormee.jdacommand.CommandAttribute;
 import com.github.rainestormee.jdacommand.CommandDescription;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.PrivateChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -72,8 +74,8 @@ public class SendThighCommand implements Command {
                                                                             .getEmoteById(Formats.getEmoteID("<:yes:443810942221025280>")))) {
                                                         try {
                                                             pm.sendMessage(Formats.LEWD_EMOTE + " " + getThigh()).queue();
-                                                        }catch (Exception e){
-                                                           BoobBot.log.error("wtf ? " + e);
+                                                        } catch (Exception e) {
+                                                            BoobBot.log.error("wtf ? " + e);
                                                         }
                                                     } else {
                                                         pm
@@ -86,7 +88,7 @@ public class SendThighCommand implements Command {
                             }, failed -> blocked.set(true));
                             try {
                                 Thread.sleep(100);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 BoobBot.log.error("tf" + e);
                             }
                             if (blocked.get()) {
@@ -95,8 +97,7 @@ public class SendThighCommand implements Command {
                                                 "hey, This {0} {1} has me blocked or there filter turned on \uD83D\uDD95",
                                                 "whore", users.get(0).getName())).queue();
 
-                            }
-                            else {
+                            } else {
                                 event.getChannel().sendMessage(MessageFormat.format("Good job {0}", event.getAuthor().getAsMention()))
                                         .queue();
                             }

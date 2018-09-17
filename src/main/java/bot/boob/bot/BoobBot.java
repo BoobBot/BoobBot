@@ -1,6 +1,5 @@
 package bot.boob.bot;
 
-import bot.boob.bot.commons.Misc;
 import bot.boob.bot.handlers.EventHandler;
 import bot.boob.bot.handlers.MessageHandler;
 import ch.qos.logback.classic.Logger;
@@ -9,21 +8,9 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.Objects;
-
-import static bot.boob.bot.commons.Constants.DEBUG_TOKEN;
-import static bot.boob.bot.commons.Constants.IS_DEBUG;
-import static bot.boob.bot.commons.Constants.TOKEN;
+import static bot.boob.bot.commons.Constants.*;
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.INFO;
 
@@ -33,7 +20,7 @@ public class BoobBot {
     public static EventWaiter waiter = new EventWaiter();
     public static Logger log = (Logger) LoggerFactory.getLogger(BoobBot.class);
 
-    public static void main( String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         log.info(JDAInfo.VERSION);
         log.setLevel(INFO);
         if (args.length > 0 && args[0].contains("debug")) {
@@ -51,4 +38,4 @@ public class BoobBot {
                 .setShardsTotal(-1)
                 .build();
     }
-    }
+}

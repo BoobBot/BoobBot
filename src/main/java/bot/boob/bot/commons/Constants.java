@@ -2,7 +2,7 @@ package bot.boob.bot.commons;
 
 public final class Constants {
 
-	public static final long[] OWNERS = {248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L};
+    public static final long[] OWNERS = {248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L};
     public static final String DEBUG_TOKEN =
             "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
     public static final Long HOME_GUILD = 440526421388165120L;
