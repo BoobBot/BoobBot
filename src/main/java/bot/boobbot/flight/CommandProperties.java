@@ -1,5 +1,7 @@
 package bot.boobbot.flight;
 
+import net.dv8tion.jda.core.Permission;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,6 +15,8 @@ public @interface CommandProperties {
     String description() default "No description available";
 
     category category() default category.MISC;
+
+    Permission[] botPermissions() default {};
 
     boolean developerOnly() default false;
 

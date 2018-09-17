@@ -1,9 +1,12 @@
 package bot.boobbot.commons;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
-    public static final long[] OWNERS = {
+    public static final List<Long> OWNERS = Arrays.asList(
             248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L
-    };
+    );
 
     public static String TOKEN = "Mjg1NDgwNDI0OTA0MzI3MTc5.DoBbBw.F_dXWInj91wvn2aU0sXtlJ9bY1s";
 
