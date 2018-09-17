@@ -1,125 +1,44 @@
-plugins {
-    id 'java'
-    id 'application'
-    id 'com.github.johnrengelman.shadow' version '2.0.4'
-    id 'idea'
-    id 'findbugs'
-    id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'net.rdrei.android.buildtimetracker' version '0.11.0'
+group 'bot.boobbot'
+version '3.0.0'
+
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    }
 }
 
-group 'BoobBot'
-version '3.0.0'
-mainClassName = 'bot.boob.bot.BoobBot'
-def jdaVersion = '3.7.1_417'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+mainClassName = "bot.boobbot.BoobBot"
 
-defaultTasks 'dependencyUpdates'
 
 repositories {
-    jcenter()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
-
-dependencyUpdates {
-    checkForGradleUpdate = true
-    resolutionStrategy {
-        componentSelection { rules ->
-            rules.all { ComponentSelection selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
-        }
-    }
+    jcenter()
 }
 
 
 dependencies {
-    compile "net.dv8tion:JDA:$jdaVersion"
-    compile group: 'com.github.rainestormee', name: 'jda-command', version: '1.1.2'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile 'com.jagrosh:jda-utilities:2.1.2'
-    compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
-    compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
-    compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.5.0-beta-1'
-    compile 'com.google.guava:guava:23.4-jre'
-    compile 'com.github.SvenWoltmann:color-thief-java:master-SNAPSHOT'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile ('net.dv8tion:JDA:3.7.1_417') {
+        exclude module: 'opus-java'
+    }
+
+    compile 'org.reflections:reflections:0.9.11'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.0'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
 }
-
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
-}
-
-
-compileJava {
-    classpath = sourceSets.main.compileClasspath
-    options.encoding = 'UTF-8'
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
-build.dependsOn shadowJar
-
-
-artifacts {
-    archives shadowJar
-}
-
-task cleanDistTar(type: Delete) { delete files(distTar) }
-distTar { classifier = "trash" }
-distTar.finalizedBy cleanDistTar
-
-task cleanDistZip(type: Delete) { delete files(distZip) }
-distZip { classifier = "trash" }
-distZip.finalizedBy cleanDistZip
-
-task cleanShittyJar(type: Delete) { delete files(jar) }
-jar { classifier = "trash" }
-jar.finalizedBy cleanShittyJar
 
 
 shadowJar {
-    baseName = 'bb'
-    classifier = null
-    version = null
-}
-
-buildtimetracker {
-    reporters {
-        csv {
-            output "build/times.csv"
-            append true
-            header false
-        }
-
-        summary {
-            ordered false
-            threshold 50
-            barstyle "unicode"
-        }
-
-        csvSummary {
-            csv "build/times.csv"
-        }
+    from("src/main/resources") {
+        include "log4j2.xml"
     }
-}
-
-
-findbugs {
-    sourceSets = [sourceSets.main]
-    effort = 'max'
-    ignoreFailures = true
-    showProgress = true
-    reportLevel = 'high'
 }
