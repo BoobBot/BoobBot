@@ -22,8 +22,7 @@ import java.util.Random;
 @CommandDescription(
         name = "rt",
         triggers = {"rt", "redtube"},
-        attributes = {@CommandAttribute(key = "dm"), @CommandAttribute(key = "nsfw"), @CommandAttribute(key = "paywall")},
-        description = "RedTube video search"
+        attributes = {@CommandAttribute(key = "dm"), @CommandAttribute(key = "nsfw")}, description = "RedTube video search"
 )
 
 public class RedTubeCommand implements Command {
