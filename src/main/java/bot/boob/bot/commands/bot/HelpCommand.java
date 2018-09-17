@@ -62,7 +62,7 @@ public class HelpCommand implements Command {
                                 trigger.getJDA().asBot().getInviteUrl(Permission.ADMINISTRATOR),
                                 trigger.getJDA().getSelfUser().getEffectiveAvatarUrl())
                         .setColor(Colors.getRndColor())
-                        .addField("\uD83D\uDCF9 Video Searching", "bb**ph**: Searches PornHub for videos.\n" +
+                        .addField("\uD83D\uDCF9 Video Searching",
                                 "bb**rt**: Searches RedTube for videos.\n" +
                                 "bb**phgif**: PornHub gifs! (Some are trash #BlamePornHub)\n", false)
                         .addField("<:TouchMaBooty:444601938320031745> General NSFW", "bb**boobs**: Shows some boobs.\n" +
@@ -76,7 +76,8 @@ public class HelpCommand implements Command {
                                 "bb**bj**: BlowJobs!\n" +
                                 "bb**dp**: Gotta get that double love!\n" +
                                 "bb**cumsluts**: Sticky Love!", false)
-                        .addField("<:whip:440551663804350495> Kinks", "bb**gay**: Got men?\n" +
+                        .addField("<:whip:440551663804350495> Kinks", "bb**magik**: its magik.\n" +
+                                "bb**gay**: Got men?\n" +
                                 "bb**lesbians**: Lesbians are sexy!\n" +
                                 "bb**group**: For when 2 are not enough..\n" +
                                 "bb**thigh**: Posts a random sexy thigh.\n" +
