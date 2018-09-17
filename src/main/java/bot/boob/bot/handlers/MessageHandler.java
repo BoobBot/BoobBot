@@ -140,30 +140,6 @@ public class MessageHandler extends ListenerAdapter {
                             return;
                         }
                     }
-                    if (command.hasAttribute("paywall") && !isDonor(event.getAuthor())) {
-                        event
-                                .getChannel()
-                                .sendMessage(
-                                        new EmbedBuilder()
-                                                .setAuthor(
-                                                        event.getJDA().getSelfUser().getName(),
-                                                        event.getJDA().asBot().getInviteUrl(Permission.ADMINISTRATOR),
-                                                        event.getJDA().getSelfUser().getEffectiveAvatarUrl())
-                                                .setColor(Colors.getEffectiveColor(event.getMessage()))
-                                                .setDescription(
-                                                        Formats.error(
-                                                                " Sorry this command is only available to our Patrons.\n"
-                                                                        + event
-                                                                        .getJDA()
-                                                                        .asBot()
-                                                                        .getShardManager()
-                                                                        .getEmoteById(475801484282429450L)
-                                                                        .getAsMention()
-                                                                        + "[Stop being a cheap fuck and join today]()"))
-                                                .build())
-                                .queue();
-                        return;
-                    }
 
                     try {
                         Formats.logCommand(event.getMessage());

@@ -29,40 +29,11 @@ import static ch.qos.logback.classic.Level.INFO;
 
 
 public class BoobBot {
-    private static final OkHttpClient client = new OkHttpClient();
-
     public static final CommandHandler commandHandler = new CommandHandler();
     public static EventWaiter waiter = new EventWaiter();
     public static Logger log = (Logger) LoggerFactory.getLogger(BoobBot.class);
 
     public static void main( String[] args) throws Exception {
-        OkHttpClient TClient = client.newBuilder()
-                .proxy(Misc.getProxy())
-                .build();
-        Request request = new Request.Builder()
-                .url("http://api.oboobs.ru/boobs/0/1/random")
-                .build();
-        try {
-            Response response = TClient.newCall(request).execute();
-            try (ResponseBody responseBody = response.body()) {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                System.out.println(
-                        MessageFormat.format(
-                                "http://media.oboobs.ru/{0}",
-                                new JSONObject(
-                                        new JSONArray(Objects.requireNonNull(responseBody)
-                                                .string())
-                                                .get(0)
-                                                .toString())
-                                        .getString("preview"))
-                );
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-
         log.info(JDAInfo.VERSION);
         log.setLevel(INFO);
         if (args.length > 0 && args[0].contains("debug")) {
