@@ -1,6 +1,7 @@
 package bot.boobbot;
 
 import bot.boobbot.commons.Constants;
+import bot.boobbot.flight.Command;
 import bot.boobbot.handlers.EventHandler;
 import bot.boobbot.handlers.MessageHandler;
 import net.dv8tion.jda.bot.sharding.DefaultShardManager;
@@ -8,11 +9,15 @@ import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoobBot {
 
@@ -20,7 +25,7 @@ public class BoobBot {
 
     private static boolean isDebug = false;
     private static ShardManager shardManager;
-    private static final List<EventHandler> commands = new ArrayList<>(); // TODO: Change EventHandler to 'command'
+    private static final Map<String, Command> commands = new HashMap<>();
 
 
     public static void main(String[] args) throws Exception {
@@ -43,11 +48,36 @@ public class BoobBot {
 
     }
 
+    private static void loadCommands() {
+        Reflections reflections = new Reflections("bot.boobbot.commands");
+
+        reflections.getSubTypesOf(Command.class).forEach(command -> {
+            if (Modifier.isAbstract(command.getModifiers()) || command.isInterface()) {
+                return;
+            }
+
+            try {
+                Command cmd = command.newInstance();
+
+                if (cmd.getProperties() == null) {
+                    log.warn("Command `" + cmd.getName() + "` is missing CommandProperties annotation. Will not load.");
+                    return;
+                }
+
+                commands.put(cmd.getName(), cmd);
+            } catch (InstantiationException | IllegalAccessException e) {
+                log.error("Failed to load command `" + command.getSimpleName() + "`", e);
+            }
+        });
+
+        log.info("Successfully loaded " + commands.size() + " commands!");
+    }
+
     public static ShardManager getShardManager() {
         return shardManager;
     }
 
-    public static List<EventHandler> getCommands() { // TODO: Change EventHandler to `command`
+    public static Map<String, Command> getCommands() {
         return commands;
     }
 
