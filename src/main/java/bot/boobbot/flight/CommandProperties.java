@@ -23,7 +23,19 @@ public @interface CommandProperties {
     boolean guildOnly() default false;
 
     enum category {
-        CONTROLS, MEDIA, MISC
+        GENERAL("<:TouchMaBooty:444601938320031745> General NSFW"),
+        KINKS("<:whip:440551663804350495> Kinks"),
+        VIDEOSEARCHING("\uD83D\uDCF9 Video Searching"),
+        FANTASY("<:Pantsu:443870754107555842> Non-Real"),
+        HOLIDAY("\uD83C\uDF85 Holiday"),
+        SEND("\uD83D\uDCE7 Send Commands"),
+        MISC("Misc Commands");
+
+        public String title;
+
+        category(String title) {
+            this.title = title;
+        }
     }
 
 }
