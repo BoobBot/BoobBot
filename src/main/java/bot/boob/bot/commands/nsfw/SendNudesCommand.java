@@ -74,8 +74,8 @@ public class SendNudesCommand implements Command {
                                                                             .getEmoteById(Formats.getEmoteID("<:yes:443810942221025280>")))) {
                                                         try {
                                                             pm.sendMessage(Formats.LEWD_EMOTE + " " + makeReqAndGetResAsString("boobs", "url")).queue();
-                                                        }catch (Exception e){
-                                                           BoobBot.log.error("wtf ? " + e);
+                                                        } catch (Exception e) {
+                                                            BoobBot.log.error("wtf ? " + e);
                                                         }
                                                     } else {
                                                         pm
@@ -88,7 +88,7 @@ public class SendNudesCommand implements Command {
                             }, failed -> blocked.set(true));
                             try {
                                 Thread.sleep(100);
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 BoobBot.log.error("tf" + e);
                             }
                             if (blocked.get()) {
@@ -97,8 +97,7 @@ public class SendNudesCommand implements Command {
                                                 "hey, This {0} {1} has me blocked or there filter turned on \uD83D\uDD95",
                                                 "whore", users.get(0).getName())).queue();
 
-                            }
-                            else {
+                            } else {
                                 event.getChannel().sendMessage(MessageFormat.format("Good job {0}", event.getAuthor().getAsMention()))
                                         .queue();
                             }

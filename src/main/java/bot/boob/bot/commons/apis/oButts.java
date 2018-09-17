@@ -21,8 +21,8 @@ public class oButts {
         try (ResponseBody responseBody = response.body()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             return "http://media.obutts.ru/" + new JSONObject(Objects.requireNonNull(responseBody).string()
-                    .replace("[","")
-                    .replace("]",""))
+                    .replace("[", "")
+                    .replace("]", ""))
                     .get("preview")
                     .toString();
         }

@@ -62,6 +62,7 @@ class CommandRegistry {
                 new MagikCommand()
         );
     }
+
     private void register(Command... cmds) {
         commands.addAll(Arrays.asList(cmds));
     }

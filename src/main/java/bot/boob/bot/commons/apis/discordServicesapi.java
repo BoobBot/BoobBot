@@ -1,7 +1,5 @@
 package bot.boob.bot.commons.apis;
 
-import bot.boob.bot.BoobBot;
-
 import java.net.URL;
 
 public class discordServicesapi {

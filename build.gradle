@@ -1,8 +1,8 @@
 plugins {
-    id'java'
-    id'application'
-    id'com.github.johnrengelman.shadow' version '2.0.4'
-    id'idea'
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'idea'
     id 'findbugs'
     id 'com.github.ben-manes.versions' version '0.20.0'
     id 'net.rdrei.android.buildtimetracker' version '0.11.0'

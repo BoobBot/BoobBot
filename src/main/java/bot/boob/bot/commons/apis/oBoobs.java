@@ -1,6 +1,5 @@
 package bot.boob.bot.commons.apis;
 
-import bot.boob.bot.commons.Misc;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,10 +19,10 @@ public class oBoobs {
         Response response = client.newCall(request).execute();
         try (ResponseBody responseBody = response.body()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            return "http://media.oboobs.ru/"+
+            return "http://media.oboobs.ru/" +
                     new JSONObject(Objects.requireNonNull(responseBody).string()
-                            .replace("[","")
-                            .replace("]",""))
+                            .replace("[", "")
+                            .replace("]", ""))
                             .get("preview")
                             .toString();
         }

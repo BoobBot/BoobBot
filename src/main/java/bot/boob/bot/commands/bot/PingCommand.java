@@ -49,7 +49,7 @@ public class PingCommand implements Command {
     public void execute(Message trigger, String args) {
         if (args.toLowerCase().contains("--all")) {
             List<String> pinglist = new ArrayList<>();
-        Map<JDA, JDA.Status> s = getShards().getStatuses();
+            Map<JDA, JDA.Status> s = getShards().getStatuses();
             pbuilder.clearItems();
             for (Map.Entry<JDA, JDA.Status> e : s.entrySet()) {
                 if (trigger.getJDA().getShardInfo().getShardId()
@@ -75,21 +75,21 @@ public class PingCommand implements Command {
             return;
         }
 
-	    trigger
-			    .getChannel()
-			    .sendMessage("Ping!")
-			    .queue(
-					    m1 ->
-							    m1.editMessage("Ping: \uD83C\uDFD3").queue(
-							            m2 ->
+        trigger
+                .getChannel()
+                .sendMessage("Ping!")
+                .queue(
+                        m1 ->
+                                m1.editMessage("Ping: \uD83C\uDFD3").queue(
+                                        m2 ->
                                                 m2.editMessage(
-									    "⏳ Ping: "
-											    + m1
-											    .getCreationTime()
-											    .until(m2.getCreationTime(), ChronoUnit.MILLIS)
-											    + "ms | \uD83D\uDC93 Web-socket: "
-											    + trigger.getJDA().getPing()
-											    + "ms")
-									    .queue()));
+                                                        "⏳ Ping: "
+                                                                + m1
+                                                                .getCreationTime()
+                                                                .until(m2.getCreationTime(), ChronoUnit.MILLIS)
+                                                                + "ms | \uD83D\uDC93 Web-socket: "
+                                                                + trigger.getJDA().getPing()
+                                                                + "ms")
+                                                        .queue()));
     }
 }

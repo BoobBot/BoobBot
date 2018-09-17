@@ -36,108 +36,6 @@ public class Formats {
                             + "\n{2} **Website**: [https:/boob.bot](https://boob.bot)"
                             + "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)",
                     DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PAYPAL_EMOTE);
-
-    public static String getReadyFormat(JDA jda, Guild HOME) {
-        return MessageFormat.format(
-                "Logging in\r\n{0}\r\n"
-                        + "Oauth link:\r\n{1}\r\n"
-                        + "JDA Version:\r\n{13}\n\r"
-                        + "Docs halp:\r\nhttp://home.dv8tion.net:8080/job/JDA/javadoc/\r\n"
-                        + "Logged in as:\r\n{2}({3})\r\n"
-                        + "Guilds:\r\n{4}\r\n"
-                        + "Shards:\r\n{5}\r\n"
-                        + "Users:\r\n{6}\r\n"
-                        + "Bots:\r\n{7}\r\n"
-                        + "Total Users:\r\n{8}\r\n"
-                        + "Home Guild:\r\n{9}\r\n"
-                        + "Users:\r\n{10}\r\n"
-                        + "Bots:\r\n{11}\r\n"
-                        + "Total Users:\r\n{12}",
-                Formats.BOOT_BANNER,
-                jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
-                jda.getSelfUser().getName(),
-                jda.getSelfUser().getId(),
-                jda.asBot().getShardManager().getGuilds().toArray().length,
-                jda.asBot().getShardManager().getShardsTotal(),
-                jda.asBot().getShardManager().getUsers().parallelStream().filter(user -> !user.isBot()).toArray().length,
-                jda.asBot().getShardManager().getUsers().parallelStream().filter(User::isBot).toArray().length,
-                jda.asBot().getShardManager().getUsers().toArray().length,
-                HOME.getName(),
-                HOME.getMembers().stream().filter(user -> !user.getUser().isBot()).toArray().length,
-                HOME.getMembers().stream().filter(user -> user.getUser().isBot()).toArray().length,
-                HOME.getMembers().toArray().length,
-                JDAInfo.VERSION);
-    }
-
-
-    public static String codeBox(String text, String lang) {
-        return MessageFormat.format("```{0}\n{1}\n```", lang, text);
-    }
-
-    public static String bold(String text) {
-        return MessageFormat.format("**{0}**", text);
-    }
-
-    public static String inline(String text) {
-        return MessageFormat.format("`{0}`", text);
-    }
-
-    public static String italics(String text) {
-        return MessageFormat.format("*{0}*", text);
-    }
-
-    public static String error(String text) {
-        return MessageFormat.format("\uD83D\uDEAB {0}", text);
-    }
-
-    public static String warning(String text) {
-        return MessageFormat.format("\u26A0 {0}", text);
-    }
-
-    public static String info(String text) {
-        return MessageFormat.format("{1}  {0}", text, INFO_EMOTE);
-    }
-
-    public static String clean(String text) {
-        return text.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere");
-    }
-
-    public static String getFullName(net.dv8tion.jda.core.entities.Message msg) {
-        return MessageFormat.format(
-                "{0}#{1}", msg.getAuthor().getName(), msg.getAuthor().getDiscriminator());
-    }
-
-    public static void logCommand(net.dv8tion.jda.core.entities.Message message) {
-        if (BotChecks.isDm(message)) {
-            String msg =
-                    MessageFormat.format(
-                            "{4}: {0} Used {1} on Channel: {2}({3})",
-                            Formats.getFullName(message),
-                            message.getContentRaw(),
-                            message.getChannel().getName(),
-                            message.getChannel().getId(),
-                            now());
-            BoobBot.log.info(msg);
-        } else {
-            String msg =
-                    MessageFormat.format(
-                            "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
-                            Formats.getFullName(message),
-                            message.getContentRaw(),
-                            message.getChannel().getName(),
-                            message.getChannel().getId(),
-                            message.getGuild().getName(),
-                            message.getGuild().getId(),
-                            now());
-            BoobBot.log.info(msg);
-        }
-    }
-
-    public static Long getEmoteID(String text) {
-        String ID = CharMatcher.DIGIT.retainFrom(text);
-        return Long.parseLong(ID);
-    }
-
     public static String[] tag = {"Amateur",
             "Anal Masturbation",
             "Anal Sex",
@@ -267,4 +165,104 @@ public class Formats {
             "Webcam",
             "Young & Old"
     };
+
+    public static String getReadyFormat(JDA jda, Guild HOME) {
+        return MessageFormat.format(
+                "Logging in\r\n{0}\r\n"
+                        + "Oauth link:\r\n{1}\r\n"
+                        + "JDA Version:\r\n{13}\n\r"
+                        + "Docs halp:\r\nhttp://home.dv8tion.net:8080/job/JDA/javadoc/\r\n"
+                        + "Logged in as:\r\n{2}({3})\r\n"
+                        + "Guilds:\r\n{4}\r\n"
+                        + "Shards:\r\n{5}\r\n"
+                        + "Users:\r\n{6}\r\n"
+                        + "Bots:\r\n{7}\r\n"
+                        + "Total Users:\r\n{8}\r\n"
+                        + "Home Guild:\r\n{9}\r\n"
+                        + "Users:\r\n{10}\r\n"
+                        + "Bots:\r\n{11}\r\n"
+                        + "Total Users:\r\n{12}",
+                Formats.BOOT_BANNER,
+                jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                jda.getSelfUser().getName(),
+                jda.getSelfUser().getId(),
+                jda.asBot().getShardManager().getGuilds().toArray().length,
+                jda.asBot().getShardManager().getShardsTotal(),
+                jda.asBot().getShardManager().getUsers().parallelStream().filter(user -> !user.isBot()).toArray().length,
+                jda.asBot().getShardManager().getUsers().parallelStream().filter(User::isBot).toArray().length,
+                jda.asBot().getShardManager().getUsers().toArray().length,
+                HOME.getName(),
+                HOME.getMembers().stream().filter(user -> !user.getUser().isBot()).toArray().length,
+                HOME.getMembers().stream().filter(user -> user.getUser().isBot()).toArray().length,
+                HOME.getMembers().toArray().length,
+                JDAInfo.VERSION);
+    }
+
+    public static String codeBox(String text, String lang) {
+        return MessageFormat.format("```{0}\n{1}\n```", lang, text);
+    }
+
+    public static String bold(String text) {
+        return MessageFormat.format("**{0}**", text);
+    }
+
+    public static String inline(String text) {
+        return MessageFormat.format("`{0}`", text);
+    }
+
+    public static String italics(String text) {
+        return MessageFormat.format("*{0}*", text);
+    }
+
+    public static String error(String text) {
+        return MessageFormat.format("\uD83D\uDEAB {0}", text);
+    }
+
+    public static String warning(String text) {
+        return MessageFormat.format("\u26A0 {0}", text);
+    }
+
+    public static String info(String text) {
+        return MessageFormat.format("{1}  {0}", text, INFO_EMOTE);
+    }
+
+    public static String clean(String text) {
+        return text.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere");
+    }
+
+    public static String getFullName(net.dv8tion.jda.core.entities.Message msg) {
+        return MessageFormat.format(
+                "{0}#{1}", msg.getAuthor().getName(), msg.getAuthor().getDiscriminator());
+    }
+
+    public static void logCommand(net.dv8tion.jda.core.entities.Message message) {
+        if (BotChecks.isDm(message)) {
+            String msg =
+                    MessageFormat.format(
+                            "{4}: {0} Used {1} on Channel: {2}({3})",
+                            Formats.getFullName(message),
+                            message.getContentRaw(),
+                            message.getChannel().getName(),
+                            message.getChannel().getId(),
+                            now());
+            BoobBot.log.info(msg);
+        } else {
+            String msg =
+                    MessageFormat.format(
+                            "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
+                            Formats.getFullName(message),
+                            message.getContentRaw(),
+                            message.getChannel().getName(),
+                            message.getChannel().getId(),
+                            message.getGuild().getName(),
+                            message.getGuild().getId(),
+                            now());
+            BoobBot.log.info(msg);
+        }
+    }
+
+    public static Long getEmoteID(String text) {
+        String ID = CharMatcher.DIGIT.retainFrom(text);
+        return Long.parseLong(ID);
+    }
 }
