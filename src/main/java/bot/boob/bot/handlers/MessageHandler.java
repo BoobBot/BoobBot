@@ -43,7 +43,7 @@ public class MessageHandler extends ListenerAdapter {
                 () -> {
                     JDA jda = event.getJDA();
                     if (BotChecks.noBot(event.getMessage())) return;
-                    String prefix = "!bb";
+                    String prefix = "bb";
                     String message = event.getMessage().getContentRaw();
                     if (message.startsWith(jda.getSelfUser().getAsMention())
                             & message.length() == jda.getSelfUser().getAsMention().length()) {
@@ -64,7 +64,7 @@ public class MessageHandler extends ListenerAdapter {
                         return;
                     }
 
-                    if (!message.toLowerCase().startsWith("!bb")) return;
+                    if (!message.toLowerCase().startsWith("bb")) return;
 
                     String[] splitMessage = message.split("\\s+", 2);
                     String commandString;
