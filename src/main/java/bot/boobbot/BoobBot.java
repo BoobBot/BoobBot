@@ -6,13 +6,14 @@ import bot.boobbot.handlers.EventHandler;
 import bot.boobbot.handlers.MessageHandler;
 import bot.boobbot.misc.EventWaiter;
 import bot.boobbot.misc.RequestUtil;
+import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import org.reflections.Reflections;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -20,8 +21,7 @@ import java.util.Map;
 
 public class BoobBot {
 
-    public static final Logger log = LoggerFactory.getLogger("BoobBot");
-
+    public static Logger log = (Logger) LoggerFactory.getLogger(BoobBot.class);
     private static boolean isDebug = false;
     private static ShardManager shardManager;
     private static final Map<String, Command> commands = new HashMap<>();
