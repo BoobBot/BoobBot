@@ -3,25 +3,45 @@ package bot.boobbot.flight
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.PendingEvent
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.MessageBuilder
-import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
+import net.dv8tion.jda.core.managers.AudioManager
 
 class Context(val trigger: String, val event: MessageReceivedEvent, args: Array<String>) {
-    val jda = event.jda
-    val message = event.message
+    val jda: JDA = event.jda
+    val message: Message = event.message
 
-    val guild = event.guild
-    val audioManager = event.guild.audioManager
+    val guild: Guild? = event.guild
+    val audioManager: AudioManager? = event.guild.audioManager
 
-    val selfMember = event.guild.selfMember
-    val selfUser = event.jda.selfUser
+    val selfMember: Member? = event.guild.selfMember
+    val selfUser: SelfUser = event.jda.selfUser
 
-    val member = event.member
-    val author = event.author
-    val voiceState = event.member.voiceState
+    val member: Member? = event.member
+    val author: User = event.author
+    val voiceState: VoiceState? = event.member.voiceState
 
-    val channel = event.channel
+    val channel: MessageChannel = event.channel
+    val textChannel: TextChannel? = event.textChannel
+
+    fun userCan(check: Permission, explicit: Boolean = false): Boolean {
+        if (!event.channelType.isGuild && !explicit) {
+            return true
+        }
+
+        return member!!.hasPermission(event.textChannel, check)
+    }
+
+    fun botCan(check: Permission, explicit: Boolean = false): Boolean {
+        if (!event.channelType.isGuild && !explicit) {
+            return true
+        }
+
+        return selfMember!!.hasPermission(event.textChannel, check)
+    }
 
     fun waitForMessage(predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent {
         return BoobBot.getWaiter().waitForMessage(channel.idLong, author.idLong, predicate, time)

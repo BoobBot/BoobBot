@@ -5,7 +5,12 @@ import bot.boobbot.flight.Command;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
+import okhttp3.Headers;
+import okhttp3.Response;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,17 +32,18 @@ public class Utils {
                 .orElse(null);
     }
 
-    public static List<Permission> getMissingPermissions(Member m, TextChannel channel, Permission... permissions) {
-        List<Permission> missing = new ArrayList<>();
-        List<Permission> current = m.getPermissions(channel);
+    public static BufferedImage downloadAvatar(String url) {
+        Response res = BoobBot.getRequestUtil().get(url, Headers.of()).block();
 
-        for (Permission p : permissions) {
-            if (!current.contains(p)) {
-                missing.add(p);
-            }
+        if (res == null || res.body() == null) {
+            return null;
         }
 
-        return missing;
+        try {
+            return ImageIO.read(res.body().byteStream());
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 }
