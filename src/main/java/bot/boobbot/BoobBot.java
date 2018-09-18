@@ -8,6 +8,7 @@ import bot.boobbot.misc.EventWaiter;
 import bot.boobbot.misc.RequestUtil;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import io.sentry.Sentry;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDAInfo;
@@ -18,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+
+import static bot.boobbot.misc.Constants.SENTRY_DSN;
+
 
 public class BoobBot {
 
@@ -30,6 +34,7 @@ public class BoobBot {
 
 
     public static void main(String[] args) throws Exception {
+        Sentry.init(SENTRY_DSN);
         log.info("--- BoobBot.jda ---");
         log.info(JDAInfo.VERSION);
 
