@@ -3,6 +3,7 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import kotlinx.coroutines.experimental.future.await
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
@@ -75,6 +76,18 @@ fun Response.json(): JSONObject? {
     body().use {
         return if (isSuccessful && body != null) {
             JSONObject(body()!!.string())
+        } else {
+            null
+        }
+    }
+}
+
+fun Response.jsonArray(): JSONArray? {
+    val body = body()
+
+    body().use {
+        return if (isSuccessful && body != null) {
+            JSONArray(body()!!.string())
         } else {
             null
         }

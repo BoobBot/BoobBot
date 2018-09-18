@@ -25,5 +25,7 @@ public class Constants {
 
     public static final String BB_API_KEY = "JDaK5IEeziTtABsWrkJWtv9yjW4Gu18B";
 
+    public static final String MEMER_IMGEN_KEY = "tom9FWexxq3UTxGkiTRc-J1FKgW";
+
     public static final String SENTRY_DSN = "https://7e9f32f3f3f7441cbcfa033e51e31432@sentry.io/1281949";
 }
