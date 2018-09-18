@@ -79,6 +79,7 @@ public class BoobBot {
         });
 
         log.info("Successfully loaded " + commands.size() + " commands!");
+        // TODO: Clean, Eval, Slideshow
     }
 
     public static ShardManager getShardManager() {
