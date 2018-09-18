@@ -2,7 +2,6 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import kotlinx.coroutines.experimental.async
-import java.lang.Exception
 
 interface AsyncCommand : Command {
 

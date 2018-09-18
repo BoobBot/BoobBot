@@ -1,9 +1,9 @@
 package bot.boobbot.models
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Constants
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
