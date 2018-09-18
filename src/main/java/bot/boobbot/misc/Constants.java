@@ -1,4 +1,4 @@
-package bot.boobbot.commons;
+package bot.boobbot.misc;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,4 +24,5 @@ public class Constants {
     public static final String GLLOG_WEBHOOK =
             "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
 
+    public static final String BB_API_KEY = "JDaK5IEeziTtABsWrkJWtv9yjW4Gu18B";
 }

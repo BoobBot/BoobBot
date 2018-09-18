@@ -1,10 +1,11 @@
 package bot.boobbot;
 
-import bot.boobbot.commons.Constants;
+import bot.boobbot.misc.Constants;
 import bot.boobbot.flight.Command;
 import bot.boobbot.handlers.EventHandler;
 import bot.boobbot.handlers.MessageHandler;
-import net.dv8tion.jda.bot.sharding.DefaultShardManager;
+import bot.boobbot.misc.EventWaiter;
+import bot.boobbot.misc.RequestUtil;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDAInfo;
@@ -14,9 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BoobBot {
@@ -26,6 +25,8 @@ public class BoobBot {
     private static boolean isDebug = false;
     private static ShardManager shardManager;
     private static final Map<String, Command> commands = new HashMap<>();
+    private static final EventWaiter waiter = new EventWaiter();
+    private static final RequestUtil requestUtil = new RequestUtil();
 
 
     public static void main(String[] args) throws Exception {
@@ -41,11 +42,10 @@ public class BoobBot {
 
         shardManager = new DefaultShardManagerBuilder()
                 .setGame(Game.playing("bbhelp | bbinvite"))
-                .addEventListeners(new MessageHandler(), new EventHandler())
+                .addEventListeners(new MessageHandler(), new EventHandler(), waiter)
                 .setToken(token)
                 .setShardsTotal(-1)
                 .build();
-
     }
 
     private static void loadCommands() {
@@ -83,6 +83,14 @@ public class BoobBot {
 
     public static boolean isDebug() {
         return isDebug;
+    }
+
+    public static EventWaiter getWaiter() {
+        return waiter;
+    }
+
+    public static RequestUtil getRequestUtil() {
+        return requestUtil;
     }
 
 }
