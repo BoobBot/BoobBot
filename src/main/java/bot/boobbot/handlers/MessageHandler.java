@@ -1,8 +1,9 @@
 package bot.boobbot.handlers;
 
 import bot.boobbot.BoobBot;
-import bot.boobbot.commons.Constants;
+import bot.boobbot.misc.Constants;
 import bot.boobbot.flight.Command;
+import bot.boobbot.flight.Context;
 import bot.boobbot.misc.Utils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -81,7 +82,7 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         try {
-            command.execute(event, args);
+            command.execute(new Context(trigger, event, args));
         } catch (Exception e) {
             BoobBot.log.error("Command `" + command.getName() + "` encountered an error during execution", e);
             event.getMessage().addReaction("\uD83D\uDEAB").queue();
