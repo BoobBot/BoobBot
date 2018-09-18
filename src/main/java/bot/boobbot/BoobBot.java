@@ -47,6 +47,8 @@ public class BoobBot {
                 .setToken(token)
                 .setShardsTotal(-1)
                 .build();
+
+        loadCommands();
     }
 
     private static void loadCommands() {

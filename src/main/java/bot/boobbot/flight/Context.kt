@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.managers.AudioManager
 
-class Context(val trigger: String, val event: MessageReceivedEvent, args: Array<String>) {
+class Context(val trigger: String, val event: MessageReceivedEvent, val args: Array<String>) {
     val jda: JDA = event.jda
     val message: Message = event.message
 
@@ -47,6 +47,26 @@ class Context(val trigger: String, val event: MessageReceivedEvent, args: Array<
         return BoobBot.getWaiter().waitForMessage(channel.idLong, author.idLong, predicate, time)
     }
 
+    fun dm(content: String) {
+        val builder = MessageBuilder().setContent(content)
+        dm(builder.build())
+    }
+
+    fun dm(embed: MessageEmbed) {
+        val builder = MessageBuilder().setEmbed(embed)
+        dm(builder.build())
+    }
+
+    private fun dm(message: Message) {
+        author.openPrivateChannel().queue { channel ->
+            channel.sendMessage(message).queue({
+                channel.close()
+            }, {
+                channel.close()
+            })
+        }
+    }
+
     fun send(content: String, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
         send(MessageBuilder(content), success, failure)
     }
@@ -54,11 +74,14 @@ class Context(val trigger: String, val event: MessageReceivedEvent, args: Array<
     fun embed(block: EmbedBuilder.() -> Unit) {
         val builder = MessageBuilder()
                 .setEmbed(EmbedBuilder()
-                        //.setColor()
                         .apply(block)
                         .build())
 
         send(builder, null, null)
+    }
+
+    fun embed(e: MessageEmbed) {
+        send(MessageBuilder().setEmbed(e), null, null)
     }
 
     fun embed(block: EmbedBuilder.() -> Unit, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {

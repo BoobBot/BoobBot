@@ -10,8 +10,7 @@ public class Constants {
 
     public static String TOKEN = "Mjg1NDgwNDI0OTA0MzI3MTc5.DoBbBw.F_dXWInj91wvn2aU0sXtlJ9bY1s";
 
-    public static final String DEBUG_TOKEN =
-            "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
+    public static final String DEBUG_TOKEN = "NDg5MDU2MDc3ODU0NTM5Nzgy.DnlMwg.JGEL9ARaxh0lHDOmX8_kFyjbEWA";
 
     public static final Long HOME_GUILD = 440526421388165120L;
 

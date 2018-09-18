@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class MessageHandler extends ListenerAdapter {
 
-    private static String prefix = "bb";
+    private static String prefix = BoobBot.isDebug() ? "!bb" : "bb";
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
