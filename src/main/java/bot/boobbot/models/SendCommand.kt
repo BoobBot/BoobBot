@@ -21,7 +21,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val emote = BoobBot.getWaiter().waitForReaction(prompt.channel.idLong, user.idLong, { reaction ->
             reaction.emote.idLong == 443810942221025280L || reaction.emote.idLong == 443810942099390464L
         }, 60000).await()
-                ?: return ctx.send("${ctx.author.name} didn't respond") // timeout
+                ?: return ctx.send("${user.name} didn't respond") // timeout
 
         prompt.delete().await()
 

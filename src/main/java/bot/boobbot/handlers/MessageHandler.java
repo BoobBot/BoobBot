@@ -72,8 +72,6 @@ public class MessageHandler extends ListenerAdapter {
                 !event.getTextChannel().isNSFW()) {
             event.getChannel().sendMessage("This isn't a NSFW channel you whore.").queue();
             return;
-
-            // TODO: Color thief + random embed colour stuff
         }
 
         if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_EMBED_LINKS)) {
