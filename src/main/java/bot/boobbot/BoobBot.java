@@ -1,11 +1,12 @@
 package bot.boobbot;
 
-import bot.boobbot.misc.Constants;
 import bot.boobbot.flight.Command;
 import bot.boobbot.handlers.EventHandler;
 import bot.boobbot.handlers.MessageHandler;
+import bot.boobbot.misc.Constants;
 import bot.boobbot.misc.EventWaiter;
 import bot.boobbot.misc.RequestUtil;
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
-
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -38,6 +38,7 @@ public class BoobBot {
 
         if (isDebug) {
             log.warn("Running in debug mode");
+            log.setLevel(Level.DEBUG);
         }
 
         shardManager = new DefaultShardManagerBuilder()
