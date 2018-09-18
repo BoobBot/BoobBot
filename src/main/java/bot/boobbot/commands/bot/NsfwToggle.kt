@@ -6,7 +6,12 @@ import bot.boobbot.flight.Context
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.ErrorResponseException
 
-@CommandProperties(description = "Toggles the current channels nsfw setting", aliases = ["nsfw", "toggle"], guildOnly = true)
+@CommandProperties(
+        description = "Toggles the current channels nsfw setting",
+        aliases = ["nsfw", "toggle"],
+        guildOnly = true,
+        category = CommandProperties.category.MISC
+)
 class NsfwToggle : Command {
 
     override fun execute(ctx: Context) {
