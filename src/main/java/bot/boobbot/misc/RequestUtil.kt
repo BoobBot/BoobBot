@@ -39,6 +39,15 @@ class RequestUtil {
             return future.await()
         }
 
+        fun block(): Response? {
+            return try {
+                httpClient.newCall(request).execute()
+            } catch (e: IOException) {
+                BoobBot.log.error("An error occurred during a HTTP request to ${request.url()}", e)
+                null
+            }
+        }
+
     }
 
     public fun get(url: String, headers: Headers = Headers.of()): PendingRequest {

@@ -29,6 +29,7 @@ mainClassName = 'bot.boobbot.BoobBot'
 repositories {
     mavenCentral()
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -37,6 +38,7 @@ dependencies {
         exclude module: 'opus-java'
     }
 
+    compile 'com.github.SvenWoltmann:color-thief-java:master-SNAPSHOT'
     compile 'org.reflections:reflections:0.9.11'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
