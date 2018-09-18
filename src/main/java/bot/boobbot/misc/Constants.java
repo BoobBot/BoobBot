@@ -24,4 +24,6 @@ public class Constants {
             "https://discordapp.com/api/webhooks/490218180652957716/dzgFWnc8jMAj-vJvpACFzMooljgOyNKwgdLQWOR7XTihmAzEKKbWbHKK7F1eot0ozBvT";
 
     public static final String BB_API_KEY = "JDaK5IEeziTtABsWrkJWtv9yjW4Gu18B";
+
+    public static final String SENTRY_DSN = "https://7e9f32f3f3f7441cbcfa033e51e31432@sentry.io/1281949";
 }
