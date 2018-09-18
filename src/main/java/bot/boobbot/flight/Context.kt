@@ -2,6 +2,7 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.PendingEvent
+import bot.boobbot.misc.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.MessageBuilder
@@ -43,13 +44,8 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
         return selfMember!!.hasPermission(event.textChannel, check)
     }
 
-    fun waitForMessage(predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent {
+    fun waitForMessage(predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent<Message> {
         return BoobBot.getWaiter().waitForMessage(channel.idLong, author.idLong, predicate, time)
-    }
-
-    fun dm(content: String) {
-        val builder = MessageBuilder().setContent(content)
-        dm(builder.build())
     }
 
     fun dm(embed: MessageEmbed) {
@@ -59,11 +55,7 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
 
     private fun dm(message: Message) {
         author.openPrivateChannel().queue { channel ->
-            channel.sendMessage(message).queue({
-                channel.close()
-            }, {
-                channel.close()
-            })
+            channel.sendMessage(message).queue()
         }
     }
 
@@ -84,14 +76,11 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
         send(MessageBuilder().setEmbed(e), null, null)
     }
 
-    fun embed(block: EmbedBuilder.() -> Unit, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
-        val builder = MessageBuilder()
-                .setEmbed(EmbedBuilder()
-                        //.setColor()
-                        .apply(block)
-                        .build())
+    suspend fun dmUserAsync(user: User, message: String): Message? {
+        val privateChannel = user.openPrivateChannel().await()
+                ?: return null
 
-        send(builder, success, failure)
+        return privateChannel.sendMessage(message).await()
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {

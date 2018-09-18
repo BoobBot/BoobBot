@@ -27,7 +27,7 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         final String messageContent = event.getMessage().getContentRaw();
-        final String mention = event.getGuild().getSelfMember().getAsMention();
+        final String mention = event.getChannelType().isGuild() ? event.getGuild().getSelfMember().getAsMention() : "";
 
         boolean isMentionTrigger = messageContent.startsWith(mention);
         boolean hasPrefix = isMentionTrigger || messageContent.startsWith(prefix);
