@@ -53,3 +53,8 @@ shadowJar {
         include "log4j2.xml"
     }
 }
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
