@@ -12,7 +12,7 @@ class Invite : Command {
 
     override fun execute(ctx: Context) {
         ctx.embed {
-            setColor(Colors.getRndColor())
+            setColor(Colors.rndColor)
             setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)
             setDescription(Formats.LING_MSG)
             setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)

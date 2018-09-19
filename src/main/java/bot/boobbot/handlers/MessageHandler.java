@@ -11,7 +11,6 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import static bot.boobbot.misc.Utils.isDonor;
 
 public class MessageHandler extends ListenerAdapter {
 
@@ -52,7 +51,7 @@ public class MessageHandler extends ListenerAdapter {
         final String commandString = content[0].toLowerCase();
         final String[] args = content.length > 1 ? content[1].split(" +") : new String[0];
 
-        final Command command = Utils.getCommand(commandString);
+        final Command command = Utils.INSTANCE.getCommand(commandString);
 
         if (command == null) {
             return; // TODO Check if mention prefix and call Nekos.getChat?
@@ -63,7 +62,7 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         if (command.getProperties().developerOnly() &&
-                !Constants.OWNERS.contains(event.getAuthor().getIdLong())) { // Is command developer only?
+                !Constants.INSTANCE.getOWNERS().contains(event.getAuthor().getIdLong())) { // Is command developer only?
             return;
         }
 
@@ -83,8 +82,8 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
 
-        if (command.getProperties().donorOnly() && !isDonor(event.getAuthor())) {
-            event.getChannel().sendMessage(Formats.error(
+        if (command.getProperties().donorOnly() && !Utils.INSTANCE.isDonor(event.getAuthor())) {
+            event.getChannel().sendMessage(Formats.INSTANCE.error(
                     " Sorry this command is only available to our Patrons.\n"
                             + event
                             .getJDA()

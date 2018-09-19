@@ -20,7 +20,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
-import static bot.boobbot.misc.Constants.SENTRY_DSN;
 
 
 public class BoobBot {
@@ -34,12 +33,12 @@ public class BoobBot {
 
 
     public static void main(String[] args) throws Exception {
-        Sentry.init(SENTRY_DSN);
+        Sentry.init(Constants.INSTANCE.getSENTRY_DSN());
         log.info("--- BoobBot.jda ---");
         log.info(JDAInfo.VERSION);
 
         isDebug = args.length > 0 && args[0].contains("debug");
-        String token = isDebug ? Constants.DEBUG_TOKEN : Constants.TOKEN;
+        String token = isDebug ? Constants.INSTANCE.getDEBUG_TOKEN() : Constants.INSTANCE.getTOKEN();
 
         if (isDebug) {
             log.warn("Running in debug mode");

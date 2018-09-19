@@ -4,11 +4,11 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 
-@CommandProperties(description = "Pong!")
+@CommandProperties(description = "Pong!", donorOnly = true)
 class Ping : Command {
 
     override fun execute(ctx: Context) {
-        // TODO: Finish
+        ctx.send("What do you want me to say, pong? No you can go fuck yourself~")// TODO: full shard pings
     }
 
 }
