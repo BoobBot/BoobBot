@@ -13,7 +13,7 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
                 Pair("Key", Constants.BB_API_KEY)
         )
 
-        val res = BoobBot.getRequestUtil().get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
+        val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         ctx.embed {
