@@ -20,6 +20,8 @@ public @interface CommandProperties {
 
     boolean developerOnly() default false;
 
+    boolean donorOnly() default false;
+
     boolean nsfw() default false;
 
     boolean enabled() default true;
