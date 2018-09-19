@@ -12,10 +12,14 @@ class RequestUtil {
     private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
     private val httpClient = OkHttpClient()
 
-    inner class PendingRequest(private val request: Request) {
+    inner class PendingRequest(private val request: Request, public var useProxy: Boolean = false) {
 
         fun queue(success: (Response?) -> Unit) {
-            httpClient.newCall(request).enqueue(object : Callback {
+            var client = httpClient
+            if (useProxy){
+                client = client.newBuilder().proxy(Utils.getProxy()).build() // this is needed for ph/rt reqs due to rape-limits
+            }
+            client.newCall(request).enqueue(object : Callback {
 
                 override fun onFailure(call: Call, e: IOException) {
                     BoobBot.log.error("An error occurred during a HTTP request to ${call.request().url()}", e)
@@ -51,22 +55,22 @@ class RequestUtil {
 
     }
 
-    public fun get(url: String, headers: Headers = Headers.of()): PendingRequest {
-        return makeRequest("GET", url, null, headers)
+    public fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean =false): PendingRequest {
+        return makeRequest(useProxy, "GET", url, null, headers)
     }
 
-    public fun post(url: String, body: RequestBody, headers: Headers): PendingRequest {
-        return makeRequest("POST", url, body, headers)
+    public fun post(url: String, body: RequestBody, headers: Headers, useProxy: Boolean = false): PendingRequest {
+        return makeRequest(useProxy, "POST", url, body, headers)
     }
 
-    public fun makeRequest(method: String, url: String, body: RequestBody? = null, headers: Headers): PendingRequest {
+    public fun makeRequest(useProxy: Boolean =false, method: String, url: String, body: RequestBody? = null, headers: Headers): PendingRequest {
         val request = Request.Builder()
                 .method(method.toUpperCase(), body)
                 .header("User-Agent", userAgent)
                 .headers(headers)
                 .url(url)
 
-        return PendingRequest(request.build())
+        return PendingRequest(request.build(),useProxy)
     }
 }
 
