@@ -4,10 +4,14 @@ import bot.boobbot.BoobBot;
 import bot.boobbot.flight.Command;
 import bot.boobbot.flight.Context;
 import bot.boobbot.misc.Constants;
+import bot.boobbot.misc.Formats;
 import bot.boobbot.misc.Utils;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import static bot.boobbot.misc.Utils.isDonor;
 
 public class MessageHandler extends ListenerAdapter {
 
@@ -76,6 +80,19 @@ public class MessageHandler extends ListenerAdapter {
 
         if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_EMBED_LINKS)) {
             event.getChannel().sendMessage("I do not have permission to use embeds, da fuck?").queue();
+            return;
+        }
+
+        if (command.getProperties().donorOnly() && !isDonor(event.getAuthor())) {
+            event.getChannel().sendMessage(Formats.error(
+                    " Sorry this command is only available to our Patrons.\n"
+                            + event
+                            .getJDA()
+                            .asBot()
+                            .getShardManager()
+                            .getEmoteById(475801484282429450L)
+                            .getAsMention()
+                            + " [Stop being a cheap fuck and join today]()")).queue(); // TODO patreon link
             return;
         }
 
