@@ -45,7 +45,7 @@ abstract class SlideShowCommand : AsyncCommand {
         var x = 0
         val msg = ctx.channel.sendMessage("\u200B").complete()
         while (x < 20) {
-            val res = BoobBot.getRequestUtil().get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
+            val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
                     ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
             x++
             msg.editMessage("\u200B")

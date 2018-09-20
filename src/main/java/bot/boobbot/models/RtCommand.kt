@@ -20,7 +20,7 @@ abstract class RtCommand() : AsyncCommand {
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
         }
-        val rt = BoobBot.getRequestUtil().get(
+        val rt = BoobBot.requestUtil.get(
                 "https://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&search=" +
                         (if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(Formats.tag.size)]) +
                         "&thumbsize=big&ordering=mostviewed&page=1",

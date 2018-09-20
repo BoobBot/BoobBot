@@ -10,7 +10,7 @@ abstract class NekoLifeApiCommand(private val category: String) : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
 
-        val res = BoobBot.getRequestUtil().get("https://nekos.life/api/v2/img/$category").await()?.json()
+        val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/$category").await()?.json()
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         ctx.embed {
