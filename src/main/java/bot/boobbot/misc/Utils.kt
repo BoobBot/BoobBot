@@ -2,17 +2,17 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Command
+import com.google.common.collect.Lists
+import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.User
 import okhttp3.Headers
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.util.Arrays
 import java.net.InetSocketAddress
-import org.json.HTTP
-import java.util.Random
-import com.google.common.collect.Lists
 import java.net.Proxy
-
+import java.text.MessageFormat
+import java.time.Instant.now
+import java.util.*
 import javax.imageio.ImageIO
 
 
@@ -37,6 +37,29 @@ class Utils {
             return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], Integer.parseInt(parts[1])))
         }
 
+
+        fun logCommand(message: net.dv8tion.jda.core.entities.Message) =
+                if ((message.isFromType(ChannelType.PRIVATE))) {
+                    val msg = MessageFormat.format(
+                            "{4}: {0} Used {1} on Channel: {2}({3})",
+                            message.author.name,
+                            message.contentRaw,
+                            message.channel.name,
+                            message.channel.id,
+                            now())
+                    BoobBot.log.info(msg)
+                } else {
+                    val msg = MessageFormat.format(
+                            "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
+                            message.author.name,
+                            message.contentRaw,
+                            message.channel.name,
+                            message.channel.id,
+                            message.guild.name,
+                            message.guild.id,
+                            now())
+                    BoobBot.log.info(msg)
+                }
 
 
         fun getCommand(commandName: String): Command? {

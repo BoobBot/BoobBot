@@ -95,6 +95,7 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         try {
+            Utils.Companion.logCommand(event.getMessage());
             command.execute(new Context(trigger, event, args));
         } catch (Exception e) {
             BoobBot.Companion.getLog().error("Command `" + command.getName() + "` encountered an error during execution", e);
