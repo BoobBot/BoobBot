@@ -34,7 +34,7 @@ public class MessageHandler extends ListenerAdapter {
         boolean isMentionTrigger = messageContent.startsWith(mention);
         boolean hasPrefix = isMentionTrigger || messageContent.startsWith(prefix);
 
-        if (!hasPrefix) {
+        if (isMentionTrigger && !messageContent.contains(" ") || !hasPrefix) {
             return;
         }
 
