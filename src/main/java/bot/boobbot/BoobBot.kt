@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
+import java.lang.reflect.Constructor
 import java.lang.reflect.Modifier
 import java.util.*
 
@@ -73,8 +74,7 @@ class BoobBot {
                 }
 
                 try {
-                    val cmd = command.newInstance()
-
+                    val cmd = command.getDeclaredConstructor().newInstance()
                     if (!cmd.hasProperties) {
                         return@forEach log.warn("Command `${cmd.name}` is missing CommandProperties annotation. Will not load.")
                     }
