@@ -8,6 +8,7 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
 import java.awt.Color
 import java.time.Instant
+import java.time.Instant.now
 import java.util.*
 
 
@@ -44,7 +45,8 @@ abstract class RtCommand() : AsyncCommand {
                                     "Url: ${video.getString("url")}",
                             false)
 
-                    .setFooter("Requested by ${ctx.author.name} | ${Formats.now()}", ctx.author.avatarUrl)
+                    .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
+                    .setTimestamp(now())
                     .build()
         }
 
