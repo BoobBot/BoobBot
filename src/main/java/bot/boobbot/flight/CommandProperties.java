@@ -16,8 +16,6 @@ public @interface CommandProperties {
 
     category category() default category.MISC;
 
-    Permission[] botPermissions() default {};
-
     boolean developerOnly() default false;
 
     boolean donorOnly() default false;

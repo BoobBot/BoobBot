@@ -4,7 +4,10 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.future.await
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.entities.Message
 import java.awt.Color
 
 
@@ -42,23 +45,30 @@ abstract class SlideShowCommand : AsyncCommand {
         }
         val headers = createHeaders(Pair("Key", Constants.BB_API_KEY))
 
-        var x = 0
-        val msg = ctx.channel.sendMessage("\u200B").complete()
-        while (x < 20) {
+        val color = Colors.getEffectiveColor(ctx.message)
+        val msg = ctx.channel.sendMessage("\u200B").submit().await()
+
+        // .submit().await() - Asynchronous, doesn't suppress errors
+        // .await()          - Asynchronous, suppresses any errors from Discord/JDA
+
+        for (i in 1 until 21) { // 1-20
             val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
                     ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
-            x++
-            msg.editMessage("\u200B")
-                    .complete()
-                    .editMessage(EmbedBuilder()
-                            .setDescription("$x of 20")
-                            .setColor(Colors.getEffectiveColor(ctx.message)
-                            ).setImage(res.getString("url"))
-                            .build()).queue()
-            Thread.sleep(5000)
-        }
-        ctx.message.delete().reason("no spam").queue(null, null)
-        msg.delete().reason("no spam").queue(null, null)
 
+            editMessage(msg, res.getString("url"), i, color)
+            delay(5000)
+        }
+
+        ctx.message.delete().reason("no spam").submit()
+        msg.delete().reason("no spam").submit()
+    }
+
+    private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
+        m.editMessage(EmbedBuilder()
+                .setDescription("$num of 20")
+                .setColor(color)
+                .setImage(url)
+                .build()
+        ).await()
     }
 }
