@@ -33,6 +33,7 @@ class BoobBot : ListenerAdapter() {
 
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
+        val startTime = System.currentTimeMillis()
 
         var isDebug = false
             private set
