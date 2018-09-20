@@ -45,6 +45,7 @@ dependencies {
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.24.0'
     compile 'io.sentry:sentry-logback:1.7.9'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 
