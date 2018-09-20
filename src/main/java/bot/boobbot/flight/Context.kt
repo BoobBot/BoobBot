@@ -84,7 +84,7 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        channel.sendMessage(message.build()).queue(success, failure)
+        return channel.sendMessage(message.build()).queue(success, failure)
     }
 
 }
