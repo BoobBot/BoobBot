@@ -12,11 +12,11 @@ class RequestUtil {
     private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
     private val httpClient = OkHttpClient()
 
-    inner class PendingRequest(private val request: Request, public var useProxy: Boolean = false) {
+    inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
 
         fun queue(success: (Response?) -> Unit) {
             var client = httpClient
-            if (useProxy){
+            if (useProxy) {
                 client = client.newBuilder().proxy(Utils.getProxy()).build() // this is needed for ph/rt reqs due to rape-limits
             }
             client.newCall(request).enqueue(object : Callback {
@@ -55,22 +55,22 @@ class RequestUtil {
 
     }
 
-    public fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean =false): PendingRequest {
+    fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {
         return makeRequest(useProxy, "GET", url, null, headers)
     }
 
-    public fun post(url: String, body: RequestBody, headers: Headers, useProxy: Boolean = false): PendingRequest {
+    fun post(url: String, body: RequestBody, headers: Headers, useProxy: Boolean = false): PendingRequest {
         return makeRequest(useProxy, "POST", url, body, headers)
     }
 
-    public fun makeRequest(useProxy: Boolean =false, method: String, url: String, body: RequestBody? = null, headers: Headers): PendingRequest {
+    fun makeRequest(useProxy: Boolean = false, method: String, url: String, body: RequestBody? = null, headers: Headers): PendingRequest {
         val request = Request.Builder()
                 .method(method.toUpperCase(), body)
                 .header("User-Agent", userAgent)
                 .headers(headers)
                 .url(url)
 
-        return PendingRequest(request.build(),useProxy)
+        return PendingRequest(request.build(), useProxy)
     }
 }
 
@@ -98,7 +98,7 @@ fun Response.jsonArray(): JSONArray? {
     }
 }
 
-public fun createHeaders(vararg kv: Pair<String, String>): Headers {
+fun createHeaders(vararg kv: Pair<String, String>): Headers {
     val builder = Headers.Builder()
 
     for (header in kv) {

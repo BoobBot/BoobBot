@@ -5,10 +5,6 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import java.text.MessageFormat
-import java.util.function.Predicate
-import java.text.SimpleDateFormat
-import java.text.DateFormat
-import java.util.*
 
 
 /**
@@ -82,7 +78,7 @@ class Formats {
             return MessageFormat.format("*{0}*", text)
         }
 
-        public fun error(text: String): String {
+        fun error(text: String): String {
             return MessageFormat.format("\uD83D\uDEAB {0}", text)
         }
 
@@ -99,5 +95,5 @@ class Formats {
         }
 
 
-}
+    }
 }

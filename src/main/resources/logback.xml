@@ -41,11 +41,10 @@
     </appender>
 
 
-
     <!--Root logger-->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE-AUDIT"/>
-        <appender-ref ref="Sentry" />
+        <appender-ref ref="Sentry"/>
     </root>
 </configuration>

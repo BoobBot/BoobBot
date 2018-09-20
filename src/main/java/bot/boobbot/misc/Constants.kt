@@ -1,6 +1,6 @@
 package bot.boobbot.misc
 
-import java.util.Arrays
+import java.util.*
 
 class Constants {
     companion object {
