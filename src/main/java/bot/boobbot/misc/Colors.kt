@@ -3,11 +3,8 @@ package bot.boobbot.misc
 import de.androidpit.colorthief.ColorThief
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.User
-
-import java.awt.*
-import java.awt.image.BufferedImage
-import java.util.HashMap
-import java.util.Random
+import java.awt.Color
+import java.util.*
 
 object Colors {
     private val BLACK = -0x1000000

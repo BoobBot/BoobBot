@@ -8,6 +8,9 @@ interface Command {
     val properties: CommandProperties
         get() = this.javaClass.getAnnotation(CommandProperties::class.java)
 
+    val hasProperties: Boolean
+        get() = this.javaClass.isAnnotationPresent(CommandProperties::class.java)
+
     fun execute(ctx: Context)
 
 }
