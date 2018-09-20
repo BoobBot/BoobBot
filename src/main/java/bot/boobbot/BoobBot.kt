@@ -88,7 +88,7 @@ class BoobBot {
             }
 
             log.info("Successfully loaded " + commands.size + " commands!")
-            // TODO: Clean, Eval, Slideshow
+            // TODO: Clean, Eval, huh, pornhub, fun com arrays from py ver
         }
 
         fun getCommands(): Map<String, Command> {
