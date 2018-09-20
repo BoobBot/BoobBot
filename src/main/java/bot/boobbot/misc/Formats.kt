@@ -99,10 +99,5 @@ class Formats {
         }
 
 
-    fun now(): String {
-        val dateFormat = SimpleDateFormat("MMMM d yyyy, h:mm:ss a")
-        return dateFormat.format(Date())
-    }
-
 }
 }
