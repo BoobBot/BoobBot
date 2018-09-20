@@ -45,7 +45,7 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
     }
 
     fun waitForMessage(predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent<Message> {
-        return BoobBot.getWaiter().waitForMessage(channel.idLong, author.idLong, predicate, time)
+        return BoobBot.waiter.waitForMessage(channel.idLong, author.idLong, predicate, time)
     }
 
     fun dm(embed: MessageEmbed) {

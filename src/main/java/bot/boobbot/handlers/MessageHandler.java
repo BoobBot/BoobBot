@@ -7,14 +7,13 @@ import bot.boobbot.misc.Constants;
 import bot.boobbot.misc.Formats;
 import bot.boobbot.misc.Utils;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 
 public class MessageHandler extends ListenerAdapter {
 
-    private static String prefix = BoobBot.isDebug() ? "!bb" : "bb";
+    private static String prefix = BoobBot.Companion.isDebug() ? "!bb" : "bb";
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -51,7 +50,7 @@ public class MessageHandler extends ListenerAdapter {
         final String commandString = content[0].toLowerCase();
         final String[] args = content.length > 1 ? content[1].split(" +") : new String[0];
 
-        final Command command = Utils.INSTANCE.getCommand(commandString);
+        final Command command = Utils.Companion.getCommand(commandString);
 
         if (command == null) {
             return; // TODO Check if mention prefix and call Nekos.getChat?
@@ -62,7 +61,7 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         if (command.getProperties().developerOnly() &&
-                !Constants.INSTANCE.getOWNERS().contains(event.getAuthor().getIdLong())) { // Is command developer only?
+                !Constants.Companion.getOWNERS().contains(event.getAuthor().getIdLong())) { // Is command developer only?
             return;
         }
 
@@ -82,8 +81,8 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
 
-        if (command.getProperties().donorOnly() && !Utils.INSTANCE.isDonor(event.getAuthor())) {
-            event.getChannel().sendMessage(Formats.INSTANCE.error(
+        if (command.getProperties().donorOnly() && !Utils.Companion.isDonor(event.getAuthor())) {
+            event.getChannel().sendMessage(Formats.Companion.error(
                     " Sorry this command is only available to our Patrons.\n"
                             + event
                             .getJDA()
@@ -98,7 +97,7 @@ public class MessageHandler extends ListenerAdapter {
         try {
             command.execute(new Context(trigger, event, args));
         } catch (Exception e) {
-            BoobBot.log.error("Command `" + command.getName() + "` encountered an error during execution", e);
+            BoobBot.Companion.getLog().error("Command `" + command.getName() + "` encountered an error during execution", e);
             event.getMessage().addReaction("\uD83D\uDEAB").queue();
         }
     }

@@ -18,7 +18,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         prompt.addReaction("yes:443810942221025280").await()
         prompt.addReaction("no:443810942099390464").await()
 
-        val emote = BoobBot.getWaiter().waitForReaction(prompt.channel.idLong, user.idLong, { reaction ->
+        val emote = BoobBot.waiter.waitForReaction(prompt.channel.idLong, user.idLong, { reaction ->
             reaction.emote.idLong == 443810942221025280L || reaction.emote.idLong == 443810942099390464L
         }, 60000).await()
                 ?: return ctx.send("${user.name} didn't respond") // timeout
@@ -30,7 +30,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
                     Pair("Key", Constants.BB_API_KEY)
             )
 
-            val url = BoobBot.getRequestUtil().get("https://boob.bot/api/v2/img/$endpoint", headers)
+            val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
                     .await()?.json()?.getString("url")
                     ?: return ctx.send("wtf, api down?")
 

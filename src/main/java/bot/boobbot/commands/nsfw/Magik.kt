@@ -23,14 +23,14 @@ class Magik : AsyncCommand {
 
         when (ctx.args[0]) {
             "boobs" -> {
-                val oboobs = BoobBot.getRequestUtil()
+                val oboobs = BoobBot.requestUtil
                         .get("http://api.oboobs.ru/boobs/0/1/random").await()?.jsonArray()
                         ?: return ctx.send("rip some error, press f")
 
                 url = "http://media.oboobs.ru/" + oboobs.getJSONObject(0).getString("preview")
             }
             "ass" -> {
-                val obutts = BoobBot.getRequestUtil()
+                val obutts = BoobBot.requestUtil
                         .get("http://api.obutts.ru/butts/0/1/random").await()?.jsonArray()
                         ?: return ctx.send("rip some error, press f")
 
@@ -41,7 +41,7 @@ class Magik : AsyncCommand {
                         Pair("Key", Constants.BB_API_KEY)
                 )
 
-                val bb = BoobBot.getRequestUtil()
+                val bb = BoobBot.requestUtil
                         .get("https://boob.bot/api/v2/img/penis", headers).await()?.json()
                         ?: return ctx.send("rip some error, press f")
 
@@ -55,7 +55,7 @@ class Magik : AsyncCommand {
             }
         }
 
-        val res = BoobBot.getRequestUtil()
+        val res = BoobBot.requestUtil
                 .get(
                         "https://dankmemer.services/api/magik?avatar1=${URLEncoder.encode(url, Charsets.UTF_8.name())}",
                         createHeaders(Pair("Authorization", Constants.MEMER_IMGEN_KEY))
