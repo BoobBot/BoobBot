@@ -24,7 +24,7 @@ class Help : Command {
                 ctx.selfUser.effectiveAvatarUrl
         )
 
-        builder.setColor(Colors.rndColor)
+        builder.setColor(Colors.getEffectiveColor(ctx.message))
 
         CommandProperties.category.values().forEach { category ->
             val list = commands
@@ -56,7 +56,7 @@ class Help : Command {
         val aliases = if (mappedAliases.isEmpty()) "None" else mappedAliases
 
         val commandHelp = EmbedBuilder()
-                .setColor(Colors.rndColor)
+                .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor("${ctx.selfUser.name} Command Info",
                         ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
                         ctx.selfUser.effectiveAvatarUrl)
