@@ -43,7 +43,7 @@ class Help : Command {
         }
 
         if (ctx.args[0].toLowerCase() == "--dm") {
-            ctx.message.addReaction("\uD83D\uDCEC").queue(null,null)
+            ctx.message.addReaction("\uD83D\uDCEC").queue(null, null)
             return ctx.dm(builder.build())
 
         }
@@ -70,7 +70,7 @@ class Help : Command {
 
         if (ctx.args.size >= 2 && ctx.args[1].toLowerCase() == "--dm") {
             ctx.dm(commandHelp.build())
-            ctx.message.addReaction("\uD83D\uDCEC").queue(null,null)
+            ctx.message.addReaction("\uD83D\uDCEC").queue(null, null)
         } else {
             ctx.embed(commandHelp.build())
         }

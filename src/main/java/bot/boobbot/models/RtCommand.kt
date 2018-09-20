@@ -7,7 +7,6 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
 import java.awt.Color
-import java.time.Instant
 import java.time.Instant.now
 import java.util.*
 
