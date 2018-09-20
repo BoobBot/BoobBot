@@ -18,6 +18,10 @@ public class MessageHandler extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
+        if (!BoobBot.Companion.isReady()) {
+            return;
+        }
+
         if (event.getAuthor().isFake() || event.getAuthor().isBot()) {
             return;
         }
