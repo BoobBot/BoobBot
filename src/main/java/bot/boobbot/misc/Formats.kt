@@ -9,6 +9,9 @@ import net.dv8tion.jda.core.entities.User
 
 import java.text.MessageFormat
 import java.util.function.Predicate
+import java.text.SimpleDateFormat
+import java.text.DateFormat
+import java.util.*
 
 
 /**
@@ -106,4 +109,10 @@ object Formats {
         val ID = CharMatcher.DIGIT.retainFrom(text)
         return java.lang.Long.parseLong(ID)
     }
+
+    fun now(): String {
+        val dateFormat = SimpleDateFormat("MMMM d yyyy, h:mm:ss a")
+        return dateFormat.format(Date())
+    }
+
 }
