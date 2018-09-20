@@ -72,7 +72,7 @@ public class MessageHandler extends ListenerAdapter {
 
         if (command.getProperties().nsfw() && event.getChannelType().isGuild() &&
                 !event.getTextChannel().isNSFW()) {
-            event.getChannel().sendMessage("This isn't a NSFW channel you whore.").queue();
+            event.getChannel().sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`").queue();
             return;
         }
 
