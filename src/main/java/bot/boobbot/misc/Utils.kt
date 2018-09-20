@@ -6,7 +6,10 @@ import com.google.common.collect.Lists
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.User
 import okhttp3.Headers
+import org.json.JSONObject
 import java.awt.image.BufferedImage
+import java.io.BufferedReader
+import java.io.File
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -23,6 +26,10 @@ class Utils {
             return member.roles.any { r -> r.idLong == 440542799658483713L }
         }
 
+        fun getRandomFunString(key: String): String {
+            val jsonObj = JSONObject(File(BoobBot::class.java.classLoader.getResource("fun.json").file).bufferedReader().use { it.readText() })
+            return jsonObj.getJSONArray(key).get(Random().nextInt(jsonObj.getJSONArray(key).length())).toString()
+        }
 
         fun getProxy(): Proxy {
             val ps = Lists.newArrayList(
