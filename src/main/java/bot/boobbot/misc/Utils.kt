@@ -21,27 +21,36 @@ import javax.imageio.ImageIO
 
 class Utils {
     companion object {
+        private val rand = Random()
+
+        private val ips = Arrays.asList(
+                "5.231.237.168:3213",
+                "94.249.224.97:2543",
+                "185.164.57.91:4012",
+                "185.164.57.144:9749",
+                "185.164.57.70:5756"
+        )
+
+        private val funJson = JSONObject(
+                File(BoobBot::class.java.classLoader.getResource("fun.json").file)
+                        .bufferedReader()
+                        .use { it.readText() }
+        )
+
         fun isDonor(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
             return member.roles.any { r -> r.idLong == 440542799658483713L }
         }
 
         fun getRandomFunString(key: String): String {
-            val jsonObj = JSONObject(File(BoobBot::class.java.classLoader.getResource("fun.json").file).bufferedReader().use { it.readText() })
-            return jsonObj.getJSONArray(key).get(Random().nextInt(jsonObj.getJSONArray(key).length())).toString()
+            val arr = funJson.getJSONArray(key)
+            return arr.getString(rand.nextInt(arr.length()))
         }
 
         fun getProxy(): Proxy {
-            val ps = Lists.newArrayList(
-                    "5.231.237.168:3213",
-                    "94.249.224.97:2543",
-                    "185.164.57.91:4012",
-                    "185.164.57.144:9749",
-                    "185.164.57.70:5756")
-            val rand = Random()
-            val proxy = ps[rand.nextInt(ps.size)]
+            val proxy = ips[rand.nextInt(ips.size)]
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
-            return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], Integer.parseInt(parts[1])))
+            return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], parts[1].toInt()))
         }
 
 
