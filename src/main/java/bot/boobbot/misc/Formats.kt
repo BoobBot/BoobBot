@@ -97,5 +97,12 @@ class Formats {
         fun clean(text: String): String {
             return text.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
         }
+
+
+    fun now(): String {
+        val dateFormat = SimpleDateFormat("MMMM d yyyy, h:mm:ss a")
+        return dateFormat.format(Date())
     }
+
+}
 }
