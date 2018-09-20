@@ -8,7 +8,7 @@ import bot.boobbot.misc.*
 import java.awt.Color
 import java.net.URLEncoder
 
-@CommandProperties(description = "Super freaky porn")
+@CommandProperties(description = "Super freaky porn <:p_:475801484282429450>", nsfw = true, guildOnly = true, donorOnly = true, category = CommandProperties.category.GENERAL)
 class Magik : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
