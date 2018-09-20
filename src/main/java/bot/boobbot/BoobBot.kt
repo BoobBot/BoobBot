@@ -14,21 +14,33 @@ import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
+import net.dv8tion.jda.core.events.ReadyEvent
+import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
 
 
-class BoobBot {
+class BoobBot : ListenerAdapter() {
+
+    override fun onReady(event: ReadyEvent) {
+        if (shardManager.shardsRunning == shardManager.shardsTotal && !isReady) {
+            isReady = true
+            log.info("All shards ready!")
+        }
+    }
 
     companion object {
-        var log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
+        val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
 
         var isDebug = false
             private set
 
         lateinit var shardManager: ShardManager
+            private set
+
+        var isReady = false
             private set
 
         private val commands = HashMap<String, Command>()
@@ -56,7 +68,7 @@ class BoobBot {
 
             shardManager = DefaultShardManagerBuilder()
                     .setGame(Game.playing("bbhelp | bbinvite"))
-                    .addEventListeners(MessageHandler(), EventHandler(), waiter)
+                    .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                     .setToken(token)
                     .setShardsTotal(-1)
                     .build()
