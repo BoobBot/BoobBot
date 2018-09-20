@@ -4,7 +4,6 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
 import java.time.Instant
 
 @CommandProperties(description = "Seems you don't discord.", aliases = ["howto"])

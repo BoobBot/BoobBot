@@ -8,7 +8,6 @@ import net.dv8tion.jda.core.entities.User
 import okhttp3.Headers
 import org.json.JSONObject
 import java.awt.image.BufferedImage
-import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.net.InetSocketAddress
