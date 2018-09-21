@@ -5,9 +5,23 @@ import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.EventWaiter
+import bot.boobbot.misc.Formats.Companion.getReadyFormat
+import bot.boobbot.misc.GuildMusicManager
 import bot.boobbot.misc.RequestUtil
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
+import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
+import io.ktor.server.netty.*
+import io.ktor.routing.*
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.response.*
+import io.ktor.server.engine.*
 import io.sentry.Sentry
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
@@ -20,6 +34,7 @@ import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 
 class BoobBot : ListenerAdapter() {
@@ -27,11 +42,22 @@ class BoobBot : ListenerAdapter() {
     override fun onReady(event: ReadyEvent) {
         if (shardManager.shardsRunning == shardManager.shardsTotal && !isReady) {
             isReady = true
-            log.info("All shards ready!")
+            // health check for status page
+            embeddedServer(Netty, 8008) {
+                routing {
+                    get("/health") {
+                        call.respondText("{health: ok, ping: ${shardManager.averagePing}}", ContentType.Application.Json)
+                    }
+                }
+            }.start(wait = false)
+            log.info(getReadyFormat(event.jda, home))
         }
     }
 
     companion object {
+        lateinit var playerManager: AudioPlayerManager
+        lateinit var musicManagers: Map<String, GuildMusicManager>
+
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 
@@ -56,6 +82,16 @@ class BoobBot : ListenerAdapter() {
         @JvmStatic
         fun main(args: Array<String>) {
             Sentry.init(Constants.SENTRY_DSN)
+            playerManager = DefaultAudioPlayerManager()
+            AudioSourceManagers.registerRemoteSources(playerManager)
+            playerManager.registerSourceManager(YoutubeAudioSourceManager())
+           // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
+            //playerManager.registerSourceManager(RedTubeAudioSourceManager())
+            playerManager.configuration.opusEncodingQuality = 10
+            playerManager
+                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.HIGH
+
+            musicManagers = ConcurrentHashMap()
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
 
@@ -69,6 +105,7 @@ class BoobBot : ListenerAdapter() {
 
             shardManager = DefaultShardManagerBuilder()
                     .setGame(Game.playing("bbhelp | bbinvite"))
+                    .setAudioSendFactory(NativeAudioSendFactory())
                     .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                     .setToken(token)
                     .setShardsTotal(-1)
