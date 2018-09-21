@@ -94,7 +94,7 @@ public class MessageHandler extends ListenerAdapter {
                             .getShardManager()
                             .getEmoteById(475801484282429450L)
                             .getAsMention()
-                            + " [Stop being a cheap fuck and join today]()")).queue(); // TODO patreon link
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")).queue();
             return;
         }
 
