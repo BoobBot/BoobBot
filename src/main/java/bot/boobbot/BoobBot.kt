@@ -50,7 +50,7 @@ class BoobBot : ListenerAdapter() {
                     }
                 }
             }.start(wait = false)
-            log.info(getReadyFormat(event.jda, home))
+            log.info(getReadyFormat())
         }
     }
 
