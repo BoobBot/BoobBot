@@ -15,7 +15,7 @@ import java.time.Instant
 class Help : Command {
 
     override fun execute(ctx: Context) {
-        val commands = BoobBot.getCommands().values
+        val commands = BoobBot.commands.values
         val builder = EmbedBuilder()
 
         builder.setAuthor(

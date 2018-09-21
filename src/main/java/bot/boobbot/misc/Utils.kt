@@ -78,7 +78,7 @@ class Utils {
 
 
         fun getCommand(commandName: String): Command? {
-            val commands = BoobBot.getCommands()
+            val commands = BoobBot.commands
             return commands[commandName]
                     ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
 

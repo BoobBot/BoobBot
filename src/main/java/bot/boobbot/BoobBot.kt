@@ -55,9 +55,6 @@ class BoobBot : ListenerAdapter() {
     }
 
     companion object {
-        lateinit var playerManager: AudioPlayerManager
-        lateinit var musicManagers: Map<String, GuildMusicManager>
-
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 
@@ -70,9 +67,11 @@ class BoobBot : ListenerAdapter() {
         var isReady = false
             private set
 
-        private val commands = HashMap<String, Command>()
+        val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
+        val playerManager = DefaultAudioPlayerManager()
+        val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
 
         val home: Guild?
             get() = shardManager.getGuildById(Constants.HOME_GUILD)
@@ -82,7 +81,6 @@ class BoobBot : ListenerAdapter() {
         @JvmStatic
         fun main(args: Array<String>) {
             Sentry.init(Constants.SENTRY_DSN)
-            playerManager = DefaultAudioPlayerManager()
             AudioSourceManagers.registerRemoteSources(playerManager)
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
            // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
@@ -91,7 +89,6 @@ class BoobBot : ListenerAdapter() {
             playerManager
                     .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.HIGH
 
-            musicManagers = ConcurrentHashMap()
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
 
@@ -140,8 +137,15 @@ class BoobBot : ListenerAdapter() {
             // TODO: Eval
         }
 
-        fun getCommands(): Map<String, Command> {
-            return commands
+        public fun getMusicManager(g: Guild): GuildMusicManager {
+            val manager = musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
+            val audioManager = g.audioManager
+
+            if (audioManager.sendingHandler == null) {
+                audioManager.sendingHandler = manager
+            }
+
+            return manager
         }
 
     }
