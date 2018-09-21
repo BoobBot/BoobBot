@@ -1,5 +1,6 @@
 package bot.boobbot.misc
 
+import bot.boobbot.BoobBot
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.Permission
@@ -30,36 +31,40 @@ class Formats {
                 DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PAYPAL_EMOTE)
         val tag = arrayOf("Amateur", "Anal Masturbation", "Anal Sex", "Animated", "Asian", "Bareback", "Bathroom", "BBW", "Behind the Scenes", "Big Ass", "Big Cock", "Big Tits", "Bikini", "Bisexual", "Black-haired", "Blonde", "Blowjob", "Bondage", "Boots", "Brunette", "Bukkake", "Car", "Cartoon", "Caucasian", "Celebrity", "CFNM", "Chubby", "Compilation", "Couple", "Cream Pie", "Cum Shot", "Cum Swap", "Deepthroat", "Domination", "Double Penetration", "Ebony", "Facial", "Fat", "Female-Friendly", "Femdom", "Fetish", "Fisting", "Footjob", "Funny", "Gagging", "Gangbang", "Gay", "Gay Couple", "Gay Group Sex", "German", "Glamour", "Glasses", "Glory Hole", "Granny", "Group Sex", "Gym", "Hairy", "Handjob", "Hentai", "High Heels", "Hospital", "Indian", "Interracial", "Japanese", "Kissing", "Latex", "Latin", "Lesbian", "Licking Vagina", "Lingerie", "Maid", "Massage", "Masturbation", "Mature", "Midget", "MILF", "Muscular", "Nurse", "Office", "Oral Sex", "Oriental", "Outdoor", "Pantyhose", "Party", "Peeing", "Piercings", "Police", "Pool", "Pornstar", "Position 69", "POV", "Pregnant", "Public", "Redhead", "Rimming", "Romantic", "Russian", "School", "Secretary", "Shaved", "Shemale", "Skinny", "Small Tits", "Solo Gay", "Solo Girl", "Solo Male", "Spanking", "Spectacular", "Spycam", "Squirting", "Stockings", "Strap-on", "Striptease", "Swallow", "Tattoos", "Teen", "Threesome", "Titfuck", "Toilet", "Toys", "Tribbing", "Uniform", "Vaginal Masturbation", "Vaginal Sex", "Vintage", "Wanking", "Webcam", "Young & Old")
 
-        fun getReadyFormat(jda: JDA, HOME: Guild?): String {
+        fun getReadyFormat(): String {
+            val shardManager = BoobBot.shardManager
+            val jda = shardManager.shards[0]
+            val home = BoobBot.home
+
             return MessageFormat.format(
-                    "Logging in\r\n{0}\r\n"
-                            + "Oauth link:\r\n{1}\r\n"
-                            + "JDA Version:\r\n{13}\n\r"
-                            + "Docs halp:\r\nhttp://home.dv8tion.net:8080/job/JDA/javadoc/\r\n"
-                            + "Logged in as:\r\n{2}({3})\r\n"
-                            + "Guilds:\r\n{4}\r\n"
-                            + "Shards:\r\n{5}\r\n"
-                            + "Users:\r\n{6}\r\n"
-                            + "Bots:\r\n{7}\r\n"
-                            + "Total Users:\r\n{8}\r\n"
-                            + "Home Guild:\r\n{9}\r\n"
-                            + "Users:\r\n{10}\r\n"
-                            + "Bots:\r\n{11}\r\n"
-                            + "Total Users:\r\n{12}",
+                    "Logging in {0}\n"
+                            + "Oauth link: {1}\n"
+                            + "JDA Version: {2}\n"
+                            + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
+                            + "Logged in as: {3} ({4})\n"
+                            + "Guilds: {5}\n"
+                            + "Shards: {6}\n"
+                            + "Users: {7}\n"
+                            + "Bots: {8}\n"
+                            + "Total Users: {9}\n"
+                            + "Home Guild: {10}\n"
+                            + "Users: {11}\n"
+                            + "Bots: {12}\n"
+                            + "Total Users: {13}",
                     BOOT_BANNER,
                     jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                    JDAInfo.VERSION,
                     jda.selfUser.name,
                     jda.selfUser.id,
-                    jda.asBot().shardManager.guilds.toTypedArray().size,
-                    jda.asBot().shardManager.shardsTotal,
-                    jda.asBot().shardManager.users.parallelStream().filter { user -> !user.isBot }.toArray().size,
-                    jda.asBot().shardManager.users.parallelStream().filter { it.isBot }.toArray().size,
-                    jda.asBot().shardManager.users.toTypedArray().size,
-                    HOME?.name,
-                    HOME?.members?.stream()?.filter { user -> !user.user.isBot }?.toArray()?.size,
-                    HOME?.members?.stream()?.filter { user -> user.user.isBot }?.toArray()?.size,
-                    HOME?.members?.toTypedArray()?.size,
-                    JDAInfo.VERSION)
+                    shardManager.guilds.size,
+                    shardManager.shardsTotal,
+                    shardManager.users.filter { !it.isBot }.size,
+                    shardManager.users.filter { it.isBot }.size,
+                    shardManager.users.size,
+                    home?.name,
+                    home?.members?.filter { !it.user.isBot }?.size,
+                    home?.members?.filter { it.user.isBot }?.size,
+                    home?.members?.size)
         }
 
         fun codeBox(text: String, lang: String): String {
