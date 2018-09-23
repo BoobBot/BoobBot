@@ -13,7 +13,7 @@ import bot.boobbot.misc.Utils.Companion.getRandomMoan
 @CommandProperties(description = "moans")
 class moan : Command {
 
-
+//TODO voice checks
     override fun execute(ctx: Context) {
         val musicManager = getMusicManager(ctx.message.guild)
         connectToVoiceChannel(ctx.message)
