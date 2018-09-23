@@ -1,10 +1,12 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.flight.Command
-import com.google.common.collect.Lists
 import net.dv8tion.jda.core.entities.ChannelType
+import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.User
+import net.dv8tion.jda.core.entities.VoiceChannel
 import okhttp3.Headers
 import org.json.JSONObject
 import java.awt.image.BufferedImage
@@ -30,8 +32,8 @@ class Utils {
                 "185.164.57.70:5756"
         )
 
-        private val funJson = JSONObject(
-                File(BoobBot::class.java.classLoader.getResource("fun.json").file)
+        private val jsonArrays = JSONObject(
+                File(BoobBot::class.java.classLoader.getResource("arrays.json").file)
                         .bufferedReader()
                         .use { it.readText() }
         )
@@ -42,14 +44,40 @@ class Utils {
         }
 
         fun getRandomFunString(key: String): String {
-            val arr = funJson.getJSONArray(key)
+            val arr = jsonArrays.getJSONArray(key)
             return arr.getString(rand.nextInt(arr.length()))
+        }
+
+        fun getRandomMoan(): File {
+            val arr = jsonArrays.getJSONArray("moan")
+            val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
+            return File(BoobBot::class.java.classLoader.getResource("moan/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
         }
 
         fun getProxy(): Proxy {
             val proxy = ips[rand.nextInt(ips.size)]
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
             return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], parts[1].toInt()))
+        }
+
+        fun disconnectFromVoice(channel: VoiceChannel) {
+            getMusicManager(channel.guild).player.stopTrack()
+            getMusicManager(channel.guild).player.isPaused = false
+            getMusicManager(channel.guild).player.destroy()
+            channel.guild.audioManager.sendingHandler = null
+            channel.guild.audioManager.closeAudioConnection()
+        }
+
+        internal fun connectToVoiceChannel(message: Message) {
+            if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
+                message
+                        .guild
+                        .audioManager.sendingHandler = getMusicManager(message.guild)
+                message
+                        .guild
+                        .audioManager
+                        .openAudioConnection(message.member.voiceState.channel)
+            }
         }
 
 
