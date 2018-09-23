@@ -61,22 +61,12 @@ class Utils {
         }
 
         fun disconnectFromVoice(channel: VoiceChannel) {
-            getMusicManager(channel.guild).player.stopTrack()
-            getMusicManager(channel.guild).player.isPaused = false
-            getMusicManager(channel.guild).player.destroy()
-            channel.guild.audioManager.sendingHandler = null
-            channel.guild.audioManager.closeAudioConnection()
+            getMusicManager(channel.guild).shutdown()
         }
 
         internal fun connectToVoiceChannel(message: Message) {
             if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
-                message
-                        .guild
-                        .audioManager.sendingHandler = getMusicManager(message.guild)
-                message
-                        .guild
-                        .audioManager
-                        .openAudioConnection(message.member.voiceState.channel)
+                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
             }
         }
 
