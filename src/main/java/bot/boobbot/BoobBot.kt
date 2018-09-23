@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
 
 
 class BoobBot : ListenerAdapter() {
@@ -56,6 +57,8 @@ class BoobBot : ListenerAdapter() {
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
+
+        val executorPool = Executors.newSingleThreadExecutor()
 
         var isDebug = false
             private set

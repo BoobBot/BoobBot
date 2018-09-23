@@ -20,7 +20,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     override fun noMatches() {
         //todo handle this when full audio added
-        }
+    }
 
 
     override fun loadFailed(e: FriendlyException) {
