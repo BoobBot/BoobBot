@@ -11,7 +11,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
 
     override fun trackLoaded(track: AudioTrack) {
-        BoobBot.log.info(track.toString())
+        track.userData = ctx.guild
         musicManager.addToQueue(track)
     }
 
@@ -19,12 +19,12 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     }
 
     override fun noMatches() {
-        BoobBot.log.error("no/")
+        //todo handle this when full audio added
         }
 
 
     override fun loadFailed(e: FriendlyException) {
-        BoobBot.log.error("ded", e)
+        BoobBot.log.error("wot", e) //should not happen rn all local tracks
     }
 
 

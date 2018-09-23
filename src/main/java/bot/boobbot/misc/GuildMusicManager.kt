@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
 import net.dv8tion.jda.core.audio.AudioSendHandler
+import net.dv8tion.jda.core.entities.Guild
 
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
@@ -46,7 +47,6 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         lastTrack = track
-
         if (!endReason.mayStartNext) {
             return
         }
@@ -60,7 +60,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
                 queue.add(cloned)
                 playNext()
             }
-            else -> playNext()
+            else ->   shutdown() //there is no next //playNext()
         }
     }
 
