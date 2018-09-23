@@ -1,12 +1,12 @@
 package bot.boobbot.misc
 
+import bot.boobbot.BoobBot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
 import net.dv8tion.jda.core.audio.AudioSendHandler
-import net.dv8tion.jda.core.entities.User
 
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
@@ -88,5 +88,19 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
 
     public enum class RepeatMode {
         SINGLE, ALL, NONE
+    }
+
+    public fun shutdown() {
+        player.stopTrack()
+        player.destroy()
+
+        val guild = BoobBot.shardManager.getGuildById(guildId)
+
+        if (guild != null) {
+            guild.audioManager.sendingHandler = null
+            guild.audioManager.closeAudioConnection()
+        }
+
+        BoobBot.musicManagers.remove(guildId)
     }
 }
