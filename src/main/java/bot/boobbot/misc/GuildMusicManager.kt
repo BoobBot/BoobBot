@@ -60,7 +60,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
                 queue.add(cloned)
                 playNext()
             }
-            else ->   shutdown() //there is no next //playNext()
+            else -> shutdown() //there is no next //playNext()
         }
     }
 
@@ -98,9 +98,16 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
 
         if (guild != null) {
             guild.audioManager.sendingHandler = null
-            guild.audioManager.closeAudioConnection()
+            disconnect()
         }
 
         BoobBot.musicManagers.remove(guildId)
+    }
+
+    public fun disconnect() {
+        val guild = BoobBot.shardManager.getGuildById(guildId) ?: return
+        BoobBot.executorPool.submit {
+            guild.audioManager.closeAudioConnection()
+        }
     }
 }

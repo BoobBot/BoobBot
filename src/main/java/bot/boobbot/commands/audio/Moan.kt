@@ -18,7 +18,6 @@ class Moan : Command {
         val musicManager = getMusicManager(ctx.message.guild)
         connectToVoiceChannel(ctx.message)
         playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
-
     }
 
 }
