@@ -13,6 +13,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import io.ktor.server.netty.*
 import io.ktor.routing.*
@@ -80,7 +81,7 @@ class BoobBot : ListenerAdapter() {
         fun main(args: Array<String>) {
             Sentry.init(Constants.SENTRY_DSN)
             AudioSourceManagers.registerRemoteSources(playerManager)
-            playerManager.registerSourceManager(YoutubeAudioSourceManager())
+            playerManager.registerSourceManager(LocalAudioSourceManager())
            // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
             //playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 10

@@ -64,7 +64,7 @@ class Utils {
             getMusicManager(channel.guild).shutdown()
         }
 
-        internal fun connectToVoiceChannel(message: Message) {
+        fun connectToVoiceChannel(message: Message) {
             if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
                 message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
             }
