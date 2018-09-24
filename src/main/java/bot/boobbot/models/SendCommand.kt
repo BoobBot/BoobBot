@@ -15,7 +15,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         }
 
         if (user.isBot) {
-            return ctx.send("Bots can't appreciate nudes.")
+            return ctx.send("Bots can't appreciate $category, whore.")
         }
 
         val prompt = ctx.dmUserAsync(user, "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?")
