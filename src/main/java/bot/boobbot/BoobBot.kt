@@ -25,6 +25,7 @@ import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class BoobBot : ListenerAdapter() {
@@ -50,7 +51,7 @@ class BoobBot : ListenerAdapter() {
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-
+        var Scheduler = Executors.newSingleThreadScheduledExecutor()
         val home: Guild?
             get() = shardManager.getGuildById(Constants.HOME_GUILD)
 

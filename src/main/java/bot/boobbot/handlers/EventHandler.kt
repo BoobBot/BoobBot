@@ -3,6 +3,8 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
+import bot.boobbot.misc.Utils
+import bot.boobbot.misc.Utils.Companion.autoAvatar
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.response.respondText
@@ -24,6 +26,7 @@ import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
 import java.awt.Color
 import java.time.Instant.now
+import java.util.concurrent.TimeUnit
 
 
 class EventHandler : ListenerAdapter() {
@@ -42,6 +45,7 @@ class EventHandler : ListenerAdapter() {
 
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
+            BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 0, 2, TimeUnit.HOURS)
             self = event.jda.selfUser // set self
             // health check for status page
             embeddedServer(Netty, 8008) {

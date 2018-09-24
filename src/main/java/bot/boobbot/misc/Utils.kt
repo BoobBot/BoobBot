@@ -3,10 +3,8 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.flight.Command
-import net.dv8tion.jda.core.entities.ChannelType
-import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.entities.User
-import net.dv8tion.jda.core.entities.VoiceChannel
+import net.dv8tion.jda.core.entities.*
+import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
 import org.json.JSONObject
 import java.awt.image.BufferedImage
@@ -52,6 +50,12 @@ class Utils {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
             return File(BoobBot::class.java.classLoader.getResource("moan/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
+        }
+
+        fun getRandomAvatar(): File {
+            val arr = jsonArrays.getJSONArray("avatar")
+            val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
+            return File(BoobBot::class.java.classLoader.getResource("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
         }
 
         fun getProxy(): Proxy {
@@ -125,5 +129,17 @@ class Utils {
                 else -> String.format("%02d:%02d", minutes, seconds)
             }
         }
+
+        fun autoAvatar() {
+            val icon = Icon.from(getRandomAvatar())
+            val gm = GuildManager(BoobBot.home)
+            gm.setIcon(icon).queue()
+            BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
+            BoobBot.log.info("Setting New Guild icon/Avatar")
+        }
+
+        fun auto(autoAvatar: Unit): Runnable = Runnable { autoAvatar() }
     }
 }
+
+
