@@ -4,35 +4,24 @@ import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.*
-import bot.boobbot.misc.Formats.Companion.getReadyFormat
-import bot.boobbot.misc.Utils.Companion.getRandomMoan
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
-import io.ktor.server.netty.*
-import io.ktor.routing.*
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.server.engine.*
 import io.sentry.Sentry
+import io.github.cdimascio.dotenv.dotenv
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
-import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
-import java.text.MessageFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -65,6 +54,12 @@ class BoobBot : ListenerAdapter() {
         val home: Guild?
             get() = shardManager.getGuildById(Constants.HOME_GUILD)
 
+        val dotenv = dotenv {
+            filename = "bb.env"
+            ignoreIfMalformed = true
+            ignoreIfMissing = false
+        }
+
 
         @Throws(Exception::class)
         @JvmStatic
@@ -82,7 +77,8 @@ class BoobBot : ListenerAdapter() {
 
             isDebug = args.isNotEmpty() && args[0].contains("debug")
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
-
+            if (!isDebug){
+                Sentry.init(Constants.SENTRY_DSN)}
             if (isDebug) {
                 log.warn("Running in debug mode")
                 log.level = Level.DEBUG
