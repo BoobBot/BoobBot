@@ -11,7 +11,7 @@ class Constants {
                 248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L
         )
 
-        var TOKEN =  BoobBot.dotenv["MY_ENV_VAR1TOKEN"] ?: ""
+        var TOKEN =  BoobBot.dotenv["TOKEN"] ?: ""
 
         val DEBUG_TOKEN =  BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
 
