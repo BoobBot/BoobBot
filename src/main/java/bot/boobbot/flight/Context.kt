@@ -16,14 +16,14 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
     val message: Message = event.message
 
     val guild: Guild? = event.guild
-    val audioManager: AudioManager? = event.guild.audioManager
+    val audioManager: AudioManager? = guild?.audioManager
 
-    val selfMember: Member? = event.guild.selfMember
     val selfUser: SelfUser = event.jda.selfUser
+    val selfMember: Member? = guild?.selfMember
 
-    val member: Member? = event.member
     val author: User = event.author
-    val voiceState: VoiceState? = event.member.voiceState
+    val member: Member? = event.member
+    val voiceState: VoiceState? = member?.voiceState
 
     val channel: MessageChannel = event.channel
     val textChannel: TextChannel? = event.textChannel

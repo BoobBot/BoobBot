@@ -6,7 +6,6 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import java.awt.Color
 import java.time.Instant.now
 import java.util.*

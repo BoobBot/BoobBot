@@ -33,7 +33,9 @@ public class MessageHandler extends ListenerAdapter {
         }
 
         final String messageContent = event.getMessage().getContentRaw();
-        final String mention = event.getChannelType().isGuild() ? event.getGuild().getSelfMember().getAsMention() : "";
+        final String mention = event.getChannelType().isGuild()
+                ? event.getGuild().getSelfMember().getAsMention()
+                : event.getJDA().getSelfUser().getAsMention();
 
         boolean isMentionTrigger = messageContent.startsWith(mention);
         boolean hasPrefix = isMentionTrigger || messageContent.startsWith(prefix);
@@ -80,7 +82,7 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
 
-        if (!event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.getChannelType().isGuild() && !event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_EMBED_LINKS)) {
             event.getChannel().sendMessage("I do not have permission to use embeds, da fuck?").queue();
             return;
         }
