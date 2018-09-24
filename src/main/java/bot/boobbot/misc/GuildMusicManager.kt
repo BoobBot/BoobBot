@@ -34,7 +34,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     public fun playNext() {
         if (queue.size > 0) {
             player.startTrack(queue[0], false)
-        } // Perhaps do something here if the queue is finished?
+        }
     }
 
     // ----------------------------------------------
@@ -60,7 +60,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
                 queue.add(cloned)
                 playNext()
             }
-            else -> shutdown() //there is no next //playNext()
+            else ->  shutdown() //there is no next playNext()
         }
     }
 

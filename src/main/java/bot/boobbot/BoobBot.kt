@@ -32,6 +32,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
+import java.text.MessageFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -39,20 +40,6 @@ import java.util.concurrent.Executors
 
 class BoobBot : ListenerAdapter() {
 
-    override fun onReady(event: ReadyEvent) {
-        if (shardManager.shardsRunning == shardManager.shardsTotal && !isReady) {
-            isReady = true
-            // health check for status page
-            embeddedServer(Netty, 8008) {
-                routing {
-                    get("/health") {
-                        call.respondText("{health: ok, ping: ${shardManager.averagePing}}", ContentType.Application.Json)
-                    }
-                }
-            }.start(wait = false)
-            log.info(getReadyFormat())
-        }
-    }
 
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
@@ -67,7 +54,7 @@ class BoobBot : ListenerAdapter() {
             private set
 
         var isReady = false
-            private set
+            internal set
 
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
@@ -82,7 +69,6 @@ class BoobBot : ListenerAdapter() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            Sentry.init(Constants.SENTRY_DSN)
             AudioSourceManagers.registerRemoteSources(playerManager)
             playerManager.registerSourceManager(LocalAudioSourceManager())
            // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
