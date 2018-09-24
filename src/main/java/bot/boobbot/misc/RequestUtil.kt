@@ -13,8 +13,10 @@ internal class LoggingInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        BoobBot.log.info("REQUEST INFO", request.toString())
-        return chain.proceed(request)
+        BoobBot.log.info(request.toString())
+        val response = chain.proceed(request)
+        BoobBot.log.info(response.toString())
+        return response
     }
 }
 class RequestUtil {
