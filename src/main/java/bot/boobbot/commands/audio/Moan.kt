@@ -8,9 +8,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.AudioLoader
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils.Companion.connectToVoiceChannel
-
 import bot.boobbot.misc.Utils.Companion.getRandomMoan
-import bot.boobbot.misc.await
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.utils.PermissionUtil
 
@@ -18,16 +16,16 @@ import net.dv8tion.jda.core.utils.PermissionUtil
 class Moan : Command {
 
     override fun execute(ctx: Context) {
-    if(getMusicManager(ctx.message.guild).player.playingTrack != null){
-        return ctx.message.channel.sendMessage(Formats.error("I am already playing, go away!")).queue()
-    }
+        if (getMusicManager(ctx.message.guild).player.playingTrack != null) {
+            return ctx.message.channel.sendMessage(Formats.error("I am already playing, go away!")).queue()
+        }
 
-    if (!ctx.message.member.voiceState.inVoiceChannel()) {
-        return ctx.message.channel.sendMessage(Formats.error("No whore, You must join a voice channel to use the command.")).queue()
-    }
-    if ( !PermissionUtil.checkPermission( ctx.message.member.voiceState.channel, ctx.selfMember, Permission.VOICE_CONNECT) ) {
-        return ctx.message.channel.sendMessage(Formats.error("No slut, I don't have permissions to connect. fucking fix it!")).queue()
-    }
+        if (!ctx.message.member.voiceState.inVoiceChannel()) {
+            return ctx.message.channel.sendMessage(Formats.error("No whore, You must join a voice channel to use the command.")).queue()
+        }
+        if (!PermissionUtil.checkPermission(ctx.message.member.voiceState.channel, ctx.selfMember, Permission.VOICE_CONNECT)) {
+            return ctx.message.channel.sendMessage(Formats.error("No slut, I don't have permissions to connect. fucking fix it!")).queue()
+        }
 
         val musicManager = getMusicManager(ctx.message.guild)
         connectToVoiceChannel(ctx.message)

@@ -9,7 +9,6 @@ import okhttp3.Headers
 import org.json.JSONObject
 import java.awt.image.BufferedImage
 import java.io.File
-import java.io.IOException
 import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.Proxy
@@ -53,7 +52,7 @@ class Utils {
             return File(BoobBot::class.java.classLoader.getResource("moan/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
         }
 
-        fun getRandomAvatar() :InputStream {
+        fun getRandomAvatar(): InputStream {
             val arr = jsonArrays.getJSONArray("avatar")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
             return (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
@@ -104,18 +103,19 @@ class Utils {
             val commands = BoobBot.commands
             return commands[commandName]
                     ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
-
         }
 
         fun downloadAvatar(url: String): BufferedImage? {
             val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
                     ?: return null
 
-            return try {
-                ImageIO.read(body.byteStream())
-            } catch (e: IOException) {
-                null
+            var image: BufferedImage? = null
+
+            body.byteStream().use {
+                image = ImageIO.read(it)
             }
+
+            return image
         }
 
         fun fTime(milliseconds: Long): String {

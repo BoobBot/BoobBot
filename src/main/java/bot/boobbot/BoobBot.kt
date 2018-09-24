@@ -3,7 +3,10 @@ package bot.boobbot
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.*
+import bot.boobbot.misc.Constants
+import bot.boobbot.misc.EventWaiter
+import bot.boobbot.misc.GuildMusicManager
+import bot.boobbot.misc.RequestUtil
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -11,8 +14,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
-import io.sentry.Sentry
 import io.github.cdimascio.dotenv.dotenv
+import io.sentry.Sentry
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.JDAInfo
@@ -25,7 +28,6 @@ import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class BoobBot : ListenerAdapter() {
@@ -67,7 +69,7 @@ class BoobBot : ListenerAdapter() {
         fun main(args: Array<String>) {
             AudioSourceManagers.registerRemoteSources(playerManager)
             playerManager.registerSourceManager(LocalAudioSourceManager())
-           // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
+            // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
             //playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 10
             playerManager
@@ -78,8 +80,9 @@ class BoobBot : ListenerAdapter() {
 
             isDebug = args.isNotEmpty() && args[0].contains("debug")
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
-            if (!isDebug){
-                Sentry.init(Constants.SENTRY_DSN)}
+            if (!isDebug) {
+                Sentry.init(Constants.SENTRY_DSN)
+            }
             if (isDebug) {
                 log.warn("Running in debug mode")
                 log.level = Level.DEBUG

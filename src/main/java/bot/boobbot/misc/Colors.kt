@@ -1,6 +1,5 @@
 package bot.boobbot.misc
 
-import bot.boobbot.BoobBot
 import de.androidpit.colorthief.ColorThief
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.User
@@ -71,7 +70,7 @@ object Colors {
 
     fun getEffectiveColor(msg: Message): Color {
         return if (msg.channelType.isGuild)
-            if (msg.member.color != null) msg.member.color  else getDominantColor(msg.author)
+            msg.member.color ?: getDominantColor(msg.author)
         else
             getDominantColor(msg.author)
     }

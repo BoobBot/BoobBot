@@ -2,7 +2,6 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import java.util.*
-import io.github.cdimascio.dotenv.dotenv
 
 
 class Constants {
@@ -11,9 +10,9 @@ class Constants {
                 248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L
         )
 
-        var TOKEN =  BoobBot.dotenv["TOKEN"] ?: ""
+        var TOKEN = BoobBot.dotenv["TOKEN"] ?: ""
 
-        val DEBUG_TOKEN =  BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
+        val DEBUG_TOKEN = BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
 
         const val HOME_GUILD = 440526421388165120L
 
