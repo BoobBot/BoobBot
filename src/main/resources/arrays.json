@@ -1,4 +1,12 @@
 {
+  "avatar": [
+    {"name":"avatar1", "ext":"jpg"},
+    {"name":"avatar2", "ext":"jpg"},
+    {"name":"avatar3", "ext":"png"},
+    {"name":"avatar4", "ext":"jpg"},
+    {"name":"avatar5", "ext":"png"},
+    {"name":"avatar6", "ext":"jpg"}
+  ],
   "moan": [
     {"name":"moan1", "ext":"m4a"},
     {"name":"moan2", "ext":"m4a"},
