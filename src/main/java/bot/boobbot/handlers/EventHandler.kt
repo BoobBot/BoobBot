@@ -73,6 +73,7 @@ class EventHandler : ListenerAdapter() {
                     .build())
             readyClient.close()
         }
+        readyClient.close()
     }
 
 

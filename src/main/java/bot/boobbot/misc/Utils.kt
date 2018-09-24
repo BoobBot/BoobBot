@@ -10,6 +10,7 @@ import org.json.JSONObject
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.text.MessageFormat
@@ -31,7 +32,7 @@ class Utils {
         )
 
         private val jsonArrays = JSONObject(
-                File(BoobBot::class.java.classLoader.getResource("arrays.json").file)
+                (BoobBot::class.java.classLoader.getResourceAsStream("arrays.json"))
                         .bufferedReader()
                         .use { it.readText() }
         )
@@ -52,10 +53,10 @@ class Utils {
             return File(BoobBot::class.java.classLoader.getResource("moan/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
         }
 
-        fun getRandomAvatar(): File {
+        fun getRandomAvatar() :InputStream {
             val arr = jsonArrays.getJSONArray("avatar")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            return File(BoobBot::class.java.classLoader.getResource("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}").file)
+            return (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
         }
 
         fun getProxy(): Proxy {

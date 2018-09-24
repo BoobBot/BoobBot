@@ -57,9 +57,9 @@ dependencies {
 
 
 shadowJar {
-    from("src/main/resources") {
-        include "log4j2.xml"
-    }
+    baseName = 'bb'
+    classifier = null
+    version = null
 }
 kotlin {
     experimental {
