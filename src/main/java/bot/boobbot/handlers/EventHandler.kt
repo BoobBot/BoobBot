@@ -12,6 +12,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.DisconnectEvent
 import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.ReconnectedEvent
@@ -26,10 +27,10 @@ import java.time.Instant.now
 
 
 class EventHandler : ListenerAdapter() {
-
+    var self: User? = null // just to hold self for discon webhooks
     override fun onReady(event: ReadyEvent) {
+        BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
-
         readyClient.send(WebhookMessageBuilder().addEmbeds(EmbedBuilder().setColor(Color.magenta)
                 .setAuthor(
                     event.jda.selfUser.name,
@@ -39,10 +40,9 @@ class EventHandler : ListenerAdapter() {
                 .setTimestamp(now()).build()).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
                 .build())
 
-        BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
-
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
+            self = event.jda.selfUser // set self
             // health check for status page
             embeddedServer(Netty, 8008) {
                 routing {
@@ -68,15 +68,60 @@ class EventHandler : ListenerAdapter() {
 
 
     override fun onReconnect(event: ReconnectedEvent?) {
-        super.onReconnect(event)
+        BoobBot.log.info("Reconnected on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
+        val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
+        try {
+        readyClient.send(WebhookMessageBuilder().addEmbeds(EmbedBuilder().setColor(Color.green)
+                .setAuthor(
+                       self?.name,
+                        self?.effectiveAvatarUrl,
+                        self?.effectiveAvatarUrl
+                ).setTitle("```Reconnected on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}```")
+                .setTimestamp(now()).build()).setUsername(self?.name).setAvatarUrl(self?.effectiveAvatarUrl)
+                .build())
+            readyClient.close()
+        } catch (ex : Exception) {
+            readyClient.close()
+            BoobBot.log.warn("error on reconnected event", ex)
+        }
     }
 
     override fun onResume(event: ResumedEvent?) {
-        super.onResume(event)
+        BoobBot.log.info("Resumed on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
+        val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
+        try {
+            readyClient.send(WebhookMessageBuilder().addEmbeds(EmbedBuilder().setColor(Color.green)
+                    .setAuthor(
+                            self?.name,
+                            self?.effectiveAvatarUrl,
+                            self?.effectiveAvatarUrl
+                    ).setTitle("```Resumed on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}```")
+                    .setTimestamp(now()).build()).setUsername(self?.name).setAvatarUrl(self?.effectiveAvatarUrl)
+                    .build())
+            readyClient.close()
+        } catch (ex : Exception) {
+            readyClient.close()
+            BoobBot.log.warn("error on resumed event", ex)
+        }
     }
 
     override fun onDisconnect(event: DisconnectEvent?) {
-        super.onDisconnect(event)
+        BoobBot.log.info("Disconnect on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
+        val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
+        try {
+            readyClient.send(WebhookMessageBuilder().addEmbeds(EmbedBuilder().setColor(Color.green)
+                    .setAuthor(
+                            self?.name,
+                            self?.effectiveAvatarUrl,
+                            self?.effectiveAvatarUrl
+                    ).setTitle("```Disconnect on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}```")
+                    .setTimestamp(now()).build()).setUsername(self?.name).setAvatarUrl(self?.effectiveAvatarUrl)
+                    .build())
+            readyClient.close()
+        } catch (ex : Exception) {
+            readyClient.close()
+            BoobBot.log.warn("error on Disconnect event", ex)
+        }
     }
 
     override fun onGuildJoin(event: GuildJoinEvent?) {
