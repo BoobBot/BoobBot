@@ -49,7 +49,7 @@ class EventHandler : ListenerAdapter() {
             BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
             self = event.jda.selfUser // set self
             // health check for status page
-            embeddedServer(Netty, 8008) {
+            embeddedServer(Netty, 8888) {
                 routing {
                     get("/health") {
                         call.respondText("{health: ok, ping: ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
