@@ -1,10 +1,13 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
 import kotlinx.coroutines.experimental.future.await
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
