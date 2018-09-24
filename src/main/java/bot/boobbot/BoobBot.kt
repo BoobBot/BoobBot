@@ -22,12 +22,16 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import okhttp3.Interceptor
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 
 
 class BoobBot : ListenerAdapter() {

@@ -38,7 +38,7 @@ public class MessageHandler extends ListenerAdapter {
                 : event.getJDA().getSelfUser().getAsMention();
 
         boolean isMentionTrigger = messageContent.startsWith(mention);
-        boolean hasPrefix = isMentionTrigger || messageContent.startsWith(prefix);
+        boolean hasPrefix = isMentionTrigger || messageContent.toLowerCase().startsWith(prefix);
 
         if (isMentionTrigger && !messageContent.contains(" ") || !hasPrefix) {
             return;

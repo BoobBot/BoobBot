@@ -1,21 +1,28 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.Logger
 import kotlinx.coroutines.experimental.future.await
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
+
+internal class LoggingInterceptor : Interceptor {
+    @Throws(IOException::class)
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        BoobBot.log.info("REQUEST INFO", request.toString())
+        return chain.proceed(request)
+    }
+}
 class RequestUtil {
     private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
-    private val httpClient = OkHttpClient()
+    private val httpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
 
     inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
+
 
         fun queue(success: (Response?) -> Unit) {
             var client = httpClient
