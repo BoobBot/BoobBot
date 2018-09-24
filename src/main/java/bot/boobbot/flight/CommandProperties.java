@@ -34,6 +34,7 @@ public @interface CommandProperties {
         HOLIDAY("\uD83C\uDF85 Holiday"),
         SEND("\uD83D\uDCE7 Send Commands"),
         FUN("✨ Fun Commands"),
+        AUDIO("\uD83D\uDD08 Audio Commands"),
         MISC("<:info:486945488080338944> Misc Commands");
 
         public String title;

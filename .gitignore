@@ -95,3 +95,5 @@ META-INF/
 #src/main/java/life/nekos/bot/commands/owner/Test1Command.java
 /src/main/java/life/nekos/bot/commons/Constants.java
 logs/
+/bb.env
+/src/main/java/bot/boobbot/misc/Constants.kt
