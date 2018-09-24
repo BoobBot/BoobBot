@@ -9,9 +9,15 @@ abstract class SendCommand(private val category: String, private val endpoint: S
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
+
         if (user.idLong == ctx.selfUser.idLong) {
             return ctx.send("Don't you fucking touch me whore, i will end you.")
         }
+
+        if (user.isBot) {
+            return ctx.send("Bots can't appreciate nudes.")
+        }
+
         val prompt = ctx.dmUserAsync(user, "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?")
                 ?: return ctx.send("hey, this whore ${ctx.author.name} has me blocked or their filter turned on \uD83D\uDD95")
 
