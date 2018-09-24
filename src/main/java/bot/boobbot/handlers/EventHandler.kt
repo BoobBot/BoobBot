@@ -14,6 +14,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.DisconnectEvent
 import net.dv8tion.jda.core.events.ReadyEvent
@@ -27,6 +28,10 @@ import net.dv8tion.jda.webhook.WebhookMessageBuilder
 import java.awt.Color
 import java.time.Instant.now
 import java.util.concurrent.TimeUnit
+
+
+
+
 
 
 class EventHandler : ListenerAdapter() {
@@ -129,10 +134,72 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildJoin(event: GuildJoinEvent?) {
-        BoobBot.log.info("Joined ${event?.guild?.name}")
+        if (!BoobBot.isReady) { return }
+        val jda = event!!.jda
+        val guild = event.guild
+        event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        BoobBot.log.info("New Guild Joined ${guild.name}(${guild.id})")
+        val em = EmbedBuilder()
+                .setColor(Color.green)
+                .setAuthor(guild.name, guild.iconUrl, guild.iconUrl)
+                .setTitle("Joined ${guild.name}")
+                .setThumbnail(guild.iconUrl)
+                .setDescription("Guild info")
+                .addField(
+                        Formats.info("info"),
+                        "**${guild.jda.shardInfo}**\n" +
+                                "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
+                                "Owner: **${guild.members.size}**\n" +
+                                "Guild Users: **${guild.owner.effectiveName}**\n",
+                        false)
+                .setTimestamp(now())
+                .build()
+        val guildJoinClient = WebhookClientBuilder(Constants.GJLOG_WEBHOOK).build()
+        try {
+            guildJoinClient.send(
+                    WebhookMessageBuilder()
+                            .addEmbeds(em)
+                            .setUsername(guild.name)
+                            .setAvatarUrl(guild.iconUrl)
+                            .build())
+            guildJoinClient.close()
+        } catch (ex: java.lang.Exception){
+            guildJoinClient.close()
+            BoobBot.log.warn("error on Guild join event", ex)
+        }
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent?) {
-        BoobBot.log.info("left ${event?.guild?.name}")
+        if (!BoobBot.isReady) { return }
+        val jda = event!!.jda
+        val guild = event.guild
+        event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        BoobBot.log.info("Guild left ${guild.name}(${guild.id})")
+        val guildLeaveClient = WebhookClientBuilder(Constants.GLLOG_WEBHOOK).build()
+        try {
+        guildLeaveClient.send(
+                WebhookMessageBuilder()
+                        .addEmbeds(
+                                EmbedBuilder()
+                                        .setColor(Color.red)
+                                        .setAuthor(guild.name, guild.iconUrl, guild.iconUrl)
+                                        .setTitle("Left ${guild.name}")
+                                        .setThumbnail(guild.iconUrl)
+                                        .setDescription("Guild info")
+                                        .addField(
+                                                Formats.info("info"),
+                                                "**${guild.jda.shardInfo}**\n" +
+                                                        "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
+                                                        "Owner: **${guild.members.size}**\n" +
+                                                        "Guild Users: **${guild.owner.effectiveName}**\n",
+                                                false)
+                                        .build())
+                        .setUsername(guild.name)
+                        .setAvatarUrl(guild.iconUrl)
+                        .build())
+        guildLeaveClient.close() } catch (ex: Exception){
+            guildLeaveClient.close()
+            BoobBot.log.warn("error on Guild leave event", ex)
+        }
     }
 }

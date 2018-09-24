@@ -23,12 +23,14 @@ class Formats {
         const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
         const val MAGIC_EMOTE = "✨"
         const val INFO_EMOTE = "<:info:486945488080338944>"
+        const val PATREON_EMOTE = "<:p_:475801484282429450>"
         val LING_MSG = MessageFormat.format(
                 "\n{0} **Server**: [https://invite.boob.bot](https://invite.boob.bot)"
                         + "\n{1} **Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
                         + "\n{2} **Website**: [https:/boob.bot](https://boob.bot)"
-                        + "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)",
-                DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PAYPAL_EMOTE)
+                        + "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
+                        + "\n{4} **Patreon**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
+                DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PAYPAL_EMOTE, PATREON_EMOTE)
         val tag = arrayOf("Amateur", "Anal Masturbation", "Anal Sex", "Animated", "Asian", "Bareback", "Bathroom", "BBW", "Behind the Scenes", "Big Ass", "Big Cock", "Big Tits", "Bikini", "Bisexual", "Black-haired", "Blonde", "Blowjob", "Bondage", "Boots", "Brunette", "Bukkake", "Car", "Cartoon", "Caucasian", "Celebrity", "CFNM", "Chubby", "Compilation", "Couple", "Cream Pie", "Cum Shot", "Cum Swap", "Deepthroat", "Domination", "Double Penetration", "Ebony", "Facial", "Fat", "Female-Friendly", "Femdom", "Fetish", "Fisting", "Footjob", "Funny", "Gagging", "Gangbang", "Gay", "Gay Couple", "Gay Group Sex", "German", "Glamour", "Glasses", "Glory Hole", "Granny", "Group Sex", "Gym", "Hairy", "Handjob", "Hentai", "High Heels", "Hospital", "Indian", "Interracial", "Japanese", "Kissing", "Latex", "Latin", "Lesbian", "Licking Vagina", "Lingerie", "Maid", "Massage", "Masturbation", "Mature", "Midget", "MILF", "Muscular", "Nurse", "Office", "Oral Sex", "Oriental", "Outdoor", "Pantyhose", "Party", "Peeing", "Piercings", "Police", "Pool", "Pornstar", "Position 69", "POV", "Pregnant", "Public", "Redhead", "Rimming", "Romantic", "Russian", "School", "Secretary", "Shaved", "Shemale", "Skinny", "Small Tits", "Solo Gay", "Solo Girl", "Solo Male", "Spanking", "Spectacular", "Spycam", "Squirting", "Stockings", "Strap-on", "Striptease", "Swallow", "Tattoos", "Teen", "Threesome", "Titfuck", "Toilet", "Toys", "Tribbing", "Uniform", "Vaginal Masturbation", "Vaginal Sex", "Vintage", "Wanking", "Webcam", "Young & Old")
 
         fun getReadyFormat(): String {

@@ -1,5 +1,6 @@
 package bot.boobbot.commands.bot
 
+import bot.boobbot.BoobBot
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -25,7 +26,7 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message): Boolean {
-        return message.jda.selfUser === message.author || message.contentDisplay.startsWith("!bb")
+        return message.jda.selfUser === message.author || message.contentDisplay.startsWith(if (BoobBot.isDebug) "!bb" else "bb")
     }
 
     override fun execute(ctx: Context) {
