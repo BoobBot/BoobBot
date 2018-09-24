@@ -46,7 +46,7 @@ class Utils {
             return arr.getString(rand.nextInt(arr.length()))
         }
 
-        fun getRandomMoan() :File {
+        fun getRandomMoan(): File {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
             return (File("/root/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
