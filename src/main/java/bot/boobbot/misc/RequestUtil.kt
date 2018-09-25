@@ -7,6 +7,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 
 internal class LoggingInterceptor : Interceptor {
@@ -21,7 +22,12 @@ internal class LoggingInterceptor : Interceptor {
 }
 class RequestUtil {
     private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
-    private val httpClient = OkHttpClient.Builder().addInterceptor(LoggingInterceptor()).build()
+    private val httpClient = OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(LoggingInterceptor())
+            .build()
 
     inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
 
