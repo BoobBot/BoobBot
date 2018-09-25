@@ -6,6 +6,7 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -29,6 +30,7 @@ class RequestUtil {
             .addInterceptor(LoggingInterceptor())
             .connectionPool(ConnectionPool(200,1,TimeUnit.MINUTES))
             .retryOnConnectionFailure(false)
+            .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .build()
 
     inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
