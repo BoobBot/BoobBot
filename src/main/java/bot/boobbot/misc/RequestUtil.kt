@@ -27,6 +27,8 @@ class RequestUtil {
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(LoggingInterceptor())
+            .connectionPool(ConnectionPool(200,1,TimeUnit.MINUTES))
+            .retryOnConnectionFailure(false)
             .build()
 
     inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
