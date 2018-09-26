@@ -6,6 +6,7 @@ import bot.boobbot.flight.Context;
 import bot.boobbot.misc.Constants;
 import bot.boobbot.misc.Formats;
 import bot.boobbot.misc.Utils;
+import de.mxro.metrics.jre.Metrics;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -17,6 +18,8 @@ public class MessageHandler extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        BoobBot.Companion.getMetrics().record(Metrics.happened("MessageReceived"));
+
 
         if (!BoobBot.Companion.isReady()) {
             return;
@@ -102,6 +105,8 @@ public class MessageHandler extends ListenerAdapter {
 
         try {
             Utils.Companion.logCommand(event.getMessage());
+            BoobBot.Companion.getMetrics().record(Metrics.happened("command"));
+            BoobBot.Companion.getMetrics().record(Metrics.happened(command.getName()));
             command.execute(new Context(trigger, event, args));
         } catch (Exception e) {
             BoobBot.Companion.getLog().error("Command `" + command.getName() + "` encountered an error during execution", e);
