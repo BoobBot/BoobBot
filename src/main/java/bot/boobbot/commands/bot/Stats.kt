@@ -7,6 +7,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Utils
 import com.sun.management.OperatingSystemMXBean
 import net.dv8tion.jda.core.JDA
+import org.json.JSONObject
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
@@ -32,6 +33,10 @@ class Stats : Command {
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
 
+
+        val commands = BoobBot.metrics.retrieve("command").get().toString()
+        val comJson = JSONObject(commands)
+        //TODO add all metrics
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
                 .append("Uptime          = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime)).append("\n")
@@ -43,7 +48,9 @@ class Stats : Command {
                 .append("Guilds          = ").append(servers).append("\n")
                 .append("Users           = ").append(users).append("\n")
                 .append("Shards_Online   = ").append(shardsOnline).append("/").append(shards).append("\n")
-                .append("Average_Latency = ").append(averageShardLatency).append("ms\n")
+                .append("Average_Latency = ").append(averageShardLatency).append("ms\n\n")
+                .append("[ BoobBot ]\n")
+                .append("Commands_Used   = ").append(comJson.getString("Total Events").toString()).append("\n")
                 .append("```")
 
         ctx.send(toSend.toString())
