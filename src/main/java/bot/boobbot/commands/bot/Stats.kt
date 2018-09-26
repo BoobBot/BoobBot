@@ -32,19 +32,24 @@ class Stats : Command {
         val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
-        /*
-        Keys =
-        "Total Events", "Events per Second (last Minute)", "Events per Second (last 5 Minutes)", "Events per Second (last 15 Minutes)"
-        metrics keys = command, Ready, Reconnected , Resumed ,Disconnect , GuildJoin, GuildLeave, atEveryoneSeen, MessageReceived
-        TODO Ready, Reconnected , Resumed ,Disconnect , GuildJoin, GuildLeave
-        */
 
         val metrics = JSONObject(BoobBot.metrics.render().get())
-        val comsUsed = if (metrics.getJSONObject("command").getString("Total Events").toIntOrNull() != null) metrics.getJSONObject("command").getString("Total Events").toIntOrNull() else 0
-        val comsPerSec = if (metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() != null) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() else 0.0
-        val msgSeen =  metrics.getJSONObject("MessageReceived").getString("Total Events").toInt()
-        val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDoubleOrNull()
-        val everyOneSeen = if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() else 0
+        val comsUsed = if (metrics.has("command")) metrics.getJSONObject("command").getString("Total Events").toInt() else 0
+        val comsPerSec = if (metrics.has("command")) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDouble() else 0.0
+
+        val guildJoin = if (metrics.has("GuildJoin")) metrics.getJSONObject("GuildJoin").getString("Total Events").toInt() else 0
+        val guildLeave = if (metrics.has("GuildLeave")) metrics.getJSONObject("GuildLeave").getString("Total Events").toInt() else 0
+
+        val ready = if (metrics.has("Ready")) metrics.getJSONObject("Ready").getString("Total Events").toInt() else 0 // can never be null
+
+        val reconnected = if (metrics.has("Reconnected")) metrics.getJSONObject("Reconnected").getString("Total Events").toInt() else 0
+        val resumed = if (metrics.has("Resumed")) metrics.getJSONObject("Resumed").getString("Resumed").toInt() else 0
+        val disconnect = if (metrics.has("Disconnect")) metrics.getJSONObject("Disconnect").getString("Total Events").toInt() else 0
+
+        val msgSeen =  metrics.getJSONObject("MessageReceived").getString("Total Events").toInt() // can never be null
+        val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDouble() // can never be null
+
+        val everyOneSeen = if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toInt() else 0
         //TODO add all metrics
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
@@ -59,11 +64,17 @@ class Stats : Command {
                 .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n")
                 .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n")
                 .append("[ Metrics_Since_Boot ]\n")
+                .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")
                 .append("Commands_Used       = ").append(comsUsed).append("\n")
-                .append("Commands_Per_second = ").append(dpFormatter.format(comsPerSec as Number)).append("/sec").append("\n")
+                .append("Commands_Per_second = ").append(dpFormatter.format(comsPerSec)).append("/sec").append("\n")
                 .append("Messages_Seen       = ").append(msgSeen).append("\n")
-                .append("Messages_Per_second = ").append(dpFormatter.format(msgSeenPerSec as Number)).append("/sec").append("\n")
-                .append("@everyone_Seen      = ").append(everyOneSeen).append("\n")
+                .append("Messages_Per_second = ").append(dpFormatter.format(msgSeenPerSec)).append("/sec").append("\n")
+                .append("Guilds_Joined       = ").append(guildJoin).append("\n")
+                .append("Guilds_Left         = ").append(guildLeave).append("\n")
+                .append("Ready_Events        = ").append(ready).append("\n")
+                .append("Resumed_Events      = ").append(resumed).append("\n")
+                .append("Reconnected_Events  = ").append(reconnected).append("\n")
+                .append("Disconnect_Events   = ").append(disconnect).append("\n")
                 .append("```")
 
         ctx.send(toSend.toString())
