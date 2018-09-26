@@ -33,7 +33,11 @@ public class MessageHandler extends ListenerAdapter {
             if (!event.getGuild().isAvailable() || !event.getTextChannel().canTalk()) {
                 return;
             }
+            if (event.getMessage().isMentioned(event.getGuild().getPublicRole())){
+                BoobBot.Companion.getMetrics().record(Metrics.happened("atEveryoneSeen"));
+            }
         }
+
 
         final String messageContent = event.getMessage().getContentRaw();
         final String mention = event.getChannelType().isGuild()

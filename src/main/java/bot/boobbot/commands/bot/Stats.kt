@@ -34,8 +34,8 @@ class Stats : Command {
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
 
 
-        val commands = BoobBot.metrics.retrieve("command").get().toString()
-        val comJson = JSONObject(commands)
+        val metrics = JSONObject(BoobBot.metrics.render().get())
+        val comJson = metrics.getJSONObject("command")
         //TODO add all metrics
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
