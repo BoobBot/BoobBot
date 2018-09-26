@@ -49,7 +49,7 @@ class Stats : Command {
                 .append("Users           = ").append(users).append("\n")
                 .append("Shards_Online   = ").append(shardsOnline).append("/").append(shards).append("\n")
                 .append("Average_Latency = ").append(averageShardLatency).append("ms\n\n")
-                .append("[ BoobBot ]\n")
+                .append("[ Metrics Since Boot ]\n")
                 .append("Commands_Used   = ").append(comJson.getString("Total Events").toString()).append("\n")
                 .append("```")
 
