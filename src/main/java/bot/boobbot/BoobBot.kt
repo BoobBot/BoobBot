@@ -14,6 +14,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
+import de.mxro.metrics.jre.Metrics
 import io.github.cdimascio.dotenv.dotenv
 import io.sentry.Sentry
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
@@ -22,16 +23,13 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.hooks.ListenerAdapter
-import okhttp3.Interceptor
+
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 
 
 class BoobBot : ListenerAdapter() {
@@ -52,6 +50,7 @@ class BoobBot : ListenerAdapter() {
         var isReady = false
             internal set
 
+        val metrics = Metrics.create()
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
@@ -97,7 +96,7 @@ class BoobBot : ListenerAdapter() {
                     .setAudioSendFactory(NativeAudioSendFactory())
                     .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                     .setToken(token)
-                    .setShardsTotal(-1)
+                    .setShardsTotal(5)
                     .build()
 
             loadCommands()

@@ -3,6 +3,7 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.flight.Command
+import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers

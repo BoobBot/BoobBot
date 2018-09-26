@@ -10,14 +10,14 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
-
+//will leave incase needed, tho lets remove spam
 internal class LoggingInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        BoobBot.log.info(request.toString())
+        //BoobBot.log.info(request.toString())
         val response = chain.proceed(request)
-        BoobBot.log.info(response.toString())
+        //BoobBot.log.info(response.toString())
         return response
     }
 }
@@ -28,7 +28,7 @@ class RequestUtil {
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(LoggingInterceptor())
-            .connectionPool(ConnectionPool(200,1,TimeUnit.MINUTES))
+            .connectionPool(ConnectionPool(200,5L,TimeUnit.MINUTES))
             .retryOnConnectionFailure(false)
             .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .build()

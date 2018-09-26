@@ -1,10 +1,12 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.BoobBot.Companion.shardManager
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.Utils.Companion.autoAvatar
+import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.response.respondText
@@ -25,6 +27,8 @@ import net.dv8tion.jda.core.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
+import org.json.JSONArray
+import org.json.JSONObject
 import java.awt.Color
 import java.time.Instant.now
 import java.util.concurrent.TimeUnit
@@ -33,6 +37,7 @@ import java.util.concurrent.TimeUnit
 class EventHandler : ListenerAdapter() {
     var self: User? = null // just to hold self for discon webhooks
     override fun onReady(event: ReadyEvent) {
+        BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         readyClient.send(WebhookMessageBuilder().addEmbeds(EmbedBuilder().setColor(Color.magenta)
@@ -47,12 +52,25 @@ class EventHandler : ListenerAdapter() {
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
             BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
-            self = event.jda.selfUser // set self
+            self = event.jda.selfUser // set
             // health check for status page
             embeddedServer(Netty, 8888) {
                 routing {
+                    get("/metrics") {
+                        call.respondText("{\"metrics\": ${BoobBot.metrics.render().get()}}", ContentType.Application.Json)
+                    }
                     get("/health") {
-                        call.respondText("{health: ok, ping: ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
+                        call.respondText("{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
+                    }
+                    get("/pings") {
+                        val pings = JSONArray()
+                        for (e in shardManager.statuses.entries) pings.put(JSONObject().put("shard", e.key.shardInfo.shardId).put("ping", e.key.ping).put("status", e.value))
+                        call.respondText("{\"status\": $pings}", ContentType.Application.Json)
+                    }
+                    get("/commands") {
+                        val coms = JSONArray()
+                        for (com in BoobBot.commands.values) coms.put(JSONObject().put("command", com.name).put("category", com.properties.category).put("description", com.properties.description).put("aliases", "[${com.properties.aliases.joinToString(", ")}]"))
+                        call.respondText("{\"commands\": $coms}", ContentType.Application.Json)
                     }
                 }
             }.start(wait = false)
@@ -74,6 +92,7 @@ class EventHandler : ListenerAdapter() {
 
 
     override fun onReconnect(event: ReconnectedEvent?) {
+        BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         try {
@@ -93,6 +112,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onResume(event: ResumedEvent?) {
+        BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         try {
@@ -112,6 +132,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onDisconnect(event: DisconnectEvent?) {
+        BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event?.jda?.shardInfo?.shardId}, Status: ${event?.jda?.status}")
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         try {
@@ -131,6 +152,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildJoin(event: GuildJoinEvent?) {
+        BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         if (!BoobBot.isReady) {
             return
         }
@@ -169,6 +191,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent?) {
+        BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         if (!BoobBot.isReady) {
             return
         }
