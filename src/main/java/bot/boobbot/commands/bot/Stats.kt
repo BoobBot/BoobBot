@@ -44,7 +44,7 @@ class Stats : Command {
         val comsPerSec = if (metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() != null) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() else 0.0
         val msgSeen =  metrics.getJSONObject("MessageReceived").getString("Total Events").toInt()
         val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDoubleOrNull()
-        val everyOneSeen = if (metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() != null) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() else 0
+        val everyOneSeen = if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() else 0
         //TODO add all metrics
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
