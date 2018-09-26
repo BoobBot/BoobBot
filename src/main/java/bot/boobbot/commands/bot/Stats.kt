@@ -42,7 +42,7 @@ class Stats : Command {
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed = if (metrics.getJSONObject("command").getString("Total Events").toIntOrNull() != null) metrics.getJSONObject("command").getString("Total Events").toIntOrNull() else 0
         val comsPerSec = if (metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() != null) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDoubleOrNull() else 0.0
-        val msgSeen =  metrics.getJSONObject("MessageReceived").getString("MessageReceived").toInt()
+        val msgSeen =  metrics.getJSONObject("MessageReceived").getString("Total Events").toInt()
         val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDoubleOrNull()
         val everyOneSeen = if (metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() != null) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toIntOrNull() else 0
         //TODO add all metrics
