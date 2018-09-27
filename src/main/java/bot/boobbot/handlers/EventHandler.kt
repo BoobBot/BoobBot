@@ -27,6 +27,7 @@ import net.dv8tion.jda.core.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
+import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.awt.Color
@@ -180,7 +181,7 @@ class EventHandler : ListenerAdapter() {
             guildJoinClient.send(
                     WebhookMessageBuilder()
                             .addEmbeds(em)
-                            .setUsername(guild.name)
+                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name,20) else "Shity name")
                             .setAvatarUrl(guild.iconUrl)
                             .build())
             guildJoinClient.close()
@@ -218,7 +219,7 @@ class EventHandler : ListenerAdapter() {
                                                             "Guild Users: **${guild.owner.effectiveName}**\n",
                                                     false)
                                             .build())
-                            .setUsername(guild.name)
+                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name,20) else "Shity name")
                             .setAvatarUrl(guild.iconUrl)
                             .build())
             guildLeaveClient.close()
