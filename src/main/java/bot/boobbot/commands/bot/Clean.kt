@@ -34,6 +34,10 @@ class Clean : Command {
             return ctx.send("\uD83D\uDEAB Hey whore, I lack the `MANAGE_MESSAGES` permission needed to do this")
         }
 
+        if (!ctx.botCan(Permission.MESSAGE_HISTORY)) {
+            return ctx.send("\uD83D\uDEAB Hey whore, I lack the `MESSAGE_HISTORY` permission needed to do this")
+        }
+
         if (!ctx.userCan(Permission.MESSAGE_MANAGE)) {
             return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_MESSAGES` permission needed to do this")
         }
