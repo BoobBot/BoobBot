@@ -20,14 +20,14 @@ abstract class RtCommand() : AsyncCommand {
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
         }
-
+        try {
         val rt = BoobBot.requestUtil.get(
                 "https://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&search=" +
                         (if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(Formats.tag.size)]) +
                         "&thumbsize=big&ordering=mostviewed&page=1",
                 useProxy = true).await()?.json()
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
-        try {
+
             val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
             ctx.embed {
                 setAuthor("RedTube video search",
@@ -50,7 +50,7 @@ abstract class RtCommand() : AsyncCommand {
                         .setTimestamp(now())
                         .build()
             }
-        }catch (Ex: Exception){
+        } catch (Ex: Exception){
             ctx.send("\uD83D\uDEAB oh? something broken af")
         }
 
