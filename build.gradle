@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.70'
+    ext.kotlin_version = '1.2.71'
     ext.ktor_version = '0.9.5'
     
 
@@ -37,7 +37,7 @@ repositories {
 
 
 dependencies {
-    compile ('net.dv8tion:JDA:3.7.1_417') {
+    compile ('net.dv8tion:JDA:3.8.0_427') {
         exclude module: 'opus-java'
     }
 
@@ -53,6 +53,7 @@ dependencies {
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile 'io.github.cdimascio:java-dotenv:3.1.2'
     compile 'org.javadelight:delight-metrics:0.0.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 }
 
 
