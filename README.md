@@ -5,10 +5,10 @@ This Repository is meant for education and allowing people to improve the curren
 
 ## Prerequisites
 
-* You will need ether a env file named bb.env placed in [Resources](src\main\resources) or to supply your env variables some other way on boot, See [Constants](src\main\java\bot\boobbot\misc\Constants.kt) for the variable names
+* You will need ether a env file named bb.env placed in [Resources](src/main/resources) or to supply your env variables some other way on boot, See [Constants](src/main/java/bot/boobbot/misc/Constants.kt) for the variable names
 * You will need a bbapi key which you can purchase [here](https://www.patreon.com/OfficialBoobBot)
 * You will need a dank memer API key which you can purchase from [Mel](https://github.com/melmsie)
-* You will need several proxies for large-scale support Which can be found in [Utils](src\main\java\bot\boobbot\misc\Utils.kt)
+* You will need several proxies for large-scale support Which can be found in [Utils](src/main/java/bot/boobbot/misc/Utils.kt)
 
 
 ## Built With
