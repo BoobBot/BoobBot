@@ -96,7 +96,7 @@ class BoobBot : ListenerAdapter() {
                     .setAudioSendFactory(NativeAudioSendFactory())
                     .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                     .setToken(token)
-                    .setShardsTotal(2)
+                    .setShardsTotal(-1)
                     .build()
 
             loadCommands()
