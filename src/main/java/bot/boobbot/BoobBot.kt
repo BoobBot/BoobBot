@@ -66,7 +66,6 @@ class BoobBot : ListenerAdapter() {
             ignoreIfMissing = false
         }
 
-
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
