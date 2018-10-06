@@ -16,6 +16,10 @@ class PornSearch : VoiceCommand {
             return
         }
 
+        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+            return ctx.send("Gotta specify a search query, whore")
+        }
+
         val player = ctx.audioPlayer!!
         val query = "phsearch:${ctx.args.joinToString(" ")}"
 

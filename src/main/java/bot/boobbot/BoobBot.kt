@@ -70,10 +70,10 @@ class BoobBot : ListenerAdapter() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            AudioSourceManagers.registerRemoteSources(playerManager)
-            playerManager.registerSourceManager(LocalAudioSourceManager())
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
+            AudioSourceManagers.registerRemoteSources(playerManager)
+            playerManager.registerSourceManager(LocalAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 9
             playerManager
                     .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.LOW // don't destroy CPU
