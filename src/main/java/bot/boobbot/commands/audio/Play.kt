@@ -6,8 +6,8 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Porn is music too")
-class Porn : VoiceCommand {
+@CommandProperties(description = "Plays a song from the given URL")
+class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {
         val shouldPlay = performVoiceChecks(ctx)
@@ -17,7 +17,7 @@ class Porn : VoiceCommand {
         }
 
         val player = ctx.audioPlayer!!
-        val query = "phsearch:${ctx.args.joinToString(" ")}"
+        val query = ctx.args.joinToString(" ")
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
     }
