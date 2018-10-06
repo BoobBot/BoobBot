@@ -1,6 +1,8 @@
 package bot.boobbot
 
 import bot.boobbot.audio.GuildMusicManager
+import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
+import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
@@ -70,8 +72,8 @@ class BoobBot : ListenerAdapter() {
         fun main(args: Array<String>) {
             AudioSourceManagers.registerRemoteSources(playerManager)
             playerManager.registerSourceManager(LocalAudioSourceManager())
-            // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
-            //playerManager.registerSourceManager(RedTubeAudioSourceManager())
+            playerManager.registerSourceManager(PornHubAudioSourceManager())
+            playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 9
             playerManager
                     .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.LOW // don't destroy CPU

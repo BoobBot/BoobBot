@@ -7,7 +7,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
 @CommandProperties(description = "Porn is music too")
-class Pornhub : VoiceCommand {
+class Porn : VoiceCommand {
 
     override fun execute(ctx: Context) {
         val shouldPlay = performVoiceChecks(ctx)
