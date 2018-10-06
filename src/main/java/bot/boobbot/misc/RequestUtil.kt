@@ -21,6 +21,7 @@ internal class LoggingInterceptor : Interceptor {
         return response
     }
 }
+
 class RequestUtil {
     private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
     private val httpClient = OkHttpClient.Builder()
@@ -28,7 +29,7 @@ class RequestUtil {
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(LoggingInterceptor())
-            .connectionPool(ConnectionPool(200,5L,TimeUnit.MINUTES))
+            .connectionPool(ConnectionPool(200, 5L, TimeUnit.MINUTES))
             .retryOnConnectionFailure(false)
             .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .build()

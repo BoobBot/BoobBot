@@ -1,6 +1,7 @@
 package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
+import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.misc.PendingEvent
 import bot.boobbot.misc.await
 import net.dv8tion.jda.core.EmbedBuilder
@@ -23,10 +24,19 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
 
     val author: User = event.author
     val member: Member? = event.member
-    val voiceState: VoiceState? = member?.voiceState
+    val voiceState: GuildVoiceState? = member?.voiceState
 
     val channel: MessageChannel = event.channel
     val textChannel: TextChannel? = event.textChannel
+
+    val audioPlayer: GuildMusicManager?
+        get() {
+            return if (guild == null) {
+                null
+            } else {
+                BoobBot.getMusicManager(guild)
+            }
+        }
 
     fun userCan(check: Permission, explicit: Boolean = false): Boolean {
         if (!event.channelType.isGuild && !explicit) {

@@ -46,7 +46,7 @@ class Stats : Command {
         val resumed = if (metrics.has("Resumed")) metrics.getJSONObject("Resumed").getString("Total Events").toInt() else 0
         val disconnect = if (metrics.has("Disconnect")) metrics.getJSONObject("Disconnect").getString("Total Events").toInt() else 0
 
-        val msgSeen =  metrics.getJSONObject("MessageReceived").getString("Total Events").toInt() // can never be null
+        val msgSeen = metrics.getJSONObject("MessageReceived").getString("Total Events").toInt() // can never be null
         val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDouble() // can never be null
 
         val everyOneSeen = if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toInt() else 0

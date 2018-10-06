@@ -21,12 +21,12 @@ abstract class RtCommand() : AsyncCommand {
             }
         }
         try {
-        val rt = BoobBot.requestUtil.get(
-                "https://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&search=" +
-                        (if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(Formats.tag.size)]) +
-                        "&thumbsize=big&ordering=mostviewed&page=1",
-                useProxy = true).await()?.json()
-                ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
+            val rt = BoobBot.requestUtil.get(
+                    "https://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&search=" +
+                            (if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(Formats.tag.size)]) +
+                            "&thumbsize=big&ordering=mostviewed&page=1",
+                    useProxy = true).await()?.json()
+                    ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
             val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
             ctx.embed {
@@ -50,7 +50,7 @@ abstract class RtCommand() : AsyncCommand {
                         .setTimestamp(now())
                         .build()
             }
-        } catch (Ex: Exception){
+        } catch (Ex: Exception) {
             ctx.send("\uD83D\uDEAB oh? something broken af")
         }
 
