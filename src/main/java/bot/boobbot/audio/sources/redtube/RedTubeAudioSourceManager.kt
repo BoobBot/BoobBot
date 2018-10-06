@@ -50,12 +50,10 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     }
 
-    override fun isTrackEncodable(track: AudioTrack): Boolean {
-        return true
-    }
+    override fun isTrackEncodable(track: AudioTrack) = true
 
     override fun encodeTrack(track: AudioTrack, output: DataOutput) {
-        // No custom values that need saving
+
     }
 
     override fun decodeTrack(trackInfo: AudioTrackInfo, input: DataInput): AudioTrack {
