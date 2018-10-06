@@ -16,8 +16,12 @@ class Play : VoiceCommand {
             return
         }
 
+        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+            return ctx.send("Gotta specify a link, whore")
+        }
+
         val player = ctx.audioPlayer!!
-        val query = ctx.args.joinToString(" ")
+        val query = ctx.args[0].replace("<","").replace(">", "")
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
     }
