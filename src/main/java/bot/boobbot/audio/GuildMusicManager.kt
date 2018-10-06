@@ -1,4 +1,4 @@
-package bot.boobbot.misc
+package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer

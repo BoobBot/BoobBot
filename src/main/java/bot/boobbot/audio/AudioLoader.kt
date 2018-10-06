@@ -1,4 +1,4 @@
-package bot.boobbot.misc
+package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
@@ -19,7 +19,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     }
 
     override fun noMatches() {
-        //todo handle this when full audio added
+        ctx.send("No matches, tf?")
     }
 
 

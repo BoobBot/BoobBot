@@ -1,11 +1,11 @@
 package bot.boobbot
 
+import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.EventWaiter
-import bot.boobbot.misc.GuildMusicManager
 import bot.boobbot.misc.RequestUtil
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
@@ -23,7 +23,6 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.hooks.ListenerAdapter
-
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
@@ -73,9 +72,9 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(LocalAudioSourceManager())
             // playerManager.registerSourceManager(PornHubAudioSourceManager()) //TODO add this stuff
             //playerManager.registerSourceManager(RedTubeAudioSourceManager())
-            playerManager.configuration.opusEncodingQuality = 10
+            playerManager.configuration.opusEncodingQuality = 9
             playerManager
-                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.HIGH
+                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.LOW // don't destroy CPU
 
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
