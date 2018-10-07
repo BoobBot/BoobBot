@@ -33,7 +33,7 @@ public class MessageHandler extends ListenerAdapter {
             if (!event.getGuild().isAvailable() || !event.getTextChannel().canTalk()) {
                 return;
             }
-            if (event.getMessage().mentionsEveryone()){
+            if (event.getMessage().mentionsEveryone()) {
                 BoobBot.Companion.getMetrics().record(Metrics.happened("atEveryoneSeen"));
             }
         }

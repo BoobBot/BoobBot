@@ -1,4 +1,4 @@
-package bot.boobbot.misc
+package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
@@ -9,17 +9,18 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 
 class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: Context) : AudioLoadResultHandler {
 
-
     override fun trackLoaded(track: AudioTrack) {
-        track.userData = ctx.guild
-        musicManager.addToQueue(track)
+        enqueueTrack(track)
     }
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
+        if (playlist.isSearchResult) {
+            enqueueTrack(playlist.tracks[0])
+        }
     }
 
     override fun noMatches() {
-        //todo handle this when full audio added
+        ctx.send("No matches, tf?")
     }
 
 
@@ -27,5 +28,11 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
         BoobBot.log.error("wot", e) //should not happen rn all local tracks
     }
 
+    private fun enqueueTrack(track: AudioTrack) {
+        track.userData = ctx.guild
+        musicManager.addToQueue(track)
+
+        ctx.send("**${track.info.title}** added to queue")
+    }
 
 }
