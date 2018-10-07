@@ -181,7 +181,7 @@ class EventHandler : ListenerAdapter() {
             guildJoinClient.send(
                     WebhookMessageBuilder()
                             .addEmbeds(em)
-                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name,20) else "Shity name")
+                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name, 20) else "Shity name")
                             .setAvatarUrl(guild.iconUrl)
                             .build())
             guildJoinClient.close()
@@ -219,7 +219,7 @@ class EventHandler : ListenerAdapter() {
                                                             "Guild Users: **${guild.owner.effectiveName}**\n",
                                                     false)
                                             .build())
-                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name,20) else "Shity name")
+                            .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name, 20) else "Shity name")
                             .setAvatarUrl(guild.iconUrl)
                             .build())
             guildLeaveClient.close()

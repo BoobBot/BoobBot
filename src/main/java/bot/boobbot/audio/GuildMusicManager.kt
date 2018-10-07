@@ -1,4 +1,4 @@
-package bot.boobbot.misc
+package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
@@ -33,16 +33,14 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     public fun playNext() {
         if (queue.size > 0) {
             player.startTrack(queue.removeAt(0), false)
+        } else {
+            shutdown()
         }
     }
 
     // ----------------------------------------------
     // PLAYER EVENT HANDLING
     // ----------------------------------------------
-
-    override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
-        playNext()
-    }
 
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         lastTrack = track
@@ -59,7 +57,9 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
                 queue.add(cloned)
                 playNext()
             }
-            else -> shutdown() //there is no next playNext()
+            RepeatMode.NONE -> {
+                playNext()
+            }
         }
     }
 

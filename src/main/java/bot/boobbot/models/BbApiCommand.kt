@@ -14,7 +14,7 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
 
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
-        
+
         ctx.embed {
             setDescription(Formats.LEWD_EMOTE)
             setColor(Colors.getEffectiveColor(ctx.message))
