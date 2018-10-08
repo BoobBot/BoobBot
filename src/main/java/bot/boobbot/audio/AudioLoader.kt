@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import java.util.concurrent.TimeUnit
 
 class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: Context) : AudioLoadResultHandler {
 
@@ -32,7 +33,8 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
         track.userData = ctx.guild
         musicManager.addToQueue(track)
 
-        ctx.send("**${track.info.title}** added to queue")
+        ctx.message.channel.sendMessage("**${track.info.title}** added to queue").queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
+
     }
 
 }
