@@ -70,7 +70,8 @@ class EventHandler : ListenerAdapter() {
                     }
                     get("/commands") {
                         val coms = JSONArray()
-                        for (com in BoobBot.commands.values) coms.put(JSONObject().put("command", com.name).put("category", com.properties.category).put("description", com.properties.description).put("aliases", "[${com.properties.aliases.joinToString(", ")}]"))
+                        for (com in BoobBot.commands.values)
+                            coms.put(JSONObject().put("command", com.name).put("category", com.properties.category).put("description", com.properties.description).put("aliases", "[${com.properties.aliases.joinToString(", ")}]"))
                         call.respondText("{\"commands\": $coms}", ContentType.Application.Json)
                     }
                 }
