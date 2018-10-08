@@ -6,7 +6,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Plays a song from the given URL")
+@CommandProperties(description = "Plays a PornHub, RedTube link from the given URL", category = CommandProperties.category.AUDIO,guildOnly = true, nsfw = true)
 class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {

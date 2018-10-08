@@ -6,7 +6,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Searches PornHub for videos to play")
+@CommandProperties(description = "Searches PornHub for videos to play", category = CommandProperties.category.AUDIO,guildOnly = true, nsfw = true)
 class PornSearch : VoiceCommand {
 
     override fun execute(ctx: Context) {
