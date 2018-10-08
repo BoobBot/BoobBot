@@ -63,6 +63,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
         }
     }
 
+
     // ----------------------------------------------
     // JDA SEND HANDLER HOOKS
     // ----------------------------------------------
