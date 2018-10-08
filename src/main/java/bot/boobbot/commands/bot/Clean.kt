@@ -26,7 +26,7 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message): Boolean {
-        return message.jda.selfUser === message.author || message.contentDisplay.startsWith(if (BoobBot.isDebug) "!bb" else "bb")
+        return message.jda.selfUser === message.author || message.contentDisplay.toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
     }
 
     override fun execute(ctx: Context) {
