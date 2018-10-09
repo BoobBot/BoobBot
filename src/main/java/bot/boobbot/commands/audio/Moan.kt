@@ -30,10 +30,10 @@ class Moan : Command {
         val musicManager = getMusicManager(ctx.message.guild)
         connectToVoiceChannel(ctx.message)
         playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
-        if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-            ctx.message.delete().reason("no spam").submit()
-        }
-        ctx.send(":tired_face:")
+        //if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
+            //ctx.message.delete().reason("no spam").submit()
+        //}
+
     }
 
 }

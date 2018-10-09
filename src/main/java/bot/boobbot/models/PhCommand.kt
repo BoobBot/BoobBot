@@ -30,7 +30,7 @@ abstract class PhCommand : AsyncCommand {
                     video.getString("url"),
                     "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
                     .setTitle(video.getString("title"), video.getString("url"))
-                    .setDescription("RedTube video search")
+                    .setDescription("PornTube video search")
                     .setColor(Colors.getEffectiveColor(ctx.message))
                     .setImage(video.getString("thumb"))
                     .addField("Video stats",
