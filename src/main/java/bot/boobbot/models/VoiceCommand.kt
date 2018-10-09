@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 
 interface VoiceCommand : Command {
 
-    open fun performVoiceChecks(ctx: Context): Boolean {
+    fun performVoiceChecks(ctx: Context): Boolean {
         if (ctx.guild == null) {
             return false
         }
@@ -46,11 +46,11 @@ interface VoiceCommand : Command {
         }
 
         if (!self.hasPermission(channel, Permission.VOICE_CONNECT)) {
-            return "I can't connect to your voicechannel"
+            return "No slut, I don't have permissions to connect. fucking fix it!"
         }
 
         if (!self.hasPermission(channel, Permission.VOICE_SPEAK)) {
-            return "I can't play music if I can't speak in your voicechannel"
+            return "No slut, I can't play music if I can't speak in your voicechannel"
         }
 
         return null
