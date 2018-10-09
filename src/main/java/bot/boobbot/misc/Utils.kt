@@ -6,12 +6,14 @@ import bot.boobbot.flight.Command
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
+import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.InputStream
 import java.net.InetSocketAddress
 import java.net.Proxy
+import java.nio.file.Paths
 import java.text.MessageFormat
 import java.time.Instant.now
 import java.util.*
@@ -49,7 +51,9 @@ class Utils {
         fun getRandomMoan(): File {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            return (File("/root/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
+            val path = Paths.get("").toAbsolutePath().toString()
+            BoobBot.log.info(path)
+            return (File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
         }
 
         fun getRandomAvatar(): InputStream {
@@ -62,6 +66,13 @@ class Utils {
             val proxy = ips[rand.nextInt(ips.size)]
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
             return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], parts[1].toInt()))
+        }
+
+        fun getProxyAsHost(): HttpHost {
+            val proxy = ips[rand.nextInt(ips.size)]
+            val parts = proxy.split(":".toRegex(), 2).toTypedArray()
+            return HttpHost(parts[0], parts[1].toInt(), "http")
+
         }
 
         fun disconnectFromVoice(channel: VoiceChannel) {

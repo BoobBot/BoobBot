@@ -1,5 +1,7 @@
 package bot.boobbot.audio.sources.pornhub
 
+import bot.boobbot.BoobBot
+import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
@@ -33,7 +35,7 @@ import java.util.regex.Pattern
 
 class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
     private val httpInterfaceManager: HttpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager()
-
+   
     val httpInterface: HttpInterface
         get() = httpInterfaceManager.`interface`
 
@@ -86,6 +88,10 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     private fun loadItemOnce(reference: AudioReference): AudioItem {
         try {
+            //httpInterfaceManager.configureBuilder {
+               // it.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+                //it.setProxy(Utils.getProxyAsHost())
+           // }
             httpInterface.use { httpInterface ->
                 val info = getVideoInfo(httpInterface, reference.identifier) ?: return AudioReference.NO_TRACK
 
@@ -105,7 +111,11 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     private fun searchForVideos(query: String): AudioItem {
         val uri: URI = URIBuilder("https://www.pornhub.com/video/search").addParameter("search", query).build()
-
+        BoobBot.log.info("debug uri $uri")
+        //httpInterfaceManager.configureBuilder {
+           // it.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
+            //it.setProxy(Utils.getProxyAsHost())
+       // }
         httpInterface.execute(HttpGet(uri)).use {
             val statusCode: Int = it.statusLine.statusCode
 
@@ -127,9 +137,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
             if (videos.isEmpty())
                 return AudioReference.NO_TRACK
-
             val tracks = ArrayList<AudioTrack>()
-
             for (e: Element in videos) {
                 val anchor = e.select("div.thumbnail-info-wrapper span.title a").first()
                 val title = anchor.text()
@@ -140,7 +148,6 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
                 tracks.add(buildTrackObject(url, identifier, title, "Unknown Uploader", false, duration))
             }
-
             return BasicAudioPlaylist("Search results for: $query", tracks, null, true)
         }
     }

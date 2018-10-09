@@ -7,6 +7,9 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import java.util.concurrent.TimeUnit
+import java.util.Random
+
+
 
 class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: Context) : AudioLoadResultHandler {
 
@@ -16,7 +19,8 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
         if (playlist.isSearchResult) {
-            enqueueTrack(playlist.tracks[0])
+            val randomIndex = Random().nextInt(playlist.tracks.size)
+            enqueueTrack(playlist.tracks[randomIndex])
         }
     }
 
@@ -32,9 +36,9 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     private fun enqueueTrack(track: AudioTrack) {
         track.userData = ctx.guild
         musicManager.addToQueue(track)
-
-        ctx.message.channel.sendMessage("**${track.info.title}** added to queue").queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
-
+       if (track.sourceManager.sourceName != "local") {
+           ctx.message.channel.sendMessage("**${track.info.title}** added to queue").queue()//{ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
+       }
     }
 
 }
