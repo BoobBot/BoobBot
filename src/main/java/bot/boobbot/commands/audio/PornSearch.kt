@@ -5,6 +5,8 @@ import bot.boobbot.audio.AudioLoader
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
+import net.dv8tion.jda.core.Permission
+import java.util.concurrent.TimeUnit
 
 @CommandProperties(description = "Searches PornHub for videos to play", category = CommandProperties.category.AUDIO,guildOnly = true, nsfw = true)
 class PornSearch : VoiceCommand {
@@ -24,6 +26,8 @@ class PornSearch : VoiceCommand {
         val query = "phsearch:${ctx.args.joinToString(" ")}"
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
+        //if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
+            //ctx.message.delete().reason("no spam").queueAfter(5, TimeUnit.SECONDS)
+        //}
     }
-
 }
