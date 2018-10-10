@@ -1,4 +1,4 @@
-![](https://cdn.discordapp.com/attachments/377619690513498133/406183455123177481/OpenSauce.svg) ![](https://cdn.discordapp.com/attachments/330777295952543744/478325842188042241/license.svg) ![](https://circleci.com/gh/Nekos-life/neko-bot-jda.svg?style=svg) [![Patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/OfficialBoobBot) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/boobbot)  
+![](https://cdn.discordapp.com/attachments/377619690513498133/406183455123177481/OpenSauce.svg) ![](https://cdn.discordapp.com/attachments/330777295952543744/478325842188042241/license.svg) ![](https://circleci.com/gh/BoobBot/BoobBot.jda.svg?style=svg) [![Patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/OfficialBoobBot) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/boobbot)  
 # BoobBot
 
 This Repository is meant for education and allowing people to improve the current bot more than anything, However if you insist on self-hosting you will need to do several things see prerequisites for more information
