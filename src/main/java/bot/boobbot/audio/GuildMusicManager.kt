@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.audio.AudioSendHandler
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
     private var lastFrame: AudioFrame? = null
-    private val queue = mutableListOf<AudioTrack>()
+    val queue = mutableListOf<AudioTrack>()
     private var lastTrack: AudioTrack? = null
     private var repeat = RepeatMode.NONE
 

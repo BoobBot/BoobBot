@@ -4,9 +4,13 @@ import bot.boobbot.BoobBot.Companion.playerManager
 import bot.boobbot.audio.AudioLoader
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
+import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser
 import net.dv8tion.jda.core.Permission
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 @CommandProperties(description = "Plays a PornHub, RedTube link from the given URL", category = CommandProperties.category.AUDIO,guildOnly = true, nsfw = true)
 class Play : VoiceCommand {
@@ -24,6 +28,22 @@ class Play : VoiceCommand {
 
         val player = ctx.audioPlayer!!
         val query = ctx.args[0].replace("<","").replace(">", "")
+        val YT_REGEX = Pattern.compile("^(https?://)?(www\\.)?(youtube\\.com|youtu\\.?be)/.+\$")
+        val match = YT_REGEX.matcher(query)
+        if (match.find()) {
+            if (!Utils.isDonor(ctx.author)) {
+                    ctx.message.channel.sendMessage(Formats.error(
+                            " Sorry YouTube music is only available to our Patrons.\n"
+                            + ctx.
+                            jda
+                            .asBot()
+                            .shardManager
+                            .getEmoteById(475801484282429450L)
+                            .asMention
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")).queue()
+                    return
+            }
+        }
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
        // if (ctx.botCan(Permission.MESSAGE_MANAGE)) {

@@ -36,7 +36,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     }
 
     private fun enqueueTrack(track: AudioTrack) {
-        track.userData = ctx.guild
+        track.userData = ctx.author
         musicManager.addToQueue(track)
         BoobBot.log.info(track.sourceManager.sourceName)
         if (track.sourceManager.sourceName == "local") {
