@@ -13,7 +13,7 @@ import bot.boobbot.models.VoiceCommand
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.utils.PermissionUtil
 
-@CommandProperties(description = "moans :tired_face:", nsfw = true, category = CommandProperties.category.AUDIO)
+@CommandProperties(description = "moans :tired_face:", nsfw = true, guildOnly = true, category = CommandProperties.category.AUDIO)
 class Moan : VoiceCommand {
 
     override fun execute(ctx: Context) {
