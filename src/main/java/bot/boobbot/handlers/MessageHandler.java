@@ -97,9 +97,8 @@ public class MessageHandler extends ListenerAdapter {
         if (command.getProperties().donorOnly() && !Utils.Companion.isDonor(event.getAuthor())) {
             event.getChannel().sendMessage(Formats.Companion.error(
                     " Sorry this command is only available to our Patrons.\n"
-                            + event
-                            .getJDA()
-                            .asBot()
+                            + BoobBot
+                            .Companion
                             .getShardManager()
                             .getEmoteById(475801484282429450L)
                             .getAsMention()

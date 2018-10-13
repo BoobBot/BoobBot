@@ -2,13 +2,14 @@ package bot.boobbot.commands.nsfw
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
 import java.awt.Color
 import java.net.URLEncoder
 
-@CommandProperties(description = "Super freaky porn <:p_:475801484282429450>", nsfw = true, guildOnly = true, donorOnly = true, category = CommandProperties.category.GENERAL)
+@CommandProperties(description = "Super freaky porn <:p_:475801484282429450>", nsfw = true, guildOnly = true, donorOnly = true, category = Category.GENERAL)
 class Magik : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {

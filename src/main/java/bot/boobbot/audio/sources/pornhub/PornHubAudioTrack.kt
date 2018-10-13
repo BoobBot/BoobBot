@@ -28,8 +28,8 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
 
     @Throws(Exception::class)
     override fun process(localExecutor: LocalAudioTrackExecutor) {
-        sourceManager.httpInterface.use { httpInterface ->
-            processStatic(localExecutor, httpInterface)
+        sourceManager.httpInterfaceManager.`interface`.use {
+            processStatic(localExecutor, it)
         }
     }
 

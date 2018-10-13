@@ -1,7 +1,8 @@
 package bot.boobbot.commands.nsfw
 
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.models.PhCommand
 
-@CommandProperties(description = "PornHub video search. <:p_:475801484282429450>", donorOnly = true, guildOnly = true, aliases = ["ph"], nsfw = true, category = CommandProperties.category.VIDEOSEARCHING)
+@CommandProperties(description = "PornHub video search. <:p_:475801484282429450>", donorOnly = true, guildOnly = true, aliases = ["ph"], nsfw = true, category = Category.VIDEOSEARCHING)
 class PornHub : PhCommand()

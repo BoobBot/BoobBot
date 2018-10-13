@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -11,7 +12,7 @@ import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 import java.time.Instant
 
-@CommandProperties(description = "help, --dm for dm", aliases = ["halp", "halllp", "coms", "commands"], category = CommandProperties.category.MISC)
+@CommandProperties(description = "help, --dm for dm", aliases = ["halp", "halllp", "coms", "commands"], category = Category.MISC)
 class Help : Command {
 
     override fun execute(ctx: Context) {
@@ -26,7 +27,7 @@ class Help : Command {
 
         builder.setColor(Colors.getEffectiveColor(ctx.message))
 
-        CommandProperties.category.values().forEach { category ->
+        Category.values().forEach { category ->
             val list = commands
                     .filter { it.properties.category == category }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }

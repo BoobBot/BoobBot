@@ -1,5 +1,6 @@
 package bot.boobbot.commands.nsfw
 
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.models.SendCommand
 
@@ -7,6 +8,6 @@ import bot.boobbot.models.SendCommand
         description = "Sends nudes to you or another user",
         guildOnly = true,
         aliases = ["sn"],
-        category = CommandProperties.category.SEND
+        category = Category.SEND
 )
 class SendNudes : SendCommand("nudes", "boobs")

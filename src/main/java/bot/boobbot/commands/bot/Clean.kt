@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -16,7 +17,7 @@ import java.util.stream.Collectors
         description = "Cleans up all the bot and trigger messages",
         aliases = ["clean", "cleanup", "purge", "del"],
         guildOnly = true,
-        category = CommandProperties.category.MISC
+        category = Category.MISC
 )
 class Clean : Command {
 
