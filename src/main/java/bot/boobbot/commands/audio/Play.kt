@@ -10,7 +10,7 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
 import java.util.regex.Pattern
 
-@CommandProperties(description = "Plays a song from the given URL", category = Category.AUDIO, guildOnly = true, nsfw = true)
+@CommandProperties(description = "Plays from a PornHub or RedTube URL", category = Category.AUDIO, guildOnly = true, nsfw = true)
 class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {
