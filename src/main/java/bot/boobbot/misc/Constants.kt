@@ -7,7 +7,7 @@ import java.util.*
 class Constants {
     companion object {
         val OWNERS: List<Long> = Arrays.asList(
-                248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L
+                248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L, 180093157554388993L
         )
 
         var TOKEN = BoobBot.dotenv["TOKEN"] ?: ""

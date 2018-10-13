@@ -1,5 +1,6 @@
 package bot.boobbot.commands.bot
 
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -10,7 +11,7 @@ import net.dv8tion.jda.core.exceptions.ErrorResponseException
         description = "Toggles the current channels nsfw setting",
         aliases = ["nsfw", "toggle"],
         guildOnly = true,
-        category = CommandProperties.category.MISC
+        category = Category.MISC
 )
 class NsfwToggle : Command {
 
