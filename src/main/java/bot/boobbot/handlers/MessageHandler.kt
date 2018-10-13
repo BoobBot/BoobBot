@@ -38,8 +38,8 @@ class MessageHandler : ListenerAdapter() {
         val messageContent = event.message.contentRaw
         val acceptablePrefixes = arrayOf(
                 botPrefix,
-                "<@${event.jda.selfUser.idLong} ",
-                "<@!${event.jda.selfUser.idLong} "
+                "<@${event.jda.selfUser.id}> ",
+                "<@!${event.jda.selfUser.id}> "
         )
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.startsWith(it) }
