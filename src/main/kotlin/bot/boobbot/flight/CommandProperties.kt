@@ -21,7 +21,7 @@ enum class Category(val title: String) {
     FANTASY("<:Pantsu:443870754107555842> Non-Real"),
     HOLIDAY("\uD83C\uDF85 Holiday"),
     SEND("\uD83D\uDCE7 Send Commands"),
-    FUN("✨ Fun Commands"),
+    FUN("\u2728 Fun Commands"),
     AUDIO("\uD83D\uDD08 Audio Commands"),
     MISC("<:info:486945488080338944> Misc Commands")
 }

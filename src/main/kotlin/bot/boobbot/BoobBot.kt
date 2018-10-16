@@ -16,6 +16,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import de.mxro.metrics.jre.Metrics
 import io.github.cdimascio.dotenv.dotenv
 import io.sentry.Sentry
@@ -40,7 +41,7 @@ class BoobBot : ListenerAdapter() {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 
-        val executorPool = Executors.newSingleThreadExecutor()
+        val executorPool = Executors.newSingleThreadExecutor()!!
 
         var isDebug = false
             private set
@@ -51,20 +52,21 @@ class BoobBot : ListenerAdapter() {
         var isReady = false
             internal set
 
-        val metrics = Metrics.create()
+        val metrics = Metrics.create()!!
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-        var Scheduler = Executors.newSingleThreadScheduledExecutor()
+        var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val home: Guild?
             get() = shardManager.getGuildById(Constants.HOME_GUILD)
 
         val dotenv = dotenv {
+            directory = "D:\\idea\\BoobBot.jda\\"
             filename = "bb.env"
             ignoreIfMalformed = true
-            ignoreIfMissing = false
+            ignoreIfMissing =  false
         }
 
         @Throws(Exception::class)
@@ -72,11 +74,11 @@ class BoobBot : ListenerAdapter() {
         fun main(args: Array<String>) {
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
-            AudioSourceManagers.registerRemoteSources(playerManager)
+            playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 9
             playerManager
-                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.LOW // don't destroy CPU
+                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.MEDIUM // lets destroy it a lil // don't destroy CPU
 
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
@@ -88,7 +90,7 @@ class BoobBot : ListenerAdapter() {
             }
             if (isDebug) {
                 log.warn("Running in debug mode")
-                log.level = Level.DEBUG
+                //log.level = Level.DEBUG
             }
 
             shardManager = DefaultShardManagerBuilder()
@@ -128,7 +130,7 @@ class BoobBot : ListenerAdapter() {
             // TODO: Eval
         }
 
-        public fun getMusicManager(g: Guild): GuildMusicManager {
+        fun getMusicManager(g: Guild): GuildMusicManager {
             val manager = musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
             val audioManager = g.audioManager
 

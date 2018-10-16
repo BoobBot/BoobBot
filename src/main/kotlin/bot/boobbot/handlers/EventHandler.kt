@@ -52,7 +52,9 @@ class EventHandler : ListenerAdapter() {
 
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
-            BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
+            if(!BoobBot.isDebug) { // dont need this is testing
+                BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
+            }
             self = event.jda.selfUser // set
             // health check for status page
             embeddedServer(Netty, 8888) {
@@ -172,8 +174,8 @@ class EventHandler : ListenerAdapter() {
                         Formats.info("info"),
                         "**${guild.jda.shardInfo}**\n" +
                                 "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
-                                "Owner: **${guild.members.size}**\n" +
-                                "Guild Users: **${guild.owner.effectiveName}**\n",
+                                "Owner: **${guild.owner.effectiveName}**\n" +
+                                "Guild Users: **${guild.members.size}**\n",
                         false)
                 .setTimestamp(now())
                 .build()
@@ -216,8 +218,8 @@ class EventHandler : ListenerAdapter() {
                                                     Formats.info("info"),
                                                     "**${guild.jda.shardInfo}**\n" +
                                                             "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
-                                                            "Owner: **${guild.members.size}**\n" +
-                                                            "Guild Users: **${guild.owner.effectiveName}**\n",
+                                                            "Owner: **${guild.owner.effectiveName}**\n" +
+                                                            "Guild Users: **${guild.members.size}**\n",
                                                     false)
                                             .build())
                             .setUsername(if (guild.name.length > 3) StringUtils.abbreviate(guild.name, 20) else "Shity name")

@@ -11,7 +11,7 @@ import java.time.Instant.now
 import java.util.*
 
 
-abstract class RtCommand() : AsyncCommand {
+abstract class RtCommand : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
