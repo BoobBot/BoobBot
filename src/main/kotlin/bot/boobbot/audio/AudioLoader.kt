@@ -20,8 +20,12 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
         if (playlist.isSearchResult) {
-            val randomIndex = Random().nextInt(playlist.tracks.size)
-            enqueueTrack(playlist.tracks[randomIndex])
+            if (playlist.tracks[0].sourceManager.sourceName.equals("pornhub")) {
+                val randomIndex = Random().nextInt(playlist.tracks.size)
+                enqueueTrack(playlist.tracks[randomIndex])
+            } else {
+                enqueueTrack(playlist.tracks[0])
+            }
         }
     }
 
@@ -42,7 +46,6 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
             ctx.message.channel.sendMessage(":tired_face:").queue()//{ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
         }
         if (track.sourceManager.sourceName == "pornhub") {
-            //ctx.message.channel.sendMessage("**${track.info.title}** added to queue").queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
             ctx.embed {
                 setAuthor("PornHub is music too",
                         track.info.uri,
@@ -60,11 +63,31 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
         }
 
         if (track.sourceManager.sourceName == "redtube") {
-            //ctx.message.channel.sendMessage("**${track.info.title}** added to queue").queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
+
             ctx.embed {
                 setAuthor("RedTube is music too",
                         track.info.uri,
                         "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png")
+                        .setColor(Colors.getEffectiveColor(ctx.message))
+                        .addField("Enqueued track",
+                                "**Title**: ${track.info.title}\n" +
+                                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                                        "**Link**: ${track.info.uri}",
+                                false)
+                        .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
+                        .setTimestamp(Instant.now())
+                        .build()
+
+            }
+
+        }
+
+        if (track.sourceManager.sourceName == "youtube") {
+
+             ctx.embed {
+                setAuthor("Music",
+                        track.info.uri,
+                        "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300")
                         .setColor(Colors.getEffectiveColor(ctx.message))
                         .addField("Enqueued track",
                                 "**Title**: ${track.info.title}\n" +

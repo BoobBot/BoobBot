@@ -38,6 +38,7 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
             }
         }
 
+
     fun userCan(check: Permission, explicit: Boolean = false): Boolean {
         if (!event.channelType.isGuild && !explicit) {
             return true

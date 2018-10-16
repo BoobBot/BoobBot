@@ -2,10 +2,39 @@ package bot.boobbot.models
 
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.Constants
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Member
+import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.entities.VoiceChannel
 
 interface VoiceCommand : Command {
+
+    fun isDJ(member: Member): Boolean {
+        return member.roles.stream().allMatch { x -> x.name.equals("dj", ignoreCase = true) }
+    }
+
+    fun canSkip(ctx: Context): Boolean {
+        val user = ctx.audioPlayer!!.player.playingTrack.userData as User
+        if (ctx.userCan(Permission.MESSAGE_MANAGE)) {
+            return true
+        }
+        if (ctx.author.idLong == user.idLong) {
+            return true
+        }
+        return if (isDJ(ctx.member!!)) {
+            true
+        } else ctx.message.member
+                .voiceState
+                .channel
+                .members
+                .stream()
+                .filter { member -> !member.user.isBot }
+                .toArray()
+                .size == 1 || Constants.OWNERS.contains(ctx.author.idLong)
+    }
 
     fun performVoiceChecks(ctx: Context): Boolean {
         if (ctx.guild == null) {
@@ -37,7 +66,7 @@ interface VoiceCommand : Command {
         return true
     }
 
-    open fun checkVoiceChannelPermissions(channel: VoiceChannel): String? {
+    fun checkVoiceChannelPermissions(channel: VoiceChannel): String? {
         val self = channel.guild.selfMember
 
         if (channel.userLimit != 0 && channel.members.size >= channel.userLimit &&

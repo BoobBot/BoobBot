@@ -25,11 +25,16 @@ class Utils {
         private val rand = Random()
 
         private val ips = Arrays.asList(
-                "5.231.237.168:3213",
-                "94.249.224.97:2543",
-                "185.164.57.91:4012",
-                "185.164.57.144:9749",
-                "185.164.57.70:5756"
+                "104.247.201.235:8564", //Atlanta
+                "104.247.211.200:4041", //PeachtreeCity
+                "104.237.210.97:4974", //Chicago
+                "172.82.172.126:1248", //Schererville
+                "45.43.216.46:3568",  //Los Angeles
+                "45.43.217.133:8058", //Los Angeles
+                "45.58.59.214:6560", //Atlanta
+                "96.46.0.53:1520", //Duarte
+                "208.72.224.182:6958", //Duarte
+                "67.227.66.102:7498" // Las Vegas
         )
 
         private val jsonArrays = JSONObject(
@@ -56,7 +61,7 @@ class Utils {
             return (File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
         }
 
-        fun getRandomAvatar(): InputStream {
+        private fun getRandomAvatar(): InputStream {
             val arr = jsonArrays.getJSONArray("avatar")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
             return (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
