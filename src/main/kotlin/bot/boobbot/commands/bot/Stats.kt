@@ -33,6 +33,8 @@ class Stats : Command {
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
 
+        val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.count()
+
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed = if (metrics.has("command")) metrics.getJSONObject("command").getString("Total Events").toInt() else 0
         val comsPerSec = if (metrics.has("command")) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDouble() else 0.0
@@ -61,6 +63,7 @@ class Stats : Command {
                 .append("[ BoobBot ]\n")
                 .append("Guilds              = ").append(servers).append("\n")
                 .append("Users               = ").append(users).append("\n")
+                .append("Audio Players       = ").append(players).append("\n")
                 .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n")
                 .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n")
                 .append("[ Metrics_Since_Boot ]\n")
