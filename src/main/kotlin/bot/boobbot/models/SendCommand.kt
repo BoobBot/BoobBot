@@ -19,7 +19,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         }
 
         val prompt = ctx.dmUserAsync(user, "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?")
-                ?: return ctx.send("hey, this whore ${ctx.author.name} has me blocked or their filter turned on \uD83D\uDD95")
+                ?: return ctx.send("hey, this whore ${user.name} has me blocked or their filter turned on \uD83D\uDD95")
 
         ctx.send("Good job ${ctx.author.asMention}")
 
