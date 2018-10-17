@@ -149,13 +149,13 @@ class Utils {
         }
 
         fun autoAvatar() {
-            if (!manSetAvatar){
-            val icon = Icon.from(getRandomAvatar())
-            val gm = GuildManager(BoobBot.home)
-            gm.setIcon(icon).queue()
-            BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
-            BoobBot.log.info("Setting New Guild icon/Avatar")
-        }
+            if (!manSetAvatar) {
+                val icon = Icon.from(getRandomAvatar())
+                val gm = GuildManager(BoobBot.home)
+                gm.setIcon(icon).queue()
+                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
+                BoobBot.log.info("Setting New Guild icon/Avatar")
+            }
         }
 
         fun auto(autoAvatar: Unit): Runnable = Runnable { autoAvatar() }

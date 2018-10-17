@@ -7,7 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Searches YouTube for videos to play", aliases = ["yt"] , nsfw = false, category = Category.AUDIO, guildOnly = true, donorOnly = true)
+@CommandProperties(description = "Searches YouTube for videos to play", aliases = ["yt"], nsfw = false, category = Category.AUDIO, guildOnly = true, donorOnly = true)
 class YouTube : VoiceCommand {
 
     override fun execute(ctx: Context) {

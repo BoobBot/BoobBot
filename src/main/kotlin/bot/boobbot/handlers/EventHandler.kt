@@ -53,7 +53,7 @@ class EventHandler : ListenerAdapter() {
 
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
-            if(!BoobBot.isDebug) { // dont need this is testing
+            if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
             }
             self = event.jda.selfUser // set

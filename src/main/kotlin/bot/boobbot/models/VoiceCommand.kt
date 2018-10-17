@@ -3,10 +3,8 @@ package bot.boobbot.models
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Constants
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.entities.VoiceChannel
 
