@@ -22,7 +22,7 @@ class Set : Command {
 
             "name" -> {
 
-                ctx.jda.selfUser.manager.setName(ctx.args[1]).queue({ ctx.send(Formats.info("Set UserName to ${ctx.args[1]}")) }, { ctx.send(Formats.error(" Failed to set UserName")) })
+                ctx.jda.selfUser.manager.setName(ctx.args.sliceArray(1 until ctx.args.size).joinToString(" ")).queue({ ctx.send(Formats.info("Set UserName to ${ctx.args[1]}")) }, { ctx.send(Formats.error(" Failed to set UserName")) })
 
             }
 
@@ -33,7 +33,7 @@ class Set : Command {
                     "playing" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.playing(ctx.args[2]))
+                        ctx.jda.asBot().shardManager.setGame(Game.playing(ctx.args.sliceArray(2 until ctx.args.size).joinToString(" ")))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -41,7 +41,7 @@ class Set : Command {
                     "listening" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.listening(ctx.args[2]))
+                        ctx.jda.asBot().shardManager.setGame(Game.listening(ctx.args.sliceArray(2 until ctx.args.size).joinToString(" ")))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -49,7 +49,7 @@ class Set : Command {
                     "watching" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.watching(ctx.args[2]))
+                        ctx.jda.asBot().shardManager.setGame(Game.watching(ctx.args.sliceArray(2 until ctx.args.size).joinToString(" "))) // There is probly a better way to do this
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -57,7 +57,7 @@ class Set : Command {
                     "stream" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.streaming(ctx.args[2], ctx.args[3]))
+                        ctx.jda.asBot().shardManager.setGame(Game.streaming(ctx.args.sliceArray(3 until ctx.args.size).joinToString(" "), ctx.args[2]))
                         ctx.send(Formats.info("Yes daddy, Stream set"))
 
                     }
@@ -79,7 +79,7 @@ class Set : Command {
 
             "nick" -> {
                 if (ctx.botCan(Permission.NICKNAME_CHANGE)) {
-                    ctx.guild?.controller?.setNickname(ctx.selfMember, ctx.args[1])?.reason("BoobBot nick set")?.queue({ ctx.send(Formats.info("Yes daddy, nick set")) }, { ctx.send(Formats.error(" Failed to set nick")) })
+                    ctx.guild?.controller?.setNickname(ctx.selfMember, ctx.args.sliceArray(1 until ctx.args.size).joinToString(" "))?.reason("BoobBot nick set")?.queue({ ctx.send(Formats.info("Yes daddy, nick set")) }, { ctx.send(Formats.error(" Failed to set nick")) })
                 }
 
             }
