@@ -27,14 +27,14 @@ class Queue : VoiceCommand {
                 ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
 
         val q = player.queue
-        val qStr = if (q.size >= 1){
+        val qStr = if (q.size >= 1) {
             q.joinToString(separator = "\n", limit = 5, truncated = "Showing 5 of ${q.size}") {
-                "**Title**: ${StringUtils.abbreviate(it.info.title.replace("Unknown title", "Moan :tired_face:"), 20)}" +
-                        " **Duration**: ${Utils.fTime(it.info.length)}" +
-                        " **Source**: ${it.sourceManager.sourceName.replace("local", "moan")}" +
-                        " **User**: ${(it.userData as User).name}"
+                "**Title**: ${StringUtils.abbreviate(it.info.title.replace("Unknown title", "Moan :tired_face:"), 50)}\n" +
+                        "**Duration**: ${Utils.fTime(it.info.length)}\n" +
+                        "**Source**: ${it.sourceManager.sourceName.replace("local", "moan")}\n" +
+                        "**User**: ${(it.userData as User).name}\n\n"
             }
-        } else{
+        } else {
             "Nothing Queued"
         }
 
@@ -46,10 +46,10 @@ class Queue : VoiceCommand {
                     ctx.jda.selfUser.avatarUrl)
                     .setColor(Colors.getEffectiveColor(ctx.message))
                     .addField("Now Playing",
-                            "**Title**: ${StringUtils.abbreviate(track.info.title.replace("Unknown title", "Moan :tired_face:"), 20)}" +
-                                    " **Duration**: ${Utils.fTime(track.info.length)}" +
-                                    " **Source**: ${track.sourceManager.sourceName.replace("local", "moan")}" +
-                                    " **User**: ${(track.userData as User).name}", false
+                            "**Title**: ${StringUtils.abbreviate(track.info.title.replace("Unknown title", "Moan :tired_face:"), 50)}\n" +
+                                    "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                                    "**Source**: ${track.sourceManager.sourceName.replace("local", "moan")}\n" +
+                                    "**User**: ${(track.userData as User).name}", false
                     )
                     .addField("Queue",
                             qStr,

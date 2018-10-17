@@ -54,6 +54,7 @@ dependencies {
     compile 'io.github.cdimascio:java-dotenv:3.1.2'
     compile 'org.javadelight:delight-metrics:0.0.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.5.2'
 }
 
 task wrapper(type: Wrapper) {

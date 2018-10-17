@@ -39,10 +39,6 @@ class Skip : VoiceCommand {
             addField(Formats.info(""), "Skipped: ${track.info.title}", false)
         }
 
-
-        // if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-        //ctx.message.delete().reason("no spam").queueAfter(5, TimeUnit.SECONDS)
-        //}
     }
 
 }

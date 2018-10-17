@@ -7,7 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Searches YouTube for videos to play", nsfw = false, category = Category.AUDIO, guildOnly = true, donorOnly = true)
+@CommandProperties(description = "Searches YouTube for videos to play", aliases = ["yt"] , nsfw = false, category = Category.AUDIO, guildOnly = true, donorOnly = true)
 class YouTube : VoiceCommand {
 
     override fun execute(ctx: Context) {
@@ -25,8 +25,6 @@ class YouTube : VoiceCommand {
         val query = "ytsearch:${ctx.args.joinToString(" ")}"
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
-        //if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-        //ctx.message.delete().reason("no spam").queueAfter(5, TimeUnit.SECONDS)
-        //}
+
     }
 }

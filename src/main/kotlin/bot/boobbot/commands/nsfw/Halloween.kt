@@ -4,5 +4,5 @@ import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.models.BbApiCommand
 
-@CommandProperties(description = "Tatted up women.", nsfw = true, category = Category.KINKS)
-class Tattoo : BbApiCommand("tattoo")
+@CommandProperties(description = "Halloween \uD83D\uDC7B", nsfw = true, category = Category.HOLIDAY)
+class Halloween : BbApiCommand("halloween")

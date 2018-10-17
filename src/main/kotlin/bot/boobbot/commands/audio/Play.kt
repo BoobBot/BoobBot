@@ -10,7 +10,7 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
 import java.util.regex.Pattern
 
-@CommandProperties(description = "Plays from a PornHub or RedTube URL", category = Category.AUDIO, guildOnly = true, nsfw = true)
+@CommandProperties(description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)", category = Category.AUDIO, guildOnly = true, nsfw = true)
 class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {
@@ -43,9 +43,7 @@ class Play : VoiceCommand {
         }
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
-        // if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-        //ctx.message.delete().reason("no spam").queueAfter(5, TimeUnit.SECONDS)
-        //}
+
     }
 
 }
