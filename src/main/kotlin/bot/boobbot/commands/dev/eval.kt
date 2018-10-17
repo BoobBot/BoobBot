@@ -4,17 +4,14 @@ import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
-import net.dv8tion.jda.core.requests.Route.Misc
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import groovy.lang.Binding
 import groovy.lang.GroovyShell
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.requests.Route.Misc
 import java.util.concurrent.Executors
-
-
-
 
 
 @Suppress("LABEL_NAME_CLASH")
@@ -41,6 +38,7 @@ class eval : Command {
             }
         }
     }
+
     private fun createShell(e: Message): GroovyShell {
         val binding = Binding()
         binding.setVariable("sm", e.jda.asBot().shardManager)

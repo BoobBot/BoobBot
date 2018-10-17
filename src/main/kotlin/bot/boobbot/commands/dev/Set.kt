@@ -96,6 +96,9 @@ class Set : Command {
 
             }
 
+            else -> {
+                //todo send com help
+            }
 
         }
     }

@@ -38,7 +38,7 @@ class Help : Command {
                         .filter { it.properties.category == category && !it.properties.developerOnly }
                         .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
             if (list.isNotEmpty()) {
-            builder.addField(category.title, list, false)
+                builder.addField(category.title, list, false)
             }
         }
 

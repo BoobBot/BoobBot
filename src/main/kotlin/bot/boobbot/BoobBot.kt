@@ -14,7 +14,6 @@ import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import de.mxro.metrics.jre.Metrics
@@ -73,7 +72,7 @@ class BoobBot : ListenerAdapter() {
             directory = Paths.get("").toAbsolutePath().toString()
             filename = "bb.env"
             ignoreIfMalformed = true
-            ignoreIfMissing =  false
+            ignoreIfMissing = false
         }
 
         @Throws(Exception::class)
