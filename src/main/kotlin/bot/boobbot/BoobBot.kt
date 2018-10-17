@@ -53,6 +53,12 @@ class BoobBot : ListenerAdapter() {
         var isReady = false
             internal set
 
+        var setGame = false
+            internal set
+
+        var manSetAvatar = false
+            internal set
+
         val metrics = Metrics.create()!!
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()

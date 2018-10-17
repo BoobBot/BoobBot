@@ -2,6 +2,7 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
+import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.GuildManager
@@ -148,11 +149,13 @@ class Utils {
         }
 
         fun autoAvatar() {
+            if (!manSetAvatar){
             val icon = Icon.from(getRandomAvatar())
             val gm = GuildManager(BoobBot.home)
             gm.setIcon(icon).queue()
             BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
             BoobBot.log.info("Setting New Guild icon/Avatar")
+        }
         }
 
         fun auto(autoAvatar: Unit): Runnable = Runnable { autoAvatar() }

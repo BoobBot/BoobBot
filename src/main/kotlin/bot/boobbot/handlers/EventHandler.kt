@@ -1,6 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.BoobBot.Companion.setGame
 import bot.boobbot.BoobBot.Companion.shardManager
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
@@ -162,7 +163,9 @@ class EventHandler : ListenerAdapter() {
         }
         val jda = event!!.jda
         val guild = event.guild
-        event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        if (!setGame) {
+            event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        }
         BoobBot.log.info("New Guild Joined ${guild.name}(${guild.id})")
         val em = EmbedBuilder()
                 .setColor(Color.green)
@@ -201,7 +204,9 @@ class EventHandler : ListenerAdapter() {
         }
         val jda = event!!.jda
         val guild = event.guild
-        event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        if (!setGame) {
+            event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+        }
         BoobBot.log.info("Guild left ${guild.name}(${guild.id})")
         val guildLeaveClient = WebhookClientBuilder(Constants.GLLOG_WEBHOOK).build()
         try {
