@@ -23,5 +23,6 @@ enum class Category(val title: String) {
     SEND("\uD83D\uDCE7 Send Commands"),
     FUN("\u2728 Fun Commands"),
     AUDIO("\uD83D\uDD08 Audio Commands"),
+    DEV("\u2699\ufe0f Dev shit"),
     MISC("<:info:486945488080338944> Misc Commands")
 }

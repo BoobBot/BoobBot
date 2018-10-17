@@ -25,8 +25,6 @@ class PornSearch : VoiceCommand {
         val query = "phsearch:${ctx.args.joinToString(" ")}"
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
-        //if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-        //ctx.message.delete().reason("no spam").queueAfter(5, TimeUnit.SECONDS)
-        //}
+
     }
 }

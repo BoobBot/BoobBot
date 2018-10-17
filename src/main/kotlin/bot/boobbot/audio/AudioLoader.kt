@@ -20,7 +20,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     override fun playlistLoaded(playlist: AudioPlaylist) {
         if (playlist.isSearchResult) {
-            if (playlist.tracks[0].sourceManager.sourceName.equals("pornhub")) {
+            if (playlist.tracks[0].sourceManager.sourceName == "pornhub") {
                 val randomIndex = Random().nextInt(playlist.tracks.size)
                 enqueueTrack(playlist.tracks[randomIndex])
             } else {
@@ -35,18 +35,17 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
 
     override fun loadFailed(e: FriendlyException) {
-        BoobBot.log.error("wot", e) //should not happen rn all local tracks
+        BoobBot.log.error("wot", e)
     }
 
     private fun enqueueTrack(track: AudioTrack) {
         track.userData = ctx.author
         musicManager.addToQueue(track)
-        BoobBot.log.info(track.sourceManager.sourceName)
-        if (track.sourceManager.sourceName == "local") {
-            ctx.message.channel.sendMessage(":tired_face:").queue()//{ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
-        }
-        if (track.sourceManager.sourceName == "pornhub") {
-            ctx.embed {
+        val source = track.sourceManager.sourceName
+        when (source) {
+            "local" -> ctx.message.channel.sendMessage(":tired_face:").queue()
+
+            "pornhub" -> ctx.embed {
                 setAuthor("PornHub is music too",
                         track.info.uri,
                         "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
@@ -60,11 +59,8 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
                         .setTimestamp(Instant.now())
                         .build()
             }
-        }
 
-        if (track.sourceManager.sourceName == "redtube") {
-
-            ctx.embed {
+            "redtube" -> ctx.embed {
                 setAuthor("RedTube is music too",
                         track.info.uri,
                         "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png")
@@ -77,14 +73,9 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
                         .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
                         .setTimestamp(Instant.now())
                         .build()
-
             }
 
-        }
-
-        if (track.sourceManager.sourceName == "youtube") {
-
-             ctx.embed {
+            "youtube" -> ctx.embed {
                 setAuthor("Music",
                         track.info.uri,
                         "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300")
@@ -100,7 +91,9 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
             }
 
+            else -> {
+                BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} ${source} ${ctx.author}")
+            }
         }
     }
-
 }

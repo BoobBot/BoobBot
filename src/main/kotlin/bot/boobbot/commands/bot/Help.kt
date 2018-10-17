@@ -6,6 +6,7 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
+import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import net.dv8tion.jda.core.EmbedBuilder
@@ -28,11 +29,17 @@ class Help : Command {
         builder.setColor(Colors.getEffectiveColor(ctx.message))
 
         Category.values().forEach { category ->
-            val list = commands
-                    .filter { it.properties.category == category }
-                    .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
-
+            val list = if (Constants.OWNERS.contains(ctx.author.idLong))
+                commands
+                        .filter { it.properties.category == category }
+                        .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
+            else
+                commands
+                        .filter { it.properties.category == category && !it.properties.developerOnly }
+                        .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
+            if (list.isNotEmpty()) {
             builder.addField(category.title, list, false)
+            }
         }
 
         builder.addField("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)

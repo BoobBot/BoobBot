@@ -29,6 +29,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
+import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -63,7 +64,7 @@ class BoobBot : ListenerAdapter() {
             get() = shardManager.getGuildById(Constants.HOME_GUILD)
 
         val dotenv = dotenv {
-            directory = "D:\\idea\\BoobBot.jda\\"
+            directory = Paths.get("").toAbsolutePath().toString()
             filename = "bb.env"
             ignoreIfMalformed = true
             ignoreIfMissing =  false
@@ -90,7 +91,7 @@ class BoobBot : ListenerAdapter() {
             }
             if (isDebug) {
                 log.warn("Running in debug mode")
-                //log.level = Level.DEBUG
+                log.level = Level.DEBUG
             }
 
             shardManager = DefaultShardManagerBuilder()
