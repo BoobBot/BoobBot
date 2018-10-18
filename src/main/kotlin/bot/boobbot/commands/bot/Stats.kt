@@ -63,7 +63,7 @@ class Stats : Command {
                 .append("[ BoobBot ]\n")
                 .append("Guilds              = ").append(servers).append("\n")
                 .append("Users               = ").append(users).append("\n")
-                .append("Audio Players       = ").append(players).append("\n")
+                .append("Audio_Players       = ").append(players).append("\n")
                 .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n")
                 .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n")
                 .append("[ Metrics_Since_Boot ]\n")

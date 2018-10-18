@@ -8,7 +8,7 @@ import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Sets the Volume", category = Category.AUDIO, guildOnly = true, donorOnly = true, aliases = ["v", "vol"])
+@CommandProperties(description = "Sets the Volume <:p_:475801484282429450> ", category = Category.AUDIO, guildOnly = true, donorOnly = true, aliases = ["v", "vol"])
 class Volume : VoiceCommand {
 
     override fun execute(ctx: Context) {
