@@ -31,7 +31,7 @@ class Skip : VoiceCommand {
             val nextTrack = player.queue[0]
             return ctx.embed {
                 setColor(Colors.getDominantColor(ctx.author))
-                addField(Formats.info(""), "Skipped: ${track.info.title}\\nNow Playing: ${nextTrack.info.title}", false)
+                addField(Formats.info(""), "Skipped: ${track.info.title}\nNow Playing: ${nextTrack.info.title}", false)
             }
         }
         ctx.embed {
