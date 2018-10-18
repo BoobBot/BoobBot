@@ -42,7 +42,7 @@ class MessageHandler : ListenerAdapter() {
                 "<@!${event.jda.selfUser.id}> "
         )
 
-        val trigger = acceptablePrefixes.firstOrNull { messageContent.startsWith(it) }
+        val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
                 ?: return
 
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
