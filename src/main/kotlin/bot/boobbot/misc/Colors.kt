@@ -69,10 +69,7 @@ object Colors {
     }
 
     fun getEffectiveColor(msg: Message): Color {
-        return if (msg.channelType.isGuild)
-            msg.member.color ?: getDominantColor(msg.author)
-        else
-            getDominantColor(msg.author)
+        return msg.member?.color ?: getDominantColor(msg.author)
     }
 
     fun parseColor(colorString: String): Int {
