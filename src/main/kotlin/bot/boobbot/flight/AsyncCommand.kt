@@ -12,7 +12,7 @@ interface AsyncCommand : Command {
             try {
                 executeAsync(ctx)
             } catch (e: Exception) {
-                BoobBot.log.error("Command `${javaClass.simpleName.toLowerCase()}` encountered an error during execution", e)
+                BoobBot.log.error("Command `${this@AsyncCommand.name}` encountered an error during execution", e)
                 ctx.message.addReaction("\uD83D\uDEAB").queue()
             }
         }
