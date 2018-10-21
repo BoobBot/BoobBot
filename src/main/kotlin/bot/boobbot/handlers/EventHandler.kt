@@ -63,7 +63,7 @@ class EventHandler : ListenerAdapter() {
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
             }
             self = event.jda.selfUser // set
-            // health check for status page
+            // api for new site
             embeddedServer(Netty, 8888) {
                 routing {
 
@@ -104,7 +104,6 @@ class EventHandler : ListenerAdapter() {
                                 .put("Average_Latenc", "${averageShardLatency}ms")
 
                         call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
-
 
                     }
 
