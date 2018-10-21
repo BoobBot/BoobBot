@@ -11,6 +11,7 @@ import bot.boobbot.misc.Utils.Companion.autoAvatar
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.http.ContentType
+import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
@@ -61,6 +62,10 @@ class EventHandler : ListenerAdapter() {
             // health check for status page
             embeddedServer(Netty, 8888) {
                 routing {
+
+                    get("/") {
+                        call.respondRedirect("https://boob.bot", true)
+                    }
 
                     get("/metrics") {
                         call.respondText("{\"metrics\": ${BoobBot.metrics.render().get()}}", ContentType.Application.Json)
