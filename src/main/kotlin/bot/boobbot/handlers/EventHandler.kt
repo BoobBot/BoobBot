@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.setGame
 import bot.boobbot.BoobBot.Companion.shardManager
+import bot.boobbot.flight.Category
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
@@ -60,23 +61,42 @@ class EventHandler : ListenerAdapter() {
             // health check for status page
             embeddedServer(Netty, 8888) {
                 routing {
+
                     get("/metrics") {
                         call.respondText("{\"metrics\": ${BoobBot.metrics.render().get()}}", ContentType.Application.Json)
                     }
+
                     get("/health") {
                         call.respondText("{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
                     }
+
                     get("/pings") {
                         val pings = JSONArray()
                         for (e in shardManager.statuses.entries) pings.put(JSONObject().put("shard", e.key.shardInfo.shardId).put("ping", e.key.ping).put("status", e.value))
                         call.respondText("{\"status\": $pings}", ContentType.Application.Json)
                     }
+
                     get("/commands") {
-                        val coms = JSONArray()
-                        for (com in BoobBot.commands.values)
-                            coms.put(JSONObject().put("command", com.name).put("category", com.properties.category).put("description", com.properties.description).put("aliases", "[${com.properties.aliases.joinToString(", ")}]"))
-                        call.respondText("{\"commands\": $coms}", ContentType.Application.Json)
+                        val categoryJson = JSONObject()
+                        Category.values().filter { c -> c.name != "DEV" }.forEach { category ->
+
+                            val commands = JSONArray()
+
+                            BoobBot.commands.values.filter { it -> it.properties.category == category }.forEach { command ->
+
+                                commands.put(JSONObject()
+                                        .put("command", command.name)
+                                        .put("category", command.properties.category)
+                                        .put("description", command.properties.description)
+                                        .put("aliases", "[${command.properties.aliases.joinToString(", ")}]"))
+                            }
+
+                            categoryJson.put(category.name, commands)
+                        }
+
+                         call.respondText("{\"commands\": $categoryJson}", ContentType.Application.Json)
                     }
+
                 }
             }.start(wait = false)
             BoobBot.log.info(Formats.getReadyFormat())
