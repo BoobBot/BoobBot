@@ -8,6 +8,7 @@ import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.Utils.Companion.autoAvatar
+import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.http.ContentType
@@ -18,6 +19,7 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
@@ -34,6 +36,8 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import java.awt.Color
+import java.lang.management.ManagementFactory
+import java.text.DecimalFormat
 import java.time.Instant.now
 import java.util.concurrent.TimeUnit
 
@@ -65,6 +69,43 @@ class EventHandler : ListenerAdapter() {
 
                     get("/") {
                         call.respondRedirect("https://boob.bot", true)
+                    }
+
+                    get("/stats") {
+                        val dpFormatter = DecimalFormat("0.00")
+                        val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
+                        val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
+                        val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
+
+                        val servers = BoobBot.shardManager.guildCache.size()
+                        val users = BoobBot.shardManager.userCache.size()
+
+                        val shards = BoobBot.shardManager.shardsTotal
+                        val shardsOnline = BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
+                        val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+
+                        val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+                        val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
+                        val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
+                        val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.count()
+
+                        val jvm = JSONObject()
+                                .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
+                                .put("JVM_CPU_Usage", procCpuUsage)
+                                .put("System_CPU_Usage", sysCpuUsage)
+                                .put("RAM_Usage", "${usedMB}MB($rPercent%)")
+                                .put("Threads", Thread.activeCount())
+
+                        val bb = JSONObject()
+                                .put("Guilds", servers)
+                                .put("Users", users)
+                                .put("Audio_Players", players)
+                                .put("Shards_Online", "$shardsOnline/$shards")
+                                .put("Average_Latenc", "${averageShardLatency}ms")
+
+                        call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
+
+
                     }
 
                     get("/metrics") {
@@ -99,7 +140,7 @@ class EventHandler : ListenerAdapter() {
                             categoryJson.put(category.name, commands)
                         }
 
-                         call.respondText("{\"commands\": $categoryJson}", ContentType.Application.Json)
+                        call.respondText("{\"commands\": $categoryJson}", ContentType.Application.Json)
                     }
 
                 }
