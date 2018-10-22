@@ -22,7 +22,7 @@ class Set : Command {
 
             "name" -> {
 
-                ctx.jda.selfUser.manager.setName(ctx.args.sliceArray(1 until ctx.args.size).joinToString(" ")).queue({ ctx.send(Formats.info("Set UserName to ${ctx.args[1]}")) }, { ctx.send(Formats.error(" Failed to set UserName")) })
+                ctx.jda.selfUser.manager.setName(ctx.args.sliceArray(1 until ctx.args.size).joinToString(" ")).queue({ ctx.send(Formats.info("Set UserName to ${ctx.args.sliceArray(1 until ctx.args.size).joinToString(" ")}")) }, { ctx.send(Formats.error(" Failed to set UserName")) })
 
             }
 
