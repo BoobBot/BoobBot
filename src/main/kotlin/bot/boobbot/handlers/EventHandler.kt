@@ -122,24 +122,20 @@ class EventHandler : ListenerAdapter() {
                     }
 
                     get("/commands") {
-                        val categoryJson = JSONObject()
-                        Category.values().filter { c -> c.name != "DEV" }.forEach { category ->
-
-                            val commands = JSONArray()
-
-                            BoobBot.commands.values.filter { it -> it.properties.category == category }.forEach { command ->
-
-                                commands.put(JSONObject()
-                                        .put("command", command.name)
-                                        .put("category", command.properties.category)
-                                        .put("description", command.properties.description)
-                                        .put("aliases", "[${command.properties.aliases.joinToString(", ")}]"))
+                        val response = JSONObject()
+                        BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" }.forEach { command ->
+                            if(!response.has(command.properties.category.name)){
+                                response.put(command.properties.category.name, JSONArray())
                             }
+                            val array = response.getJSONArray(command.properties.category.name)
+                            array.put(JSONObject()
+                                    .put("command", command.name)
+                                    .put("category", command.properties.category)
+                                    .put("description", command.properties.description)
+                                    .put("aliases", "[${command.properties.aliases.joinToString(", ")}]"))
 
-                            categoryJson.put(category.name, commands)
                         }
-
-                        call.respondText("{\"commands\": $categoryJson}", ContentType.Application.Json)
+                        call.respondText("{\"commands\": $response}", ContentType.Application.Json)
                     }
 
                 }
