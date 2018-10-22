@@ -15,8 +15,8 @@ import java.util.concurrent.Executors
 
 
 @Suppress("LABEL_NAME_CLASH")
-@CommandProperties(description = "eval", category = Category.DEV, developerOnly = true)
-class eval : Command {
+@CommandProperties(description = "Eval", category = Category.DEV, developerOnly = true)
+class Eval : Command {
     private val evalThreadGroup = ThreadGroup("Eval Thread Pool")
     private val pool = Executors.newCachedThreadPool { r -> Thread(evalThreadGroup, r, evalThreadGroup.name + evalThreadGroup.activeCount()) }
 
