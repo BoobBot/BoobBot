@@ -1,5 +1,6 @@
 package bot.boobbot.commands.dev
 
+import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
@@ -41,6 +42,7 @@ class Eval : Command {
 
     private fun createShell(e: Message): GroovyShell {
         val binding = Binding()
+        binding.setVariable("log", BoobBot.log)
         binding.setVariable("sm", e.jda.asBot().shardManager)
         binding.setVariable("api", e.jda)
         binding.setVariable("getEffectiveColor", Colors.getEffectiveColor(e))
