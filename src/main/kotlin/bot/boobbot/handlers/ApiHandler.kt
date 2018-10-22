@@ -6,6 +6,7 @@ import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CORS
 import io.ktor.http.ContentType
 import io.ktor.response.respondRedirect
@@ -24,9 +25,9 @@ class ApiHandler {
 
     fun startServer(){
         // api for new site
-
         embeddedServer(Netty, 8888) {
             install(CORS)
+            install(AutoHeadResponse)
             routing {
 
                 get("/") {
