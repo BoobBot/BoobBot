@@ -2,24 +2,12 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.setGame
-import bot.boobbot.BoobBot.Companion.shardManager
-import bot.boobbot.flight.Category
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.Utils.Companion.autoAvatar
-import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.response.respondRedirect
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
@@ -33,11 +21,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
 import org.apache.commons.lang3.StringUtils
-import org.json.JSONArray
-import org.json.JSONObject
 import java.awt.Color
-import java.lang.management.ManagementFactory
-import java.text.DecimalFormat
 import java.time.Instant.now
 import java.util.concurrent.TimeUnit
 
@@ -63,84 +47,8 @@ class EventHandler : ListenerAdapter() {
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(autoAvatar()), 1, 2, TimeUnit.HOURS)
             }
             self = event.jda.selfUser // set
-            // api for new site
-            embeddedServer(Netty, 8888) {
-                routing {
-
-                    get("/") {
-                        call.respondRedirect("https://boob.bot", true)
-                    }
-
-                    get("/stats") {
-                        val dpFormatter = DecimalFormat("0.00")
-                        val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
-                        val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
-                        val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
-
-                        val servers = BoobBot.shardManager.guildCache.size()
-                        val users = BoobBot.shardManager.userCache.size()
-
-                        val shards = BoobBot.shardManager.shardsTotal
-                        val shardsOnline = BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
-                        val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
-
-                        val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
-                        val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
-                        val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
-                        val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.count()
-
-                        val jvm = JSONObject()
-                                .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
-                                .put("JVM_CPU_Usage", procCpuUsage)
-                                .put("System_CPU_Usage", sysCpuUsage)
-                                .put("RAM_Usage", "${usedMB}MB($rPercent%)")
-                                .put("Threads", Thread.activeCount())
-
-                        val bb = JSONObject()
-                                .put("Guilds", servers)
-                                .put("Users", users)
-                                .put("Audio_Players", players)
-                                .put("Shards_Online", "$shardsOnline/$shards")
-                                .put("Average_Latenc", "${averageShardLatency}ms")
-
-                        call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
-
-                    }
-
-                    get("/metrics") {
-                        call.respondText("{\"metrics\": ${BoobBot.metrics.render().get()}}", ContentType.Application.Json)
-                    }
-
-                    get("/health") {
-                        call.respondText("{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
-                    }
-
-                    get("/pings") {
-                        val pings = JSONArray()
-                        for (e in shardManager.statuses.entries) pings.put(JSONObject().put("shard", e.key.shardInfo.shardId).put("ping", e.key.ping).put("status", e.value))
-                        call.respondText("{\"status\": $pings}", ContentType.Application.Json)
-                    }
-
-                    get("/commands") {
-                        val response = JSONObject()
-                        BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" }.forEach { command ->
-                            if(!response.has(command.properties.category.name)){
-                                response.put(command.properties.category.name, JSONArray())
-                            }
-                            val array = response.getJSONArray(command.properties.category.name)
-                            array.put(JSONObject()
-                                    .put("command", command.name)
-                                    .put("category", command.properties.category)
-                                    .put("description", command.properties.description)
-                                    .put("aliases", "[${command.properties.aliases.joinToString(", ")}]"))
-
-                        }
-                        call.respondText("{\"commands\": $response}", ContentType.Application.Json)
-                    }
-
-                }
-            }.start(wait = false)
             BoobBot.log.info(Formats.getReadyFormat())
+            ApiHandler().startServer()
             readyClient.send(WebhookMessageBuilder().setContent("Ready").addEmbeds(EmbedBuilder().setColor(Color.magenta)
                     .setAuthor(
                             event.jda.selfUser.name,
