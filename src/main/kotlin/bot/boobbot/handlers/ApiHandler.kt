@@ -5,6 +5,8 @@ import bot.boobbot.misc.Utils
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.http.ContentType
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
@@ -22,7 +24,9 @@ class ApiHandler {
 
     fun startServer(){
         // api for new site
+
         embeddedServer(Netty, 8888) {
+            install(CORS)
             routing {
 
                 get("/") {
