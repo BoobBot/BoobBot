@@ -52,14 +52,27 @@ class Stats : Command {
         val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)").toDouble() // can never be null
 
         val everyOneSeen = if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toInt() else 0
-        //TODO add all metrics
+
+        var totalGarbageCollections = 0L
+        var garbageCollectionTime = 0L
+        ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
+            val count = gc.collectionCount
+            if(count >= 0) {
+                totalGarbageCollections += count
+            }
+            val time = gc.collectionTime
+            if(time >= 0) {
+                garbageCollectionTime += time
+            } }
+
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
                 .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime)).append("\n")
                 .append("JVM_CPU_Usage       = ").append(procCpuUsage).append("%\n")
                 .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
                 .append("RAM_Usage           = ").append(usedMB).append("MB (").append(rPercent).append("%)\n")
-                .append("Threads             = ").append(Thread.activeCount()).append("\n\n")
+                .append("Total_GC_Count      = ").append(totalGarbageCollections).append("\n")
+                .append("Total_GC_Time       = ").append(garbageCollectionTime).append("ms").append("\n\n")
                 .append("[ BoobBot ]\n")
                 .append("Guilds              = ").append(servers).append("\n")
                 .append("Users               = ").append(users).append("\n")

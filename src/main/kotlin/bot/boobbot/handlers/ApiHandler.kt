@@ -55,12 +55,26 @@ class ApiHandler {
                     val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
                     val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.count()
 
+                    var totalGarbageCollections = 0L
+                    var garbageCollectionTime = 0L
+                    ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
+                        val count = gc.collectionCount
+                        if(count >= 0) {
+                            totalGarbageCollections += count
+                        }
+                        val time = gc.collectionTime
+                        if(time >= 0) {
+                            garbageCollectionTime += time
+                        } }
+
                     val jvm = JSONObject()
                             .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
                             .put("JVM_CPU_Usage", procCpuUsage)
                             .put("System_CPU_Usage", sysCpuUsage)
                             .put("RAM_Usage", "${usedMB}MB($rPercent%)")
                             .put("Threads", Thread.activeCount())
+                            .put("Total_GC_Count", totalGarbageCollections)
+                            .put("Total_GC_Time", "${garbageCollectionTime}ms")
 
                     val bb = JSONObject()
                             .put("Guilds", servers)
