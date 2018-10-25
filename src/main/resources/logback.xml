@@ -40,7 +40,7 @@
     </appender>
 
     <!--Root logger-->
-    <root level="INFO">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE-AUDIT"/>
         <appender-ref ref="Sentry"/>
