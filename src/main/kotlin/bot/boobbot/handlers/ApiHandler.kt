@@ -1,14 +1,20 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.models.BbApiCommand
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.features.AutoHeadResponse
-import io.ktor.features.CORS
+import io.ktor.features.*
+import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.request.path
+import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -18,6 +24,7 @@ import io.ktor.server.netty.Netty
 import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
+import org.slf4j.event.Level
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
@@ -26,8 +33,34 @@ class ApiHandler {
     fun startServer(){
         // api for new site
         embeddedServer(Netty, 8888) {
-            install(CORS)
             install(AutoHeadResponse)
+            install(CallLogging) {
+                level = Level.INFO
+                filter { call -> call.request.path().startsWith("/") }
+            }
+
+            install(DefaultHeaders) {
+                header("Access-Control-Allow-Origin", "*")
+                header("Access-Control-Max-Age",  "1728000")
+                header("Access-Control-Allow-Credentials",  "true")
+                header("Access-Control-Allow-Methods",  "GET, POST, OPTIONS")
+                header("Access-Control-Allow-Headers",  "Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type")
+                header("server", "yOu DoNt NeEd To KnOw")
+            }
+            install(ForwardedHeaderSupport)
+            install(XForwardedHeaderSupport)
+            install(ContentNegotiation) {
+
+                gson {
+                    setPrettyPrinting()
+                    disableHtmlEscaping()
+                    enableComplexMapKeySerialization()
+                    serializeNulls()
+                    serializeSpecialFloatingPointValues()
+
+                }
+            }
+
             routing {
 
                 get("/") {
@@ -82,8 +115,9 @@ class ApiHandler {
                             .put("Users", users)
                             .put("Audio_Players", players)
                             .put("Shards_Online", "$shardsOnline/$shards")
-                            .put("Average_Latenc", "${averageShardLatency}ms")
+                            .put("Average_Latency", "${averageShardLatency}ms")
 
+                               //call.respond(mapOf("Stats" to bb))//JSONObject().put("bb", bb).put("jvm", jvm)))
                     call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
 
                 }
