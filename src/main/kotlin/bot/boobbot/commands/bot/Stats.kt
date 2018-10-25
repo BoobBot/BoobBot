@@ -17,6 +17,7 @@ class Stats : Command {
     private val dpFormatter = DecimalFormat("0.00")
 
     override fun execute(ctx: Context) {
+        //TODO move all this to a func
         val toSend = StringBuilder()
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
@@ -55,6 +56,7 @@ class Stats : Command {
 
         var totalGarbageCollections = 0L
         var garbageCollectionTime = 0L
+        var totalGarbageCollectionTime = 0L
         ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
             val count = gc.collectionCount
             if(count >= 0) {
@@ -64,6 +66,11 @@ class Stats : Command {
             if(time >= 0) {
                 garbageCollectionTime += time
             } }
+        totalGarbageCollectionTime = if (garbageCollectionTime > 0 && totalGarbageCollections > 0){
+            garbageCollectionTime / totalGarbageCollections
+        } else {
+            0L
+        }
 
         toSend.append("```ini\n")
                 .append("[ JVM ]\n")
@@ -72,7 +79,8 @@ class Stats : Command {
                 .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
                 .append("RAM_Usage           = ").append(usedMB).append("MB (").append(rPercent).append("%)\n")
                 .append("Total_GC_Count      = ").append(totalGarbageCollections).append("\n")
-                .append("Total_GC_Time       = ").append(garbageCollectionTime).append("ms").append("\n\n")
+                .append("Total_GC_Time       = ").append(garbageCollectionTime).append("ms").append("\n")
+                .append("Avg_GC_Cycle        = ").append(dpFormatter.format(totalGarbageCollectionTime)).append("ms").append("\n\n")
                 .append("[ BoobBot ]\n")
                 .append("Guilds              = ").append(servers).append("\n")
                 .append("Users               = ").append(users).append("\n")

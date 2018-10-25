@@ -38,7 +38,7 @@ class ApiHandler {
                 level = Level.INFO
                 filter { call -> call.request.path().startsWith("/") }
             }
-
+            // insatll cors broke? lets do this
             install(DefaultHeaders) {
                 header("Access-Control-Allow-Origin", "*")
                 header("Access-Control-Max-Age",  "1728000")
@@ -91,6 +91,7 @@ class ApiHandler {
 
                     var totalGarbageCollections = 0L
                     var garbageCollectionTime = 0L
+                    var totalGarbageCollectionTime = 0L
                     ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
                         val count = gc.collectionCount
                         if(count >= 0) {
@@ -100,6 +101,11 @@ class ApiHandler {
                         if(time >= 0) {
                             garbageCollectionTime += time
                         } }
+                    totalGarbageCollectionTime = if (garbageCollectionTime > 0 && totalGarbageCollections > 0){
+                        garbageCollectionTime / totalGarbageCollections
+                    } else {
+                        0L
+                    }
 
                     val jvm = JSONObject()
                             .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
@@ -109,6 +115,7 @@ class ApiHandler {
                             .put("Threads", Thread.activeCount())
                             .put("Total_GC_Count", totalGarbageCollections)
                             .put("Total_GC_Time", "${garbageCollectionTime}ms")
+                            .put("Avg_GC_Cycle", "${dpFormatter.format(totalGarbageCollectionTime)}ms")
 
                     val bb = JSONObject()
                             .put("Guilds", servers)
