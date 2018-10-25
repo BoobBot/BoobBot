@@ -158,7 +158,7 @@ class Utils {
             }
         }
 
-        fun auto(autoAvatar: Unit): Runnable = Runnable { autoAvatar() }
+        fun auto(): Runnable = Runnable { autoAvatar() }
 
         public inline fun suppressExceptions(block: () -> Unit) {
             try {

@@ -91,7 +91,7 @@ class ApiHandler {
 
                     var totalGarbageCollections = 0L
                     var garbageCollectionTime = 0L
-                    var totalGarbageCollectionTime = 0L
+                    val totalGarbageCollectionTime: Long
                     ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
                         val count = gc.collectionCount
                         if(count >= 0) {
