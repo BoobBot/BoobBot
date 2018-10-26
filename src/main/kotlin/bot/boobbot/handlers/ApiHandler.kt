@@ -124,7 +124,6 @@ class ApiHandler {
                             .put("Shards_Online", "$shardsOnline/$shards")
                             .put("Average_Latency", "${averageShardLatency}ms")
 
-                               //call.respond(mapOf("Stats" to bb))//JSONObject().put("bb", bb).put("jvm", jvm)))
                     call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
 
                 }
