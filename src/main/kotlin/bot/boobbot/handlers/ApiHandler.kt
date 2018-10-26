@@ -127,6 +127,7 @@ class ApiHandler {
                     call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
                 }
 
+
                 get("/metrics") {
                     BoobBot.metrics.record(Metrics.happened("request /metrics"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
