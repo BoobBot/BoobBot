@@ -125,7 +125,6 @@ class ApiHandler {
                             .put("Average_Latency", "${averageShardLatency}ms")
 
                     call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
-
                 }
 
                 get("/metrics") {
