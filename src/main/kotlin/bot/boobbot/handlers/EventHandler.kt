@@ -40,7 +40,6 @@ class EventHandler : ListenerAdapter() {
                 ).setTitle("```Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}```", event.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR))
                 .setTimestamp(now()).build()).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
                 .build())
-
         if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
@@ -48,7 +47,6 @@ class EventHandler : ListenerAdapter() {
             }
             self = event.jda.selfUser // set
             BoobBot.log.info(Formats.getReadyFormat())
-            ApiHandler().startServer()
             readyClient.send(WebhookMessageBuilder().setContent("Ready").addEmbeds(EmbedBuilder().setColor(Color.magenta)
                     .setAuthor(
                             event.jda.selfUser.name,

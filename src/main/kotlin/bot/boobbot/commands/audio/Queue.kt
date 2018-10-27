@@ -37,7 +37,7 @@ class Queue : VoiceCommand {
         } else {
             "Nothing Queued"
         }
-
+        ctx.guild?.roles?.filter { it.hasPermission(Permission.ADMINISTRATOR) }?.joinToString(separator = "\n") { "${it.name} " }
         val total = Utils.fTime(q.asSequence().map { it.duration }.sum())
 
         ctx.embed {

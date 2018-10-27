@@ -4,6 +4,7 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
+import bot.boobbot.misc.ApiServer
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Constants
@@ -108,6 +109,7 @@ class BoobBot : ListenerAdapter() {
                     .build()
 
             loadCommands()
+            ApiServer().startServer()
         }
 
         private fun loadCommands() {

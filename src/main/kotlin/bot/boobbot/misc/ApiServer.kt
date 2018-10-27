@@ -1,9 +1,6 @@
-package bot.boobbot.handlers
+package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
-import bot.boobbot.models.BbApiCommand
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
@@ -11,10 +8,7 @@ import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
 import io.ktor.request.path
-import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -28,7 +22,7 @@ import org.slf4j.event.Level
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
-class ApiHandler {
+class ApiServer {
 
     fun startServer(){
         // api for new site
