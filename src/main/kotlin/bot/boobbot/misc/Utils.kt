@@ -24,24 +24,30 @@ import javax.imageio.ImageIO
 class Utils {
     companion object {
         private val rand = Random()
-
+        private val path = Paths.get("").toAbsolutePath().toString()
         private val ips = Arrays.asList(
-                "104.247.201.235:8564", //Atlanta
-                "104.247.211.200:4041", //PeachtreeCity
-                "104.237.210.97:4974", //Chicago
-                "172.82.172.126:1248", //Schererville
-                "45.43.216.46:3568",  //Los Angeles
-                "45.43.217.133:8058", //Los Angeles
-                "45.58.59.214:6560", //Atlanta
-                "96.46.0.53:1520", //Duarte
-                "208.72.224.182:6958", //Duarte
-                "67.227.66.102:7498" // Las Vegas
+            "104.247.201.235:8564", //Atlanta
+            "104.247.211.200:4041", //PeachtreeCity
+            "104.237.210.97:4974", //Chicago
+            "172.82.172.126:1248", //Schererville
+            "45.43.216.46:3568",  //Los Angeles
+            "45.43.217.133:8058", //Los Angeles
+            "45.58.59.214:6560", //Atlanta
+            "96.46.0.53:1520", //Duarte
+            "208.72.224.182:6958", //Duarte
+            "67.227.66.102:7498" // Las Vegas
         )
 
         private val jsonArrays = JSONObject(
+            if (File("$path/arrays.json").exists()) {
+                (File("$path/arrays.json").inputStream())
+                    .bufferedReader()
+                    .use { it.readText() }
+            } else {
                 (BoobBot::class.java.classLoader.getResourceAsStream("arrays.json"))
-                        .bufferedReader()
-                        .use { it.readText() }
+                    .bufferedReader()
+                    .use { it.readText() }
+            }
         )
 
         fun isDonor(user: User): Boolean {
@@ -57,7 +63,6 @@ class Utils {
         fun getRandomMoan(): File {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            val path = Paths.get("").toAbsolutePath().toString()
             BoobBot.log.info(path)
             return (File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
         }
@@ -65,7 +70,13 @@ class Utils {
         private fun getRandomAvatar(): InputStream {
             val arr = jsonArrays.getJSONArray("avatar")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            return (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
+            val file = File("$path/avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}")
+            return if (file.exists()) {
+                file.inputStream()
+            } else {
+                (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
+
+            }
         }
 
         fun getProxy(): Proxy {
@@ -74,6 +85,7 @@ class Utils {
             return Proxy(Proxy.Type.HTTP, InetSocketAddress(parts[0], parts[1].toInt()))
         }
 
+        @Suppress("unused")
         fun getProxyAsHost(): HttpHost {
             val proxy = ips[rand.nextInt(ips.size)]
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
@@ -93,38 +105,40 @@ class Utils {
 
 
         fun logCommand(message: net.dv8tion.jda.core.entities.Message) =
-                if ((message.isFromType(ChannelType.PRIVATE))) {
-                    val msg = MessageFormat.format(
-                            "{4}: {0} Used {1} on Channel: {2}({3})",
-                            message.author.name,
-                            message.contentRaw,
-                            message.channel.name,
-                            message.channel.id,
-                            now())
-                    BoobBot.log.info(msg)
-                } else {
-                    val msg = MessageFormat.format(
-                            "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
-                            message.author.name,
-                            message.contentRaw,
-                            message.channel.name,
-                            message.channel.id,
-                            message.guild.name,
-                            message.guild.id,
-                            now())
-                    BoobBot.log.info(msg)
-                }
+            if ((message.isFromType(ChannelType.PRIVATE))) {
+                val msg = MessageFormat.format(
+                    "{4}: {0} Used {1} on Channel: {2}({3})",
+                    message.author.name,
+                    message.contentRaw,
+                    message.channel.name,
+                    message.channel.id,
+                    now()
+                )
+                BoobBot.log.info(msg)
+            } else {
+                val msg = MessageFormat.format(
+                    "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
+                    message.author.name,
+                    message.contentRaw,
+                    message.channel.name,
+                    message.channel.id,
+                    message.guild.name,
+                    message.guild.id,
+                    now()
+                )
+                BoobBot.log.info(msg)
+            }
 
 
         fun getCommand(commandName: String): Command? {
             val commands = BoobBot.commands
             return commands[commandName]
-                    ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
+                ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
         }
 
         fun downloadAvatar(url: String): BufferedImage? {
             val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
-                    ?: return null
+                ?: return null
 
             var image: BufferedImage? = null
 
@@ -160,7 +174,7 @@ class Utils {
 
         fun auto(): Runnable = Runnable { autoAvatar() }
 
-        public inline fun suppressExceptions(block: () -> Unit) {
+        inline fun suppressExceptions(block: () -> Unit) {
             try {
                 block()
             } catch (e: Exception) {

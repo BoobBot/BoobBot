@@ -9,6 +9,7 @@ import bot.boobbot.misc.Formats
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Icon
+import net.dv8tion.jda.core.managers.GuildManager
 import java.net.URL
 
 
@@ -93,8 +94,25 @@ class Set : Command {
                 val icon = Icon.from(connection.getInputStream())
                 ctx.jda.selfUser.manager.setAvatar(icon).queue({ ctx.send(Formats.info("Yes daddy, avatar set")) }, { ctx.send(Formats.error(" Failed to set avatar")) })
                 BoobBot.log.info("Setting New Avatar")
+                BoobBot.manSetAvatar = true
 
             }
+
+            "icons" -> {
+
+                val url = URL(ctx.args[1])
+                val connection = url.openConnection()
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+                connection.connect()
+                val icon = Icon.from(connection.getInputStream())
+                val gm = GuildManager(BoobBot.home)
+                gm.setIcon(icon).queue()
+                ctx.jda.selfUser.manager.setAvatar(icon).queue({ ctx.send(Formats.info("Yes daddy, icond set")) }, { ctx.send(Formats.error(" Failed to set avatar")) })
+                BoobBot.log.info("Setting New icons")
+                BoobBot.manSetAvatar = true
+
+            }
+
 
             else -> {
                 //todo send com help
