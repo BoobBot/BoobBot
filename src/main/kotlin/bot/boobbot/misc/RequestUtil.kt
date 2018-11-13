@@ -1,6 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import kotlinx.coroutines.future.await
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject

@@ -65,8 +65,3 @@ shadowJar {
     classifier = null
     version = null
 }
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}

@@ -4,6 +4,8 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.future.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import java.awt.Color
