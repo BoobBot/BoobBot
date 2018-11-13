@@ -92,9 +92,11 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
             val videoTitle = info.get("video_title").text()
             val videoDuration = Integer.parseInt(info.get("video_duration").text()) * 1000 // PH returns seconds
+            val videoUrl = info.get("link_url").text()
+            val matcher = VIDEO_REGEX.matcher(videoUrl)
+            val videoId = if (matcher.matches()) matcher.group(1) else reference.identifier
 
-            // todo: one of these should be the video id, the other should be the complete URL
-            return buildTrackObject(reference.identifier, reference.identifier, videoTitle, "Unknown Uploader", false, videoDuration.toLong())
+            return buildTrackObject(videoUrl, videoId, videoTitle, "Unknown Uploader", false, videoDuration.toLong())
         } catch (e: Exception) {
             throw ExceptionTools.wrapUnfriendlyExceptions("Loading information for a PornHub track failed.", FAULT, e)
         }
@@ -118,14 +120,15 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
                 throw IOException("Invalid status code for search response: $statusCode")
             }
 
-            val document: Document = Jsoup.parse(it.entity.content, StandardCharsets.UTF_8.name(), "https://pornhub.com")
+            val document: Document =
+                Jsoup.parse(it.entity.content, StandardCharsets.UTF_8.name(), "https://pornhub.com")
             val videos = document.getElementsByClass("wrap")
-                    .filter { elem ->
-                        !elem.select("div.thumbnail-info-wrapper span.title a")
-                                .first()
-                                .attr("href")
-                                .contains("playlist")
-                    }
+                .filter { elem ->
+                    !elem.select("div.thumbnail-info-wrapper span.title a")
+                        .first()
+                        .attr("href")
+                        .contains("playlist")
+                }
 
             if (videos.isEmpty())
                 return AudioReference.NO_TRACK
@@ -137,7 +140,8 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
                 val title = anchor.text()
                 val identifier = anchor.parents().select("li.videoBox").first().attr("_vkey")
                 val url = anchor.absUrl("href")
-                val durationStr = anchor.parents().select("div.videoPreviewBg .marker-overlays var").firstOrNull()?.text()
+                val durationStr =
+                    anchor.parents().select("div.videoPreviewBg .marker-overlays var").firstOrNull()?.text()
                 val duration = if (durationStr != null) parseDuration(durationStr) else 0L
 
                 tracks.add(buildTrackObject(url, identifier, title, "Unknown Uploader", false, duration))
@@ -166,7 +170,14 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
         }
     }
 
-    private fun buildTrackObject(uri: String, identifier: String, title: String, uploader: String, isStream: Boolean, duration: Long): PornHubAudioTrack {
+    private fun buildTrackObject(
+        uri: String,
+        identifier: String,
+        title: String,
+        uploader: String,
+        isStream: Boolean,
+        duration: Long
+    ): PornHubAudioTrack {
         return PornHubAudioTrack(AudioTrackInfo(title, uploader, duration, identifier, isStream, uri), this)
     }
 
@@ -195,7 +206,8 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     companion object {
         private val CHARSET = Charset.forName("UTF-8")
-        private val VIDEO_REGEX = Pattern.compile("^https?://www.pornhub.com/view_video.php\\?viewkey=[a-zA-Z0-9]{9,15}$")
+        private val VIDEO_REGEX =
+            Pattern.compile("^https?://www\\.pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
         private val VIDEO_INFO_REGEX = Pattern.compile("var flashvars_\\d{7,9} = (\\{.+})")
         private const val VIDEO_SEARCH_PREFIX = "phsearch:"
     }

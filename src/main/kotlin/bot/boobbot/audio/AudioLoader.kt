@@ -46,53 +46,65 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
             "local" -> ctx.message.channel.sendMessage(":tired_face:").queue()
 
             "pornhub" -> ctx.embed {
-                setAuthor("PornHub is music too",
-                        track.info.uri,
-                        "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
-                        .setColor(Colors.getEffectiveColor(ctx.message))
-                        .addField("Enqueued track",
-                                "**Title**: ${track.info.title}\n" +
-                                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
-                                        "**Link**: ${track.info.uri}",
-                                false)
-                        .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
-                        .setTimestamp(Instant.now())
-                        .build()
+                setAuthor(
+                    "PornHub is music too",
+                    track.info.uri,
+                    "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s"
+                )
+                    .setColor(Colors.getEffectiveColor(ctx.message))
+                    .addField(
+                        "Enqueued track",
+                        "**Title**: ${track.info.title}\n" +
+                                "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                                "**Link**: ${track.info.uri}",
+                        false
+                    )
+                    .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
+                    .setTimestamp(Instant.now())
+                    .build()
             }
 
             "redtube" -> ctx.embed {
-                setAuthor("RedTube is music too",
-                        track.info.uri,
-                        "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png")
-                        .setColor(Colors.getEffectiveColor(ctx.message))
-                        .addField("Enqueued track",
-                                "**Title**: ${track.info.title}\n" +
-                                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
-                                        "**Link**: ${track.info.uri}",
-                                false)
-                        .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
-                        .setTimestamp(Instant.now())
-                        .build()
+                setAuthor(
+                    "RedTube is music too",
+                    track.info.uri,
+                    "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png"
+                )
+                    .setColor(Colors.getEffectiveColor(ctx.message))
+                    .addField(
+                        "Enqueued track",
+                        "**Title**: ${track.info.title}\n" +
+                                "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                                "**Link**: ${track.info.uri}",
+                        false
+                    )
+                    .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
+                    .setTimestamp(Instant.now())
+                    .build()
             }
 
             "youtube" -> ctx.embed {
-                setAuthor("Music",
-                        track.info.uri,
-                        "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300")
-                        .setColor(Colors.getEffectiveColor(ctx.message))
-                        .addField("Enqueued track",
-                                "**Title**: ${track.info.title}\n" +
-                                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
-                                        "**Link**: ${track.info.uri}",
-                                false)
-                        .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
-                        .setTimestamp(Instant.now())
-                        .build()
+                setAuthor(
+                    "Music",
+                    track.info.uri,
+                    "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300"
+                )
+                    .setColor(Colors.getEffectiveColor(ctx.message))
+                    .addField(
+                        "Enqueued track",
+                        "**Title**: ${track.info.title}\n" +
+                                "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                                "**Link**: ${track.info.uri}",
+                        false
+                    )
+                    .setFooter("Requested by ${ctx.author.name}", ctx.author.avatarUrl)
+                    .setTimestamp(Instant.now())
+                    .build()
 
             }
 
             else -> {
-                BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} ${source} ${ctx.author}")
+                BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} $source ${ctx.author}")
             }
         }
     }

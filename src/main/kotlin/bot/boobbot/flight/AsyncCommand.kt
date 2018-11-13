@@ -1,14 +1,15 @@
 package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 interface AsyncCommand : Command {
 
     suspend fun executeAsync(ctx: Context)
 
     override fun execute(ctx: Context) {
-        async {
+        GlobalScope.async {
             try {
                 executeAsync(ctx)
             } catch (e: Exception) {

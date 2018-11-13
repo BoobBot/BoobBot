@@ -1,7 +1,6 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import kotlinx.coroutines.experimental.future.await
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -23,16 +22,17 @@ internal class LoggingInterceptor : Interceptor {
 }
 
 class RequestUtil {
-    private val userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+    private val userAgent =
+        "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
     private val httpClient = OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor(LoggingInterceptor())
-            .connectionPool(ConnectionPool(200, 5L, TimeUnit.MINUTES))
-            .retryOnConnectionFailure(false)
-            .protocols(Arrays.asList(Protocol.HTTP_1_1))
-            .build()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(LoggingInterceptor())
+        .connectionPool(ConnectionPool(200, 5L, TimeUnit.MINUTES))
+        .retryOnConnectionFailure(false)
+        .protocols(Arrays.asList(Protocol.HTTP_1_1))
+        .build()
 
     inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
 
@@ -40,7 +40,8 @@ class RequestUtil {
         fun queue(success: (Response?) -> Unit) {
             var client = httpClient
             if (useProxy) {
-                client = client.newBuilder().proxy(Utils.getProxy()).build() // this is needed for ph/rt reqs due to rape-limits
+                client = client.newBuilder().proxy(Utils.getProxy())
+                    .build() // this is needed for ph/rt reqs due to rape-limits
             }
             client.newCall(request).enqueue(object : Callback {
 
@@ -86,12 +87,18 @@ class RequestUtil {
         return makeRequest(useProxy, "POST", url, body, headers)
     }
 
-    fun makeRequest(useProxy: Boolean = false, method: String, url: String, body: RequestBody? = null, headers: Headers): PendingRequest {
+    fun makeRequest(
+        useProxy: Boolean = false,
+        method: String,
+        url: String,
+        body: RequestBody? = null,
+        headers: Headers
+    ): PendingRequest {
         val request = Request.Builder()
-                .method(method.toUpperCase(), body)
-                .header("User-Agent", userAgent)
-                .headers(headers)
-                .url(url)
+            .method(method.toUpperCase(), body)
+            .header("User-Agent", userAgent)
+            .headers(headers)
+            .url(url)
 
         return PendingRequest(request.build(), useProxy)
     }

@@ -16,7 +16,8 @@ import java.net.URI
 import java.nio.charset.Charset
 import java.util.regex.Pattern
 
-class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: PornHubAudioSourceManager) : DelegatedAudioTrack(trackInfo) {
+class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: PornHubAudioSourceManager) :
+    DelegatedAudioTrack(trackInfo) {
 
     override fun makeClone(): AudioTrack {
         return PornHubAudioTrack(trackInfo, sourceManager)
@@ -44,12 +45,12 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
 
     private fun getPlaybackUrl(httpInterface: HttpInterface): String? {
         val info = getPageConfig(httpInterface)
-                ?: throw FriendlyException("This track is unplayable", FriendlyException.Severity.SUSPICIOUS, null)
+            ?: throw FriendlyException("This track is unplayable", FriendlyException.Severity.SUSPICIOUS, null)
 
         return info.get("mediaDefinitions").values().stream()
-                .filter { format -> format.get("videoUrl").text().isNotEmpty() }
-                .findFirst()
-                .orElse(null)!!.get("videoUrl").text() ?: null
+            .filter { format -> format.get("videoUrl").text().isNotEmpty() }
+            .findFirst()
+            .orElse(null)!!.get("videoUrl").text() ?: null
     }
 
     private fun getPageConfig(httpInterface: HttpInterface): JsonBrowser? {

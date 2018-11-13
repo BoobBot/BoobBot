@@ -11,7 +11,8 @@ import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor
 
 import java.net.URI
 
-class RedTubeAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: RedTubeAudioSourceManager) : DelegatedAudioTrack(trackInfo) {
+class RedTubeAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: RedTubeAudioSourceManager) :
+    DelegatedAudioTrack(trackInfo) {
 
     override fun makeClone(): AudioTrack {
         return RedTubeAudioTrack(trackInfo, sourceManager)

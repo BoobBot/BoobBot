@@ -1,6 +1,5 @@
 package bot.boobbot.misc
 
-import kotlinx.coroutines.experimental.future.await
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageReaction
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -16,7 +15,12 @@ class EventWaiter : ListenerAdapter() {
     private val messageWaiters = ConcurrentHashMap<Long, PendingEvent<Message>>()
     private val reactionWaiters = ConcurrentHashMap<Long, PendingEvent<MessageReaction.ReactionEmote>>()
 
-    fun waitForMessage(channelID: Long, userID: Long, predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent<Message> {
+    fun waitForMessage(
+        channelID: Long,
+        userID: Long,
+        predicate: (Message) -> Boolean = { true },
+        time: Long = 10000
+    ): PendingEvent<Message> {
         val identifier = channelID + userID
         val result = PendingEvent(predicate)
 
@@ -29,7 +33,12 @@ class EventWaiter : ListenerAdapter() {
         return result
     }
 
-    fun waitForReaction(channelID: Long, userID: Long, predicate: (MessageReaction.ReactionEmote) -> Boolean = { true }, time: Long = 10000):
+    fun waitForReaction(
+        channelID: Long,
+        userID: Long,
+        predicate: (MessageReaction.ReactionEmote) -> Boolean = { true },
+        time: Long = 10000
+    ):
             PendingEvent<MessageReaction.ReactionEmote> {
         val identifier = channelID + userID
         val result = PendingEvent(predicate)

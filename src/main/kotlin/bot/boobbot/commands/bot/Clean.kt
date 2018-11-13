@@ -14,15 +14,16 @@ import java.util.stream.Collectors
 
 
 @CommandProperties(
-        description = "Cleans up all the bot and trigger messages",
-        aliases = ["clean", "cleanup", "purge", "del"],
-        guildOnly = true,
-        category = Category.MISC
+    description = "Cleans up all the bot and trigger messages",
+    aliases = ["clean", "cleanup", "purge", "del"],
+    guildOnly = true,
+    category = Category.MISC
 )
 class Clean : Command {
 
     private fun twoWeeks(message: Message): Boolean {
-        val twoWeeksAgo = System.currentTimeMillis() - 14 * 24 * 60 * 60 * 1000 - MiscUtil.DISCORD_EPOCH shl MiscUtil.TIMESTAMP_OFFSET.toInt()
+        val twoWeeksAgo =
+            System.currentTimeMillis() - 14 * 24 * 60 * 60 * 1000 - MiscUtil.DISCORD_EPOCH shl MiscUtil.TIMESTAMP_OFFSET.toInt()
         return MiscUtil.parseSnowflake(message.id) < twoWeeksAgo
     }
 
@@ -54,7 +55,8 @@ class Clean : Command {
                 return@queue
             }
             ctx.message.textChannel.deleteMessages(spam).queue(null, null)
-            ctx.message.channel.sendMessage(Formats.info("I deleted ${spam.size} messages")).queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
+            ctx.message.channel.sendMessage(Formats.info("I deleted ${spam.size} messages"))
+                .queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
 
 
         }, null)

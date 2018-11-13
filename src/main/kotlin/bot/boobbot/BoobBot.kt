@@ -4,9 +4,9 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
-import bot.boobbot.misc.ApiServer
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
+import bot.boobbot.misc.ApiServer
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.EventWaiter
 import bot.boobbot.misc.RequestUtil
@@ -85,7 +85,8 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(LocalAudioSourceManager())
             playerManager.configuration.opusEncodingQuality = 9
             playerManager
-                    .configuration.resamplingQuality = AudioConfiguration.ResamplingQuality.MEDIUM // lets destroy it a lil // don't destroy CPU
+                .configuration.resamplingQuality =
+                    AudioConfiguration.ResamplingQuality.MEDIUM // lets destroy it a lil // don't destroy CPU
 
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
@@ -101,12 +102,12 @@ class BoobBot : ListenerAdapter() {
             }
 
             shardManager = DefaultShardManagerBuilder()
-                    .setGame(Game.playing("bbhelp | bbinvite"))
-                    .setAudioSendFactory(NativeAudioSendFactory())
-                    .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
-                    .setToken(token)
-                    .setShardsTotal(-1)
-                    .build()
+                .setGame(Game.playing("bbhelp | bbinvite"))
+                .setAudioSendFactory(NativeAudioSendFactory())
+                .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
+                .setToken(token)
+                .setShardsTotal(-1)
+                .build()
 
             loadCommands()
             ApiServer().startServer()
@@ -135,11 +136,11 @@ class BoobBot : ListenerAdapter() {
             }
 
             log.info("Successfully loaded " + commands.size + " commands!")
-            // TODO: Eval
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {
-            val manager = musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
+            val manager =
+                musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
             val audioManager = g.audioManager
 
             if (audioManager.sendingHandler == null) {

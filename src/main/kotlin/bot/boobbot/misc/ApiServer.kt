@@ -24,7 +24,7 @@ import java.text.DecimalFormat
 
 class ApiServer {
 
-    fun startServer(){
+    fun startServer() {
         // api for new site
         embeddedServer(Netty, 8888) {
             install(AutoHeadResponse)
@@ -35,10 +35,13 @@ class ApiServer {
             // insatll cors broke? lets do this
             install(DefaultHeaders) {
                 header("Access-Control-Allow-Origin", "*")
-                header("Access-Control-Max-Age",  "1728000")
-                header("Access-Control-Allow-Credentials",  "true")
-                header("Access-Control-Allow-Methods",  "GET, POST, OPTIONS")
-                header("Access-Control-Allow-Headers",  "Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type")
+                header("Access-Control-Max-Age", "1728000")
+                header("Access-Control-Allow-Credentials", "true")
+                header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                header(
+                    "Access-Control-Allow-Headers",
+                    "Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type"
+                )
                 header("server", "yOu DoNt NeEd To KnOw")
             }
             install(ForwardedHeaderSupport)
@@ -75,10 +78,13 @@ class ApiServer {
                     val users = BoobBot.shardManager.userCache.size()
 
                     val shards = BoobBot.shardManager.shardsTotal
-                    val shardsOnline = BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
+                    val shardsOnline =
+                        BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
+                            .count()
                     val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
 
-                    val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+                    val osBean: OperatingSystemMXBean =
+                        ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
                     val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
                     val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
                     val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.count()
@@ -88,37 +94,41 @@ class ApiServer {
                     val totalGarbageCollectionTime: Long
                     ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
                         val count = gc.collectionCount
-                        if(count >= 0) {
+                        if (count >= 0) {
                             totalGarbageCollections += count
                         }
                         val time = gc.collectionTime
-                        if(time >= 0) {
+                        if (time >= 0) {
                             garbageCollectionTime += time
-                        } }
-                    totalGarbageCollectionTime = if (garbageCollectionTime > 0 && totalGarbageCollections > 0){
+                        }
+                    }
+                    totalGarbageCollectionTime = if (garbageCollectionTime > 0 && totalGarbageCollections > 0) {
                         garbageCollectionTime / totalGarbageCollections
                     } else {
                         0L
                     }
 
                     val jvm = JSONObject()
-                            .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
-                            .put("JVM_CPU_Usage", procCpuUsage)
-                            .put("System_CPU_Usage", sysCpuUsage)
-                            .put("RAM_Usage", "${usedMB}MB($rPercent%)")
-                            .put("Threads", Thread.activeCount())
-                            .put("Total_GC_Count", totalGarbageCollections)
-                            .put("Total_GC_Time", "${garbageCollectionTime}ms")
-                            .put("Avg_GC_Cycle", "${dpFormatter.format(totalGarbageCollectionTime)}ms")
+                        .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
+                        .put("JVM_CPU_Usage", procCpuUsage)
+                        .put("System_CPU_Usage", sysCpuUsage)
+                        .put("RAM_Usage", "${usedMB}MB($rPercent%)")
+                        .put("Threads", Thread.activeCount())
+                        .put("Total_GC_Count", totalGarbageCollections)
+                        .put("Total_GC_Time", "${garbageCollectionTime}ms")
+                        .put("Avg_GC_Cycle", "${dpFormatter.format(totalGarbageCollectionTime)}ms")
 
                     val bb = JSONObject()
-                            .put("Guilds", servers)
-                            .put("Users", users)
-                            .put("Audio_Players", players)
-                            .put("Shards_Online", "$shardsOnline/$shards")
-                            .put("Average_Latency", "${averageShardLatency}ms")
+                        .put("Guilds", servers)
+                        .put("Users", users)
+                        .put("Audio_Players", players)
+                        .put("Shards_Online", "$shardsOnline/$shards")
+                        .put("Average_Latency", "${averageShardLatency}ms")
 
-                    call.respondText("{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}", ContentType.Application.Json)
+                    call.respondText(
+                        "{\"stats\": ${JSONObject().put("bb", bb).put("jvm", jvm)}}",
+                        ContentType.Application.Json
+                    )
                 }
 
 
@@ -131,14 +141,22 @@ class ApiServer {
                 get("/health") {
                     BoobBot.metrics.record(Metrics.happened("request /health"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
-                    call.respondText("{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}", ContentType.Application.Json)
+                    call.respondText(
+                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}",
+                        ContentType.Application.Json
+                    )
                 }
 
                 get("/pings") {
                     BoobBot.metrics.record(Metrics.happened("request /pings"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val pings = JSONArray()
-                    for (e in BoobBot.shardManager.statuses.entries) pings.put(JSONObject().put("shard", e.key.shardInfo.shardId).put("ping", e.key.ping).put("status", e.value))
+                    for (e in BoobBot.shardManager.statuses.entries) pings.put(
+                        JSONObject().put(
+                            "shard",
+                            e.key.shardInfo.shardId
+                        ).put("ping", e.key.ping).put("status", e.value)
+                    )
                     call.respondText("{\"status\": $pings}", ContentType.Application.Json)
                 }
 
@@ -146,18 +164,21 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /commands"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val response = JSONObject()
-                    BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" }.forEach { command ->
-                        if(!response.has(command.properties.category.name)){
-                            response.put(command.properties.category.name, JSONArray())
-                        }
-                        val array = response.getJSONArray(command.properties.category.name)
-                        array.put(JSONObject()
-                                .put("command", command.name)
-                                .put("category", command.properties.category)
-                                .put("description", command.properties.description)
-                                .put("aliases", "[${command.properties.aliases.joinToString(", ")}]"))
+                    BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" }
+                        .forEach { command ->
+                            if (!response.has(command.properties.category.name)) {
+                                response.put(command.properties.category.name, JSONArray())
+                            }
+                            val array = response.getJSONArray(command.properties.category.name)
+                            array.put(
+                                JSONObject()
+                                    .put("command", command.name)
+                                    .put("category", command.properties.category)
+                                    .put("description", command.properties.description)
+                                    .put("aliases", "[${command.properties.aliases.joinToString(", ")}]")
+                            )
 
-                    }
+                        }
                     call.respondText("{\"commands\": $response}", ContentType.Application.Json)
                 }
 

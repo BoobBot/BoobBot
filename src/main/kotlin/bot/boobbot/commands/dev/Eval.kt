@@ -19,7 +19,13 @@ import java.util.concurrent.Executors
 @CommandProperties(description = "Eval", category = Category.DEV, developerOnly = true)
 class Eval : Command {
     private val evalThreadGroup = ThreadGroup("Eval Thread Pool")
-    private val pool = Executors.newCachedThreadPool { r -> Thread(evalThreadGroup, r, evalThreadGroup.name + evalThreadGroup.activeCount()) }
+    private val pool = Executors.newCachedThreadPool { r ->
+        Thread(
+            evalThreadGroup,
+            r,
+            evalThreadGroup.name + evalThreadGroup.activeCount()
+        )
+    }
 
 
     override fun execute(ctx: Context) {

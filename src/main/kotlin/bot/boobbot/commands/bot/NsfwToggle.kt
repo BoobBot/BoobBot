@@ -8,10 +8,10 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.ErrorResponseException
 
 @CommandProperties(
-        description = "Toggles the current channels nsfw setting",
-        aliases = ["nsfw", "toggle"],
-        guildOnly = true,
-        category = Category.MISC
+    description = "Toggles the current channels nsfw setting",
+    aliases = ["nsfw", "toggle"],
+    guildOnly = true,
+    category = Category.MISC
 )
 class NsfwToggle : Command {
 

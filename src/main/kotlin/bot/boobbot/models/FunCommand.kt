@@ -21,6 +21,12 @@ abstract class FunCommand(private val category: String) : AsyncCommand {
         if (user?.idLong == ctx.author.idLong) {
             return ctx.send("aww how sad you wanna play with yourself, well fucking don't go find a friend whore.")
         }
-        ctx.send(getRandomFunString(category).replace("{0}", ctx.author.name, true).replace("{1}", user?.name.toString(), true))
+        ctx.send(
+            getRandomFunString(category).replace("{0}", ctx.author.name, true).replace(
+                "{1}",
+                user?.name.toString(),
+                true
+            )
+        )
     }
 }

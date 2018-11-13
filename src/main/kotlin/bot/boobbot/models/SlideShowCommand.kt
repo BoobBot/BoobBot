@@ -4,8 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.future.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
 import java.awt.Color
@@ -53,7 +51,7 @@ abstract class SlideShowCommand : AsyncCommand {
 
         for (i in 1 until 21) { // 1-20
             val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
-                    ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
+                ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
             editMessage(msg, res.getString("url"), i, color)
             delay(5000)
@@ -64,7 +62,8 @@ abstract class SlideShowCommand : AsyncCommand {
     }
 
     private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
-        m.editMessage(EmbedBuilder()
+        m.editMessage(
+            EmbedBuilder()
                 .setDescription("$num of 20")
                 .setColor(color)
                 .setImage(url)

@@ -15,7 +15,10 @@ class Huh : Command {
             setTitle("It seems you don't discord, So here is a gif")
             setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)
             setImage("https://b1nzy-banned.me/g/V6Aeh.gif")
-            setFooter("LOL if that cant help ${ctx.author.name}, Maybe this can \uD83D\uDD2B", ctx.author.effectiveAvatarUrl)
+            setFooter(
+                "LOL if that cant help ${ctx.author.name}, Maybe this can \uD83D\uDD2B",
+                ctx.author.effectiveAvatarUrl
+            )
             setTimestamp(Instant.now())
         }
     }

@@ -7,7 +7,12 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.models.VoiceCommand
 
-@CommandProperties(description = "Skips current playing track", category = Category.AUDIO, guildOnly = true, nsfw = true)
+@CommandProperties(
+    description = "Skips current playing track",
+    category = Category.AUDIO,
+    guildOnly = true,
+    nsfw = true
+)
 class Skip : VoiceCommand {
 
     override fun execute(ctx: Context) {
@@ -19,7 +24,7 @@ class Skip : VoiceCommand {
 
         val player = ctx.audioPlayer!!
         val track = player.player.playingTrack
-                ?: return ctx.send(Formats.error("Wtf whore, How can i skip when im not playing anything?!"))
+            ?: return ctx.send(Formats.error("Wtf whore, How can i skip when im not playing anything?!"))
 
         if (!canSkip(ctx)) {
             return ctx.send(Formats.error("No whore, i can't let you do that"))

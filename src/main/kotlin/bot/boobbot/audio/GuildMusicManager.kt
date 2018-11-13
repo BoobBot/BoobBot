@@ -105,9 +105,6 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     }
 
     public fun disconnect() {
-        val guild = BoobBot.shardManager.getGuildById(guildId) ?: return
-        BoobBot.executorPool.submit {
-            guild.audioManager.closeAudioConnection()
-        }
+        BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
     }
 }

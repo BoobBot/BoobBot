@@ -13,9 +13,9 @@ class Why : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
 
         val res = BoobBot.requestUtil
-                .get("https://nekos.life/api/v2/why")
-                .await()
-                ?: return ctx.send("rip some error, press f")
+            .get("https://nekos.life/api/v2/why")
+            .await()
+            ?: return ctx.send("rip some error, press f")
         val body = res.json() ?: return ctx.send("rip some error, press f")
         ctx.send(body.get("why").toString())
     }

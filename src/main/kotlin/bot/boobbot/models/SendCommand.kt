@@ -18,8 +18,11 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             return ctx.send("Bots can't appreciate $category, whore.")
         }
 
-        val prompt = ctx.dmUserAsync(user, "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?")
-                ?: return ctx.send("hey, this whore ${user.name} has me blocked or their filter turned on \uD83D\uDD95")
+        val prompt = ctx.dmUserAsync(
+            user,
+            "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?"
+        )
+            ?: return ctx.send("hey, this whore ${user.name} has me blocked or their filter turned on \uD83D\uDD95")
 
         ctx.send("Good job ${ctx.author.asMention}")
 
@@ -30,18 +33,18 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             reaction.emote != null &&
                     reaction.emote.idLong == 443810942221025280L || reaction.emote.idLong == 443810942099390464L
         }, 60000).await()
-                ?: return ctx.send("${user.name} didn't respond") // timeout
+            ?: return ctx.send("${user.name} didn't respond") // timeout
 
         prompt.delete().await()
 
         if (emote.idLong == 443810942221025280L) { // yes
             val headers = createHeaders(
-                    Pair("Key", Constants.BB_API_KEY)
+                Pair("Key", Constants.BB_API_KEY)
             )
 
             val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
-                    .await()?.json()?.getString("url")
-                    ?: return ctx.send("wtf, api down?")
+                .await()?.json()?.getString("url")
+                ?: return ctx.send("wtf, api down?")
 
             ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
         } else {

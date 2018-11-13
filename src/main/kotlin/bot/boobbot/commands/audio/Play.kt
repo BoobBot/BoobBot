@@ -10,7 +10,12 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
 import java.util.regex.Pattern
 
-@CommandProperties(description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)", category = Category.AUDIO, guildOnly = true, nsfw = true)
+@CommandProperties(
+    description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",
+    category = Category.AUDIO,
+    guildOnly = true,
+    nsfw = true
+)
 class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {
@@ -30,14 +35,17 @@ class Play : VoiceCommand {
         val match = YT_REGEX.matcher(query)
         if (match.find()) {
             if (!Utils.isDonor(ctx.author)) {
-                ctx.message.channel.sendMessage(Formats.error(
+                ctx.message.channel.sendMessage(
+                    Formats.error(
                         " Sorry YouTube music is only available to our Patrons.\n"
                                 + ctx.jda
-                                .asBot()
-                                .shardManager
-                                .getEmoteById(475801484282429450L)
-                                .asMention
-                                + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")).queue()
+                            .asBot()
+                            .shardManager
+                            .getEmoteById(475801484282429450L)
+                            .asMention
+                                + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                    )
+                ).queue()
                 return
             }
         }

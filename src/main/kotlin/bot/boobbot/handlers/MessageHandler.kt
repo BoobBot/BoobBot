@@ -37,13 +37,13 @@ class MessageHandler : ListenerAdapter() {
 
         val messageContent = event.message.contentRaw
         val acceptablePrefixes = arrayOf(
-                botPrefix,
-                "<@${event.jda.selfUser.id}> ",
-                "<@!${event.jda.selfUser.id}> "
+            botPrefix,
+            "<@${event.jda.selfUser.id}> ",
+            "<@!${event.jda.selfUser.id}> "
         )
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
-                ?: return
+            ?: return
 
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
         val commandString = args.removeAt(0)
@@ -66,18 +66,24 @@ class MessageHandler : ListenerAdapter() {
             return event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`").queue()
         }
 
-        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(
+                event.textChannel,
+                Permission.MESSAGE_EMBED_LINKS
+            )
+        ) {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
         if (command.properties.donorOnly && !Utils.isDonor(event.author)) {
-            return event.channel.sendMessage(Formats.error(
+            return event.channel.sendMessage(
+                Formats.error(
                     " Sorry this command is only available to our Patrons.\n"
                             + BoobBot
-                            .shardManager
-                            .getEmoteById(475801484282429450L)
-                            .asMention
-                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")
+                        .shardManager
+                        .getEmoteById(475801484282429450L)
+                        .asMention
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                )
             ).queue()
         }
 

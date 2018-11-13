@@ -93,7 +93,7 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
             val videoDuration = Integer.parseInt(info.get("video_duration").text()) * 1000
 
             return buildTrackObject(
-                    reference.identifier, playbackURL, videoTitle, "Unknown Uploader", false, videoDuration.toLong()
+                reference.identifier, playbackURL, videoTitle, "Unknown Uploader", false, videoDuration.toLong()
             )
         }
     }
@@ -118,14 +118,16 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
     }
 
     private fun buildTrackObject(
-            uri: String,
-            identifier: String,
-            title: String,
-            uploader: String,
-            isStream: Boolean,
-            duration: Long): RedTubeAudioTrack {
+        uri: String,
+        identifier: String,
+        title: String,
+        uploader: String,
+        isStream: Boolean,
+        duration: Long
+    ): RedTubeAudioTrack {
         return RedTubeAudioTrack(
-                AudioTrackInfo(title, uploader, duration, identifier, isStream, uri), this)
+            AudioTrackInfo(title, uploader, duration, identifier, isStream, uri), this
+        )
     }
 
     companion object {

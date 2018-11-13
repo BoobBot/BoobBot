@@ -58,7 +58,8 @@ interface VoiceCommand : Command {
         val self = channel.guild.selfMember
 
         if (channel.userLimit != 0 && channel.members.size >= channel.userLimit &&
-                !self.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)) {
+            !self.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
+        ) {
             return "There's no room in your voicechannel, raise the user limit"
         }
 
