@@ -1,35 +1,11 @@
 {
   "avatar": [
     {
-      "name": "avatar1",
-      "ext": "jpg"
-    },
-    {
-      "name": "avatar2",
-      "ext": "jpg"
-    },
-    {
       "name": "avatar3",
       "ext": "png"
     },
     {
       "name": "avatar4",
-      "ext": "jpg"
-    },
-    {
-      "name": "avatar5",
-      "ext": "jpg"
-    },
-    {
-      "name": "avatar6",
-      "ext": "jpg"
-    },
-    {
-      "name": "avatar7",
-      "ext": "jpg"
-    },
-    {
-      "name": "avatar8",
       "ext": "jpg"
     }
   ],
