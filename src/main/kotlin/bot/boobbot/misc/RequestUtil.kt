@@ -84,6 +84,10 @@ class RequestUtil {
         return makeRequest(useProxy, "GET", url, null, headers)
     }
 
+    fun delete(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {
+        return makeRequest(useProxy, "DELETE", url, null, headers)
+    }
+
     fun post(url: String, body: RequestBody, headers: Headers, useProxy: Boolean = false): PendingRequest {
         return makeRequest(useProxy, "POST", url, body, headers)
     }
