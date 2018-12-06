@@ -36,7 +36,7 @@ class autoporn : AsyncCommand {
 
             "set" -> {
 
-                if (ctx.args.size < 2 || ctx.args[1].isEmpty() || !types.contains(ctx.args[1])) {
+                if (ctx.args.size < 2 || ctx.args[1].isEmpty() || !types.contains(ctx.args[1].toLowerCase())) {
                     return ctx.embed {
                         setColor(Color.red)
                         setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass, gay"))

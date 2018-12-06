@@ -1,10 +1,12 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import net.dv8tion.jda.core.EmbedBuilder
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.time.Instant
 
 
 class AutoPorn {
@@ -81,15 +83,32 @@ class AutoPorn {
                         deleteGuild(it.getString("guild_id"))
                         return@forEach
                     }
-                    //TODO get image
-                    channel.sendMessage("k").queue()
+
+                    var type = it.getString("type")
+                    if (type == "gif") {
+                        type = "Gifs"
+                    }
+
+                    val headers = createHeaders(
+                        Pair("Key", Constants.BB_API_KEY)
+                    )
+
+                    val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$type", headers).block()?.json()
+
+                    channel.sendMessage(
+                        EmbedBuilder().apply {
+                            setDescription(Formats.LEWD_EMOTE)
+                            setColor(Colors.rndColor)
+                            setImage(res!!.getString("url"))
+                            setTimestamp(Instant.now())
+                        }.build()
+                    ).queue()
 
                 }
             }
         }
 
+    fun auto(): Runnable = Runnable { autoPorn() }
 
-        fun auto(): Runnable = Runnable { autoPorn() }
-
-    }
+}
 }

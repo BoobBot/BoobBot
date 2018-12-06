@@ -2,6 +2,7 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.setGame
+import bot.boobbot.misc.AutoPorn
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
@@ -51,6 +52,7 @@ class EventHandler : ListenerAdapter() {
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
             }
+            BoobBot.Scheduler.scheduleAtFixedRate(AutoPorn.auto(), 60, 45, TimeUnit.SECONDS)
             self = event.jda.selfUser // set
             BoobBot.log.info(Formats.getReadyFormat())
             readyClient.send(
