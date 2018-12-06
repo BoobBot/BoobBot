@@ -6,10 +6,7 @@ import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.ApiServer
-import bot.boobbot.misc.Constants
-import bot.boobbot.misc.EventWaiter
-import bot.boobbot.misc.RequestUtil
+import bot.boobbot.misc.*
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -79,6 +76,7 @@ class BoobBot : ListenerAdapter() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
+            AutoPorn.getGuilds()
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
