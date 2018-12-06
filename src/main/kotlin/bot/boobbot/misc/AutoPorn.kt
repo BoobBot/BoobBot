@@ -57,58 +57,63 @@ class AutoPorn {
         }
 
 
-        private fun getGuilds(): JSONArray {
+        private fun getGuilds(): JSONArray? {
             val guilds = BoobBot.requestUtil
                 .get(
                     "http://localhost:5000/api/guilds",
                     createHeaders(Pair("Authorization", "GAY"))
                 ).block()?.json()
-            return guilds!!.getJSONArray("guilds")
+            return guilds?.getJSONArray("guilds")
         }
 
 
-        fun autoPorn() {
+        private fun autoPorn() {
             if (BoobBot.isReady) {
                 BoobBot.log.info("Running auto-porn")
-                val guilds: JSONArray = getGuilds()
+                val guilds: JSONArray = getGuilds() ?: return
                 guilds.forEach { it ->
-                    (it as JSONObject)
-                    val guild = BoobBot.shardManager.getGuildById(it.getString("guild_id"))
-                    if (guild == null) {
-                        deleteGuild(it.getString("guild_id"))
+                    try {
+                        (it as JSONObject)
+                        val guild = BoobBot.shardManager.getGuildById(it.getString("guild_id"))
+                        if (guild == null) {
+                            deleteGuild(it.getString("guild_id"))
+                            return@forEach
+                        }
+                        val channel = guild.getTextChannelById(it.getString("channel"))
+                        if (channel == null && guild.isAvailable) {
+                            deleteGuild(it.getString("guild_id"))
+                            return@forEach
+                        }
+
+                        var type = it.getString("type")
+                        if (type == "gif") {
+                            type = "Gifs"
+                        }
+
+                        val headers = createHeaders(
+                            Pair("Key", Constants.BB_API_KEY)
+                        )
+
+                        val res =
+                            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$type", headers).block()?.json()
+                                ?: return@forEach
+                        channel.sendMessage(
+                            EmbedBuilder().apply {
+                                setDescription(Formats.LEWD_EMOTE)
+                                setColor(Colors.rndColor)
+                                setImage(res!!.getString("url"))
+                                setTimestamp(Instant.now())
+                            }.build()
+                        ).queue()
+
+                    } catch (e: Exception) {
                         return@forEach
                     }
-                    val channel = guild.getTextChannelById(it.getString("channel"))
-                    if (channel == null && guild.isAvailable) {
-                        deleteGuild(it.getString("guild_id"))
-                        return@forEach
-                    }
-
-                    var type = it.getString("type")
-                    if (type == "gif") {
-                        type = "Gifs"
-                    }
-
-                    val headers = createHeaders(
-                        Pair("Key", Constants.BB_API_KEY)
-                    )
-
-                    val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$type", headers).block()?.json()
-
-                    channel.sendMessage(
-                        EmbedBuilder().apply {
-                            setDescription(Formats.LEWD_EMOTE)
-                            setColor(Colors.rndColor)
-                            setImage(res!!.getString("url"))
-                            setTimestamp(Instant.now())
-                        }.build()
-                    ).queue()
-
                 }
             }
         }
 
-    fun auto(): Runnable = Runnable { autoPorn() }
+        fun auto(): Runnable = Runnable { autoPorn() }
 
-}
+    }
 }

@@ -52,7 +52,7 @@ class EventHandler : ListenerAdapter() {
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
             }
-            BoobBot.Scheduler.scheduleAtFixedRate(AutoPorn.auto(), 60, 45, TimeUnit.SECONDS)
+            BoobBot.Scheduler.scheduleAtFixedRate(AutoPorn.auto(), 1, 5, TimeUnit.SECONDS)
             self = event.jda.selfUser // set
             BoobBot.log.info(Formats.getReadyFormat())
             readyClient.send(
