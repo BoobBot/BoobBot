@@ -5,6 +5,7 @@ import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.AutoPorn
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
@@ -49,58 +50,30 @@ class autoporn : AsyncCommand {
                     }
                 }
 
-                val check = BoobBot.requestUtil
-                    .get(
-                        "http://localhost:5000/api/guilds/${ctx.guild!!.id}",
-                        createHeaders(Pair("Authorization", "GAY"))
-                    ).await()
-                    ?: return ctx.send("rip some error, press f")
-                if (check.code() != 404) {
-                    check.close()
+
+                if (AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
                         setColor(Color.red)
                         setDescription(Formats.error("Auto-porn is already setup for this server"))
                     }
                 }
-                check.close()
-                val JSON = MediaType.parse("application/json; charset=utf-8")
-                val Body = RequestBody.create(
-                    JSON,
-                    "{\"guild_id\": \"${ctx.guild!!.id}\", \"channel\": \"${ctx.message.mentionedChannels[0].id}\", \"type\": \"${ctx.args[1]}\"}"
-                )
-                val res = BoobBot.requestUtil
-                    .post(
-                        "http://localhost:5000/api/guilds", Body,
-                        createHeaders(Pair("Authorization", "GAY"))
-                    )
-                    .await() ?: return ctx.send("rip some error, press f")
 
-                val body = res ?: return ctx.send("rip some error, press f")
-                //TODO remove place holder
-                ctx.send(body.body()!!.string())
-                return
+               if (AutoPorn.createGuild(ctx.guild.id, ctx.message.mentionedChannels[0].id, ctx.args[1].toLowerCase())){
+                   ctx.send("Yes it worked")
+               }
+                return ctx.send("broken")
+
             }
 
             "delete" -> {
-                val check = BoobBot.requestUtil
-                    .get(
-                        "http://localhost:5000/api/guilds/${ctx.guild!!.id}",
-                        createHeaders(Pair("Authorization", "GAY"))
-                    ).await()
-                    ?: return ctx.send("rip some error, press f")
-                if (check.code() == 404) {
-                    check.close()
+
+                if (!AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
                         setColor(Color.red)
                         setDescription(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
-                check.close()
-                BoobBot.requestUtil
-                    .delete(
-                        "http://localhost:5000/api/guilds/${ctx.guild!!.id}",
-                        createHeaders(Pair("Authorization", "GAY"))
-                    ).await()
+                AutoPorn.deleteGuild(ctx.guild.id)
                 return ctx.send("done maybe")
             }
 
