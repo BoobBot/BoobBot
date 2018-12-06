@@ -1,12 +1,10 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Context
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.nio.channels.spi.AbstractInterruptibleChannel
 
 
 class AutoPorn {
@@ -48,34 +46,48 @@ class AutoPorn {
         }
 
 
-        suspend fun deleteGuild(guild_id: String) {
+        fun deleteGuild(guild_id: String) {
             BoobBot.requestUtil
                 .delete(
                     "http://localhost:5000/api/guilds/$guild_id",
                     createHeaders(Pair("Authorization", "GAY"))
-                ).await()
+                ).block()!!.close()
         }
 
 
-        fun getGuilds() {
-            val k = BoobBot.requestUtil
+        private fun getGuilds(): JSONArray {
+            val guilds = BoobBot.requestUtil
                 .get(
                     "http://localhost:5000/api/guilds",
                     createHeaders(Pair("Authorization", "GAY"))
-                ).block()?.json() ?: return
-            BoobBot.log.info(k.toString(3))
-            val d: JSONArray = k.getJSONArray("guilds")
-            d.forEach { it ->
-                BoobBot.log.info((it as JSONObject).get("channel").toString())
-            }
+                ).block()?.json()
+            return guilds!!.getJSONArray("guilds")
         }
 
 
         fun autoPorn() {
             if (BoobBot.isReady) {
-                BoobBot.log.info("Running autoporn")
+                BoobBot.log.info("Running auto-porn")
+                val guilds: JSONArray = getGuilds()
+                guilds.forEach { it ->
+                    (it as JSONObject)
+                    val guild = BoobBot.shardManager.getGuildById(it.getString("guild_id"))
+                    if (guild == null) {
+                        deleteGuild(it.getString("guild_id"))
+                        return@forEach
+                    }
+                    val channel = guild.getTextChannelById(it.getString("channel"))
+                    if (channel == null && guild.isAvailable) {
+                        deleteGuild(it.getString("guild_id"))
+                        return@forEach
+                    }
+                    //TODO get image
+                    channel.sendMessage("k").queue()
+
+                }
             }
         }
+
 
         fun auto(): Runnable = Runnable { autoPorn() }
 

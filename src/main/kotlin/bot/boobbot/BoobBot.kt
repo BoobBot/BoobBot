@@ -76,7 +76,7 @@ class BoobBot : ListenerAdapter() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            AutoPorn.getGuilds()
+            AutoPorn.autoPorn()
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
