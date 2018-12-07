@@ -11,7 +11,7 @@ import java.time.Instant
 
 class AutoPorn {
     companion object {
-        private var dbHeaders = createHeaders(Pair("Authorization", Constants.BB_DB_KEY))
+        private var dbHeaders = createHeaders(Pair("Authorization", "GAY"))
         suspend fun checkExists(guild_id: String): Boolean {
             val check = BoobBot.requestUtil
                 .get(
@@ -53,8 +53,8 @@ class AutoPorn {
                 .get(
                     "https://db.boob.bot/api/guilds/$guild_id",
                     dbHeaders
-                ).await()
-            return req!!.json()!!.getJSONObject("guild").get("channel").toString()
+                ).await() ?: return ""
+            return req.json()?.getJSONObject("guild")?.get("channel").toString()
         }
 
 
@@ -102,6 +102,10 @@ class AutoPorn {
                         var type = it.getString("type")
                         if (type == "gif") {
                             type = "Gifs"
+                        }
+
+                        if (type == "random") {
+                            type = "nsfw"
                         }
 
                         val headers = createHeaders(
