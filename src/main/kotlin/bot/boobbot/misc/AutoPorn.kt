@@ -95,6 +95,10 @@ class AutoPorn {
                             return@forEach
                         }
 
+                        if (!channel.isNSFW){
+                            return@forEach
+                        }
+
                         var type = it.getString("type")
                         if (type == "gif") {
                             type = "Gifs"

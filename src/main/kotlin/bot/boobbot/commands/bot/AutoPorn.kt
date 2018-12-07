@@ -9,6 +9,7 @@ import bot.boobbot.misc.AutoPorn
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
+import net.dv8tion.jda.core.Permission
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import java.awt.Color
@@ -24,6 +25,10 @@ import java.awt.Color
 class AutoPorn : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
+
+        if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
+            return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
+        }
 
         if (ctx.args.isEmpty()) {
             return ctx.embed {
