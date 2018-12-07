@@ -5,6 +5,7 @@ import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
 import net.dv8tion.jda.core.entities.*
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
 import org.apache.http.HttpHost
@@ -53,6 +54,26 @@ class Utils {
         fun isDonor(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
             return member.roles.any { r -> r.idLong == 440542799658483713L }
+        }
+
+        fun isDonorPlus(user: User): Boolean {
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 520645293054623747L }
+        }
+
+        fun checkDonor(event: MessageReceivedEvent): Boolean {
+            if (isDonor(event.author)) {
+                return true
+            }
+            if (event.channelType.isGuild) {
+                if (isDonorPlus(event.guild.owner.user)) {
+                    return true
+                }
+            }
+            if (Constants.OWNERS.contains(event.author.idLong)) {
+                return true
+            }
+            return false
         }
 
         fun getRandomFunString(key: String): String {

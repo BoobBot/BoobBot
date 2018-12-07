@@ -74,7 +74,7 @@ class MessageHandler : ListenerAdapter() {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
-        if (command.properties.donorOnly && !Utils.isDonor(event.author)) {
+        if (command.properties.donorOnly && !Utils.checkDonor(event)) {
             return event.channel.sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n"
