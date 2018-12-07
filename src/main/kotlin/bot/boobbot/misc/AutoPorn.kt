@@ -11,7 +11,7 @@ import java.time.Instant
 
 class AutoPorn {
     companion object {
-        private var dbHeaders = createHeaders(Pair("Authorization", "GAY"))
+        private var dbHeaders = createHeaders(Pair("Authorization", Constants.BB_DB_KEY))
         suspend fun checkExists(guild_id: String): Boolean {
             val check = BoobBot.requestUtil
                 .get(
