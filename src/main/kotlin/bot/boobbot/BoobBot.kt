@@ -6,7 +6,10 @@ import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.*
+import bot.boobbot.misc.ApiServer
+import bot.boobbot.misc.Constants
+import bot.boobbot.misc.EventWaiter
+import bot.boobbot.misc.RequestUtil
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -36,6 +39,7 @@ class BoobBot : ListenerAdapter() {
 
 
     companion object {
+        var autoPornChannels = 0
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 

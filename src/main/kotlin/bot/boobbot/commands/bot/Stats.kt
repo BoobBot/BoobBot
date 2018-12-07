@@ -37,6 +37,8 @@ class Stats : Command {
 
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.count()
 
+        val autoPornChannels = BoobBot.autoPornChannels
+
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed =
             if (metrics.has("command")) metrics.getJSONObject("command").getString("Total Events").toInt() else 0
@@ -99,6 +101,7 @@ class Stats : Command {
             .append("Guilds              = ").append(servers).append("\n")
             .append("Users               = ").append(users).append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
+            .append("Auto_Porn_Channels  = ").append(autoPornChannels).append("\n")
             .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n")
             .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n")
             .append("[ Metrics_Since_Boot ]\n")

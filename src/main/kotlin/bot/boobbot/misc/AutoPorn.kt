@@ -81,6 +81,7 @@ class AutoPorn {
             if (BoobBot.isReady) {
                 BoobBot.log.info("Running auto-porn")
                 val guilds: JSONArray = getGuilds() ?: return
+                BoobBot.autoPornChannels = guilds.length()
                 guilds.forEach { it ->
                     try {
                         (it as JSONObject)

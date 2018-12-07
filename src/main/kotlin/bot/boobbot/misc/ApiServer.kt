@@ -122,6 +122,7 @@ class ApiServer {
                         .put("Guilds", servers)
                         .put("Users", users)
                         .put("Audio_Players", players)
+                        .put("Auto_Porn_Channels", BoobBot.autoPornChannels)
                         .put("Shards_Online", "$shardsOnline/$shards")
                         .put("Average_Latency", "${averageShardLatency}ms")
 
