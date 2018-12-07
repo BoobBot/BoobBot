@@ -11,12 +11,12 @@ import java.time.Instant
 
 class AutoPorn {
     companion object {
-
+        private var dbHeaders = createHeaders(Pair("Authorization", Constants.BB_DB_KEY))
         suspend fun checkExists(guild_id: String): Boolean {
             val check = BoobBot.requestUtil
                 .get(
-                    "http://localhost:5000/api/guilds/$guild_id",
-                    createHeaders(Pair("Authorization", "GAY"))
+                    "https://db.boob.bot/api/guilds/$guild_id",
+                    dbHeaders
                 ).await()
                 ?: return false
             if (check.code() == 404) {
@@ -37,8 +37,8 @@ class AutoPorn {
             )
             val res = BoobBot.requestUtil
                 .post(
-                    "http://localhost:5000/api/guilds", Body,
-                    createHeaders(Pair("Authorization", "GAY"))
+                    "https://db.boob.bot/api/guilds", Body,
+                    dbHeaders
                 )
                 .await() ?: return false
             if (res.code() == 201) {
@@ -48,11 +48,21 @@ class AutoPorn {
         }
 
 
+        suspend fun getStatus(guild_id: String): String {
+            val req = BoobBot.requestUtil
+                .get(
+                    "https://db.boob.bot/api/guilds/$guild_id",
+                    dbHeaders
+                ).await()
+            return req!!.json()!!.getJSONObject("guild").get("channel").toString()
+        }
+
+
         fun deleteGuild(guild_id: String) {
             BoobBot.requestUtil
                 .delete(
-                    "http://localhost:5000/api/guilds/$guild_id",
-                    createHeaders(Pair("Authorization", "GAY"))
+                    "https://db.boob.bot/api/guilds/$guild_id",
+                    dbHeaders
                 ).block()!!.close()
         }
 
@@ -60,8 +70,8 @@ class AutoPorn {
         private fun getGuilds(): JSONArray? {
             val guilds = BoobBot.requestUtil
                 .get(
-                    "http://localhost:5000/api/guilds",
-                    createHeaders(Pair("Authorization", "GAY"))
+                    "https://db.boob.bot/api/guilds",
+                    dbHeaders
                 ).block()?.json()
             return guilds?.getJSONArray("guilds")
         }
@@ -97,11 +107,16 @@ class AutoPorn {
                         val res =
                             BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$type", headers).block()?.json()
                                 ?: return@forEach
+
+                        if (!channel.canTalk()) {
+                            deleteGuild(it.getString("guild_id"))
+                            return@forEach
+                        }
                         channel.sendMessage(
                             EmbedBuilder().apply {
                                 setDescription(Formats.LEWD_EMOTE)
                                 setColor(Colors.rndColor)
-                                setImage(res!!.getString("url"))
+                                setImage(res.getString("url"))
                                 setTimestamp(Instant.now())
                             }.build()
                         ).queue()

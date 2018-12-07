@@ -31,7 +31,7 @@ class RequestUtil {
         .readTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(LoggingInterceptor())
         .connectionPool(ConnectionPool(200, 5L, TimeUnit.MINUTES))
-        .retryOnConnectionFailure(false)
+        .retryOnConnectionFailure(true)
         .protocols(Arrays.asList(Protocol.HTTP_1_1))
         .build()
 

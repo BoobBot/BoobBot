@@ -15,13 +15,13 @@ import java.awt.Color
 
 
 @CommandProperties(
-    description = "autoporn <:p_:475801484282429450>",
+    description = "AutoPorn, Sub-commands: set, delete, status <:p_:475801484282429450>",
     nsfw = true,
     guildOnly = true,
     donorOnly = true,
     category = Category.GENERAL
 )
-class autoporn : AsyncCommand {
+class AutoPorn : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
 
@@ -49,6 +49,12 @@ class autoporn : AsyncCommand {
                         setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass,gay"))
                     }
                 }
+                if (!ctx.message.mentionedChannels[0].isNSFW) {
+                    return ctx.embed {
+                        setColor(Color.red)
+                        setDescription(Formats.error("That's not a nsfw channel you fuck"))
+                    }
+                }
 
 
                 if (AutoPorn.checkExists(ctx.guild!!.id)) {
@@ -59,9 +65,15 @@ class autoporn : AsyncCommand {
                 }
 
                if (AutoPorn.createGuild(ctx.guild.id, ctx.message.mentionedChannels[0].id, ctx.args[1].toLowerCase())){
-                   ctx.send("Yes it worked")
+                   return ctx.embed {
+                       setColor(Color.green)
+                       setDescription(Formats.info("Auto-porn is setup for this server on ${ctx.message.mentionedChannels[0].asMention}"))
+                   }
                }
-                return ctx.send("broken")
+                return ctx.embed {
+                    setColor(Color.red)
+                    setDescription(Formats.error("Shit, some error try again"))
+                }
 
             }
 
@@ -74,29 +86,20 @@ class autoporn : AsyncCommand {
                     }
                 }
                 AutoPorn.deleteGuild(ctx.guild.id)
-                return ctx.send("done maybe")
+                return ctx.send(Formats.info("done, whore!"))
             }
 
             "status" -> {
 
-                val check = BoobBot.requestUtil
-                    .get(
-                        "http://localhost:5000/api/guilds/${ctx.guild!!.id}",
-                        createHeaders(Pair("Authorization", "GAY"))
-                    ).await()
-                    ?: return ctx.send("rip some error, press f")
-                if (check.code() == 404) {
-                    check.close()
+                if (!AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
                         setColor(Color.red)
                         setDescription(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
 
-
-                val data = check.json()!!
-                val json = data.getJSONObject("guild").get("channel")
-                val c = ctx.guild.getTextChannelById(json.toString())
+                val c = ctx.guild.getTextChannelById(AutoPorn.getStatus(ctx.guild.id))
+                if (c == null){AutoPorn.deleteGuild(ctx.guild.id)}
                 return ctx.embed {
                     setColor(Color.red)
                     setDescription(Formats.info("Auto-porn is setup for this server on ${c.asMention}"))
