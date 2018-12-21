@@ -241,7 +241,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /pings"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
 
-                    call.respondText("{\"status\": ${getPings()}()}", ContentType.Application.Json)
+                    call.respondText("{\"status\": ${getPings()}", ContentType.Application.Json)
                 }
 
                 get("/commands") {
