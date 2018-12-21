@@ -68,7 +68,7 @@ class BoobBot : ListenerAdapter() {
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val home: Guild?
-            get() = shardManager.getGuildById(Constants.HOME_GUILD)
+            get() = shardManager.getGuildById(Constants.HOME_GUILD.toString())
 
         val dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()

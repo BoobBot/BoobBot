@@ -19,8 +19,8 @@ import java.awt.Color
     description = "AutoPorn, Sub-commands: set, delete, status <:p_:475801484282429450>",
     nsfw = true,
     guildOnly = true,
-    donorOnly = true,
-    category = Category.GENERAL
+    category = Category.DEV,
+    developerOnly = true
 )
 class AutoPorn : AsyncCommand {
 

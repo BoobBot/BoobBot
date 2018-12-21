@@ -48,6 +48,7 @@ dependencies {
     implementation "com.sedmelluq:lavaplayer:$lp_version"
     implementation "com.sedmelluq:jda-nas:$nas_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-websockets:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
     implementation "io.github.cdimascio:java-dotenv:3.1.2"
     implementation "org.javadelight:delight-metrics:0.0.6"

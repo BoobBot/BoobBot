@@ -14,7 +14,7 @@ class Constants {
 
         val DEBUG_TOKEN = BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
 
-        const val HOME_GUILD = 440526421388165120L
+        var HOME_GUILD = BoobBot.dotenv["HOME_GUILD"] ?: ""
 
         var RDY_WEBHOOK = BoobBot.dotenv["RDY_WEBHOOK"] ?: ""
 
@@ -24,11 +24,19 @@ class Constants {
 
         var BB_API_KEY = BoobBot.dotenv["BB_API_KEY"] ?: ""
 
+        var BB_API_URL = BoobBot.dotenv["BB_API_URL"] ?: ""
+
         var BB_DB_KEY = BoobBot.dotenv["BB_DB_KEY"] ?: ""
+
+        var BB_DB_URL = BoobBot.dotenv["BB_DB_URL"] ?: ""
 
         var MEMER_IMGEN_KEY = BoobBot.dotenv["MEMER_IMGEN_KEY"] ?: ""
 
         var SENTRY_DSN = BoobBot.dotenv["SENTRY_DSN"] ?: ""
+
+        var AUTO_PORN_TIME = BoobBot.dotenv["AUTO_PORN_TIME"] ?: ""
+
+
 
     }
 }

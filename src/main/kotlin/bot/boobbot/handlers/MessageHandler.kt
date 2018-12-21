@@ -75,14 +75,24 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.donorOnly && !Utils.checkDonor(event)) {
-            return event.channel.sendMessage(
-                Formats.error(
-                    " Sorry this command is only available to our Patrons.\n"
+//            return event.channel.sendMessage(
+//                Formats.error(
+//                    " Sorry this command is only available to our Patrons.\n"
+//                            + BoobBot
+//                        .shardManager
+//                        .getEmoteById(475801484282429450L)
+//                        .asMention
+//                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+//                )
+//            ).queue()
+            event.channel.sendMessage(
+                Formats.info(
+                    "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
                             + BoobBot
                         .shardManager
                         .getEmoteById(475801484282429450L)
                         .asMention
-                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                            + "Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
                 )
             ).queue()
         }
