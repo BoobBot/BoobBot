@@ -86,7 +86,7 @@ class AutoPorn {
                     try {
                         (it as JSONObject)
                         val guild = BoobBot.shardManager.getGuildById(it.getString("guild_id"))
-                        if (guild == null) {
+                        if (guild == null && BoobBot.shardManager.statuses.entries.parallelStream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal) {
                             deleteGuild(it.getString("guild_id"))
                             return@forEach
                         }

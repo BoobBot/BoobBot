@@ -53,12 +53,12 @@ class Utils {
 
         fun isDonor(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 440542799658483713L }
+            return member.roles.any { r -> r.idLong == 528615837305929748L }
         }
 
         fun isDonorPlus(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 520645293054623747L }
+            return member.roles.any { r -> r.idLong == 528615882709008430L }
         }
 
         fun checkDonor(event: MessageReceivedEvent): Boolean {
