@@ -17,7 +17,7 @@ abstract class SlideShowCommand : AsyncCommand {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif"))
+                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
             }
         }
 
@@ -25,6 +25,18 @@ abstract class SlideShowCommand : AsyncCommand {
 
         when (ctx.args[0].toLowerCase()) {
             "boobs" -> {
+                endpoint = ctx.args[0]
+            }
+            "gay" -> {
+                endpoint = ctx.args[0]
+            }
+            "tiny" -> {
+                endpoint = ctx.args[0]
+            }
+            "cumsluts" -> {
+                endpoint = ctx.args[0]
+            }
+            "collared" -> {
                 endpoint = ctx.args[0]
             }
             "ass" -> {
@@ -39,7 +51,7 @@ abstract class SlideShowCommand : AsyncCommand {
             else -> {
                 return ctx.embed {
                     setColor(Color.red)
-                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick, gif"))
+                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
                 }
             }
         }
