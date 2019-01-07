@@ -14,7 +14,7 @@ class Formats {
     companion object {
         const val BOOT_BANNER = "(.Y.)"
 
-        const val LEWD_EMOTE = "<:TouchMaBooty:444601938320031745>"
+        const val LEWD_EMOTE = "<:Ass:520247323343978509>"
         const val DISCORD_EMOTE = "<:discord:486939267365470210>"
         const val BOT_EMOTE = "<:bot:486939322151338005>"
         const val LINK_EMOTE = "\uD83D\uDD17"

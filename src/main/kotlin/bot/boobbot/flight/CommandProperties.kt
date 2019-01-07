@@ -15,7 +15,7 @@ annotation class CommandProperties(
 
 
 enum class Category(val title: String) {
-    GENERAL("<:TouchMaBooty:444601938320031745> General NSFW"),
+    GENERAL("<:Ass:520247323343978509> General NSFW"),
     KINKS("<:whip:440551663804350495> Kinks"),
     VIDEOSEARCHING("\uD83D\uDCF9 Video Searching"),
     FANTASY("<:Pantsu:443870754107555842> Non-Real"),
