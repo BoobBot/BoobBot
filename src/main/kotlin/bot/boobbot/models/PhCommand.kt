@@ -40,7 +40,7 @@ abstract class PhCommand : AsyncCommand {
                 .setImage(video.getString("thumb"))
                 .addField(
                     "Video stats",
-                    "Views: ${video.getString("views")}\n" +
+                    "Views: ${video.get("views")}\n" +
                             "Rating: ${video.get("rating")}\n" +
                             "Ratings: ${video.get("ratings")}\n" +
                             "Duration: ${video.getString("duration")}\n" +
