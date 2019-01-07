@@ -32,6 +32,7 @@ abstract class RtCommand : AsyncCommand {
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
             val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
+            //BoobBot.log.info(video.toString(3))
             ctx.embed {
                 setAuthor(
                     "RedTube video search",
@@ -44,7 +45,7 @@ abstract class RtCommand : AsyncCommand {
                     .setImage(video.getString("thumb"))
                     .addField(
                         "Video stats",
-                        "Views: ${video.getString("views")}\n" +
+                        "Views: ${video.get("views")}\n" +
                                 "Rating: ${video.getString("rating")}\n" +
                                 "Ratings: ${video.getString("ratings")}\n" +
                                 "Duration: ${video.getString("duration")}\n" +
@@ -58,6 +59,7 @@ abstract class RtCommand : AsyncCommand {
                     .build()
             }
         } catch (Ex: Exception) {
+            BoobBot.log.error(Ex.toString())
             ctx.send("\uD83D\uDEAB oh? something broken af")
         }
 
