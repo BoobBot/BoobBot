@@ -34,7 +34,7 @@ repositories {
 
 
 dependencies {
-    api ("net.dv8tion:JDA:$jda_version") {
+    api("net.dv8tion:JDA:$jda_version") {
         exclude module: "opus-java"
     }
 

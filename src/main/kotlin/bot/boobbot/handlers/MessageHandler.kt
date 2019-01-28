@@ -85,16 +85,16 @@ class MessageHandler : ListenerAdapter() {
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
                 )
             ).queue()
-           /* event.channel.sendMessage(
-                Formats.info(
-                    "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
-                            + BoobBot
-                        .shardManager
-                        .getEmoteById(475801484282429450L)
-                        .asMention
-                            + "Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
-                )
-            ).queue()*/
+            /* event.channel.sendMessage(
+                 Formats.info(
+                     "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
+                             + BoobBot
+                         .shardManager
+                         .getEmoteById(475801484282429450L)
+                         .asMention
+                             + "Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
+                 )
+             ).queue()*/
         }
 
         try {

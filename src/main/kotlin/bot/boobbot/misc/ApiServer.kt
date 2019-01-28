@@ -8,57 +8,40 @@ import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
-import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readText
 import io.ktor.request.path
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
-import io.ktor.routing.accept
 import io.ktor.routing.get
 import io.ktor.routing.routing
-import io.ktor.websocket.WebSockets
-import io.ktor.websocket.webSocket
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.channels.*
 import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
-import java.time.Duration
-import java.util.*
-import kotlin.concurrent.timerTask
-import org.json.JSONException
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
-
-
-
 
 
 typealias DelayProvider = suspend (ms: Int) -> Unit
+
 class ApiServer {
     fun startServer() {
 
-       /* fun isJSONValid(json: String): Boolean {
-            try {
-                JSONObject(json)
-            } catch (ex: JSONException) {
-                try {
-                    JSONArray(json)
-                } catch (ex1: JSONException) {
-                    return false
-                }
+        /* fun isJSONValid(json: String): Boolean {
+             try {
+                 JSONObject(json)
+             } catch (ex: JSONException) {
+                 try {
+                     JSONArray(json)
+                 } catch (ex1: JSONException) {
+                     return false
+                 }
 
-            }
+             }
 
-            return true
-        }*/
+             return true
+         }*/
 
         fun getStats(): JSONObject {
             val dpFormatter = DecimalFormat("0.00")
@@ -171,38 +154,38 @@ class ApiServer {
             }*/
 
             routing {
-             /* just things
-                val baos = ByteArrayOutputStream()
-                System.setOut(PrintStream(baos))
-                webSocket("/ws") {
-                    BoobBot.metrics.record(Metrics.happened("ws connected"))
-                    if (BoobBot.isDebug){ BoobBot.log.info("incoming ws connect from ${call.request.origin.host}") }
-                    incoming.mapNotNull { it as? Frame.Text }.consumeEach { frame ->
-                        val inText = frame.readText()
-                        BoobBot.metrics.record(Metrics.happened("incoming frame"))
-                        if (BoobBot.isDebug){ BoobBot.log.info("incoming ws frame \n text: ${frame.readText()}") }
-                        if (inText.equals("bye", ignoreCase = true)) {
-                            close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
-                        }
-                        if (inText.equals("metrics", ignoreCase = true)) {
-                            outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
-                        }
-                        if (isJSONValid(inText)) {
-                            val json = JSONObject(inText)
-                            if (json.has("data")){
-                                BoobBot.log.info(json.getString("data"))
-                                if (json.get("data").toString().equals("metrics", ignoreCase = true)) {
-                                    outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
-                                }
-                            }
+                /* just things
+                   val baos = ByteArrayOutputStream()
+                   System.setOut(PrintStream(baos))
+                   webSocket("/ws") {
+                       BoobBot.metrics.record(Metrics.happened("ws connected"))
+                       if (BoobBot.isDebug){ BoobBot.log.info("incoming ws connect from ${call.request.origin.host}") }
+                       incoming.mapNotNull { it as? Frame.Text }.consumeEach { frame ->
+                           val inText = frame.readText()
+                           BoobBot.metrics.record(Metrics.happened("incoming frame"))
+                           if (BoobBot.isDebug){ BoobBot.log.info("incoming ws frame \n text: ${frame.readText()}") }
+                           if (inText.equals("bye", ignoreCase = true)) {
+                               close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
+                           }
+                           if (inText.equals("metrics", ignoreCase = true)) {
+                               outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
+                           }
+                           if (isJSONValid(inText)) {
+                               val json = JSONObject(inText)
+                               if (json.has("data")){
+                                   BoobBot.log.info(json.getString("data"))
+                                   if (json.get("data").toString().equals("metrics", ignoreCase = true)) {
+                                       outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
+                                   }
+                               }
 
-                        }
-                        outgoing.send(Frame.Text("{\"this\": $inText}"))
-                        baos.use {
-                            outgoing.send(Frame.Text("{\"data\": ${it.toString()}}")) }
-                    }
+                           }
+                           outgoing.send(Frame.Text("{\"this\": $inText}"))
+                           baos.use {
+                               outgoing.send(Frame.Text("{\"data\": ${it.toString()}}")) }
+                       }
 
-                }*/
+                   }*/
 
 
 

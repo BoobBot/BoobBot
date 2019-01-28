@@ -7,11 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.AutoPorn
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.createHeaders
-import bot.boobbot.misc.json
 import net.dv8tion.jda.core.Permission
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import java.awt.Color
 
 
@@ -69,12 +65,17 @@ class AutoPorn : AsyncCommand {
                     }
                 }
 
-               if (AutoPorn.createGuild(ctx.guild.id, ctx.message.mentionedChannels[0].id, ctx.args[1].toLowerCase())){
-                   return ctx.embed {
-                       setColor(Color.green)
-                       setDescription(Formats.info("Auto-porn is setup for this server on ${ctx.message.mentionedChannels[0].asMention}"))
-                   }
-               }
+                if (AutoPorn.createGuild(
+                        ctx.guild.id,
+                        ctx.message.mentionedChannels[0].id,
+                        ctx.args[1].toLowerCase()
+                    )
+                ) {
+                    return ctx.embed {
+                        setColor(Color.green)
+                        setDescription(Formats.info("Auto-porn is setup for this server on ${ctx.message.mentionedChannels[0].asMention}"))
+                    }
+                }
                 return ctx.embed {
                     setColor(Color.red)
                     setDescription(Formats.error("Shit, some error try again"))
@@ -104,14 +105,16 @@ class AutoPorn : AsyncCommand {
                 }
                 val id = AutoPorn.getStatus(ctx.guild.id)
                 BoobBot.log.info(id.length.toString())
-                if (id.length < 6){
+                if (id.length < 6) {
                     return ctx.embed {
                         setColor(Color.red)
                         setDescription(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
                 val c = ctx.guild.getTextChannelById(AutoPorn.getStatus(ctx.guild.id))
-                if (c == null){AutoPorn.deleteGuild(ctx.guild.id)}
+                if (c == null) {
+                    AutoPorn.deleteGuild(ctx.guild.id)
+                }
                 return ctx.embed {
                     setColor(Color.red)
                     setDescription(Formats.info("Auto-porn is setup for this server on ${c.asMention}"))

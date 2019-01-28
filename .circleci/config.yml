@@ -6,8 +6,8 @@ version: 2
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: circleci/openjdk@sha256:826939f759e288a4b8c5b03e9c36b3333049ec5c83460e4b915ec339724ebafe
+      # specify the version you desire here
+      - image: circleci/openjdk@sha256:826939f759e288a4b8c5b03e9c36b3333049ec5c83460e4b915ec339724ebafe
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
@@ -22,24 +22,24 @@ jobs:
       TERM: dumb
 
     steps:
-    - checkout
+      - checkout
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "build.gradle" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-    - run: gradle dependencies
+      - run: gradle dependencies
 
-    - save_cache:
-        paths:
-        - ~/.gradle
-        key: v1-dependencies-{{ checksum "build.gradle" }}
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
 
-    # run tests!
-    - run: gradle test
+      # run tests!
+      - run: gradle test
 
 
 

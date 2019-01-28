@@ -37,6 +37,5 @@ class Constants {
         var AUTO_PORN_TIME = BoobBot.dotenv["AUTO_PORN_TIME"] ?: ""
 
 
-
     }
 }

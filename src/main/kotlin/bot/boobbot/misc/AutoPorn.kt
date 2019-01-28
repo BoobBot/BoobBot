@@ -96,7 +96,7 @@ class AutoPorn {
                             return@forEach
                         }
 
-                        if (!channel.isNSFW){
+                        if (!channel.isNSFW) {
                             return@forEach
                         }
 
