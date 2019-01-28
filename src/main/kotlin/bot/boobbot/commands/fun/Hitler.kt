@@ -1,4 +1,4 @@
-package bot.boobbot.commands.fun
+package bot.boobbot.commands.`fun`
 
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
