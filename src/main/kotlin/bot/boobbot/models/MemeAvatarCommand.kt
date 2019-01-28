@@ -5,30 +5,26 @@ import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.createHeaders
-import net.dv8tion.jda.core.entities.User
-import java.net.URLEncoder
+import okhttp3.HttpUrl
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
+
+    private val filename = "$category.png"
+    private val endpointUrl = "https://dankmemer.services/api/$category"
+    private val httpUrl = HttpUrl.parse(endpointUrl)!!
+
+    private val urlBuilder
+        get() = httpUrl.newBuilder()
+
     override suspend fun executeAsync(ctx: Context) {
         val headers = createHeaders(Pair("Authorization", Constants.MEMER_IMGEN_KEY))
-        val user: User = if (ctx.message.mentionedUsers.isEmpty()) {
-            ctx.author
-        } else {
-            ctx.message.mentionedUsers.firstOrNull()!!
-        }
+        val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
+        val url = urlBuilder.addQueryParameter("avatar1", user.effectiveAvatarUrl).build()
 
-        val res = BoobBot.requestUtil
-            .get(
-                "https://dankmemer.services/api/$category?avatar1=${URLEncoder.encode(
-                    user.avatarUrl,
-                    Charsets.UTF_8.name()
-                )}",
-                headers
-            )
-            .await()
-            ?: return ctx.send("rip some error, press f")
+        val res = BoobBot.requestUtil.get(url.toString(), headers).await()?.body()
+            ?: return ctx.send("rip some error press f")
 
-        val body = res.body() ?: return ctx.send("rip some error, press f")
-        ctx.channel.sendFile(body.byteStream(), "$category.png").queue()
+        ctx.channel.sendFile(res.byteStream(), filename).queue()
     }
+
 }
