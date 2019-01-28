@@ -15,7 +15,7 @@ buildscript {
 plugins {
     id "idea"
     id "application"
-    id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "com.github.johnrengelman.shadow" version "4.0.2"
     id "org.jetbrains.kotlin.jvm" version "1.2.70"
 }
 
