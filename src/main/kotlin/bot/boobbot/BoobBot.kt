@@ -13,7 +13,6 @@ import bot.boobbot.misc.RequestUtil
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
-import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
@@ -37,13 +36,10 @@ import java.util.concurrent.Executors
 
 class BoobBot : ListenerAdapter() {
 
-
     companion object {
         var autoPornChannels = 0
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
-
-        val executorPool = Executors.newSingleThreadExecutor()!!
 
         var isDebug = false
             private set
@@ -68,7 +64,7 @@ class BoobBot : ListenerAdapter() {
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val home: Guild?
-            get() = shardManager.getGuildById(Constants.HOME_GUILD.toString())
+            get() = shardManager.getGuildById(Constants.HOME_GUILD)
 
         val dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
@@ -84,15 +80,11 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
-            playerManager.configuration.opusEncodingQuality = 9
-            playerManager
-                .configuration.resamplingQuality =
-                    AudioConfiguration.ResamplingQuality.MEDIUM // lets destroy it a lil // don't destroy CPU
 
             log.info("--- BoobBot.jda ---")
             log.info(JDAInfo.VERSION)
 
-            isDebug = args.isNotEmpty() && args[0].contains("debug")
+            isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
             if (!isDebug) {
                 Sentry.init(Constants.SENTRY_DSN)
@@ -136,7 +128,7 @@ class BoobBot : ListenerAdapter() {
                 }
             }
 
-            log.info("Successfully loaded " + commands.size + " commands!")
+            log.info("Successfully loaded ${commands.size} commands!")
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {
