@@ -17,10 +17,6 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     private val pornhubIcon = "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s"
     private val redtubeIcon = "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png"
 
-    override fun trackLoaded(track: AudioTrack) {
-        enqueueTrack(track)
-    }
-
     override fun playlistLoaded(playlist: AudioPlaylist) {
         if (playlist.isSearchResult) {
             if (playlist.tracks[0].sourceManager.sourceName == "pornhub") {
@@ -31,14 +27,11 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
         }
     }
 
-    override fun noMatches() {
-        ctx.send("No matches, tf?")
-    }
+    override fun trackLoaded(track: AudioTrack) = enqueueTrack(track)
 
+    override fun noMatches() = ctx.send("No matches, tf?")
 
-    override fun loadFailed(e: FriendlyException) {
-        BoobBot.log.error("wot", e)
-    }
+    override fun loadFailed(e: FriendlyException) = BoobBot.log.error("wot", e)
 
     private fun enqueueTrack(track: AudioTrack) {
         track.userData = ctx.author
