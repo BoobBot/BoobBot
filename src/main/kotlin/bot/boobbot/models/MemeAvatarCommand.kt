@@ -9,12 +9,9 @@ import okhttp3.HttpUrl
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
 
-    private val filename = "$category.png"
     private val endpointUrl = "https://dankmemer.services/api/$category"
-    private val httpUrl = HttpUrl.parse(endpointUrl)!!
-
     private val urlBuilder
-        get() = httpUrl.newBuilder()
+        get() = HttpUrl.parse(endpointUrl)!!.newBuilder()
 
     override suspend fun executeAsync(ctx: Context) {
         val headers = createHeaders(Pair("Authorization", Constants.MEMER_IMGEN_KEY))
@@ -24,7 +21,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
         val res = BoobBot.requestUtil.get(url.toString(), headers).await()?.body()
             ?: return ctx.send("rip some error press f")
 
-        ctx.channel.sendFile(res.byteStream(), filename).queue()
+        ctx.channel.sendFile(res.byteStream(), "$category.png").queue()
     }
 
 }
