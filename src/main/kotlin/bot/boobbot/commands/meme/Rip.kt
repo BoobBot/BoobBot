@@ -1,8 +1,8 @@
-package bot.boobbot.commands.`fun`
+package bot.boobbot.commands.meme
 
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.models.MemeAvatarCommand
 
-@CommandProperties(description = "Rip.", nsfw = false, category = Category.FUN, guildOnly = true)
+@CommandProperties(description = "Rip.", category = Category.MEME, guildOnly = true)
 class Rip : MemeAvatarCommand("rip")
