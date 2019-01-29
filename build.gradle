@@ -57,10 +57,6 @@ dependencies {
     implementation "com.google.code.gson:gson:2.8.5"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "4.10.2"
-}
-
 shadowJar {
     baseName = "bb"
     classifier = null
