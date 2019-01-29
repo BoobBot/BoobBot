@@ -39,11 +39,12 @@ class RequestUtil {
 
 
         fun queue(success: (Response?) -> Unit) {
-            var client = httpClient
-            if (useProxy) {
-                client = client.newBuilder().proxy(Utils.getProxy())
-                    .build() // this is needed for ph/rt reqs due to rape-limits
+            var client = if (useProxy) {
+                httpClient.newBuilder().proxy(Utils.getProxy()).build() // this is needed for ph/rt reqs due to rape-limits
+            } else {
+                httpClient
             }
+
             client.newCall(request).enqueue(object : Callback {
 
                 override fun onFailure(call: Call, e: IOException) {

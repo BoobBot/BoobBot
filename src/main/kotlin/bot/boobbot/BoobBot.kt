@@ -25,6 +25,8 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
@@ -94,12 +96,16 @@ class BoobBot : ListenerAdapter() {
                 log.level = Level.DEBUG
             }
 
+            val jdaHttpClient = OkHttpClient.Builder()
+                .protocols(Arrays.asList(Protocol.HTTP_1_1))
+
             shardManager = DefaultShardManagerBuilder()
                 .setGame(Game.playing("bbhelp | bbinvite"))
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                 .setToken(token)
                 .setShardsTotal(-1)
+                .setHttpClientBuilder(jdaHttpClient)
                 .build()
 
             loadCommands()
