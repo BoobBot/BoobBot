@@ -37,7 +37,6 @@ dependencies {
     api("net.dv8tion:JDA:$jda_version") {
         exclude module: "opus-java"
     }
-
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
@@ -55,6 +54,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.codehaus.groovy:groovy:2.5.2'
     implementation "com.google.code.gson:gson:2.8.5"
+    implementation 'com.github.BoobBot:lbots-jvm:59477f4550b2883bce7d23b99e2edcb5b03e01aa'
+
 }
 
 shadowJar {

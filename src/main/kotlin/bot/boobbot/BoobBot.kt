@@ -27,6 +27,7 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import org.lbots.jvmclient.LBotsClient
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
@@ -57,7 +58,6 @@ class BoobBot : ListenerAdapter() {
 
         var manSetAvatar = false
             internal set
-
         val metrics = Metrics.create()!!
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
@@ -65,15 +65,16 @@ class BoobBot : ListenerAdapter() {
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
-        val home: Guild?
-            get() = shardManager.getGuildById(Constants.HOME_GUILD)
-
         val dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
             filename = "bb.env"
             ignoreIfMalformed = true
             ignoreIfMissing = false
         }
+        val home: Guild?
+            get() = shardManager.getGuildById(Constants.HOME_GUILD)
+
+        val lbots = LBotsClient(285480424904327179, Constants.LBOTS_API_KEY)
 
         @Throws(Exception::class)
         @JvmStatic

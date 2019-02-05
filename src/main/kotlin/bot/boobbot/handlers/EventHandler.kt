@@ -80,6 +80,7 @@ class EventHandler : ListenerAdapter() {
             readyClient.close()
         }
         readyClient.close()
+        BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
     }
 
 
@@ -196,6 +197,7 @@ class EventHandler : ListenerAdapter() {
             guildJoinClient.close()
             BoobBot.log.warn("error on Guild join event", ex)
         }
+        BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent?) {
@@ -239,5 +241,6 @@ class EventHandler : ListenerAdapter() {
             guildLeaveClient.close()
             BoobBot.log.warn("error on Guild leave event", ex)
         }
+        BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
     }
 }

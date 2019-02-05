@@ -24,6 +24,8 @@ class Constants {
 
         var BB_API_KEY = BoobBot.dotenv["BB_API_KEY"] ?: ""
 
+        var LBOTS_API_KEY = BoobBot.dotenv["LBOTS_API_KEY"] ?: "."
+
         var BB_API_URL = BoobBot.dotenv["BB_API_URL"] ?: ""
 
         var BB_DB_KEY = BoobBot.dotenv["BB_DB_KEY"] ?: ""
