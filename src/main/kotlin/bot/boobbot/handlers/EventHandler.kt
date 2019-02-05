@@ -78,9 +78,10 @@ class EventHandler : ListenerAdapter() {
                     .build()
             )
             readyClient.close()
+            BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
+
         }
         readyClient.close()
-        BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
     }
 
 
