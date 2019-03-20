@@ -103,7 +103,7 @@ class BoobBot : ListenerAdapter() {
 
             shardManager = DefaultShardManagerBuilder()
                 .setGame(Game.playing("bbhelp | bbinvite"))
-                .setAudioSendFactory(NativeAudioSendFactory())
+                //.setAudioSendFactory(NativeAudioSendFactory())
                 .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                 .setToken(token)
                 .setShardsTotal(-1)
