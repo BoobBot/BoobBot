@@ -195,6 +195,12 @@ class ApiServer {
                     call.respondRedirect("https://boob.bot", true)
                 }
 
+                get("/bad-request") {
+                    BoobBot.metrics.record(Metrics.happened("request /bad-request"))
+                    BoobBot.metrics.record(Metrics.happened("requests"))
+                    call.respondRedirect("https://boob.bot", true)
+                }
+
                 get("/stats") {
                     BoobBot.metrics.record(Metrics.happened("request /stats"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
