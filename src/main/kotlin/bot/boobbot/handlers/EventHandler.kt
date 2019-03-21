@@ -47,7 +47,7 @@ class EventHandler : ListenerAdapter() {
             ).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
                 .build()
         )
-        if (BoobBot.shardManager.statuses.entries.stream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
+        if (BoobBot.shardManager.statuses.entries.parallelStream().filter { e -> e.value.name == "CONNECTED" || e.value.name == "RECONNECT_QUEUED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
