@@ -53,7 +53,7 @@ class EventHandler : ListenerAdapter() {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
-                BoobBot.Scheduler.scheduleAtFixedRate(AutoPorn.auto(), 5, 45, TimeUnit.SECONDS)
+                BoobBot.Scheduler.scheduleAtFixedRate(AutoPorn.auto(), 1, 5, TimeUnit.MINUTES)
             }
             self = event.jda.selfUser // set
             BoobBot.log.info(Formats.getReadyFormat())
@@ -80,8 +80,9 @@ class EventHandler : ListenerAdapter() {
                     .build()
             )
             readyClient.close()
-            BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
-
+            if (!BoobBot.isDebug) {
+                BoobBot.log.info("Response for  lbots stats update was ${BoobBot.lbots.updateStats(BoobBot.shardManager.guilds.size)}")
+            }
         }
         readyClient.close()
     }

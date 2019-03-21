@@ -8,7 +8,10 @@ import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.RequestConnectionPoint
 import io.ktor.request.path
+import io.ktor.request.uri
+import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -198,7 +201,13 @@ class ApiServer {
                 get("/bad-request") {
                     BoobBot.metrics.record(Metrics.happened("request /bad-request"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
-                    call.respondRedirect("https://boob.bot", true)
+                    val uri = call.request.uri
+                    BoobBot.log.info("bad-Request uri: $uri")
+                    val local : RequestConnectionPoint = call.request.local
+                    val origin: RequestConnectionPoint = call.request.origin
+                    BoobBot.log.info("${origin.host} ${local.host} ${origin.remoteHost}")
+                    call.respond("no")
+
                 }
 
                 get("/stats") {

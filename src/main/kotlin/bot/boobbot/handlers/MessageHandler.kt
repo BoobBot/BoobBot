@@ -9,11 +9,15 @@ import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.concurrent.schedule
 
 class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-
+    private val noSpam = mutableListOf<Long>()
+    private val shitUsers = ConcurrentHashMap<Long, Int>()
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
@@ -22,6 +26,10 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.author.isBot || event.author.isFake) {
+            return
+        }
+        if (shitUsers.getOrDefault(event.author.idLong, 0) > 25) {
+            BoobBot.log.warn("Shit user blocked ${event.author} on ${event.channel}")
             return
         }
 
@@ -97,15 +105,46 @@ class MessageHandler : ListenerAdapter() {
              ).queue()*/
         }
 
-        try {
-            Utils.logCommand(event.message)
-            BoobBot.metrics.record(Metrics.happened("command"))
-            BoobBot.metrics.record(Metrics.happened(command.name))
-            command.execute(Context(trigger, event, args.toTypedArray()))
-        } catch (e: Exception) {
-            BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.message.addReaction("\uD83D\uDEAB").queue()
-        }
-    }
+        //shit cool-down
+        if (noSpam.contains(event.author.idLong)) {
+            BoobBot.log.warn("hit no spam ${event.author} on ${event.channel}")
+            var allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
+            return if (allSpamCount > 5 && 25-allSpamCount > 0) {
+                event.channel.sendMessage(
+                    Formats.error(
+                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> \n:no_entry_sign: You have ${25-allSpamCount} warnings left until blacklist :middle_finger: :no_entry_sign:"
+                    )
+                ).queue()
 
-}
+            } else {
+                event.channel.sendMessage(
+                    Formats.error(
+                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> "
+                    )
+                ).queue()
+            }
+        }
+
+            if (!Utils.checkDonor(event)) {
+                noSpam.add(event.author.idLong)
+                var allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
+                allSpamCount++
+                shitUsers.put(event.author.idLong, allSpamCount)
+                Timer().schedule(1200) {
+                    noSpam.remove(event.author.idLong)
+                }
+            }
+
+
+            try {
+                Utils.logCommand(event.message)
+                BoobBot.metrics.record(Metrics.happened("command"))
+                BoobBot.metrics.record(Metrics.happened(command.name))
+                command.execute(Context(trigger, event, args.toTypedArray()))
+            } catch (e: Exception) {
+                BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
+                event.message.addReaction("\uD83D\uDEAB").queue()
+            }
+        }
+
+    }
