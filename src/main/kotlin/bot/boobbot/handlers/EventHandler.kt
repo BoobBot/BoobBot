@@ -28,9 +28,11 @@ import java.util.concurrent.TimeUnit
 
 class EventHandler : ListenerAdapter() {
     var self: User? = null // just to hold self for discon webhooks
+    var readyCount = 0
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
+        if (!BoobBot.isReady) {readyCount++}
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         readyClient.send(
             WebhookMessageBuilder().addEmbeds(
@@ -47,7 +49,7 @@ class EventHandler : ListenerAdapter() {
             ).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
                 .build()
         )
-        if (BoobBot.shardManager.statuses.entries.parallelStream().filter { e -> e.value.name == "CONNECTED" || e.value.name == "RECONNECT_QUEUED" }.count().toInt() == BoobBot.shardManager.shardsTotal - 1 && !BoobBot.isReady) {
+        if (readyCount == Constants.SHARD_COUNT.toString().toInt() && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)

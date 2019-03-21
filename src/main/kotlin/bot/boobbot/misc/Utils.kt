@@ -84,7 +84,6 @@ class Utils {
         fun getRandomMoan(): File {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            BoobBot.log.info(path)
             return (File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
         }
 

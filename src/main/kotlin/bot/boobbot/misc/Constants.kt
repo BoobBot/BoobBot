@@ -14,6 +14,8 @@ class Constants {
 
         val DEBUG_TOKEN = BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
 
+        var SHARD_COUNT = BoobBot.dotenv["SHARD_COUNT"] ?: -1
+
         var HOME_GUILD = BoobBot.dotenv["HOME_GUILD"] ?: ""
 
         var RDY_WEBHOOK = BoobBot.dotenv["RDY_WEBHOOK"] ?: ""

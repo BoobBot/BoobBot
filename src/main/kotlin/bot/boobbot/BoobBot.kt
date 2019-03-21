@@ -6,10 +6,7 @@ import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.ApiServer
-import bot.boobbot.misc.Constants
-import bot.boobbot.misc.EventWaiter
-import bot.boobbot.misc.RequestUtil
+import bot.boobbot.misc.*
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -79,15 +76,18 @@ class BoobBot : ListenerAdapter() {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            log.info(lbots.favoriteCount().toString())
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
             log.info("--- BoobBot.jda ---")
-            log.info(JDAInfo.VERSION)
-
+            log.info("jda version: ${JDAInfo.VERSION}")
+            val duration = Constants.SHARD_COUNT.toString().toInt() * 5000
+            val now = Calendar.getInstance()
+            val targetTime = now.clone() as Calendar
+            targetTime.add(Calendar.MILLISECOND, duration)
+            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}\nEstimated full boot by ${targetTime.time}\nIt\'s currently ${now.time}")
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
             if (!isDebug) {
@@ -106,7 +106,7 @@ class BoobBot : ListenerAdapter() {
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
                 .setToken(token)
-                .setShardsTotal(-1)
+                .setShardsTotal(Constants.SHARD_COUNT.toString().toInt())
                 .setHttpClientBuilder(jdaHttpClient)
                 .build()
 
