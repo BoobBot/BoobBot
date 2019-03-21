@@ -1,6 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.BoobBot.Companion.shitUsers
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
@@ -17,7 +18,6 @@ class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
     private val noSpam = mutableListOf<Long>()
-    private val shitUsers = ConcurrentHashMap<Long, Int>()
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
@@ -28,7 +28,7 @@ class MessageHandler : ListenerAdapter() {
         if (event.author.isBot || event.author.isFake) {
             return
         }
-        if (shitUsers.getOrDefault(event.author.idLong, 0) > 25) {
+        if (shitUsers.getOrDefault(event.author.idLong, 0) > 75 && !Utils.checkDonor(event)) {
             BoobBot.log.warn("Shit user blocked ${event.author} on ${event.channel}")
             return
         }
@@ -108,11 +108,11 @@ class MessageHandler : ListenerAdapter() {
         //shit cool-down
         if (noSpam.contains(event.author.idLong)) {
             BoobBot.log.warn("hit no spam ${event.author} on ${event.channel}")
-            var allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
-            return if (allSpamCount > 5 && 25-allSpamCount > 0) {
+            val allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
+            return if (allSpamCount > 20 && 75-allSpamCount > 0) {
                 event.channel.sendMessage(
                     Formats.error(
-                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> \n:no_entry_sign: You have ${25-allSpamCount} warnings left until blacklist :middle_finger: :no_entry_sign:"
+                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> \n:no_entry_sign: You have ${75-allSpamCount} warnings left until blacklist :middle_finger: :no_entry_sign:"
                     )
                 ).queue()
 
@@ -129,7 +129,7 @@ class MessageHandler : ListenerAdapter() {
                 noSpam.add(event.author.idLong)
                 var allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
                 allSpamCount++
-                shitUsers.put(event.author.idLong, allSpamCount)
+                shitUsers[event.author.idLong] = allSpamCount
                 Timer().schedule(1200) {
                     noSpam.remove(event.author.idLong)
                 }

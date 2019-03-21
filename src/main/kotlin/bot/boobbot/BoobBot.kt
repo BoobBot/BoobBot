@@ -61,6 +61,7 @@ class BoobBot : ListenerAdapter() {
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
+        val shitUsers = ConcurrentHashMap<Long, Int>()
         var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
