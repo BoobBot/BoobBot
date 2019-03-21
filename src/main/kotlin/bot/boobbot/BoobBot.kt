@@ -61,7 +61,7 @@ class BoobBot : ListenerAdapter() {
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-        val shitUsers = ConcurrentHashMap<Long, Int>()
+        //val shitUsers = ConcurrentHashMap<Long, Int>()
         var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
@@ -89,6 +89,8 @@ class BoobBot : ListenerAdapter() {
             val targetTime = now.clone() as Calendar
             targetTime.add(Calendar.MILLISECOND, duration)
             log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}\nEstimated full boot by ${targetTime.time}\nIt\'s currently ${now.time}")
+            log.info("Estimated full boot by ${targetTime.time}")
+            log.info("It\'s currently ${now.time}")
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
             if (!isDebug) {
