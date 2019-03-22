@@ -6,11 +6,11 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.Permission
+import bot.boobbot.models.Config
+import com.mewna.catnip.entity.builder.EmbedBuilder
+import com.mewna.catnip.entity.util.Permission
 import java.time.Instant
 
 @CommandProperties(
@@ -24,16 +24,16 @@ class Help : Command {
         val commands = BoobBot.commands.values
         val builder = EmbedBuilder()
 
-        builder.setAuthor(
+        builder.author(
             "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
             ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
             ctx.selfUser.effectiveAvatarUrl
         )
 
-        builder.setColor(Colors.getEffectiveColor(ctx.message))
+        builder.color(Colors.getEffectiveColor(ctx.message))
 
         Category.values().forEach { category ->
-            val list = if (Constants.OWNERS.contains(ctx.author.idLong))
+            val list = if (Config.owners.contains(ctx.author.idLong))
                 commands
                     .filter { it.properties.category == category }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
@@ -42,13 +42,13 @@ class Help : Command {
                     .filter { it.properties.category == category && !it.properties.developerOnly }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
             if (list.isNotEmpty()) {
-                builder.addField(category.title, list, false)
+                builder.field(category.title, list, false)
             }
         }
 
-        builder.addField("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
-        builder.setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-        builder.setTimestamp(Instant.now())
+        builder.field("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
+        builder.footer("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+        builder.timestamp(Instant.now())
 
         if (ctx.args.isEmpty()) {
             return ctx.embed(builder.build())
@@ -68,13 +68,13 @@ class Help : Command {
         val aliases = if (mappedAliases.isEmpty()) "None" else mappedAliases
 
         val commandHelp = EmbedBuilder()
-            .setColor(Colors.getEffectiveColor(ctx.message))
-            .setAuthor(
+            .color(Colors.getEffectiveColor(ctx.message))
+            .author(
                 "${ctx.selfUser.name} Command Info",
                 ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
                 ctx.selfUser.effectiveAvatarUrl
             )
-            .addField(
+            .field(
                 Formats.info("Info"),
                 String.format(
                     "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**",
@@ -82,8 +82,8 @@ class Help : Command {
                 ),
                 false
             )
-            .setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-            .setTimestamp(Instant.now())
+            .footer("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            .timestamp(Instant.now())
 
         if (ctx.args.size >= 2 && ctx.args[1].toLowerCase() == "--dm") {
             ctx.dm(commandHelp.build())

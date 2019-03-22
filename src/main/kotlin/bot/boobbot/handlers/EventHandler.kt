@@ -3,23 +3,9 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.setGame
 import bot.boobbot.misc.AutoPorn
-import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.entities.User
-import net.dv8tion.jda.core.events.DisconnectEvent
-import net.dv8tion.jda.core.events.ReadyEvent
-import net.dv8tion.jda.core.events.ReconnectedEvent
-import net.dv8tion.jda.core.events.ResumedEvent
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent
-import net.dv8tion.jda.core.events.guild.GuildLeaveEvent
-import net.dv8tion.jda.core.hooks.ListenerAdapter
-import net.dv8tion.jda.webhook.WebhookClientBuilder
-import net.dv8tion.jda.webhook.WebhookMessageBuilder
 import org.apache.commons.lang3.StringUtils
 import java.awt.Color
 import java.time.Instant.now
@@ -32,11 +18,13 @@ class EventHandler : ListenerAdapter() {
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
-        if (!BoobBot.isReady) {readyCount++}
+        if (!BoobBot.isReady) {
+            readyCount++
+        }
         val readyClient = WebhookClientBuilder(Constants.RDY_WEBHOOK).build()
         readyClient.send(
             WebhookMessageBuilder().addEmbeds(
-                EmbedBuilder().setColor(Color.magenta)
+                EmbedBuilder().color(Color.magenta)
                     .setAuthor(
                         event.jda.selfUser.name,
                         event.jda.selfUser.effectiveAvatarUrl,
@@ -59,7 +47,7 @@ class EventHandler : ListenerAdapter() {
             BoobBot.log.info(Formats.getReadyFormat())
             readyClient.send(
                 WebhookMessageBuilder().setContent("Ready").addEmbeds(
-                    EmbedBuilder().setColor(Color.magenta)
+                    EmbedBuilder().color(Color.magenta)
                         .setAuthor(
                             event.jda.selfUser.name,
                             event.jda.selfUser.effectiveAvatarUrl,
@@ -95,7 +83,7 @@ class EventHandler : ListenerAdapter() {
         try {
             readyClient.send(
                 WebhookMessageBuilder().addEmbeds(
-                    EmbedBuilder().setColor(Color.green)
+                    EmbedBuilder().color(Color.green)
                         .setAuthor(
                             self?.name,
                             self?.effectiveAvatarUrl,
@@ -119,7 +107,7 @@ class EventHandler : ListenerAdapter() {
         try {
             readyClient.send(
                 WebhookMessageBuilder().addEmbeds(
-                    EmbedBuilder().setColor(Color.green)
+                    EmbedBuilder().color(Color.green)
                         .setAuthor(
                             self?.name,
                             self?.effectiveAvatarUrl,
@@ -143,7 +131,7 @@ class EventHandler : ListenerAdapter() {
         try {
             readyClient.send(
                 WebhookMessageBuilder().addEmbeds(
-                    EmbedBuilder().setColor(Color.green)
+                    EmbedBuilder().color(Color.green)
                         .setAuthor(
                             self?.name,
                             self?.effectiveAvatarUrl,
@@ -172,11 +160,11 @@ class EventHandler : ListenerAdapter() {
         }
         BoobBot.log.info("New Guild Joined ${guild.name}(${guild.id})")
         val em = EmbedBuilder()
-            .setColor(Color.green)
+            .color(Color.green)
             .setAuthor(guild.name, guild.iconUrl, guild.iconUrl)
             .setTitle("Joined ${guild.name}")
             .setThumbnail(guild.iconUrl)
-            .setDescription("Guild info")
+            .description("Guild info")
             .addField(
                 Formats.info("info"),
                 "**${guild.jda.shardInfo}**\n" +
@@ -221,11 +209,11 @@ class EventHandler : ListenerAdapter() {
                 WebhookMessageBuilder()
                     .addEmbeds(
                         EmbedBuilder()
-                            .setColor(Color.red)
+                            .color(Color.red)
                             .setAuthor(guild.name, guild.iconUrl, guild.iconUrl)
                             .setTitle("Left ${guild.name}")
                             .setThumbnail(guild.iconUrl)
-                            .setDescription("Guild info")
+                            .description("Guild info")
                             .addField(
                                 Formats.info("info"),
                                 "**${guild.jda.shardInfo}**\n" +

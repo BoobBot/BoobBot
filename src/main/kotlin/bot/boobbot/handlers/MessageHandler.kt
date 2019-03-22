@@ -2,13 +2,9 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import net.dv8tion.jda.core.hooks.ListenerAdapter
 
 class MessageHandler : ListenerAdapter() {
 
@@ -81,22 +77,14 @@ class MessageHandler : ListenerAdapter() {
         if (command.properties.donorOnly && !Utils.checkDonor(event)) {
             return event.channel.sendMessage(
                 Formats.error(
-                    " Sorry this command is only available to our Patrons.\n"
-                            + BoobBot
-                        .shardManager
-                        .getEmoteById(475801484282429450L)
-                        .asMention
+                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
                 )
             ).queue()
             /* event.channel.sendMessage(
                  Formats.info(
                      "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
-                             + BoobBot
-                         .shardManager
-                         .getEmoteById(475801484282429450L)
-                         .asMention
-                             + "Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
+                             + "<:p_:475801484282429450> Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
                  )
              ).queue()*/
         }

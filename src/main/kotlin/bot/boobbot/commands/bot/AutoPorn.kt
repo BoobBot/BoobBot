@@ -7,7 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.AutoPorn
 import bot.boobbot.misc.Formats
-import net.dv8tion.jda.core.Permission
+import com.mewna.catnip.entity.util.Permission
 import java.awt.Color
 
 
@@ -22,14 +22,14 @@ class AutoPorn : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
 
-        if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
+        if (!ctx.userCan(Permission.MANAGE_CHANNELS)) {
             return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
+                color(Color.red)
+                description(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
             }
         }
 
@@ -40,28 +40,28 @@ class AutoPorn : AsyncCommand {
 
                 if (ctx.args.size < 2 || ctx.args[1].isEmpty() || !types.contains(ctx.args[1].toLowerCase())) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass,gay,random"))
+                        color(Color.red)
+                        description(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass,gay,random"))
                     }
                 }
-                if (ctx.message.mentionedChannels.isEmpty()) {
+                if (ctx.message.ment.isEmpty()) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass,gay,random"))
+                        color(Color.red)
+                        description(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: gif,boobs,ass,gay,random"))
                     }
                 }
                 if (!ctx.message.mentionedChannels[0].isNSFW) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("That's not a nsfw channel you fuck"))
+                        color(Color.red)
+                        description(Formats.error("That's not a nsfw channel you fuck"))
                     }
                 }
 
 
                 if (AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Auto-porn is already setup for this server"))
+                        color(Color.red)
+                        description(Formats.error("Auto-porn is already setup for this server"))
                     }
                 }
 
@@ -72,13 +72,13 @@ class AutoPorn : AsyncCommand {
                     )
                 ) {
                     return ctx.embed {
-                        setColor(Color.green)
-                        setDescription(Formats.info("Auto-porn is setup for this server on ${ctx.message.mentionedChannels[0].asMention}"))
+                        color(Color.green)
+                        description(Formats.info("Auto-porn is setup for this server on ${ctx.message.mentionedChannels[0].asMention}"))
                     }
                 }
                 return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.error("Shit, some error try again"))
+                    color(Color.red)
+                    description(Formats.error("Shit, some error try again"))
                 }
 
             }
@@ -87,8 +87,8 @@ class AutoPorn : AsyncCommand {
 
                 if (!AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Auto-porn is not setup for this server"))
+                        color(Color.red)
+                        description(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
                 AutoPorn.deleteGuild(ctx.guild.id)
@@ -99,16 +99,16 @@ class AutoPorn : AsyncCommand {
 
                 if (!AutoPorn.checkExists(ctx.guild!!.id)) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Auto-porn is not setup for this server"))
+                        color(Color.red)
+                        description(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
                 val id = AutoPorn.getStatus(ctx.guild.id)
                 BoobBot.log.info(id.length.toString())
                 if (id.length < 6) {
                     return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Auto-porn is not setup for this server"))
+                        color(Color.red)
+                        description(Formats.error("Auto-porn is not setup for this server"))
                     }
                 }
                 val c = ctx.guild.getTextChannelById(AutoPorn.getStatus(ctx.guild.id))
@@ -116,15 +116,15 @@ class AutoPorn : AsyncCommand {
                     AutoPorn.deleteGuild(ctx.guild.id)
                 }
                 return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.info("Auto-porn is setup for this server on ${c.asMention}"))
+                    color(Color.red)
+                    description(Formats.info("Auto-porn is setup for this server on ${c.asMention}"))
                 }
             }
 
             else -> {
                 return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
+                    color(Color.red)
+                    description(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
                 }
             }
         }

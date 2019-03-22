@@ -1,8 +1,6 @@
 package bot.boobbot.misc
 
 import de.androidpit.colorthief.ColorThief
-import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.entities.User
 import java.awt.Color
 import java.util.*
 

@@ -1,18 +1,13 @@
 package bot.boobbot.flight
 
-import net.dv8tion.jda.core.events.Event
-import net.dv8tion.jda.core.hooks.ListenerAdapter
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashSet
 
 class EventWaiter : ListenerAdapter() {
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
     private val pendingEvents = hashMapOf<Class<*>, HashSet<WaitingEvent<*>>>()
-//    private val messageWaiters = ConcurrentHashMap<Long, PendingEvent<Message>>()
-//    private val reactionWaiters = ConcurrentHashMap<Long, PendingEvent<MessageReaction.ReactionEmote>>()
 
     fun <T : Event> waitFor(event: Class<T>, predicate: (T) -> Boolean, timeout: Long): CompletableFuture<T?> {
         val future = CompletableFuture<T?>()

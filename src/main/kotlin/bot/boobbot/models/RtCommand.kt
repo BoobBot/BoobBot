@@ -16,8 +16,8 @@ abstract class RtCommand : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
+                color(Color.red)
+                description(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
         }
         try {
@@ -40,8 +40,8 @@ abstract class RtCommand : AsyncCommand {
                     "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png"
                 )
                     .setTitle(video.getString("title"), video.getString("url"))
-                    .setDescription("RedTube video search")
-                    .setColor(Colors.getEffectiveColor(ctx.message))
+                    .description("RedTube video search")
+                    .color(Colors.getEffectiveColor(ctx.message))
                     .setImage(video.getString("thumb"))
                     .addField(
                         "Video stats",

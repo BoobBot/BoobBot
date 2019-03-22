@@ -1,9 +1,9 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import net.dv8tion.jda.core.EmbedBuilder
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
@@ -11,7 +11,8 @@ import java.time.Instant
 
 class AutoPorn {
     companion object {
-        private var dbHeaders = createHeaders(Pair("Authorization", Constants.BB_DB_KEY))
+        private val dbHeaders = createHeaders(Pair("Authorization", BoobBot.config.bbDbKey))
+
         suspend fun checkExists(guild_id: String): Boolean {
             val check = BoobBot.requestUtil
                 .get(
@@ -19,12 +20,11 @@ class AutoPorn {
                     dbHeaders
                 ).await()
                 ?: return false
-            if (check.code() == 404) {
-                check.close()
-                return false
-            }
+
+            val code = check.code()
             check.close()
-            return true
+
+            return code != 404
         }
 
 
@@ -41,10 +41,8 @@ class AutoPorn {
                     dbHeaders
                 )
                 .await() ?: return false
-            if (res.code() == 201) {
-                return true
-            }
-            return false
+
+            return res.code() == 201
         }
 
 
@@ -54,6 +52,7 @@ class AutoPorn {
                     "https://db.boob.bot/api/guilds/$guild_id",
                     dbHeaders
                 ).await() ?: return ""
+
             return req.json()?.getJSONObject("guild")?.get("channel").toString()
         }
 
@@ -63,7 +62,9 @@ class AutoPorn {
                 .delete(
                     "https://db.boob.bot/api/guilds/$guild_id",
                     dbHeaders
-                ).block()!!.close()
+                ).queue {
+                    it?.close()
+                }
         }
 
 
@@ -76,17 +77,16 @@ class AutoPorn {
             return guilds?.getJSONArray("guilds")
         }
 
-
         private fun autoPorn() {
             if (BoobBot.isReady) {
                 BoobBot.log.info("Running auto-porn")
-                val guilds: JSONArray = getGuilds() ?: return
+                val guilds = getGuilds() ?: return
                 BoobBot.autoPornChannels = guilds.length()
-                guilds.forEach { it ->
+                guilds.forEach {
                     try {
                         (it as JSONObject)
-                        val guild = BoobBot.shardManager.getGuildById(it.getString("guild_id"))
-                        if (guild == null && BoobBot.shardManager.statuses.entries.parallelStream().filter { e -> e.value.name == "CONNECTED" }.count().toInt() == BoobBot.shardManager.shardsTotal) {
+                        val guild = BoobBot.catnip.cache().guild(it.getString("guild_id"))
+                        if (guild == null && BoobBot.isAllShardsConnected()) {
                             deleteGuild(it.getString("guild_id"))
                             return@forEach
                         }
@@ -123,8 +123,8 @@ class AutoPorn {
                         }
                         channel.sendMessage(
                             EmbedBuilder().apply {
-                                setDescription(Formats.LEWD_EMOTE)
-                                setColor(Colors.rndColor)
+                                description(Formats.LEWD_EMOTE)
+                                color(Colors.rndColor)
                                 setImage(res.getString("url"))
                                 setTimestamp(Instant.now())
                             }.build()

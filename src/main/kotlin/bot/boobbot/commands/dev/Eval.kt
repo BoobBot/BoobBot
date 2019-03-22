@@ -6,12 +6,10 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
+import bot.boobbot.models.Config
 import groovy.lang.Binding
 import groovy.lang.GroovyShell
-import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.requests.Route.Misc
 import java.util.concurrent.Executors
 
 
@@ -56,9 +54,9 @@ class Eval : Command {
         binding.setVariable("channel", e.channel)
         binding.setVariable("author", e.author)
         binding.setVariable("message", e)
-        binding.setVariable("Misc", Misc::class.java)
+//        binding.setVariable("Misc", Misc::class.java)
         binding.setVariable("msg", e)
-        binding.setVariable("owner", Constants.OWNERS)
+        binding.setVariable("owner", Config.owners)
         binding.setVariable("guild", e.guild)
         return GroovyShell(binding)
     }

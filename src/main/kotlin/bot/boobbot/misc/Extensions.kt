@@ -1,12 +1,17 @@
 package bot.boobbot.misc
 
-import kotlinx.coroutines.future.await
-import net.dv8tion.jda.core.requests.RestAction
+import io.github.cdimascio.dotenv.Dotenv
+import java.util.concurrent.CompletionStage
 
-suspend fun <T> RestAction<T>.await(): T? {
-    return try {
-        submit().await()
-    } catch (e: Exception) {
-        null
+fun Dotenv.get(key: String, default: String): String = get(key) ?: default
+
+fun <T> CompletionStage<T>.thenException(handler: ((Throwable) -> Unit)?): CompletionStage<T> {
+    exceptionally {
+        if (handler != null) {
+            handler(it)
+        }
+        return@exceptionally null
     }
+
+    return this
 }

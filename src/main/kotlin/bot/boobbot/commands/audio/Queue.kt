@@ -1,5 +1,6 @@
 package bot.boobbot.commands.audio
 
+import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -7,8 +8,8 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.User
+import com.mewna.catnip.entity.user.User
+import com.mewna.catnip.entity.util.Permission
 import org.apache.commons.lang3.StringUtils
 import java.time.Instant
 
@@ -41,23 +42,22 @@ class Queue : VoiceCommand {
                 )}\n" +
                         "**Duration**: ${Utils.fTime(it.info.length)}\n" +
                         "**Source**: ${it.sourceManager.sourceName.replace("local", "moan")}\n" +
-                        "**User**: ${(it.userData as User).name}\n\n"
+                        "**User**: ${(it.userData as User).username()}\n\n"
             }
         } else {
             "Nothing Queued"
         }
-        ctx.guild?.roles?.filter { it.hasPermission(Permission.ADMINISTRATOR) }
-            ?.joinToString(separator = "\n") { "${it.name} " }
+
         val total = Utils.fTime(q.asSequence().map { it.duration }.sum())
 
         ctx.embed {
-            setAuthor(
+            author(
                 "Current playlist",
-                ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
-                ctx.jda.selfUser.avatarUrl
+                BoobBot.inviteUrl,
+                ctx.selfUser?.effectiveAvatarUrl()
             )
-                .setColor(Colors.getEffectiveColor(ctx.message))
-                .addField(
+                .color(Colors.getEffectiveColor(ctx.message))
+                .field(
                     "Now Playing",
                     "**Title**: ${StringUtils.abbreviate(
                         track.info.title.replace("Unknown title", "Moan :tired_face:"),
@@ -65,15 +65,15 @@ class Queue : VoiceCommand {
                     )}\n" +
                             "**Duration**: ${Utils.fTime(track.info.length)}\n" +
                             "**Source**: ${track.sourceManager.sourceName.replace("local", "moan")}\n" +
-                            "**User**: ${(track.userData as User).name}", false
+                            "**User**: ${(track.userData as User).username()}", false
                 )
-                .addField(
+                .field(
                     "Queue",
                     qStr,
                     false
                 )
-                .setFooter("Total duration $total", ctx.jda.selfUser.avatarUrl)
-                .setTimestamp(Instant.now())
+                .footer("Total duration $total", ctx.jda.selfUser.avatarUrl)
+                .timestamp(Instant.now())
                 .build()
         }
 

@@ -35,13 +35,13 @@ class Skip : VoiceCommand {
         if (player.queue.size >= 1) {
             val nextTrack = player.queue[0]
             return ctx.embed {
-                setColor(Colors.getDominantColor(ctx.author))
-                addField(Formats.info(""), "Skipped: ${track.info.title}\nNow Playing: ${nextTrack.info.title}", false)
+                color(Colors.getDominantColor(ctx.author))
+                field(Formats.info(""), "Skipped: ${track.info.title}\nNow Playing: ${nextTrack.info.title}", false)
             }
         }
         ctx.embed {
-            setColor(Colors.getDominantColor(ctx.author))
-            addField(Formats.info(""), "Skipped: ${track.info.title}", false)
+            color(Colors.getDominantColor(ctx.author))
+            field(Formats.info(""), "Skipped: ${track.info.title}", false)
         }
 
     }

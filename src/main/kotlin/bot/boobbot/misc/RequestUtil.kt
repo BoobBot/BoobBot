@@ -40,7 +40,8 @@ class RequestUtil {
 
         fun queue(success: (Response?) -> Unit) {
             var client = if (useProxy) {
-                httpClient.newBuilder().proxy(Utils.getProxy()).build() // this is needed for ph/rt reqs due to rape-limits
+                httpClient.newBuilder().proxy(Utils.getProxy())
+                    .build() // this is needed for ph/rt reqs due to rape-limits
             } else {
                 httpClient
             }

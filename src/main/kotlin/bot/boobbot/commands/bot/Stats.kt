@@ -6,7 +6,6 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Utils
 import com.sun.management.OperatingSystemMXBean
-import net.dv8tion.jda.core.JDA
 import org.json.JSONObject
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat

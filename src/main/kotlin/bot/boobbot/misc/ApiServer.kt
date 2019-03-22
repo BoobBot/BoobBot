@@ -18,7 +18,6 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
@@ -203,7 +202,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val uri = call.request.uri
                     BoobBot.log.info("bad-Request uri: $uri")
-                    val local : RequestConnectionPoint = call.request.local
+                    val local: RequestConnectionPoint = call.request.local
                     val origin: RequestConnectionPoint = call.request.origin
                     BoobBot.log.info("${origin.host} ${local.host} ${origin.remoteHost}")
                     call.respond("no")

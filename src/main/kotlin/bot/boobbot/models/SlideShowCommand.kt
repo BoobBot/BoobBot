@@ -3,11 +3,11 @@ package bot.boobbot.models
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.*
+import bot.boobbot.misc.Colors
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.createHeaders
+import bot.boobbot.misc.json
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.future.await
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.entities.Message
 import java.awt.Color
 
 
@@ -16,8 +16,8 @@ abstract class SlideShowCommand : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
+                color(Color.red)
+                description(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
             }
         }
 
@@ -50,8 +50,8 @@ abstract class SlideShowCommand : AsyncCommand {
             }
             else -> {
                 return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
+                    color(Color.red)
+                    description(Formats.error("What?\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
                 }
             }
         }
@@ -78,8 +78,8 @@ abstract class SlideShowCommand : AsyncCommand {
     private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
         m.editMessage(
             EmbedBuilder()
-                .setDescription("$num of 20")
-                .setColor(color)
+                .description("$num of 20")
+                .color(color)
                 .setImage(url)
                 .build()
         ).await()

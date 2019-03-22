@@ -4,9 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
-import net.dv8tion.jda.core.entities.*
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject

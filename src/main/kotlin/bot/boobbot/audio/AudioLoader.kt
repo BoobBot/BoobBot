@@ -13,7 +13,8 @@ import java.time.Instant
 
 class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: Context) : AudioLoadResultHandler {
 
-    private val youtubeIcon = "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300"
+    private val youtubeIcon =
+        "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300"
     private val pornhubIcon = "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s"
     private val redtubeIcon = "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png"
 
@@ -38,25 +39,25 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
         musicManager.addToQueue(track)
         val source = track.sourceManager.sourceName
         when (source) {
-            "local" -> ctx.message.channel.sendMessage(":tired_face:").queue()
+            "local" -> ctx.send(":tired_face:")
             "pornhub" -> send(track, pornhubIcon)
             "redtube" -> send(track, redtubeIcon)
             "youtube" -> send(track, youtubeIcon)
-            else -> BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} $source ${ctx.author}")
+            else -> BoobBot.log.warn("Wtf am i playing? ${ctx.message.content()} $source ${ctx.author}")
         }
     }
 
     private fun send(track: AudioTrack, trackIcon: String) {
         ctx.embed {
-            setColor(Colors.getEffectiveColor(ctx.message))
-            setAuthor("Music", track.info.uri, trackIcon)
-            addField(
+            color(Colors.getEffectiveColor(ctx.message))
+            author("Music", track.info.uri, trackIcon)
+            field(
                 "Enqueued Track",
                 "**Title**: ${track.info.title}\n**Duration**: ${Utils.fTime(track.info.length)}\n**Link**: ${track.info.uri}",
                 false
             )
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-            setTimestamp(Instant.now())
+            footer("Requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
+            timestamp(Instant.now())
             build()
         }
     }

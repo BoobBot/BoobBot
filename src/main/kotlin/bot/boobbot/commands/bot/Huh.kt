@@ -11,7 +11,7 @@ class Huh : Command {
 
     override fun execute(ctx: Context) {
         ctx.embed {
-            setColor(Colors.getEffectiveColor(ctx.message))
+            color(Colors.getEffectiveColor(ctx.message))
             setTitle("It seems you don't discord, So here is a gif")
             setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)
             setImage("https://b1nzy-banned.me/g/V6Aeh.gif")

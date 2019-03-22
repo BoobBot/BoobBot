@@ -3,9 +3,9 @@ package bot.boobbot.models
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.*
-import kotlinx.coroutines.future.await
-import net.dv8tion.jda.core.events.message.priv.react.PrivateMessageReactionAddEvent
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.createHeaders
+import bot.boobbot.misc.json
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 

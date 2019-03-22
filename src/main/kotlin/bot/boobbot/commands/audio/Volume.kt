@@ -4,8 +4,8 @@ import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Constants
 import bot.boobbot.misc.Formats
+import bot.boobbot.models.Config
 import bot.boobbot.models.VoiceCommand
 
 @CommandProperties(
@@ -37,7 +37,7 @@ class Volume : VoiceCommand {
         val oldVol = player.player.volume
         try {
             var newVol = Integer.parseInt(ctx.args[0])
-            if (newVol > 100 && !Constants.OWNERS.contains(ctx.author.idLong)) {
+            if (newVol > 100 && !Config.owners.contains(ctx.author.idAsLong())) {
                 newVol = 100
             }
             if (newVol < 0) {
@@ -46,8 +46,8 @@ class Volume : VoiceCommand {
 
             player.player.volume = newVol
             return ctx.embed {
-                setColor(Colors.getDominantColor(ctx.author))
-                addField(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
+                color(Colors.getDominantColor(ctx.author))
+                field(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
             }
 
         } catch (ex: NumberFormatException) {

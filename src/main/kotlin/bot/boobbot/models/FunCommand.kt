@@ -10,8 +10,8 @@ abstract class FunCommand(private val category: String) : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.message.mentionedUsers.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
+                color(Color.red)
+                description(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
         }
         val user = ctx.message.mentionedUsers.firstOrNull()

@@ -16,8 +16,8 @@ abstract class PhCommand : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
+                color(Color.red)
+                description(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
         }
         val rt = BoobBot.requestUtil.get(
@@ -35,8 +35,8 @@ abstract class PhCommand : AsyncCommand {
                 "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s"
             )
                 .setTitle(video.getString("title"), video.getString("url"))
-                .setDescription("PornTube video search")
-                .setColor(Colors.getEffectiveColor(ctx.message))
+                .description("PornTube video search")
+                .color(Colors.getEffectiveColor(ctx.message))
                 .setImage(video.getString("thumb"))
                 .addField(
                     "Video stats",

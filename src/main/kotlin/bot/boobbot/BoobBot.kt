@@ -5,48 +5,51 @@ import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.EventWaiter
-import bot.boobbot.handlers.EventHandler
-import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.*
+import bot.boobbot.misc.ApiServer
+import bot.boobbot.misc.RequestUtil
+import bot.boobbot.misc.Utils
+import bot.boobbot.models.Config
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
-import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
+import com.mewna.catnip.Catnip
+import com.mewna.catnip.CatnipOptions
+import com.mewna.catnip.entity.guild.Guild
+import com.mewna.catnip.entity.user.Presence
+import com.mewna.catnip.shard.manager.DefaultShardManager
+import com.mewna.catnip.util.CatnipMeta
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
-import io.github.cdimascio.dotenv.dotenv
 import io.sentry.Sentry
-import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
-import net.dv8tion.jda.bot.sharding.ShardManager
-import net.dv8tion.jda.core.JDAInfo
-import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.entities.Guild
-import net.dv8tion.jda.core.hooks.ListenerAdapter
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import org.lbots.jvmclient.LBotsClient
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
-import java.nio.file.Paths
 import java.util.*
+import java.util.concurrent.CompletionStage
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.set
 
 
-class BoobBot : ListenerAdapter() {
+class BoobBot {
 
     companion object {
-        var autoPornChannels = 0
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
+        var autoPornChannels = 0
+
+        public val selfId = 285480424904327179L
+        public val inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
 
         var isDebug = false
             private set
 
-        lateinit var shardManager: ShardManager
+        lateinit var catnip: Catnip
             private set
 
         var isReady = false
@@ -58,24 +61,21 @@ class BoobBot : ListenerAdapter() {
         var manSetAvatar = false
             internal set
 
-        val metrics = Metrics.create()!!
+        val config = Config.load()
+
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
-        val playerManager = DefaultAudioPlayerManager()
-        val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-        //val shitUsers = ConcurrentHashMap<Long, Int>()
-        var Scheduler = Executors.newSingleThreadScheduledExecutor()!!
-        val dotenv = dotenv {
-            directory = Paths.get("").toAbsolutePath().toString()
-            filename = "bb.env"
-            ignoreIfMalformed = true
-            ignoreIfMissing = false
-        }
-        val home: Guild?
-            get() = shardManager.getGuildById(Constants.HOME_GUILD)
 
-        val lbots = LBotsClient(285480424904327179, Constants.LBOTS_API_KEY)
+        val playerManager = DefaultAudioPlayerManager()
+        val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
+        var scheduler = Executors.newSingleThreadScheduledExecutor()
+        val metrics = Metrics.create()!!
+
+        val home: Guild?
+            get() = catnip.cache().guild(config.homeGuild)
+
+        val lbots = LBotsClient(285480424904327179, config.lbotsApiKey)
 
         @Throws(Exception::class)
         @JvmStatic
@@ -85,12 +85,12 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
-            val shards = Constants.SHARD_COUNT
+            val shards = config.shardCount
             val duration = Math.abs(shards * 5000)
             val currentTime = Calendar.getInstance()
 
             log.info("--- BoobBot.jda ---")
-            log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
+            log.info("Catnip: ${CatnipMeta.VERSION} | LP: ${PlayerLibrary.VERSION}")
             log.info("Launching $shards shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("It\'s currently ${currentTime.time}")
 
@@ -98,26 +98,31 @@ class BoobBot : ListenerAdapter() {
             log.info("Estimated full boot by ${currentTime.time}")
 
             isDebug = args.firstOrNull()?.contains("debug") ?: false
-            val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
+            val token = if (isDebug) config.debugToken else config.token
 
             if (isDebug) {
                 log.warn("Running in debug mode")
                 log.level = Level.DEBUG
             } else {
-                Sentry.init(Constants.SENTRY_DSN)
+                Sentry.init(config.sentryDsn)
             }
 
-            val jdaHttpClient = OkHttpClient.Builder()
-                .protocols(Arrays.asList(Protocol.HTTP_1_1))
+            val opts = CatnipOptions(token)
+                .chunkMembers(true)
+                .presence(
+                    Presence.of(
+                        Presence.OnlineStatus.ONLINE,
+                        Presence.Activity.of("bbhelp || bbinvite", Presence.ActivityType.PLAYING)
+                    )
+                )
+                .shardManager(DefaultShardManager())
 
-            shardManager = DefaultShardManagerBuilder()
-                .setGame(Game.playing("bbhelp | bbinvite"))
-                .setAudioSendFactory(NativeAudioSendFactory())
-                .addEventListeners(MessageHandler(), EventHandler(), waiter)
-                .setToken(token)
-                .setShardsTotal(shards)
-                .setHttpClientBuilder(jdaHttpClient)
-                .build()
+            catnip = Catnip.catnip(opts).connect()
+
+//                .setGame(Game.playing("bbhelp | bbinvite"))
+//                .setAudioSendFactory(NativeAudioSendFactory())
+//                .addEventListeners(MessageHandler(), EventHandler(), waiter)
+//                .build()
 
             loadCommands()
             ApiServer().startServer()
@@ -149,15 +154,28 @@ class BoobBot : ListenerAdapter() {
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {
-            val manager =
-                musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
-            val audioManager = g.audioManager
-
-            if (audioManager.sendingHandler == null) {
-                audioManager.sendingHandler = manager
+            val manager = musicManagers.computeIfAbsent(g.id()) {
+                GuildMusicManager(g.id(), playerManager.createPlayer())
             }
+//            val audioManager = g.audioManager
+//
+//            if (audioManager.sendingHandler == null) {
+//                audioManager.sendingHandler = manager
+//            }
 
             return manager
+        }
+
+        public fun isAllShardsConnected(): Boolean {
+            val ids = catnip.shardManager().shardIds()
+            val results = mutableListOf<Boolean>()
+
+            for (id in ids) {
+                val res = catnip.shardManager().isConnected(id).toCompletableFuture().get()
+                results.add(res)
+            }
+
+            return results.all { it }
         }
 
     }

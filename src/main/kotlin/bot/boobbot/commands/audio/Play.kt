@@ -8,6 +8,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import java.util.regex.Pattern
 
 @CommandProperties(
@@ -17,6 +18,23 @@ import java.util.regex.Pattern
     nsfw = true
 )
 class Play : VoiceCommand {
+
+    private val PROTOCOL_REGEX = "(?:http://|https://|)"
+    private val DOMAIN_REGEX = "(?:www\\.|m\\.|music\\.|)youtube\\.com"
+    private val SHORT_DOMAIN_REGEX = "(?:www\\.|)youtu\\.be"
+    private val VIDEO_ID_REGEX = "(?<v>[a-zA-Z0-9_-]{11})"
+    private val PLAYLIST_ID_REGEX = "(?<list>(PL|LL|FL|UU)[a-zA-Z0-9_-]+)"
+
+    //private val YT_REGEX = Pattern.compile("^(https?://)?(www\\.)?(youtube\\.com|youtu\\.?be)/.+\$")
+
+    private val directVideoIdPattern = Pattern.compile("^$VIDEO_ID_REGEX$")
+
+    private val checks = arrayListOf(
+        directVideoIdPattern,
+        Pattern.compile("^$PLAYLIST_ID_REGEX$"),
+        Pattern.compile("^$PROTOCOL_REGEX$DOMAIN_REGEX/.*"),
+        Pattern.compile("^$PROTOCOL_REGEX$SHORT_DOMAIN_REGEX/.*")
+    )
 
     override fun execute(ctx: Context) {
         val shouldPlay = performVoiceChecks(ctx)
@@ -31,22 +49,18 @@ class Play : VoiceCommand {
 
         val player = ctx.audioPlayer!!
         val query = ctx.args[0].replace("<", "").replace(">", "")
-        val YT_REGEX = Pattern.compile("^(https?://)?(www\\.)?(youtube\\.com|youtu\\.?be)/.+\$")
-        val match = YT_REGEX.matcher(query)
-        if (match.find()) {
-            if (!Utils.isDonor(ctx.author)) {
-                ctx.message.channel.sendMessage(
-                    Formats.error(
-                        " Sorry YouTube music is only available to our Patrons.\n"
-                                + ctx.jda
-                            .asBot()
-                            .shardManager
-                            .getEmoteById(475801484282429450L)
-                            .asMention
-                                + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+
+        if (!Utils.isDonor(ctx.author)) {
+            for (pattern in checks) {
+                if (pattern.matcher(query).matches()) {
+                    ctx.send(
+                        Formats.error(
+                            " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
+                                    + "Stop being a cheap fuck and join today! https://www.patreon.com/OfficialBoobBot"
+                        )
                     )
-                ).queue()
-                return
+                    return
+                }
             }
         }
 

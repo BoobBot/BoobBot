@@ -5,7 +5,10 @@ import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.*
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.createHeaders
+import bot.boobbot.misc.json
+import bot.boobbot.misc.jsonArray
 import java.awt.Color
 import java.net.URLEncoder
 
@@ -18,11 +21,13 @@ import java.net.URLEncoder
 )
 class Magik : AsyncCommand {
 
+    private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
+
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
+                color(Color.red)
+                description(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
             }
         }
 
@@ -44,10 +49,6 @@ class Magik : AsyncCommand {
                 url = "http://media.obutts.ru/" + obutts.getJSONObject(0).getString("preview")
             }
             "dick" -> {
-                val headers = createHeaders(
-                    Pair("Key", Constants.BB_API_KEY)
-                )
-
                 val bb = BoobBot.requestUtil
                     .get("https://boob.bot/api/v2/img/penis", headers).await()?.json()
                     ?: return ctx.send("rip some error, press f")
@@ -56,8 +57,8 @@ class Magik : AsyncCommand {
             }
             else -> {
                 return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick"))
+                    color(Color.red)
+                    description(Formats.error("What?\nTypes: boobs, ass, dick"))
                 }
             }
         }
@@ -65,7 +66,7 @@ class Magik : AsyncCommand {
         val res = BoobBot.requestUtil
             .get(
                 "https://dankmemer.services/api/magik?avatar1=${URLEncoder.encode(url, Charsets.UTF_8.name())}",
-                createHeaders(Pair("Authorization", Constants.MEMER_IMGEN_KEY))
+                createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
             )
             .await()
             ?: return ctx.send("rip some error, press f")

@@ -16,7 +16,7 @@ abstract class NekoLifeApiCommand(private val category: String) : AsyncCommand {
 
         ctx.embed {
             setTitle("Nya~", "https://nekos.life")
-            setColor(Colors.getEffectiveColor(ctx.message))
+            color(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))
             setFooter("Powered by nekos.life", "https://nekos.life/static/icons/favicon-194x194.png")
             setTimestamp(Instant.now())

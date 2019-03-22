@@ -1,10 +1,9 @@
 package bot.boobbot.flight
 
-import net.dv8tion.jda.core.events.Event
 import java.util.concurrent.CompletableFuture
 
 @Suppress("UNCHECKED_CAST")
-class WaitingEvent<T: Event>(
+class WaitingEvent<T : Event>(
     private val eventClass: Class<*>,
     private val predicate: (T) -> Boolean,
     private val future: CompletableFuture<T?>

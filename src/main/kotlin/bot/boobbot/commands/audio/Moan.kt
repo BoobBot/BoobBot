@@ -14,16 +14,15 @@ import bot.boobbot.models.VoiceCommand
 class Moan : VoiceCommand {
 
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
-            return
-        }
-
-        val musicManager = getMusicManager(ctx.message.guild)
-        connectToVoiceChannel(ctx.message)
-        playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
-
+//        val shouldPlay = performVoiceChecks(ctx)
+//
+//        if (!shouldPlay) {
+//            return
+//        }
+//
+//        val musicManager = getMusicManager(ctx.message.guild)
+//        connectToVoiceChannel(ctx.message)
+//        playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
     }
 
 }
