@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -11,11 +12,11 @@ import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 
 @CommandProperties(description = "Overview of BoobBot's process")
-class Stats : Command {
+class Stats : AsyncCommand {
 
     private val dpFormatter = DecimalFormat("0.00")
 
-    override fun execute(ctx: Context) {
+    override suspend fun executeAsync(ctx: Context) {
         //TODO move all this to a func
         val toSend = StringBuilder()
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
@@ -26,9 +27,8 @@ class Stats : Command {
         val users = BoobBot.catnip.cache().users().size()
 
         val shards = BoobBot.catnip.shardManager().shardCount()
-        //val shardsOnline =
-            //BoobBot.catnip.sh.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
-        //val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+        val shardsOnline = BoobBot.getOnlineShards().filter { it }.size
+        val averageShardLatency = BoobBot.getShardLatencies().reduce { acc, l -> acc + l  } / BoobBot.catnip.shardManager().shardCount()
 
         val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
@@ -101,8 +101,8 @@ class Stats : Command {
             .append("Users               = ").append(users).append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Auto_Porn_Channels  = ").append(autoPornChannels).append("\n")
-            .append("Shards_Online       = ").append("a lot i hope?").append("/").append(shards).append("\n") // shardsOnline
-            .append("Average_Latency     = ").append("very low, we're talking sanic speeds here ").append("ms\n\n") // averageShardLatency
+            .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n") // shardsOnline
+            .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n") // averageShardLatency
             .append("[ Metrics_Since_Boot ]\n")
             .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")
             .append("Commands_Used       = ").append(comsUsed).append("\n")

@@ -25,11 +25,13 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
+import kotlinx.coroutines.future.await
 import org.lbots.jvmclient.LBotsClient
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import kotlin.collections.firstOrNull
@@ -180,6 +182,26 @@ class BoobBot {
             }
 
             return results.all { it }
+        }
+
+        public suspend fun getOnlineShards(): List<Boolean> {
+            val online = BooleanArray(catnip.shardManager().shardCount())
+
+            for (shard in catnip.shardManager().shardIds()) {
+                online[shard] = catnip.shardManager().isConnected(shard).await()
+            }
+
+            return online.toList()
+        }
+
+        public suspend fun getShardLatencies(): List<Long> {
+            val latency = LongArray(catnip.shardManager().shardCount())
+
+            for (shard in catnip.shardManager().shardIds()) {
+                latency[shard] = catnip.shardManager().latency(shard).await()
+            }
+
+            return latency.toList()
         }
 
     }
