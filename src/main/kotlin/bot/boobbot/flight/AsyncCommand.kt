@@ -14,7 +14,7 @@ interface AsyncCommand : Command {
                 executeAsync(ctx)
             } catch (e: Exception) {
                 BoobBot.log.error("Command `${this@AsyncCommand.name}` encountered an error during execution", e)
-                ctx.message.addReaction("\uD83D\uDEAB").queue()
+                ctx.message.react("\uD83D\uDEAB")
             }
         }
     }

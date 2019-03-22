@@ -51,14 +51,14 @@ class ApiServer {
             val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
             val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-            val servers = BoobBot.shardManager.guildCache.size()
-            val users = BoobBot.shardManager.userCache.size()
+            val servers = BoobBot.catnip.cache().guilds().size()
+            val users = BoobBot.catnip.cache().users().size()
 
-            val shards = BoobBot.shardManager.shardsTotal
-            val shardsOnline =
-                BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
-                    .count()
-            val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+            val shards = BoobBot.catnip.shardManager().shardCount()
+            //val shardsOnline =
+                //BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
+                    //.count()
+            //val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
 
             val osBean: OperatingSystemMXBean =
                 ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
@@ -100,20 +100,20 @@ class ApiServer {
                 .put("Users", users)
                 .put("Audio_Players", players)
                 .put("Auto_Porn_Channels", BoobBot.autoPornChannels)
-                .put("Shards_Online", "$shardsOnline/$shards")
-                .put("Average_Latency", "${averageShardLatency}ms")
+                //.put("Shards_Online", "$shardsOnline/$shards")
+                //.put("Average_Latency", "${averageShardLatency}ms")
 
             return JSONObject().put("bb", bb).put("jvm", jvm)
         }
 
         fun getPings(): JSONArray {
             val pings = JSONArray()
-            for (e in BoobBot.shardManager.statuses.entries) pings.put(
-                JSONObject().put(
-                    "shard",
-                    e.key.shardInfo.shardId
-                ).put("ping", e.key.ping).put("status", e.value)
-            )
+            //for (e in BoobBot.shardManager.statuses.entries) pings.put(
+            //    JSONObject().put(
+            //        "shard",
+            //        e.key.shardInfo.shardId
+            //    ).put("ping", e.key.ping).put("status", e.value)
+            //)
             return pings
         }
 
@@ -229,7 +229,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /health"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     call.respondText(
-                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}",
+                        "{\"health\": \"ok\", \"ping\": -1}", // fix
                         ContentType.Application.Json
                     )
                 }

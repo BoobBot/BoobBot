@@ -74,11 +74,7 @@ class Clean : Command {
                 return@thenAccept
             }
 
-            //ctx.textChannel?.deleteMessages(spam).queue(null, null) // CATNIP HAS NO DELETEMESSAGES FUNCTION.
-
-            for (m in spam) {
-                m.delete()
-            }
+            ctx.catnip.rest().channel().deleteMessages(ctx.channel.id(), spam.map { it.id() })
 
             ctx.send(Formats.info("I deleted ${spam.size} messages"))
                 //.queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)

@@ -4,6 +4,9 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
+import bot.boobbot.models.Config
+import com.mewna.catnip.entity.message.Message
+import com.mewna.catnip.entity.user.User
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -49,25 +52,25 @@ class Utils {
         )
 
         fun isDonor(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615837305929748L }
+            val member = BoobBot.home?.member(user.id()) ?: return false
+            return member.roles().any { r -> r.idAsLong() == 528615837305929748L }
         }
 
         fun isDonorPlus(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615882709008430L }
+            val member = BoobBot.home?.member(user.id()) ?: return false
+            return member.roles().any { r -> r.idAsLong() == 528615882709008430L }
         }
 
-        fun checkDonor(event: MessageReceivedEvent): Boolean {
-            if (isDonor(event.author)) {
+        fun checkDonor(event: Message): Boolean {
+            if (isDonor(event.author())) {
                 return true
             }
-            if (event.channelType.isGuild) {
-                if (isDonorPlus(event.guild.owner.user)) {
+            if (event.channel().isGuild) {
+                if (isDonorPlus(event.guild()!!.owner().user())) {
                     return true
                 }
             }
-            if (Constants.OWNERS.contains(event.author.idLong)) {
+            if (Config.owners.contains(event.author().idAsLong())) {
                 return true
             }
             return false
@@ -110,37 +113,36 @@ class Utils {
 
         }
 
-        fun disconnectFromVoice(channel: VoiceChannel) {
-            getMusicManager(channel.guild).shutdown()
-        }
+//        fun disconnectFromVoice(channel: VoiceChannel) {
+//            getMusicManager(channel.guild).shutdown()
+//        }
 
-        fun connectToVoiceChannel(message: Message) {
-            if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
-                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
-            }
-        }
+//        fun connectToVoiceChannel(message: Message) {
+//            if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
+//                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
+//            }
+//        }
 
 
-        fun logCommand(message: net.dv8tion.jda.core.entities.Message) =
-            if ((message.isFromType(ChannelType.PRIVATE))) {
+        fun logCommand(message: Message) =
+            if (message.channel().isDM) {
                 val msg = MessageFormat.format(
-                    "{4}: {0} Used {1} on Channel: {2}({3})",
-                    message.author.name,
-                    message.contentRaw,
-                    message.channel.name,
-                    message.channel.id,
+                    "{3}: {0} Used {1} in DM ({2})",
+                    message.author().username(),
+                    message.content(),
+                    message.channel().id(),
                     now()
                 )
                 BoobBot.log.info(msg)
             } else {
                 val msg = MessageFormat.format(
                     "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
-                    message.author.name,
-                    message.contentRaw,
-                    message.channel.name,
-                    message.channel.id,
-                    message.guild.name,
-                    message.guild.id,
+                    message.author().username(),
+                    message.content(),
+                    message.channel().asTextChannel().name(),
+                    message.channel().id(),
+                    message.guild()?.name(),
+                    message.guild()?.id(),
                     now()
                 )
                 BoobBot.log.info(msg)
@@ -179,26 +181,17 @@ class Utils {
             }
         }
 
-        fun autoAvatar() {
-            if (!manSetAvatar) {
-                val icon = Icon.from(getRandomAvatar())
-                val gm = GuildManager(BoobBot.home)
-                gm.setIcon(icon).queue()
-                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
-                BoobBot.log.info("Setting New Guild icon/Avatar")
-            }
-        }
+//        fun autoAvatar() {
+//            if (!manSetAvatar) {
+//                val icon = Icon.from(getRandomAvatar())
+//                val gm = GuildManager(BoobBot.home)
+//                gm.setIcon(icon).queue()
+//                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
+//                BoobBot.log.info("Setting New Guild icon/Avatar")
+//            }
+//        }
 
-        fun fixJda() {
-            for (e in BoobBot.shardManager.statuses.entries) {
-                if (e.key.ping > 900){
-                    BoobBot.shardManager.restart(e.key.shardInfo.shardId)
-                }
-            }
-        }
-
-        fun autoFix(): Runnable = Runnable { fixJda() }
-        fun auto(): Runnable = Runnable { autoAvatar() }
+        //fun auto(): Runnable = Runnable { autoAvatar() }
 
 
         inline fun suppressExceptions(block: () -> Unit) {

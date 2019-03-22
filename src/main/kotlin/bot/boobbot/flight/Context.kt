@@ -16,6 +16,7 @@ import com.mewna.catnip.entity.user.VoiceState
 import com.mewna.catnip.entity.util.Permission
 import com.mewna.catnip.shard.DiscordEvent
 import kotlinx.coroutines.future.await
+import java.util.regex.Pattern
 
 class Context(val trigger: String, val message: Message, val args: Array<String>) {
     val catnip = message.catnip()
@@ -36,6 +37,18 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     val audioPlayer: GuildMusicManager?
         get() = if (guild == null) null else BoobBot.getMusicManager(guild)
 
+    val mentionedChannels: List<TextChannel>
+
+    init {
+        val matcher = channelMention.matcher(message.content())
+        val ids = mutableListOf<String>()
+
+        while (matcher.find()) {
+            ids.add(matcher.group())
+        }
+
+        mentionedChannels = ids.mapNotNull { guild?.channel(it)?.asTextChannel() }.toList()
+    }
 
     fun userCan(check: Permission): Boolean {
         return channel.isDM ||
@@ -65,6 +78,10 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
         send(MessageOptions().content(content), success, failure)
     }
 
+    suspend fun sendAsync(content: String): Message {
+        return channel.sendMessage(content).await()
+    }
+
     fun embed(block: EmbedBuilder.() -> Unit) {
         val builder = MessageOptions()
             .embed(EmbedBuilder().apply(block).build())
@@ -82,9 +99,19 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     private fun send(message: MessageOptions, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        channel.sendMessage(message.buildMessage())
-            .thenAccept(success)
-            .thenException(failure)
+        val f = channel.sendMessage(message.buildMessage())
+
+        if (success != null) {
+            f.thenAccept(success)
+        }
+
+        if (failure != null) {
+            f.thenException(failure)
+        }
+    }
+
+    companion object {
+        private val channelMention = Pattern.compile("<#(\\d{17,21})>")
     }
 
 }

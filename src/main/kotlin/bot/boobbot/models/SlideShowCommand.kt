@@ -7,7 +7,10 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
+import com.mewna.catnip.entity.builder.EmbedBuilder
+import com.mewna.catnip.entity.message.Message
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.future.await
 import java.awt.Color
 
 
@@ -55,13 +58,10 @@ abstract class SlideShowCommand : AsyncCommand {
                 }
             }
         }
-        val headers = createHeaders(Pair("Key", Constants.BB_API_KEY))
+        val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
 
         val color = Colors.getEffectiveColor(ctx.message)
-        val msg = ctx.channel.sendMessage("\u200B").submit().await()
-
-        // .submit().await() - Asynchronous, doesn't suppress errors
-        // .await()          - Asynchronous, suppresses any errors from Discord/JDA
+        val msg = ctx.sendAsync("\u200B")
 
         for (i in 1 until 21) { // 1-20
             val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
@@ -71,16 +71,16 @@ abstract class SlideShowCommand : AsyncCommand {
             delay(5000)
         }
 
-        ctx.message.delete().reason("no spam").submit()
-        msg.delete().reason("no spam").submit()
+        ctx.message.delete("No spam")
+        msg.delete("No spam")
     }
 
     private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
-        m.editMessage(
+        m.edit(
             EmbedBuilder()
                 .description("$num of 20")
                 .color(color)
-                .setImage(url)
+                .image(url)
                 .build()
         ).await()
     }

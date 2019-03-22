@@ -1,6 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import com.mewna.catnip.entity.builder.EmbedBuilder
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -90,13 +91,19 @@ class AutoPorn {
                             deleteGuild(it.getString("guild_id"))
                             return@forEach
                         }
-                        val channel = guild.getTextChannelById(it.getString("channel"))
-                        if (channel == null && guild.isAvailable) {
+
+                        val channel = guild?.channel(it.getString("channel"))
+
+                        if (channel == null && guild == null) {
+                            return@forEach
+                        }
+
+                        if (channel == null && !guild.unavailable()) {
                             deleteGuild(it.getString("guild_id"))
                             return@forEach
                         }
 
-                        if (!channel.isNSFW) {
+                        if (!channel!!.asTextChannel().nsfw()) {
                             return@forEach
                         }
 
@@ -110,7 +117,7 @@ class AutoPorn {
                         }
 
                         val headers = createHeaders(
-                            Pair("Key", Constants.BB_API_KEY)
+                            Pair("Key", BoobBot.config.bbApiKey)
                         )
 
                         val res =
@@ -121,14 +128,15 @@ class AutoPorn {
                             deleteGuild(it.getString("guild_id"))
                             return@forEach
                         }
-                        channel.sendMessage(
+
+                        channel.asTextChannel().sendMessage(
                             EmbedBuilder().apply {
                                 description(Formats.LEWD_EMOTE)
                                 color(Colors.rndColor)
-                                setImage(res.getString("url"))
-                                setTimestamp(Instant.now())
+                                image(res.getString("url"))
+                                timestamp(Instant.now())
                             }.build()
-                        ).queue()
+                        )
 
                     } catch (e: Exception) {
                         return@forEach

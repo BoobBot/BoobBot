@@ -12,7 +12,7 @@ import java.time.Instant
 abstract class BbApiCommand(private val category: String) : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         val headers = createHeaders(
-            Pair("Key", Constants.BB_API_KEY)
+            Pair("Key", BoobBot.config.bbApiKey)
         )
 
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
@@ -21,9 +21,9 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
         ctx.embed {
             description(Formats.LEWD_EMOTE)
             color(Colors.getEffectiveColor(ctx.message))
-            setImage(res.getString("url"))
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-            setTimestamp(Instant.now())
+            image(res.getString("url"))
+            footer("Requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
+            timestamp(Instant.now())
         }
     }
 }

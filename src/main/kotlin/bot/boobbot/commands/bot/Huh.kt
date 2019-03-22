@@ -12,14 +12,14 @@ class Huh : Command {
     override fun execute(ctx: Context) {
         ctx.embed {
             color(Colors.getEffectiveColor(ctx.message))
-            setTitle("It seems you don't discord, So here is a gif")
-            setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)
-            setImage("https://b1nzy-banned.me/g/V6Aeh.gif")
-            setFooter(
-                "LOL if that cant help ${ctx.author.name}, Maybe this can \uD83D\uDD2B",
-                ctx.author.effectiveAvatarUrl
+            title("It seems you don't discord, So here is a gif")
+            author(ctx.selfUser?.username(), ctx.selfUser?.effectiveAvatarUrl(), ctx.selfUser?.effectiveAvatarUrl())
+            image("https://b1nzy-banned.me/g/V6Aeh.gif")
+            footer(
+                "LOL if that cant help ${ctx.author.username()}, Maybe this can \uD83D\uDD2B",
+                ctx.author.effectiveAvatarUrl()
             )
-            setTimestamp(Instant.now())
+            timestamp(Instant.now())
         }
     }
 

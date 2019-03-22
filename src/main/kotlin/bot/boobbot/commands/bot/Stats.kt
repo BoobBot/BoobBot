@@ -22,13 +22,13 @@ class Stats : Command {
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-        val servers = BoobBot.shardManager.guildCache.size()
-        val users = BoobBot.shardManager.userCache.size()
+        val servers = BoobBot.catnip.cache().guilds().size()
+        val users = BoobBot.catnip.cache().users().size()
 
-        val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline =
-            BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
-        val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+        val shards = BoobBot.catnip.shardManager().shardCount()
+        //val shardsOnline =
+            //BoobBot.catnip.sh.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
+        //val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
 
         val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
@@ -101,8 +101,8 @@ class Stats : Command {
             .append("Users               = ").append(users).append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Auto_Porn_Channels  = ").append(autoPornChannels).append("\n")
-            .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n")
-            .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n")
+            .append("Shards_Online       = ").append("a lot i hope?").append("/").append(shards).append("\n") // shardsOnline
+            .append("Average_Latency     = ").append("very low, we're talking sanic speeds here").append("ms\n\n") // averageShardLatency
             .append("[ Metrics_Since_Boot ]\n")
             .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")
             .append("Commands_Used       = ").append(comsUsed).append("\n")

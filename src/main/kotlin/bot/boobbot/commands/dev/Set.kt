@@ -6,6 +6,9 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
+import bot.boobbot.misc.thenException
+import com.mewna.catnip.entity.user.Presence
+import com.mewna.catnip.entity.util.Permission
 
 
 @CommandProperties(description = "Settings", category = Category.DEV, developerOnly = true)
@@ -16,15 +19,17 @@ class Set : Command {
 
         when (ctx.args[0]) {
 
-            "name" -> {
-                val newName = ctx.args.drop(1).joinToString(" ")
-
-                ctx.jda.selfUser.manager.setName(newName).queue(
-                    { ctx.send(Formats.info("Set UserName to $newName")) },
-                    { ctx.send(Formats.error(" Failed to set UserName")) }
-                )
-
-            }
+//            "name" -> {
+//                val newName = ctx.args.drop(1).joinToString(" ")
+//
+//                BoobBot.catnip.rest().user().modifyCurrentUser(newName, avatar = null)
+//
+////                selfUser.manager.setName(newName).queue(
+////                    { ctx.send(Formats.info("Set UserName to $newName")) },
+////                    { ctx.send(Formats.error(" Failed to set UserName")) }
+////                )
+//
+//            }
 
             "game" -> {
 
@@ -35,7 +40,7 @@ class Set : Command {
                     "playing" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.playing(game))
+                        BoobBot.catnip.game(game, Presence.ActivityType.PLAYING, null)
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -43,7 +48,7 @@ class Set : Command {
                     "listening" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.listening(game))
+                        BoobBot.catnip.game(game, Presence.ActivityType.LISTENING, null)
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -51,8 +56,7 @@ class Set : Command {
                     "watching" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot()
-                            .shardManager.setGame(Game.watching(game)) // There is probly a better way to do this
+                        BoobBot.catnip.game(game, Presence.ActivityType.WATCHING, null)
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -63,15 +67,15 @@ class Set : Command {
                         val name = ctx.args.drop(3).joinToString(" ")
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.streaming(name, url))
-                        ctx.send(Formats.info("Yes daddy, Stream set"))
+                        BoobBot.catnip.game(name, Presence.ActivityType.WATCHING, url)
+                        ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
 
                     "clear" -> {
 
                         BoobBot.setGame = false
-                        ctx.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+                        BoobBot.catnip.game("bbhelp || bbinvite", Presence.ActivityType.PLAYING, null)
                         ctx.send(Formats.info("Yes daddy, cleared game"))
 
                     }
@@ -88,46 +92,49 @@ class Set : Command {
                     return ctx.send("This can only be run in a guild")
                 }
 
-                if (!ctx.botCan(Permission.NICKNAME_CHANGE)) {
-                    ctx.guild.controller.setNickname(ctx.selfMember, ctx.args.drop(1).joinToString(" "))
-                        .reason("BoobBot nick set")
-                        .queue(
-                            { ctx.send(Formats.info("Yes daddy, nick set")) },
-                            { ctx.send(Formats.error(" Failed to set nick")) }
-                        )
+                if (ctx.botCan(Permission.CHANGE_NICKNAME)) {
+                    val newNickname = ctx.args.drop(1).joinToString(" ")
+                    ctx.guild.changeNickName(newNickname, "BoobBot nick set")
+                        .thenAccept {
+                            ctx.send(Formats.info("Yes daddy, nick set"))
+                        }
+                        .thenException {
+                            ctx.send(Formats.error(" Failed to set nick"))
+                        }
                 }
 
             }
 
             "avatar" -> {
 
-                BoobBot.requestUtil.get(ctx.args[1]).queue {
-                    val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch avatar")
-
-                    ctx.jda.selfUser.manager.setAvatar(Icon.from(image)).queue(
-                        { ctx.send(Formats.info("Yes daddy, avatar set")) },
-                        { ctx.send(Formats.error(" Failed to set avatar")) }
-                    )
-                    BoobBot.log.info("Setting New Avatar")
-                    BoobBot.manSetAvatar = true
-                }
+//                BoobBot.requestUtil.get(ctx.args[1]).queue {
+//                    val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch avatar")
+//
+//                    BoobBot.catnip.rest().user().modifyCurrentUser()
+//                    ctx.jda.selfUser.manager.setAvatar(Icon.from(image)).queue(
+//                        { ctx.send(Formats.info("Yes daddy, avatar set")) },
+//                        { ctx.send(Formats.error(" Failed to set avatar")) }
+//                    )
+//                    BoobBot.log.info("Setting New Avatar")
+//                    BoobBot.manSetAvatar = true
+//                }
 
             }
 
             "icons" -> {
 
-                BoobBot.requestUtil.get(ctx.args[1]).queue {
-                    val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch image")
-                    val icon = Icon.from(image)
-
-                    BoobBot.home?.manager?.setIcon(icon)?.queue()
-                    ctx.jda.selfUser.manager.setAvatar(icon).queue(
-                        { ctx.send(Formats.info("Yes daddy, icons set")) },
-                        { ctx.send(Formats.error(" Failed to set avatar")) }
-                    )
-                    BoobBot.log.info("Setting New icons")
-                    BoobBot.manSetAvatar = true
-                }
+//                BoobBot.requestUtil.get(ctx.args[1]).queue {
+//                    val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch image")
+//                    val icon = Icon.from(image)
+//
+//                    BoobBot.home?.manager?.setIcon(icon)?.queue()
+//                    ctx.jda.selfUser.manager.setAvatar(icon).queue(
+//                        { ctx.send(Formats.info("Yes daddy, icons set")) },
+//                        { ctx.send(Formats.error(" Failed to set avatar")) }
+//                    )
+//                    BoobBot.log.info("Setting New icons")
+//                    BoobBot.manSetAvatar = true
+//                }
 
             }
 

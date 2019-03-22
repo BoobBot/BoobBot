@@ -72,7 +72,7 @@ class Printer : AsyncCommand {
 
         val body = res.body() ?: return ctx.send("rip some error, press f")
 
-        ctx.channel.sendMessage("```${body.string()}```").queue()
+        ctx.channel.sendMessage("```${body.string()}```")
     }
 
 }

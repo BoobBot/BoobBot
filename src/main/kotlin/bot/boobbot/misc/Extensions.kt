@@ -1,5 +1,8 @@
 package bot.boobbot.misc
 
+import com.mewna.catnip.entity.channel.GuildChannel
+import com.mewna.catnip.entity.channel.MessageChannel
+import com.mewna.catnip.entity.util.Permission
 import io.github.cdimascio.dotenv.Dotenv
 import java.util.concurrent.CompletionStage
 
@@ -14,4 +17,8 @@ fun <T> CompletionStage<T>.thenException(handler: ((Throwable) -> Unit)?): Compl
     }
 
     return this
+}
+
+fun GuildChannel.canTalk(): Boolean {
+    return this.asTextChannel().guild().selfMember().hasPermissions(this.asTextChannel(), Permission.SEND_MESSAGES)
 }

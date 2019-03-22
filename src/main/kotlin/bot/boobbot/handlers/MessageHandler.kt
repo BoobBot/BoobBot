@@ -4,20 +4,24 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.misc.canTalk
+import bot.boobbot.models.Config
+import com.mewna.catnip.entity.message.Message
+import com.mewna.catnip.entity.util.Permission
 import de.mxro.metrics.jre.Metrics
 
-class MessageHandler : ListenerAdapter() {
+class MessageHandler {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
     //private val noSpam = mutableListOf<Long>()
-    override fun onMessageReceived(event: MessageReceivedEvent) {
+    fun onMessageReceived(event: Message) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-        if (!BoobBot.isReady) {
-            return
-        }
+//        if (!BoobBot.isReady) {
+//            return
+//        }
 
-        if (event.author.isBot || event.author.isFake) {
+        if (event.author().bot()) {
             return
         }
 //        if (shitUsers.getOrDefault(event.author.idLong, 0) > 75 && !Utils.checkDonor(event)) {
@@ -25,21 +29,21 @@ class MessageHandler : ListenerAdapter() {
 //            return
 //        }
 
-        if (event.channelType.isGuild) {
-            if (!event.guild.isAvailable || !event.textChannel.canTalk()) {
+        if (event.channel().isGuild) {
+            if (event.guild()?.unavailable() == true || !event.channel().asTextChannel().canTalk()) {
                 return
             }
 
-            if (event.message.mentionsEveryone()) {
+            if (event.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
         }
 
-        val messageContent = event.message.contentRaw
+        val messageContent = event.content()
         val acceptablePrefixes = arrayOf(
             botPrefix,
-            "<@${event.jda.selfUser.id}> ",
-            "<@!${event.jda.selfUser.id}> "
+            "<@${BoobBot.selfId}> ",
+            "<@!${BoobBot.selfId}> "
         )
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
@@ -54,33 +58,33 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (command.properties.developerOnly && !Constants.OWNERS.contains(event.author.idLong)) {
+        if (command.properties.developerOnly && !Config.owners.contains(event.author().idAsLong())) {
             return
         }
 
-        if (command.properties.guildOnly && !event.channelType.isGuild) {
-            return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
+        if (command.properties.guildOnly && !event.channel().isGuild) {
+            event.channel().sendMessage("No, whore you can only use this in a guild")
+            return
         }
 
-        if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
-            return event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`").queue()
+        if (command.properties.nsfw && event.channel().isGuild && !event.channel().asTextChannel().nsfw()) {
+            event.channel().sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`")
+            return
         }
 
-        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(
-                event.textChannel,
-                Permission.MESSAGE_EMBED_LINKS
-            )
-        ) {
-            return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
+        if (event.channel().isGuild && !event.guild()!!.selfMember().hasPermissions(event.channel().asTextChannel(), Permission.EMBED_LINKS)) {
+            event.channel().sendMessage("I do not have permission to use embeds, da fuck?")
+            return
         }
 
         if (command.properties.donorOnly && !Utils.checkDonor(event)) {
-            return event.channel.sendMessage(
+            event.channel().sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
                 )
-            ).queue()
+            )
+            return
             /* event.channel.sendMessage(
                  Formats.info(
                      "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
@@ -121,13 +125,13 @@ class MessageHandler : ListenerAdapter() {
 
 
         try {
-            Utils.logCommand(event.message)
+            Utils.logCommand(event)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
             command.execute(Context(trigger, event, args.toTypedArray()))
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.message.addReaction("\uD83D\uDEAB").queue()
+            event.react("\uD83D\uDEAB")
         }
     }
 

@@ -25,15 +25,15 @@ class Help : Command {
         val builder = EmbedBuilder()
 
         builder.author(
-            "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
-            ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
-            ctx.selfUser.effectiveAvatarUrl
+            "${ctx.selfUser?.username()} help ${Formats.MAGIC_EMOTE}",
+            BoobBot.inviteUrl,
+            ctx.selfUser?.effectiveAvatarUrl()
         )
 
         builder.color(Colors.getEffectiveColor(ctx.message))
 
         Category.values().forEach { category ->
-            val list = if (Config.owners.contains(ctx.author.idLong))
+            val list = if (Config.owners.contains(ctx.author.idAsLong()))
                 commands
                     .filter { it.properties.category == category }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
@@ -47,7 +47,7 @@ class Help : Command {
         }
 
         builder.field("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
-        builder.footer("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+        builder.footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
         builder.timestamp(Instant.now())
 
         if (ctx.args.isEmpty()) {
@@ -55,7 +55,7 @@ class Help : Command {
         }
 
         if (ctx.args[0].toLowerCase() == "--dm") {
-            ctx.message.addReaction("\uD83D\uDCEC").queue(null, null)
+            ctx.message.react("\uD83D\uDCEC")
             return ctx.dm(builder.build())
 
         }
@@ -70,9 +70,9 @@ class Help : Command {
         val commandHelp = EmbedBuilder()
             .color(Colors.getEffectiveColor(ctx.message))
             .author(
-                "${ctx.selfUser.name} Command Info",
-                ctx.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
-                ctx.selfUser.effectiveAvatarUrl
+                "${ctx.selfUser?.username()} Command Info",
+                BoobBot.inviteUrl,
+                ctx.selfUser?.effectiveAvatarUrl()
             )
             .field(
                 Formats.info("Info"),
@@ -82,12 +82,12 @@ class Help : Command {
                 ),
                 false
             )
-            .footer("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            .footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
             .timestamp(Instant.now())
 
         if (ctx.args.size >= 2 && ctx.args[1].toLowerCase() == "--dm") {
             ctx.dm(commandHelp.build())
-            ctx.message.addReaction("\uD83D\uDCEC").queue(null, null)
+            ctx.message.react("\uD83D\uDCEC")
         } else {
             ctx.embed(commandHelp.build())
         }

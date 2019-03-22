@@ -13,10 +13,10 @@ class Invite : Command {
     override fun execute(ctx: Context) {
         ctx.embed {
             color(Colors.rndColor)
-            setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)
+            author(ctx.selfUser?.username(), ctx.selfUser?.effectiveAvatarUrl(), ctx.selfUser?.effectiveAvatarUrl())
             description(Formats.LING_MSG)
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-            setTimestamp(Instant.now())
+            footer("Requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
+            timestamp(Instant.now())
         }
     }
 

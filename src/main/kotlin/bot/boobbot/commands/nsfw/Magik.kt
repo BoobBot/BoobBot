@@ -9,6 +9,7 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
 import bot.boobbot.misc.jsonArray
+import com.mewna.catnip.entity.message.MessageOptions
 import java.awt.Color
 import java.net.URLEncoder
 
@@ -73,7 +74,10 @@ class Magik : AsyncCommand {
 
         val body = res.body() ?: return ctx.send("rip some error, press f")
 
-        ctx.channel.sendFile(body.byteStream(), "magik.png").queue()
+        val opts = MessageOptions()
+            .addFile("magik.png", body.byteStream())
+
+        ctx.channel.sendMessage(opts)
     }
 
 }

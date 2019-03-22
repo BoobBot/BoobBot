@@ -15,11 +15,12 @@ abstract class NekoLifeApiCommand(private val category: String) : AsyncCommand {
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         ctx.embed {
-            setTitle("Nya~", "https://nekos.life")
+            title("Nya~")
+            url("https://nekos.life")
             color(Colors.getEffectiveColor(ctx.message))
-            setImage(res.getString("url"))
-            setFooter("Powered by nekos.life", "https://nekos.life/static/icons/favicon-194x194.png")
-            setTimestamp(Instant.now())
+            image(res.getString("url"))
+            footer("Powered by nekos.life", "https://nekos.life/static/icons/favicon-194x194.png")
+            timestamp(Instant.now())
         }
 
     }

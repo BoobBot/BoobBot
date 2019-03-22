@@ -72,7 +72,7 @@ class Queue : VoiceCommand {
                     qStr,
                     false
                 )
-                .footer("Total duration $total", ctx.jda.selfUser.avatarUrl)
+                .footer("Total duration $total", ctx.selfUser?.effectiveAvatarUrl())
                 .timestamp(Instant.now())
                 .build()
         }

@@ -4,7 +4,8 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
-import bot.boobbot.flight.EventWaiter
+import bot.boobbot.handlers.MessageHandler
+//import bot.boobbot.flight.EventWaiter
 import bot.boobbot.misc.ApiServer
 import bot.boobbot.misc.RequestUtil
 import bot.boobbot.misc.Utils
@@ -15,6 +16,7 @@ import com.mewna.catnip.Catnip
 import com.mewna.catnip.CatnipOptions
 import com.mewna.catnip.entity.guild.Guild
 import com.mewna.catnip.entity.user.Presence
+import com.mewna.catnip.shard.DiscordEvent
 import com.mewna.catnip.shard.manager.DefaultShardManager
 import com.mewna.catnip.util.CatnipMeta
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
@@ -28,7 +30,6 @@ import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
-import java.util.concurrent.CompletionStage
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import kotlin.collections.firstOrNull
@@ -64,7 +65,7 @@ class BoobBot {
         val config = Config.load()
 
         val commands = HashMap<String, Command>()
-        val waiter = EventWaiter()
+        //val waiter = EventWaiter()
         val requestUtil = RequestUtil()
 
         val playerManager = DefaultAudioPlayerManager()
@@ -117,7 +118,10 @@ class BoobBot {
                 )
                 .shardManager(DefaultShardManager())
 
+            val handler = MessageHandler()
+
             catnip = Catnip.catnip(opts).connect()
+            catnip.on(DiscordEvent.MESSAGE_CREATE) { handler.onMessageReceived(it) }
 
 //                .setGame(Game.playing("bbhelp | bbinvite"))
 //                .setAudioSendFactory(NativeAudioSendFactory())
