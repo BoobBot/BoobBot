@@ -4,8 +4,12 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
+import kotlinx.coroutines.future.await
+import net.dv8tion.jda.core.events.message.priv.react.PrivateMessageReactionAddEvent
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
+
+    private val headers = createHeaders(Pair("Key", Constants.BB_API_KEY))
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
@@ -29,19 +33,15 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         prompt.addReaction("yes:443810942221025280").await()
         prompt.addReaction("no:443810942099390464").await()
 
-        val emote = BoobBot.waiter.waitForReaction(prompt.channel.idLong, user.idLong, { reaction ->
-            reaction.emote != null &&
-                    reaction.emote.idLong == 443810942221025280L || reaction.emote.idLong == 443810942099390464L
-        }, 60000).await()
-            ?: return ctx.send("${user.name} didn't respond") // timeout
+        val emote = BoobBot.waiter.waitFor(PrivateMessageReactionAddEvent::class.java, {
+            it.user.idLong == ctx.author.idLong
+                    && it.reactionEmote != null
+                    && (it.reactionEmote.idLong == 443810942221025280L || it.reactionEmote.idLong == 443810942099390464L)
+        }, 60000).await() ?: return ctx.send("${user.name} didn't respond") // timeout
 
         prompt.delete().await()
 
-        if (emote.idLong == 443810942221025280L) { // yes
-            val headers = createHeaders(
-                Pair("Key", Constants.BB_API_KEY)
-            )
-
+        if (emote.reactionEmote.idLong == 443810942221025280L) { // yes
             val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
                 .await()?.json()?.getString("url")
                 ?: return ctx.send("wtf, api down?")

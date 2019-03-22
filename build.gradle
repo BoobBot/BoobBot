@@ -55,6 +55,7 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy:2.5.2'
     implementation "com.google.code.gson:gson:2.8.5"
     implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
+    implementation "com.mewna:catnip:$catnip_version"
 
 }
 

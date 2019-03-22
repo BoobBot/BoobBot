@@ -2,7 +2,6 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
-import bot.boobbot.misc.PendingEvent
 import bot.boobbot.misc.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
@@ -11,6 +10,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.managers.AudioManager
+import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val event: MessageReceivedEvent, val args: Array<String>) {
     val jda: JDA = event.jda
@@ -47,10 +47,6 @@ class Context(val trigger: String, val event: MessageReceivedEvent, val args: Ar
         }
 
         return selfMember!!.hasPermission(event.textChannel, check)
-    }
-
-    fun waitForMessage(predicate: (Message) -> Boolean = { true }, time: Long = 10000): PendingEvent<Message> {
-        return BoobBot.waiter.waitForMessage(channel.idLong, author.idLong, predicate, time)
     }
 
     fun dm(embed: MessageEmbed) {

@@ -4,6 +4,7 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
+import bot.boobbot.flight.EventWaiter
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.*
@@ -56,6 +57,7 @@ class BoobBot : ListenerAdapter() {
 
         var manSetAvatar = false
             internal set
+
         val metrics = Metrics.create()!!
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
@@ -83,12 +85,13 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
-            val duration = Constants.SHARD_COUNT.toString().toInt() * 5000
+            val shards = Constants.SHARD_COUNT
+            val duration = Math.abs(shards * 5000)
             val currentTime = Calendar.getInstance()
 
             log.info("--- BoobBot.jda ---")
             log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
-            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}")
+            log.info("Launching $shards shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("It\'s currently ${currentTime.time}")
 
             currentTime.add(Calendar.MILLISECOND, duration)
@@ -96,12 +99,12 @@ class BoobBot : ListenerAdapter() {
 
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
-            if (!isDebug) {
-                Sentry.init(Constants.SENTRY_DSN)
-            }
+
             if (isDebug) {
                 log.warn("Running in debug mode")
                 log.level = Level.DEBUG
+            } else {
+                Sentry.init(Constants.SENTRY_DSN)
             }
 
             val jdaHttpClient = OkHttpClient.Builder()
@@ -110,9 +113,9 @@ class BoobBot : ListenerAdapter() {
             shardManager = DefaultShardManagerBuilder()
                 .setGame(Game.playing("bbhelp | bbinvite"))
                 .setAudioSendFactory(NativeAudioSendFactory())
-                .addEventListeners(BoobBot(), MessageHandler(), EventHandler(), waiter)
+                .addEventListeners(MessageHandler(), EventHandler(), waiter)
                 .setToken(token)
-                .setShardsTotal(Constants.SHARD_COUNT.toString().toInt())
+                .setShardsTotal(shards)
                 .setHttpClientBuilder(jdaHttpClient)
                 .build()
 

@@ -14,32 +14,32 @@ class Constants {
 
         val DEBUG_TOKEN = BoobBot.dotenv["DEBUG_TOKEN"] ?: ""
 
-        var SHARD_COUNT = BoobBot.dotenv["SHARD_COUNT"] ?: -1
+        val SHARD_COUNT: Int
+            get() = BoobBot.dotenv["SHARD_COUNT"]?.toInt() ?: -1
 
-        var HOME_GUILD = BoobBot.dotenv["HOME_GUILD"] ?: ""
+        val HOME_GUILD = BoobBot.dotenv["HOME_GUILD"] ?: ""
 
-        var RDY_WEBHOOK = BoobBot.dotenv["RDY_WEBHOOK"] ?: ""
+        val RDY_WEBHOOK = BoobBot.dotenv["RDY_WEBHOOK"] ?: ""
 
-        var GJLOG_WEBHOOK = BoobBot.dotenv["GJLOG_WEBHOOK"] ?: ""
+        val GJLOG_WEBHOOK = BoobBot.dotenv["GJLOG_WEBHOOK"] ?: ""
 
-        var GLLOG_WEBHOOK = BoobBot.dotenv["GLLOG_WEBHOOK"] ?: ""
+        val GLLOG_WEBHOOK = BoobBot.dotenv["GLLOG_WEBHOOK"] ?: ""
 
-        var BB_API_KEY = BoobBot.dotenv["BB_API_KEY"] ?: ""
+        val BB_API_KEY = BoobBot.dotenv["BB_API_KEY"] ?: ""
 
-        var LBOTS_API_KEY = BoobBot.dotenv["LBOTS_API_KEY"] ?: "."
+        val LBOTS_API_KEY = BoobBot.dotenv["LBOTS_API_KEY"] ?: "."
 
-        var BB_API_URL = BoobBot.dotenv["BB_API_URL"] ?: ""
+        val BB_API_URL = BoobBot.dotenv["BB_API_URL"] ?: ""
 
-        var BB_DB_KEY = BoobBot.dotenv["BB_DB_KEY"] ?: ""
+        val BB_DB_KEY = BoobBot.dotenv["BB_DB_KEY"] ?: ""
 
-        var BB_DB_URL = BoobBot.dotenv["BB_DB_URL"] ?: ""
+        val BB_DB_URL = BoobBot.dotenv["BB_DB_URL"] ?: ""
 
-        var MEMER_IMGEN_KEY = BoobBot.dotenv["MEMER_IMGEN_KEY"] ?: ""
+        val MEMER_IMGEN_KEY = BoobBot.dotenv["MEMER_IMGEN_KEY"] ?: ""
 
-        var SENTRY_DSN = BoobBot.dotenv["SENTRY_DSN"] ?: ""
+        val SENTRY_DSN = BoobBot.dotenv["SENTRY_DSN"] ?: ""
 
-        var AUTO_PORN_TIME = BoobBot.dotenv["AUTO_PORN_TIME"] ?: ""
-
+        val AUTO_PORN_TIME = BoobBot.dotenv["AUTO_PORN_TIME"] ?: ""
 
     }
 }
