@@ -49,7 +49,7 @@ class EventHandler : ListenerAdapter() {
             ).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
                 .build()
         )
-        if (readyCount == BoobBot.shardManager.shardsTotal && !BoobBot.isReady) {
+        if (readyCount == Constants.SHARD_COUNT.toString().toInt()-1 && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.Scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
