@@ -189,7 +189,17 @@ class Utils {
             }
         }
 
+        fun fixJda() {
+            for (e in BoobBot.shardManager.statuses.entries) {
+                if (e.key.ping > 900){
+                    BoobBot.shardManager.restart(e.key.shardInfo.shardId)
+                }
+            }
+        }
+
+        fun autoFix(): Runnable = Runnable { fixJda() }
         fun auto(): Runnable = Runnable { autoAvatar() }
+
 
         inline fun suppressExceptions(block: () -> Unit) {
             try {
