@@ -88,7 +88,7 @@ class BoobBot : ListenerAdapter() {
             val now = Calendar.getInstance()
             val targetTime = now.clone() as Calendar
             targetTime.add(Calendar.MILLISECOND, duration)
-            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}\nEstimated full boot by ${targetTime.time}\nIt\'s currently ${now.time}")
+            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("Estimated full boot by ${targetTime.time}")
             log.info("It\'s currently ${now.time}")
             isDebug = args.firstOrNull()?.contains("debug") ?: false
