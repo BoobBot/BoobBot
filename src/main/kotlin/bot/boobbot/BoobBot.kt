@@ -123,7 +123,7 @@ class BoobBot {
             val handler = MessageHandler()
 
             catnip = Catnip.catnip(opts).connect()
-            catnip.on(DiscordEvent.MESSAGE_CREATE) { handler.onMessageReceived(it) }
+            catnip.on(DiscordEvent.MESSAGE_CREATE) { handler.processMessage(it) }
 
 //                .setGame(Game.playing("bbhelp | bbinvite"))
 //                .setAudioSendFactory(NativeAudioSendFactory())

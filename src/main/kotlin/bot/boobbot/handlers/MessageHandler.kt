@@ -9,11 +9,18 @@ import bot.boobbot.models.Config
 import com.mewna.catnip.entity.message.Message
 import com.mewna.catnip.entity.util.Permission
 import de.mxro.metrics.jre.Metrics
+import java.util.concurrent.Executors
 
 class MessageHandler {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
+    private val executor = Executors.newFixedThreadPool(300) // Adjust if needed.
     //private val noSpam = mutableListOf<Long>()
+
+    fun processMessage(event: Message) {
+        executor.submit { onMessageReceived(event) }
+    }
+
     fun onMessageReceived(event: Message) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
