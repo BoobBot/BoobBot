@@ -13,6 +13,7 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import io.github.cdimascio.dotenv.dotenv
 import io.sentry.Sentry
@@ -82,15 +83,17 @@ class BoobBot : ListenerAdapter() {
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
-            log.info("--- BoobBot.jda ---")
-            log.info("jda version: ${JDAInfo.VERSION}")
             val duration = Constants.SHARD_COUNT.toString().toInt() * 5000
-            val now = Calendar.getInstance()
-            val targetTime = now.clone() as Calendar
-            targetTime.add(Calendar.MILLISECOND, duration)
-            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}\nEstimated full boot by ${targetTime.time}\nIt\'s currently ${now.time}")
-            log.info("Estimated full boot by ${targetTime.time}")
-            log.info("It\'s currently ${now.time}")
+            val currentTime = Calendar.getInstance()
+
+            log.info("--- BoobBot.jda ---")
+            log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
+            log.info("Launching ${Constants.SHARD_COUNT} shards at an estimated ${Utils.fTime(duration.toLong())}")
+            log.info("It\'s currently ${currentTime.time}")
+
+            currentTime.add(Calendar.MILLISECOND, duration)
+            log.info("Estimated full boot by ${currentTime.time}")
+
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) Constants.DEBUG_TOKEN else Constants.TOKEN
             if (!isDebug) {
@@ -157,4 +160,3 @@ class BoobBot : ListenerAdapter() {
     }
 
 }
-
