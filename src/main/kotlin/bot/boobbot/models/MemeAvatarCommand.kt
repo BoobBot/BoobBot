@@ -23,6 +23,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
 
         val opts = MessageOptions()
             .addFile("$category.png", res.byteStream())
+            .content("\u200b")
 
         ctx.channel.sendMessage(opts)
     }

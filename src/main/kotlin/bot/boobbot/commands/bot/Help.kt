@@ -22,47 +22,67 @@ class Help : Command {
 
     override fun execute(ctx: Context) {
         val commands = BoobBot.commands.values
-        val builder = EmbedBuilder()
 
-        builder.author(
-            "${ctx.selfUser?.username()} help ${Formats.MAGIC_EMOTE}",
-            BoobBot.inviteUrl,
-            ctx.selfUser?.effectiveAvatarUrl()
-        )
+        if (ctx.args.isEmpty() || ctx.args[0] == "--dm") {
+            val builder = EmbedBuilder()
 
-        builder.color(Colors.getEffectiveColor(ctx.message))
+            builder.author(
+                "${ctx.selfUser?.username()} help ${Formats.MAGIC_EMOTE}",
+                BoobBot.inviteUrl,
+                ctx.selfUser?.effectiveAvatarUrl()
+            )
 
-        Category.values().forEach { category ->
-            val list = if (Config.owners.contains(ctx.author.idAsLong()))
-                commands
-                    .filter { it.properties.category == category }
-                    .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
-            else
-                commands
+            builder.color(Colors.getEffectiveColor(ctx.message))
+
+            Category.values().forEach { category ->
+                val list = commands
                     .filter { it.properties.category == category && !it.properties.developerOnly }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
-            if (list.isNotEmpty()) {
-                builder.field(category.title, list, false)
+
+                if (list.isNotEmpty()) {
+                    builder.field(category.title, list, false)
+                }
             }
-        }
 
-        builder.field("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
-        builder.footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
-        builder.timestamp(Instant.now())
+            builder.field("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
+            builder.footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
+            builder.timestamp(Instant.now())
 
-        if (ctx.args.isEmpty()) {
-            return ctx.embed(builder.build())
-        }
+            if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
+                ctx.message.react("\uD83D\uDCEC")
+                ctx.dm(builder.build())
+            } else {
+                ctx.embed(builder.build())
+            }
 
-        if (ctx.args[0].toLowerCase() == "--dm") {
-            ctx.message.react("\uD83D\uDCEC")
-            return ctx.dm(builder.build())
+            if (Config.owners.contains(ctx.author.idAsLong())) {
+                val d = EmbedBuilder()
 
+                d.title("You're a developer!")
+                d.color(Colors.getEffectiveColor(ctx.message))
+
+                Category.values().forEach { category ->
+                    val list = commands
+                        .filter { it.properties.category == category && it.properties.developerOnly }
+                        .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
+
+                    if (list.isNotEmpty()) {
+                        d.field(category.title, list, false)
+                    }
+                }
+
+                if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
+                    ctx.dm(d.build())
+                } else {
+                    ctx.embed(d.build())
+                }
+            }
+
+            return
         }
 
         val command = Utils.getCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
-
 
         val mappedAliases = command.properties.aliases.joinToString(", ")
         val aliases = if (mappedAliases.isEmpty()) "None" else mappedAliases

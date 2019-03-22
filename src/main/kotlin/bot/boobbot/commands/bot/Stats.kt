@@ -87,8 +87,8 @@ class Stats : Command {
 
         toSend.append("```ini\n")
             .append("[ JVM ]\n")
-            .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
-            .append("\n")
+            .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime)).append("\n")
+            .append("Threads             = ").append(Thread.activeCount()).append("\n")
             .append("JVM_CPU_Usage       = ").append(procCpuUsage).append("%\n")
             .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
             .append("RAM_Usage           = ").append(usedMB).append("MB (").append(rPercent).append("%)\n")
@@ -102,7 +102,7 @@ class Stats : Command {
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Auto_Porn_Channels  = ").append(autoPornChannels).append("\n")
             .append("Shards_Online       = ").append("a lot i hope?").append("/").append(shards).append("\n") // shardsOnline
-            .append("Average_Latency     = ").append("very low, we're talking sanic speeds here").append("ms\n\n") // averageShardLatency
+            .append("Average_Latency     = ").append("very low, we're talking sanic speeds here ").append("ms\n\n") // averageShardLatency
             .append("[ Metrics_Since_Boot ]\n")
             .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")
             .append("Commands_Used       = ").append(comsUsed).append("\n")
