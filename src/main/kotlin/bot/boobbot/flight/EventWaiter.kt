@@ -1,5 +1,6 @@
 package bot.boobbot.flight
 
+import bot.boobbot.BoobBot
 import com.mewna.catnip.entity.message.Message
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
@@ -26,9 +27,13 @@ class EventWaiter {
     }
 
     public fun checkMessage(message: Message) {
-        val passed = pendingEvents.filter { it.check(message) }
-        pendingEvents.removeAll(passed)
-        passed.forEach { it.accept(message) }
+        try {
+            val passed = pendingEvents.filter { it.check(message) }
+            pendingEvents.removeAll(passed)
+            passed.forEach { it.accept(message) }
+        } catch (e: Exception) {
+            BoobBot.log.error("Error in EventWaiter while checking message", e)
+        }
     }
 
 }
