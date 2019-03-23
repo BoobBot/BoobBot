@@ -14,7 +14,6 @@ import com.mewna.catnip.entity.message.MessageOptions
 import com.mewna.catnip.entity.user.User
 import com.mewna.catnip.entity.user.VoiceState
 import com.mewna.catnip.entity.util.Permission
-import com.mewna.catnip.shard.DiscordEvent
 import kotlinx.coroutines.future.await
 import java.util.regex.Pattern
 
@@ -32,7 +31,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     val voiceState: VoiceState? = if (guild != null && member != null) catnip.cache().voiceState(guild.id(), member.id()) else null
 
     val channel: MessageChannel = message.channel()
-    val textChannel: TextChannel? = message.channel().asTextChannel()
+    val textChannel: TextChannel? = if (channel.isText) channel.asTextChannel() else null
 
     val audioPlayer: GuildMusicManager?
         get() = if (guild == null) null else BoobBot.getMusicManager(guild)

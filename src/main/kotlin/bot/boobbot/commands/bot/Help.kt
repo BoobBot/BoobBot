@@ -10,7 +10,6 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import com.mewna.catnip.entity.builder.EmbedBuilder
-import com.mewna.catnip.entity.util.Permission
 import java.time.Instant
 
 @CommandProperties(
