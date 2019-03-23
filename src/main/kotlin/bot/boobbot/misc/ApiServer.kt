@@ -55,7 +55,7 @@ class ApiServer {
             val users = BoobBot.catnip.cache().users().size()
 
             val shards = BoobBot.catnip.shardManager().shardCount()
-            val shardsOnline = BoobBot.getOnlineShards().size
+            val shardsOnline = BoobBot.getOnlineShards().filter { it }.size
             val allLatencies = BoobBot.getShardLatencies()
             val averageShardLatency = allLatencies.sum() / allLatencies.size
 
