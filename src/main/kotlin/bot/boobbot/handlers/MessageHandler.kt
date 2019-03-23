@@ -14,17 +14,17 @@ import java.util.concurrent.Executors
 class MessageHandler {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-    private val executor = Executors.newFixedThreadPool(300) // Adjust if needed.
+    //private val executor = Executors.newFixedThreadPool(300) // Adjust if needed.
     //private val noSpam = mutableListOf<Long>()
 
     fun processMessage(event: Message) {
-        executor.submit {
-            try {
-                onMessageReceived(event)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+        //executor.submit {
+        //    try {
+        //        onMessageReceived(event)
+        //    } catch (e: Exception) {
+        //        e.printStackTrace()
+        //    }
+        //}
     }
 
     fun onMessageReceived(event: Message) {

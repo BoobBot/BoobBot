@@ -31,12 +31,11 @@ import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
 import kotlinx.coroutines.future.await
-import org.lbots.jvmclient.LBotsClient
+//import org.lbots.jvmclient.LBotsClient
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import kotlin.collections.firstOrNull
@@ -85,7 +84,7 @@ class BoobBot {
         val home: Guild?
             get() = catnip.cache().guild(config.homeGuild)
 
-        val lbots = LBotsClient(285480424904327179, config.lbotsApiKey)
+        //val lbots = LBotsClient(285480424904327179, config.lbotsApiKey)
 
         @Throws(Exception::class)
         @JvmStatic
@@ -135,7 +134,7 @@ class BoobBot {
 
             catnip.on(DiscordEvent.MESSAGE_CREATE) {
                 waiter.checkMessage(it)
-                handler.processMessage(it)
+                handler.onMessageReceived(it)
             }
 
 //                .addEventListeners(MessageHandler(), EventHandler(), waiter)
