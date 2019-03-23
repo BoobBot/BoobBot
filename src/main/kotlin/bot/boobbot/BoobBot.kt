@@ -138,6 +138,11 @@ class BoobBot {
             ApiServer().startServer()
         }
 
+        // TODO
+        // -----------------------------------
+        // | DON'T FORGET TO DO SQLITE STUFF |
+        // -----------------------------------
+
         private fun loadCommands() {
             val reflections = Reflections("bot.boobbot.commands")
 
