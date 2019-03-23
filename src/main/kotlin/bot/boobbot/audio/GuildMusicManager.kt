@@ -1,14 +1,26 @@
 package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
+import com.github.natanbc.catnipvoice.AudioProvider
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
+import com.github.natanbc.catnipvoice.ExampleBot
+import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats
+import java.nio.ByteBuffer
+import org.xnio.Buffers.position
+import org.springframework.core.convert.TypeDescriptor.array
+import com.sedmelluq.discord.lavaplayer.track.playback.ImmutableAudioFrame
+import javax.annotation.Nonnull
 
-class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter() {
 
+
+
+class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter(), AudioProvider {
+
+    private val buffer = ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize())
     private var lastFrame: AudioFrame? = null
     val queue = mutableListOf<AudioTrack>()
     private var lastTrack: AudioTrack? = null
@@ -79,6 +91,27 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
 //    }
 //
 //    override fun isOpus(): Boolean = true
+
+
+    // ----------------------------------------------
+    // catnip SEND HANDLER HOOKS
+    // ----------------------------------------------
+
+    override fun canProvide(): Boolean {
+        lastFrame = player.provide()
+       return lastFrame != null
+    }
+
+    override fun provide(): ByteBuffer {
+        if (lastFrame is ImmutableAudioFrame) {
+            lastFrame!!.getData(buffer.array(), lastFrame!!.dataLength)
+        } else {
+            lastFrame!!.getData(buffer.array(), 0)
+        }
+        return buffer.position(0).limit(lastFrame!!.dataLength)
+    }
+
+    override fun isOpus(): Boolean = true
 
 
     // ----------------------------------------------

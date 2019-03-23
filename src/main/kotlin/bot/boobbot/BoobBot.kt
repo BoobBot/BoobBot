@@ -13,6 +13,7 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import com.github.natanbc.catnipvoice.CatnipVoice
 import com.mewna.catnip.Catnip
 import com.mewna.catnip.CatnipOptions
 import com.mewna.catnip.cache.CacheFlag
@@ -21,6 +22,7 @@ import com.mewna.catnip.entity.user.Presence
 import com.mewna.catnip.shard.DiscordEvent
 import com.mewna.catnip.shard.manager.DefaultShardManager
 import com.mewna.catnip.util.CatnipMeta
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
@@ -39,7 +41,7 @@ import java.util.concurrent.Executors
 import kotlin.collections.firstOrNull
 import kotlin.collections.forEach
 import kotlin.collections.set
-
+import com.github.natanbc.catnipvoice.magma.MagmaHandler
 
 class BoobBot {
 
@@ -71,7 +73,8 @@ class BoobBot {
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
-
+        var sendFactory = NativeAudioSendFactory()
+        var voiceHandler = MagmaHandler(sendFactory)
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
         var scheduler = Executors.newSingleThreadScheduledExecutor()
@@ -126,6 +129,7 @@ class BoobBot {
             val handler = MessageHandler()
 
             catnip = Catnip.catnip(opts).connect()
+            catnip.loadExtension(CatnipVoice(voiceHandler))
             catnip.on(DiscordEvent.MESSAGE_CREATE) {
                 waiter.checkMessage(it)
                 handler.processMessage(it)
@@ -172,6 +176,8 @@ class BoobBot {
             val manager = musicManagers.computeIfAbsent(g.id()) {
                 GuildMusicManager(g.id(), playerManager.createPlayer())
             }
+            val voiceExtension = catnip.extensionManager().extension(CatnipVoice::class.java)
+            voiceExtension!!.setAudioProvider(g.id(), manager)
 //            val audioManager = g.audioManager
 //
 //            if (audioManager.sendingHandler == null) {
