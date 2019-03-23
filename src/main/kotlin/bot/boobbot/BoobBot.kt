@@ -201,7 +201,11 @@ class BoobBot {
             val online = BooleanArray(catnip.shardManager().shardCount())
 
             for (shard in catnip.shardManager().shardIds()) {
-                online[shard] = catnip.shardManager().isConnected(shard).await()
+                try {
+                    online[shard] = catnip.shardManager().isConnected(shard).await()
+                } catch (e: Exception) {
+                    online[shard] = false
+                }
             }
 
             return online.toList()
@@ -211,7 +215,11 @@ class BoobBot {
             val latency = LongArray(catnip.shardManager().shardCount())
 
             for (shard in catnip.shardManager().shardIds()) {
-                latency[shard] = catnip.shardManager().latency(shard).await()
+                try {
+                    latency[shard] = catnip.shardManager().latency(shard).await()
+                } catch (e: Exception) {
+                    latency[shard] = -1
+                }
             }
 
             return latency.toList()
