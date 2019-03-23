@@ -18,7 +18,13 @@ class MessageHandler {
     //private val noSpam = mutableListOf<Long>()
 
     fun processMessage(event: Message) {
-        executor.submit { onMessageReceived(event) }
+        executor.submit {
+            try {
+                onMessageReceived(event)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun onMessageReceived(event: Message) {
@@ -92,12 +98,13 @@ class MessageHandler {
                 )
             )
             return
-            /* event.channel.sendMessage(
+                /* event.channel.sendMessage(
                  Formats.info(
                      "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
                              + "<:p_:475801484282429450> Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
                  )
              ).queue()*/
+            }
         }
 
 //        //shit cool-down

@@ -4,6 +4,7 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
+import bot.boobbot.flight.EventWaiter
 import bot.boobbot.handlers.MessageHandler
 //import bot.boobbot.flight.EventWaiter
 import bot.boobbot.misc.ApiServer
@@ -68,7 +69,7 @@ class BoobBot {
         val config = Config.load()
 
         val commands = HashMap<String, Command>()
-        //val waiter = EventWaiter()
+        val waiter = EventWaiter()
         val requestUtil = RequestUtil()
 
         val playerManager = DefaultAudioPlayerManager()
@@ -125,7 +126,10 @@ class BoobBot {
             val handler = MessageHandler()
 
             catnip = Catnip.catnip(opts).connect()
-            catnip.on(DiscordEvent.MESSAGE_CREATE) { handler.processMessage(it) }
+            catnip.on(DiscordEvent.MESSAGE_CREATE) {
+                waiter.checkMessage(it)
+                handler.processMessage(it)
+            }
 
 //                .setAudioSendFactory(NativeAudioSendFactory())
 //                .addEventListeners(MessageHandler(), EventHandler(), waiter)

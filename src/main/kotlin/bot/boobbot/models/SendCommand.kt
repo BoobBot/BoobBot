@@ -25,32 +25,29 @@ abstract class SendCommand(private val category: String, private val endpoint: S
 
         val prompt = ctx.dmUserAsync(
             user,
-            "${ctx.author.username()} has sent you some NSFW $category!\nAre you 18+ and wish to view this content?"
+            "${ctx.author.username()} has sent you some NSFW $category!\nAre you 18+ and wish to view this content? (`y`/`n`)"
         )
             ?: return ctx.send("hey, this whore ${user.username()} has me blocked or their filter turned on \uD83D\uDD95")
 
         ctx.send("Good job ${ctx.author.asMention()}")
 
-        prompt.react("yes:443810942221025280").await()
-        prompt.react("no:443810942099390464").await()
+        val res = BoobBot.waiter.waitForMessage({
+            //println("${prompt.channelId()}-${it.channelId()}")
+            it.channelId() == prompt.channelId() &&
+             it.content().toLowerCase() == "y" || it.content().toLowerCase() == "n"
+        }, 60000).await() ?: return ctx.send("${user.username()} didn't respond") // timeout
 
-//        val emote = BoobBot.waiter.waitFor(PrivateMessageReactionAddEvent::class.java, {
-//            it.user.idLong == ctx.author.idLong
-//                    && it.reactionEmote != null
-//                    && (it.reactionEmote.idLong == 443810942221025280L || it.reactionEmote.idLong == 443810942099390464L)
-//        }, 60000).await() ?: return ctx.send("${user.name} didn't respond") // timeout
+        prompt.delete().await()
 
-        //prompt.delete().await()
+        if (res.content().toLowerCase() == "y") { // yes
+            val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
+                .await()?.json()?.getString("url")
+                ?: return ctx.send("wtf, api down?")
 
-//        if (emote.reactionEmote.idLong == 443810942221025280L) { // yes
-//            val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
-//                .await()?.json()?.getString("url")
-//                ?: return ctx.send("wtf, api down?")
-//
-//            ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
-//        } else {
-//            ctx.dmUserAsync(user, "Alright then, I won't.")
-//        }
+            ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
+        } else {
+            ctx.dmUserAsync(user, "Alright then, I won't.")
+        }
 
     }
 
