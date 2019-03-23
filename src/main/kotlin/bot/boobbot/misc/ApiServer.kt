@@ -110,7 +110,11 @@ class ApiServer {
             val pings = JSONArray()
 
             allLatencies.forEachIndexed { index, l ->
-                val s = mapOf(index to l)
+                val s = mapOf(
+                    "shard" to index,
+                    "ping" to l,
+                    "status" to "UNKNOWN"
+                )
                 pings.put(JSONObject(s))
             }
 
