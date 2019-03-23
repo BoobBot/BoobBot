@@ -14,6 +14,7 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.mewna.catnip.Catnip
 import com.mewna.catnip.CatnipOptions
+import com.mewna.catnip.cache.CacheFlag
 import com.mewna.catnip.entity.guild.Guild
 import com.mewna.catnip.entity.user.Presence
 import com.mewna.catnip.shard.DiscordEvent
@@ -118,17 +119,16 @@ class BoobBot {
                         Presence.Activity.of("bbhelp || bbinvite", Presence.ActivityType.PLAYING)
                     )
                 )
-                .shardManager(DefaultShardManager())
+                .shardManager(DefaultShardManager(shards))
+                .cacheFlags(EnumSet.of(CacheFlag.DROP_GAME_STATUSES, CacheFlag.DROP_EMOJI))
 
             val handler = MessageHandler()
 
             catnip = Catnip.catnip(opts).connect()
             catnip.on(DiscordEvent.MESSAGE_CREATE) { handler.processMessage(it) }
 
-//                .setGame(Game.playing("bbhelp | bbinvite"))
 //                .setAudioSendFactory(NativeAudioSendFactory())
 //                .addEventListeners(MessageHandler(), EventHandler(), waiter)
-//                .build()
 
             loadCommands()
             ApiServer().startServer()
