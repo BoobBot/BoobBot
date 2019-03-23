@@ -104,7 +104,6 @@ class MessageHandler {
                              + "<:p_:475801484282429450> Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
                  )
              ).queue()*/
-            }
         }
 
 //        //shit cool-down
