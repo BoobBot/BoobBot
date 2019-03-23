@@ -125,7 +125,7 @@ class BoobBot {
                     )
                 )
                 .shardManager(DefaultShardManager(shards))
-                .cacheFlags(EnumSet.of(CacheFlag.DROP_GAME_STATUSES, CacheFlag.DROP_EMOJI))
+                //.cacheFlags(EnumSet.of(CacheFlag.DROP_GAME_STATUSES, CacheFlag.DROP_EMOJI))
 
             val handler = MessageHandler()
 
