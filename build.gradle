@@ -34,7 +34,7 @@ repositories {
 
 
 dependencies {
-    implementation "com.github.mewna:catnip:1.0.1"
+    implementation "com.github.mewna:catnip:$catnip_version"
     implementation "com.github.natanbc:catnip-voice:$catnip_voice_version"
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
