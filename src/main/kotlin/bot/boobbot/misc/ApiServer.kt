@@ -45,7 +45,7 @@ class ApiServer {
              return true
          }*/
 
-        fun getStats(): JSONObject {
+        suspend fun getStats(): JSONObject {
             val dpFormatter = DecimalFormat("0.00")
             val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
             val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
@@ -55,10 +55,9 @@ class ApiServer {
             val users = BoobBot.catnip.cache().users().size()
 
             val shards = BoobBot.catnip.shardManager().shardCount()
-            //val shardsOnline =
-                //BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
-                    //.count()
-            //val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+            val shardsOnline = BoobBot.getOnlineShards().size
+            val allLatencies = BoobBot.getShardLatencies()
+            val averageShardLatency = allLatencies.sum() / allLatencies.size
 
             val osBean: OperatingSystemMXBean =
                 ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
@@ -100,20 +99,21 @@ class ApiServer {
                 .put("Users", users)
                 .put("Audio_Players", players)
                 .put("Auto_Porn_Channels", BoobBot.autoPornChannels)
-                //.put("Shards_Online", "$shardsOnline/$shards")
-                //.put("Average_Latency", "${averageShardLatency}ms")
+                .put("Shards_Online", "$shardsOnline/$shards")
+                .put("Average_Latency", "${averageShardLatency}ms")
 
             return JSONObject().put("bb", bb).put("jvm", jvm)
         }
 
-        fun getPings(): JSONArray {
+        suspend fun getPings(): JSONArray {
+            val allLatencies = BoobBot.getShardLatencies()
             val pings = JSONArray()
-            //for (e in BoobBot.shardManager.statuses.entries) pings.put(
-            //    JSONObject().put(
-            //        "shard",
-            //        e.key.shardInfo.shardId
-            //    ).put("ping", e.key.ping).put("status", e.value)
-            //)
+
+            allLatencies.forEachIndexed { index, l ->
+                val s = mapOf(index to l)
+                pings.put(JSONObject(s))
+            }
+
             return pings
         }
 
