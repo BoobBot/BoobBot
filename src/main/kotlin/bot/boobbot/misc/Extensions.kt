@@ -20,5 +20,6 @@ fun <T> CompletionStage<T>.thenException(handler: ((Throwable) -> Unit)?): Compl
 }
 
 fun GuildChannel.canTalk(): Boolean {
-    return this.asTextChannel().guild().selfMember().hasPermissions(this.asTextChannel(), Permission.SEND_MESSAGES)
+    val guild = this.catnip().cache().guild(guildIdAsLong()) ?: return false
+    return guild.selfMember().hasPermissions(this, Permission.SEND_MESSAGES)
 }
