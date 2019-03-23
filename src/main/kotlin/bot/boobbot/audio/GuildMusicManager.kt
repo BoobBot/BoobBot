@@ -15,9 +15,6 @@ import org.springframework.core.convert.TypeDescriptor.array
 import com.sedmelluq.discord.lavaplayer.track.playback.ImmutableAudioFrame
 import javax.annotation.Nonnull
 
-
-
-
 class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter(), AudioProvider {
 
     private val buffer = ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize())
@@ -74,32 +71,13 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
         }
     }
 
-
-    // ----------------------------------------------
-    // JDA SEND HANDLER HOOKS
-    // ----------------------------------------------
-
-//    override fun provide20MsAudio(): ByteArray {
-//        return lastFrame!!.data
-//        // We know this won't be null here as JDA will only call this if canProvide is true
-//        // And we already do null checks in canProvide
-//    }
-//
-//    override fun canProvide(): Boolean {
-//        lastFrame = player.provide()
-//        return lastFrame != null
-//    }
-//
-//    override fun isOpus(): Boolean = true
-
-
     // ----------------------------------------------
     // catnip SEND HANDLER HOOKS
     // ----------------------------------------------
 
     override fun canProvide(): Boolean {
         lastFrame = player.provide()
-       return lastFrame != null
+        return lastFrame != null
     }
 
     override fun provide(): ByteBuffer {
@@ -111,7 +89,7 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
         return buffer.position(0).limit(lastFrame!!.dataLength)
     }
 
-    override fun isOpus(): Boolean = true
+    override fun isOpus() = true
 
 
     // ----------------------------------------------

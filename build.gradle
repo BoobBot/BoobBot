@@ -34,7 +34,7 @@ repositories {
 
 
 dependencies {
-    implementation "com.mewna:catnip:$catnip_version"
+    implementation "com.github.mewna:catnip:1.0.1"
     implementation "com.github.natanbc:catnip-voice:$catnip_voice_version"
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
@@ -54,7 +54,7 @@ dependencies {
     implementation 'org.codehaus.groovy:groovy:2.5.2'
     implementation "com.google.code.gson:gson:2.8.5"
     implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
-
+    implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
 }
 
 shadowJar {
@@ -67,4 +67,9 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 1, 'seconds'
+    resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
 }

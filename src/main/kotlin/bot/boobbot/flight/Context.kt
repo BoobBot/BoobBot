@@ -43,7 +43,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
         val ids = mutableListOf<String>()
 
         while (matcher.find()) {
-            ids.add(matcher.group())
+            ids.add(matcher.group(1))
         }
 
         mentionedChannels = ids.mapNotNull { guild?.channel(it)?.asTextChannel() }.toList()
@@ -56,7 +56,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
 
     fun botCan(check: Permission): Boolean {
         return channel.isDM ||
-                textChannel != null && member?.hasPermissions(textChannel, check) ?: false
+                textChannel != null && selfMember?.hasPermissions(textChannel, check) ?: false
     }
 
     fun dm(embed: Embed) {

@@ -11,6 +11,7 @@ import bot.boobbot.misc.ApiServer
 import bot.boobbot.misc.RequestUtil
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
+import bot.boobbot.models.Database
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.github.natanbc.catnipvoice.CatnipVoice
@@ -59,8 +60,8 @@ class BoobBot {
         lateinit var catnip: Catnip
             private set
 
-        var isReady = false
-            internal set
+        //var isReady = false
+        //    internal set
 
         var setGame = false
             internal set
@@ -69,12 +70,13 @@ class BoobBot {
             internal set
 
         val config = Config.load()
+        val database = Database()
 
         val commands = HashMap<String, Command>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
-        var sendFactory = NativeAudioSendFactory()
-        var voiceHandler = MagmaHandler(sendFactory)
+        val sendFactory = NativeAudioSendFactory()
+        val voiceHandler = MagmaHandler(sendFactory)
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
         var scheduler = Executors.newSingleThreadScheduledExecutor()
@@ -130,12 +132,12 @@ class BoobBot {
 
             catnip = Catnip.catnip(opts).connect()
             catnip.loadExtension(CatnipVoice(voiceHandler))
+
             catnip.on(DiscordEvent.MESSAGE_CREATE) {
                 waiter.checkMessage(it)
                 handler.processMessage(it)
             }
 
-//                .setAudioSendFactory(NativeAudioSendFactory())
 //                .addEventListeners(MessageHandler(), EventHandler(), waiter)
 
             loadCommands()
@@ -176,13 +178,9 @@ class BoobBot {
             val manager = musicManagers.computeIfAbsent(g.id()) {
                 GuildMusicManager(g.id(), playerManager.createPlayer())
             }
+
             val voiceExtension = catnip.extensionManager().extension(CatnipVoice::class.java)
             voiceExtension!!.setAudioProvider(g.id(), manager)
-//            val audioManager = g.audioManager
-//
-//            if (audioManager.sendingHandler == null) {
-//                audioManager.sendingHandler = manager
-//            }
 
             return manager
         }

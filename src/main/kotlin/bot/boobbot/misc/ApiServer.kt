@@ -142,7 +142,6 @@ class ApiServer {
             install(ForwardedHeaderSupport)
             install(XForwardedHeaderSupport)
             install(ContentNegotiation) {
-
                 gson {
                     setPrettyPrinting()
                     disableHtmlEscaping()
