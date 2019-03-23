@@ -76,6 +76,7 @@ class Magik : AsyncCommand {
 
         val opts = MessageOptions()
             .addFile("magik.png", body.byteStream())
+            .content("\u200b")
 
         ctx.channel.sendMessage(opts)
     }
