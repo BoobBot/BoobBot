@@ -19,8 +19,14 @@ import java.util.regex.Pattern
 )
 class AutoPorn : Command {
 
-    private val types = arrayListOf("gif", "boobs", "ass", "gay", "random")
-    private val typeString = types.joinToString(", ")
+    private val types = mapOf(
+        "gif" to "Gifs",
+        "boobs" to "boobs",
+        "ass" to "ass",
+        "gay" to "gay",
+        "random" to "nsfw"
+    )
+    private val typeString = types.entries.joinToString(", ")
 
     private val webhookRegex = Pattern.compile("https?://(\\w+\\.)?discordapp\\.com/api/webhooks/(\\d+)/([a-zA-Z0-9-_]+)")
 
@@ -54,7 +60,7 @@ class AutoPorn : Command {
             "set" -> {
                 if (ctx.args.size < 2 ||
                     ctx.args[1].isEmpty() ||
-                    !types.contains(ctx.args[1].toLowerCase()) ||
+                    !types.containsKey(ctx.args[1].toLowerCase()) ||
                     ctx.mentionedChannels.isEmpty()
                 ) {
                     return ctx.embed {
@@ -78,8 +84,8 @@ class AutoPorn : Command {
 
                 ctx.catnip.rest().channel().createWebhook(channel.id(), "BoobBot", null, "Auto-Porn setup")
                     .thenAccept {
-                        val url = formatWebhookUrl(it.channelId(), it.token())
-                        BoobBot.database.setWebhook(ctx.guild!!.id(), url)
+                        val url = formatWebhookUrl(it.id(), it.token())
+                        BoobBot.database.setWebhook(ctx.guild!!.id(), url, types.getValue(ctx.args[1]), channel.id())
 
                         ctx.embed {
                             color(Color.red)
@@ -113,14 +119,7 @@ class AutoPorn : Command {
                     description("Wtf, this server doesn't even have Auto-Porn set up?")
                 }
 
-                println(wh)
-                val channelId = getChannelId(wh) ?: return ctx.embed {
-                    color(Color.red)
-                    description("Shit, something went wrong. The error has been logged\n" +
-                            "You should be able to work around this by using the `set` subcommand again.")
-                }
-
-                val channel = ctx.guild.channel(channelId)
+                val channel = ctx.guild.channel(wh.getString("channelId"))
 
                 if (channel == null) {
                     BoobBot.database.deleteWebhook(ctx.guild.id())
@@ -131,10 +130,11 @@ class AutoPorn : Command {
                     }
                 }
 
+                val category = wh.getString("category")
 
                 ctx.embed {
                     color(Color.red)
-                    description("Auto-Porn is set up for ${channel.asTextChannel().asMention()}")
+                    description("Auto-Porn is set up for ${channel.asTextChannel().asMention()} (**$category**)")
                 }
             }
 

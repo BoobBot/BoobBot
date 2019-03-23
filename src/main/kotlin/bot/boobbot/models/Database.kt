@@ -14,15 +14,19 @@ class Database {
     private val webhooks = autoPorn.getCollection("webhooks")
 
 
-    fun getWebhook(guildId: String): String? {
+    fun getWebhook(guildId: String): Document? {
         return webhooks.find(BasicDBObject("_id", guildId))
-            .first()?.getString("webhook")
+            .firstOrNull()
     }
 
-    fun setWebhook(guildId: String, webhookUrl: String) {
+    fun setWebhook(guildId: String, webhookUrl: String, category: String, channelId: String) {
+        val doc = Document("webhook", webhookUrl)
+            .append("category", category)
+            .append("channelId", channelId)
+
         webhooks.updateOne(
             eq("_id", guildId),
-            Document("\$set", Document("webhook", webhookUrl)),
+            Document("\$set", doc),
             UpdateOptions().upsert(true)
         )
     }
