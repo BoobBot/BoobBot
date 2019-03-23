@@ -43,7 +43,7 @@ class MessageHandler {
 //        }
 
         if (event.channel().isGuild) {
-            if (event.guild()?.unavailable() == true || !event.channel().asTextChannel().canTalk()) {
+            if (event.guild()!!.unavailable() || !event.channel().asTextChannel().canTalk()) {
                 return
             }
 
