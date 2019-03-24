@@ -8,9 +8,9 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.models.Config
-import com.mewna.catnip.entity.message.Message
 import groovy.lang.Binding
 import groovy.lang.GroovyShell
+import net.dv8tion.jda.core.entities.Message
 import java.util.concurrent.Executors
 
 
@@ -48,16 +48,16 @@ class Eval : Command {
     private fun createShell(e: Message): GroovyShell {
         val binding = Binding()
         binding.setVariable("log", BoobBot.log)
-        binding.setVariable("sm", BoobBot.catnip.shardManager())
-        binding.setVariable("catnip", BoobBot.catnip)
+        binding.setVariable("sm", BoobBot.shardManager)
+        binding.setVariable("jda", e.jda)
         binding.setVariable("getEffectiveColor", Colors.getEffectiveColor(e))
-        binding.setVariable("channel", e.channel())
-        binding.setVariable("author", e.author())
+        binding.setVariable("channel", e.channel)
+        binding.setVariable("author", e.author)
         binding.setVariable("message", e)
 //        binding.setVariable("Misc", Misc::class.java)
         binding.setVariable("msg", e)
         binding.setVariable("owner", Config.owners)
-        binding.setVariable("guild", e.guild())
+        binding.setVariable("guild", e.guild)
         return GroovyShell(binding)
     }
 

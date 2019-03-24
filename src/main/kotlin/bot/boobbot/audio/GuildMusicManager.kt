@@ -1,23 +1,15 @@
 package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
-import com.github.natanbc.catnipvoice.AudioProvider
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
-import com.github.natanbc.catnipvoice.ExampleBot
-import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats
-import java.nio.ByteBuffer
-import org.xnio.Buffers.position
-import org.springframework.core.convert.TypeDescriptor.array
-import com.sedmelluq.discord.lavaplayer.track.playback.ImmutableAudioFrame
-import javax.annotation.Nonnull
+import net.dv8tion.jda.core.audio.AudioSendHandler
 
-class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter(), AudioProvider {
+class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
-    private val buffer = ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize())
     private var lastFrame: AudioFrame? = null
     val queue = mutableListOf<AudioTrack>()
     private var lastTrack: AudioTrack? = null
@@ -80,13 +72,8 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
         return lastFrame != null
     }
 
-    override fun provide(): ByteBuffer {
-        if (lastFrame is ImmutableAudioFrame) {
-            lastFrame!!.getData(buffer.array(), lastFrame!!.dataLength)
-        } else {
-            lastFrame!!.getData(buffer.array(), 0)
-        }
-        return buffer.position(0).limit(lastFrame!!.dataLength)
+    override fun provide20MsAudio(): ByteArray {
+        return lastFrame!!.data
     }
 
     override fun isOpus() = true

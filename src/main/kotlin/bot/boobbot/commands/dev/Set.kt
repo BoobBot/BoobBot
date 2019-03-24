@@ -6,9 +6,8 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.thenException
-import com.mewna.catnip.entity.user.Presence
-import com.mewna.catnip.entity.util.Permission
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Game
 
 
 @CommandProperties(description = "Settings", category = Category.DEV, developerOnly = true)
@@ -40,7 +39,7 @@ class Set : Command {
                     "playing" -> {
 
                         BoobBot.setGame = true
-                        BoobBot.catnip.game(game, Presence.ActivityType.PLAYING, null)
+                        BoobBot.shardManager.setGame(Game.playing(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -48,7 +47,7 @@ class Set : Command {
                     "listening" -> {
 
                         BoobBot.setGame = true
-                        BoobBot.catnip.game(game, Presence.ActivityType.LISTENING, null)
+                        BoobBot.shardManager.setGame(Game.listening(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -56,7 +55,7 @@ class Set : Command {
                     "watching" -> {
 
                         BoobBot.setGame = true
-                        BoobBot.catnip.game(game, Presence.ActivityType.WATCHING, null)
+                        BoobBot.shardManager.setGame(Game.watching(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -67,7 +66,7 @@ class Set : Command {
                         val name = ctx.args.drop(3).joinToString(" ")
 
                         BoobBot.setGame = true
-                        BoobBot.catnip.game(name, Presence.ActivityType.WATCHING, url)
+                        BoobBot.shardManager.setGame(Game.streaming(name, url))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -75,7 +74,7 @@ class Set : Command {
                     "clear" -> {
 
                         BoobBot.setGame = false
-                        BoobBot.catnip.game("bbhelp || bbinvite", Presence.ActivityType.PLAYING, null)
+                        BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
                         ctx.send(Formats.info("Yes daddy, cleared game"))
 
                     }
@@ -92,7 +91,7 @@ class Set : Command {
                     return ctx.send("This can only be run in a guild")
                 }
 
-                if (ctx.botCan(Permission.CHANGE_NICKNAME)) {
+                if (ctx.botCan(Permission.NICKNAME_CHANGE)) {
                     val newNickname = ctx.args.drop(1).joinToString(" ")
                     ctx.guild.changeNickName(newNickname, "BoobBot nick set")
                         .thenAccept {

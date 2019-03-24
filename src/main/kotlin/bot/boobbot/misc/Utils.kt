@@ -1,12 +1,11 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.BoobBot.Companion.getMusicManager
-import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
 import bot.boobbot.models.Config
-import com.mewna.catnip.entity.message.Message
-import com.mewna.catnip.entity.user.User
+import net.dv8tion.jda.core.entities.ChannelType
+import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.User
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -52,25 +51,25 @@ class Utils {
         )
 
         fun isDonor(user: User): Boolean {
-            val member = BoobBot.home?.member(user.id()) ?: return false
-            return member.roles().any { r -> r.idAsLong() == 528615837305929748L }
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 528615837305929748L }
         }
 
         fun isDonorPlus(user: User): Boolean {
-            val member = BoobBot.home?.member(user.id()) ?: return false
-            return member.roles().any { r -> r.idAsLong() == 528615882709008430L }
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 528615882709008430L }
         }
 
         fun checkDonor(event: Message): Boolean {
-            if (isDonor(event.author())) {
+            if (isDonor(event.author)) {
                 return true
             }
-            if (event.channel().isGuild) {
-                if (isDonorPlus(event.guild()!!.owner().user())) {
+            if (event.channelType.isGuild) {
+                if (isDonorPlus(event.guild!!.owner.user)) {
                     return true
                 }
             }
-            if (Config.owners.contains(event.author().idAsLong())) {
+            if (Config.owners.contains(event.author.idLong)) {
                 return true
             }
             return false
@@ -125,24 +124,24 @@ class Utils {
 
 
         fun logCommand(message: Message) =
-            if (message.channel().isDM) {
+            if (message.channelType == ChannelType.PRIVATE) {
                 val msg = MessageFormat.format(
                     "{3}: {0} Used {1} in DM ({2})",
-                    message.author().username(),
-                    message.content(),
-                    message.channel().id(),
+                    message.author.name,
+                    message.contentRaw,
+                    message.channel.id,
                     now()
                 )
                 BoobBot.log.info(msg)
             } else {
                 val msg = MessageFormat.format(
                     "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
-                    message.author().username(),
-                    message.content(),
-                    message.channel().asTextChannel().name(),
-                    message.channel().id(),
-                    message.guild()?.name(),
-                    message.guild()?.id(),
+                    message.author.name,
+                    message.contentRaw,
+                    message.channel.name,
+                    message.channel.id,
+                    message.guild!!.name,
+                    message.guild.id,
                     now()
                 )
                 BoobBot.log.info(msg)

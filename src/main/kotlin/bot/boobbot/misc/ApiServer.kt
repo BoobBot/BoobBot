@@ -51,11 +51,11 @@ class ApiServer {
             val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
             val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-            val servers = BoobBot.catnip.cache().guilds().size()
-            val users = BoobBot.catnip.cache().users().size()
+            val servers = BoobBot.shardManager.guildCache.size()
+            val users = BoobBot.shardManager.users.size
 
-            val shards = BoobBot.catnip.shardManager().shardCount()
-            val shardsOnline = BoobBot.getOnlineShards().filter { it }.size
+            val shards = BoobBot.shardManager.shardsTotal
+            val shardsOnline = BoobBot.getOnlineShards().size
             val allLatencies = BoobBot.getShardLatencies()
             val averageShardLatency = allLatencies.sum() / allLatencies.size
 

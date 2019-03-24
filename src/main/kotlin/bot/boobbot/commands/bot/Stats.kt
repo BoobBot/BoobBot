@@ -23,12 +23,12 @@ class Stats : AsyncCommand {
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-        val servers = BoobBot.catnip.cache().guilds().size()
-        val users = BoobBot.catnip.cache().users().size()
+        val servers = BoobBot.shardManager.guildCache.size()
+        val users = BoobBot.shardManager.userCache.size()
 
-        val shards = BoobBot.catnip.shardManager().shardCount()
-        val shardsOnline = BoobBot.getOnlineShards().filter { it }.size
-        val averageShardLatency = BoobBot.getShardLatencies().reduce { acc, l -> acc + l  } / BoobBot.catnip.shardManager().shardCount()
+        val shards = BoobBot.shardManager.shardsTotal
+        val shardsOnline = BoobBot.getOnlineShards().size
+        val averageShardLatency = BoobBot.getShardLatencies().reduce { acc, l -> acc + l  } / BoobBot.shardManager.shardsTotal
 
         val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)

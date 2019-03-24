@@ -21,8 +21,8 @@ class Moan : VoiceCommand {
 //        }
 //
         val musicManager = getMusicManager(ctx.guild!!)
-        val voiceState = catnip.cache().voiceState(ctx.guild.id(), ctx.message.author().id())
-        catnip.openVoiceConnection(ctx.guild.id(), voiceState!!.channelId()!!)
+        val voiceState = ctx.voiceState
+        //ctx.jda.openVoiceConnection(ctx.guild.id(), voiceState!!.channelId()!!)
         playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
     }
 

@@ -26,16 +26,15 @@ mainClassName = "bot.boobbot.BoobBot"
 
 
 repositories {
-    mavenCentral()
     jcenter()
+    mavenCentral()
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/kotlin/ktor" }
 }
 
 
 dependencies {
-    implementation "com.github.mewna:catnip:$catnip_version"
-    implementation "com.github.natanbc:catnip-voice:$catnip_voice_version"
+    compile "net.dv8tion:JDA:3.8.3_462"
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
