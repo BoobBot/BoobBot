@@ -42,6 +42,8 @@ import kotlin.collections.firstOrNull
 import kotlin.collections.forEach
 import kotlin.collections.set
 import com.github.natanbc.catnipvoice.magma.MagmaHandler
+import io.vertx.core.Vertx
+import io.vertx.core.VertxOptions
 
 class BoobBot {
 
@@ -129,7 +131,7 @@ class BoobBot {
 
             val handler = MessageHandler()
 
-            catnip = Catnip.catnip(opts).connect()
+            catnip = Catnip.catnip(opts, Vertx.vertx(VertxOptions().setEventLoopPoolSize(80))).connect()
             catnip.loadExtension(CatnipVoice(voiceHandler))
 
             catnip.on(DiscordEvent.MESSAGE_CREATE) {
