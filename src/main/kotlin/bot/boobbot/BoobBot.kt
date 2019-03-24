@@ -119,7 +119,7 @@ class BoobBot {
             }
 
             val opts = CatnipOptions(token)
-                .chunkMembers(true)
+                .chunkMembers(false)
                 .presence(
                     Presence.of(
                         Presence.OnlineStatus.ONLINE,
