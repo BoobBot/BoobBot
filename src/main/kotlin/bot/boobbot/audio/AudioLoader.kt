@@ -49,7 +49,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     private fun send(track: AudioTrack, trackIcon: String) {
         ctx.embed {
-            color(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.message))
             author("Music", track.info.uri, trackIcon)
             field(
                 "Enqueued Track",
