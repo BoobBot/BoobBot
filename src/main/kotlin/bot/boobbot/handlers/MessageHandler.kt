@@ -7,15 +7,17 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import java.util.concurrent.Executors
 
 class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
+    private val executor = Executors.newFixedThreadPool(1000)
 
-    override fun onMessageReceived(event: MessageReceivedEvent) {
+
+    private fun processMessage(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
         if (!BoobBot.isReady) {
@@ -69,7 +71,11 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(
+                event.textChannel,
+                Permission.MESSAGE_EMBED_LINKS
+            )
+        ) {
             event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
             return
         }
@@ -96,4 +102,14 @@ class MessageHandler : ListenerAdapter() {
         }
     }
 
+
+    override fun onMessageReceived(event: MessageReceivedEvent) {
+        executor.submit {
+            try {
+                processMessage(event)
+            } catch (e: Exception) {
+                BoobBot.log.error("on message", e)
+            }
+        }
+    }
 }
