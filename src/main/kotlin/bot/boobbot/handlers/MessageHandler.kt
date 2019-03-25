@@ -8,25 +8,14 @@ import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 
 class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-    //private val executor = Executors.newFixedThreadPool(300) // Adjust if needed.
 
-
-    //fun processMessage(event: Message) {
-        //executor.submit {
-        //    try {
-        //        onMessageReceived(event)
-        //    } catch (e: Exception) {
-        //        e.printStackTrace()
-        //    }
-        //}
-    //}
-
-    fun onMessageReceived(event: Message) {
+    override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
         if (!BoobBot.isReady) {
@@ -42,12 +31,12 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            if (event.mentionsEveryone()) {
+            if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
         }
 
-        val messageContent = event.contentRaw
+        val messageContent = event.message.contentRaw
         val acceptablePrefixes = arrayOf(
             botPrefix,
             "<@${event.jda.selfUser.id}> ",
@@ -85,7 +74,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (command.properties.donorOnly && !Utils.checkDonor(event)) {
+        if (command.properties.donorOnly && !Utils.checkDonor(event.message)) {
             event.channel.sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
@@ -97,13 +86,13 @@ class MessageHandler : ListenerAdapter() {
 
 
         try {
-            Utils.logCommand(event)
+            Utils.logCommand(event.message)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
-            command.execute(Context(trigger, event, args.toTypedArray()))
+            command.execute(Context(trigger, event.message, args.toTypedArray()))
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.addReaction("\uD83D\uDEAB").queue()
+            event.message.addReaction("\uD83D\uDEAB").queue()
         }
     }
 
