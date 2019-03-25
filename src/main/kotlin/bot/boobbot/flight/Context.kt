@@ -87,15 +87,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        val f = channel.sendMessage(message.build()).submit()
-
-        if (success != null) {
-            f.thenAccept(success)
-        }
-
-        if (failure != null) {
-            f.thenException(failure)
-        }
+        channel.sendMessage(message.build()).queue(success, failure)
     }
 
     companion object {
