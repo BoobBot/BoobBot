@@ -18,6 +18,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
@@ -45,19 +46,20 @@ class ApiServer {
              return true
          }*/
 
-        suspend fun getStats(): JSONObject {
+        fun getStats(): JSONObject {
             val dpFormatter = DecimalFormat("0.00")
             val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
             val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
             val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
             val servers = BoobBot.shardManager.guildCache.size()
-            val users = BoobBot.shardManager.users.size
+            val users = BoobBot.shardManager.userCache.size()
 
             val shards = BoobBot.shardManager.shardsTotal
-            val shardsOnline = BoobBot.getOnlineShards().size
-            val allLatencies = BoobBot.getShardLatencies()
-            val averageShardLatency = allLatencies.sum() / allLatencies.size
+            val shardsOnline =
+                BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
+                    .count()
+            val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
 
             val osBean: OperatingSystemMXBean =
                 ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
@@ -105,19 +107,14 @@ class ApiServer {
             return JSONObject().put("bb", bb).put("jvm", jvm)
         }
 
-        suspend fun getPings(): JSONArray {
-            val allLatencies = BoobBot.getShardLatencies()
+        fun getPings(): JSONArray {
             val pings = JSONArray()
-
-            allLatencies.forEachIndexed { index, l ->
-                val s = mapOf(
-                    "shard" to index,
-                    "ping" to l,
-                    "status" to "UNKNOWN"
-                )
-                pings.put(JSONObject(s))
-            }
-
+            for (e in BoobBot.shardManager.statuses.entries) pings.put(
+                JSONObject().put(
+                    "shard",
+                    e.key.shardInfo.shardId
+                ).put("ping", e.key.ping).put("status", e.value)
+            )
             return pings
         }
 
@@ -142,6 +139,7 @@ class ApiServer {
             install(ForwardedHeaderSupport)
             install(XForwardedHeaderSupport)
             install(ContentNegotiation) {
+
                 gson {
                     setPrettyPrinting()
                     disableHtmlEscaping()
@@ -205,7 +203,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val uri = call.request.uri
                     BoobBot.log.info("bad-Request uri: $uri")
-                    val local: RequestConnectionPoint = call.request.local
+                    val local : RequestConnectionPoint = call.request.local
                     val origin: RequestConnectionPoint = call.request.origin
                     BoobBot.log.info("${origin.host} ${local.host} ${origin.remoteHost}")
                     call.respond("no")
@@ -232,7 +230,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /health"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     call.respondText(
-                        "{\"health\": \"ok\", \"ping\": -1}", // fix
+                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}",
                         ContentType.Application.Json
                     )
                 }

@@ -6,6 +6,7 @@ import bot.boobbot.audio.AudioLoader
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.Utils.Companion.connectToVoiceChannel
 import bot.boobbot.misc.Utils.Companion.getRandomMoan
 import bot.boobbot.models.VoiceCommand
 
@@ -13,17 +14,16 @@ import bot.boobbot.models.VoiceCommand
 class Moan : VoiceCommand {
 
     override fun execute(ctx: Context) {
-//        val shouldPlay = performVoiceChecks(ctx)
-//
-//        if (!shouldPlay)
-//            return
-//        }
-//
-        val voiceState = ctx.voiceState ?: return ctx.send("Join a voicechannel whore")
-        val musicManager = getMusicManager(ctx.guild!!)
+        val shouldPlay = performVoiceChecks(ctx)
 
-        ctx.guild.audioManager.openAudioConnection(voiceState.channel)
+        if (!shouldPlay) {
+            return
+        }
+
+        val musicManager = getMusicManager(ctx.message.guild)
+        connectToVoiceChannel(ctx.message)
         playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
+
     }
 
 }

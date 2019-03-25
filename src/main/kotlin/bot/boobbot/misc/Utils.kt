@@ -1,11 +1,12 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import bot.boobbot.BoobBot.Companion.getMusicManager
+import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
 import bot.boobbot.models.Config
-import net.dv8tion.jda.core.entities.ChannelType
-import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.entities.User
+import net.dv8tion.jda.core.entities.*
+import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -112,15 +113,15 @@ class Utils {
 
         }
 
-//        fun disconnectFromVoice(channel: VoiceChannel) {
-//            getMusicManager(channel.guild).shutdown()
-//        }
+        fun disconnectFromVoice(channel: VoiceChannel) {
+            getMusicManager(channel.guild).shutdown()
+        }
 
-//        fun connectToVoiceChannel(message: Message) {
-//            if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
-//                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
-//            }
-//        }
+        fun connectToVoiceChannel(message: Message) {
+            if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
+                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
+            }
+        }
 
 
         fun logCommand(message: Message) =
@@ -180,17 +181,17 @@ class Utils {
             }
         }
 
-//        fun autoAvatar() {
-//            if (!manSetAvatar) {
-//                val icon = Icon.from(getRandomAvatar())
-//                val gm = GuildManager(BoobBot.home)
-//                gm.setIcon(icon).queue()
-//                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
-//                BoobBot.log.info("Setting New Guild icon/Avatar")
-//            }
-//        }
+        private fun autoAvatar() {
+            if (!manSetAvatar) {
+                val icon = Icon.from(getRandomAvatar())
+                val gm = GuildManager(BoobBot.home)
+                gm.setIcon(icon).queue()
+                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
+                BoobBot.log.info("Setting New Guild icon/Avatar")
+            }
+        }
 
-        //fun auto(): Runnable = Runnable { autoAvatar() }
+        fun auto(): Runnable = Runnable { autoAvatar() }
 
 
         inline fun suppressExceptions(block: () -> Unit) {

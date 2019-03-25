@@ -5,16 +5,18 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.misc.thenException
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.*
+import net.dv8tion.jda.core.managers.AudioManager
 import java.util.regex.Pattern
 
 class Context(val trigger: String, val message: Message, val args: Array<String>) {
     val client = message.jda
-
+    val jda: JDA = message.jda
     val guild: Guild? = message.guild
-    //val audioManager: AudioManager? = guild?.audioManager
+    val audioManager: AudioManager? = guild?.audioManager
 
     val selfUser = client.selfUser
     val selfMember = guild?.selfMember
@@ -29,18 +31,6 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     val audioPlayer: GuildMusicManager?
         get() = if (guild == null) null else BoobBot.getMusicManager(guild)
 
-//    val mentionedChannels: List<TextChannel>
-
-//    init {
-//        val matcher = channelMention.matcher(message.content)
-//        val ids = mutableListOf<String>()
-//
-//        while (matcher.find()) {
-//            ids.add(matcher.group(1))
-//        }
-//
-//        mentionedChannels = ids.mapNotNull { guild.getT(it)?.asTextChannel() }.toList()
-//    }
 
     fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean{
         return if (channel.type == ChannelType.PRIVATE) {

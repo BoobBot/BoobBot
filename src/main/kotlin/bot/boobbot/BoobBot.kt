@@ -5,6 +5,7 @@ import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.EventWaiter
+import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.ApiServer
 import bot.boobbot.misc.RequestUtil
@@ -18,10 +19,10 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
+
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
 import org.reflections.Reflections
-import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -33,11 +34,13 @@ import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDAInfo
+import net.dv8tion.jda.core.OnlineStatus
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.utils.cache.CacheFlag
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import org.slf4j.LoggerFactory
 
 class BoobBot {
 
@@ -46,17 +49,14 @@ class BoobBot {
         val startTime = System.currentTimeMillis()
         var autoPornChannels = 0
 
-        public const val selfId = 285480424904327179L
-        public const val inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
-
         var isDebug = false
             private set
 
         lateinit var shardManager: ShardManager
             private set
 
-        //var isReady = false
-        //    internal set
+        var isReady = false
+            internal set
 
         var setGame = false
             internal set
@@ -71,14 +71,13 @@ class BoobBot {
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
-        val musicManagers = ConcurrentHashMap<String, GuildMusicManager>()
-        var scheduler = Executors.newSingleThreadScheduledExecutor()
+        val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
+        var scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val metrics = Metrics.create()!!
 
         val home: Guild?
             get() = shardManager.getGuildById(config.homeGuild)
 
-        //val lbots = LBotsClient(285480424904327179, config.lbotsApiKey)
 
         @Throws(Exception::class)
         @JvmStatic
@@ -116,8 +115,10 @@ class BoobBot {
 
             shardManager = DefaultShardManagerBuilder()
                 .setToken(token)
-                .setGame(Game.playing("bbhelp || bbinvite"))
-                .addEventListeners(waiter, MessageHandler())
+                .setShardsTotal(config.shardCount)
+                .setGame(Game.playing("Booting...."))
+                .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                .addEventListeners(waiter, MessageHandler(), EventHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.GAME))
@@ -153,10 +154,8 @@ class BoobBot {
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {
-            val manager = musicManagers.computeIfAbsent(g.id) {
-                GuildMusicManager(g.id, playerManager.createPlayer())
-            }
-
+            val manager =
+                musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
             val audioManager = g.audioManager
 
             if (audioManager.sendingHandler == null) {
@@ -165,6 +164,7 @@ class BoobBot {
 
             return manager
         }
+
 
         public fun isAllShardsConnected(): Boolean {
             return shardManager.shards.all { it.status == JDA.Status.CONNECTED }

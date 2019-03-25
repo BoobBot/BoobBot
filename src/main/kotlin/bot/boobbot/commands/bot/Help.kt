@@ -10,6 +10,7 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.Permission
 import java.time.Instant
 
 @CommandProperties(
@@ -27,7 +28,7 @@ class Help : Command {
                 .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor(
                     "${ctx.selfUser?.name} help ${Formats.MAGIC_EMOTE}",
-                    BoobBot.inviteUrl,
+                    ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
                     ctx.selfUser.effectiveAvatarUrl
                 )
 
@@ -87,7 +88,7 @@ class Help : Command {
             .setColor(Colors.getEffectiveColor(ctx.message))
             .setAuthor(
                 "${ctx.selfUser.name} Command Info",
-                BoobBot.inviteUrl,
+                ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
                 ctx.selfUser.effectiveAvatarUrl
             )
             .addField(

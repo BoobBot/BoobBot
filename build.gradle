@@ -34,7 +34,7 @@ repositories {
 
 
 dependencies {
-    compile "net.dv8tion:JDA:3.8.3_462"
+    implementation "net.dv8tion:JDA:3.8.3_462"
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"

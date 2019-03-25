@@ -8,14 +8,15 @@ import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.hooks.ListenerAdapter
 
-class MessageHandler {
+class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
     //private val executor = Executors.newFixedThreadPool(300) // Adjust if needed.
-    //private val noSpam = mutableListOf<Long>()
 
-    fun processMessage(event: Message) {
+
+    //fun processMessage(event: Message) {
         //executor.submit {
         //    try {
         //        onMessageReceived(event)
@@ -23,22 +24,18 @@ class MessageHandler {
         //        e.printStackTrace()
         //    }
         //}
-    }
+    //}
 
     fun onMessageReceived(event: Message) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-//        if (!BoobBot.isReady) {
-//            return
-//        }
+        if (!BoobBot.isReady) {
+            return
+        }
 
         if (event.author.isBot) {
             return
         }
-//        if (shitUsers.getOrDefault(event.author.idLong, 0) > 75 && !Utils.checkDonor(event)) {
-//            BoobBot.log.warn("Shit user blocked ${event.author} on ${event.channel}")
-//            return
-//        }
 
         if (event.channelType.isGuild) {
             if (!event.guild!!.isAvailable || !event.textChannel.canTalk()) {
@@ -53,8 +50,8 @@ class MessageHandler {
         val messageContent = event.contentRaw
         val acceptablePrefixes = arrayOf(
             botPrefix,
-            "<@${BoobBot.selfId}> ",
-            "<@!${BoobBot.selfId}> "
+            "<@${event.jda.selfUser.id}> ",
+            "<@!${event.jda.selfUser.id}> "
         )
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
@@ -96,43 +93,7 @@ class MessageHandler {
                 )
             ).queue()
             return
-                /* event.channel.sendMessage(
-                 Formats.info(
-                     "This command is normally only available to our Patrons. But Merry Christmas, Enjoy until the 26th :^)\n"
-                             + "<:p_:475801484282429450> Still stop being a cheap fuck and join today!\n<https://www.patreon.com/OfficialBoobBot>"
-                 )
-             ).queue()*/
         }
-
-//        //shit cool-down
-//        if (noSpam.contains(event.author.idLong)) {
-//            BoobBot.log.warn("hit no spam ${event.author} on ${event.channel}")
-//            val allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
-//            return if (allSpamCount > 20 && 75-allSpamCount > 0) {
-//                event.channel.sendMessage(
-//                    Formats.error(
-//                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> \n:no_entry_sign: You have ${75-allSpamCount} warnings left until blacklist :middle_finger: :no_entry_sign:"
-//                    )
-//                ).queue()
-//
-//            } else {
-//                event.channel.sendMessage(
-//                    Formats.error(
-//                        "Slow down whore, don't spam me! <:dafuck:558146584148443136> "
-//                    )
-//                ).queue()
-//            }
-//        }
-
-//            if (!Utils.checkDonor(event)) {
-//                noSpam.add(event.author.idLong)
-//                var allSpamCount = shitUsers.getOrDefault(event.author.idLong, 0)
-//                allSpamCount++
-//                shitUsers[event.author.idLong] = allSpamCount
-//                Timer().schedule(1200) {
-//                    noSpam.remove(event.author.idLong)
-//                }
-//            }
 
 
         try {

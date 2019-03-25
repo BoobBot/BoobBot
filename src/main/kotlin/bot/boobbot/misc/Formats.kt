@@ -1,6 +1,8 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import net.dv8tion.jda.core.JDAInfo
+import net.dv8tion.jda.core.Permission
 import java.text.MessageFormat
 
 
@@ -159,42 +161,42 @@ class Formats {
             "Young & Old"
         )
 
-//        fun getReadyFormat(): String {
-//            val shardManager = BoobBot.shardManager
-//            val jda = shardManager.shards[0]
-//            val home = BoobBot.home
-//
-//            return MessageFormat.format(
-//                "Logging in {0}\n"
-//                        + "Oauth link: {1}\n"
-//                        + "JDA Version: {2}\n"
-//                        + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
-//                        + "Logged in as: {3} ({4})\n"
-//                        + "Guilds: {5}\n"
-//                        + "Shards: {6}\n"
-//                        + "Users: {7}\n"
-//                        + "Bots: {8}\n"
-//                        + "Total Users: {9}\n"
-//                        + "Home Guild: {10}\n"
-//                        + "Users: {11}\n"
-//                        + "Bots: {12}\n"
-//                        + "Total Users: {13}",
-//                BOOT_BANNER,
-//                jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
-//                JDAInfo.VERSION,
-//                jda.selfUser.name,
-//                jda.selfUser.id,
-//                shardManager.guilds.size,
-//                shardManager.shardsTotal,
-//                shardManager.users.filter { !it.isBot }.size,
-//                shardManager.users.filter { it.isBot }.size,
-//                shardManager.users.size,
-//                home?.name,
-//                home?.members?.filter { !it.user.isBot }?.size,
-//                home?.members?.filter { it.user.isBot }?.size,
-//                home?.members?.size
-//            )
-//        }
+        fun getReadyFormat(): String {
+            val shardManager = BoobBot.shardManager
+            val jda = shardManager.shards[0]
+            val home = BoobBot.home
+
+            return MessageFormat.format(
+                "Logging in {0}\n"
+                        + "Oauth link: {1}\n"
+                        + "JDA Version: {2}\n"
+                        + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
+                        + "Logged in as: {3} ({4})\n"
+                        + "Guilds: {5}\n"
+                        + "Shards: {6}\n"
+                        + "Users: {7}\n"
+                        + "Bots: {8}\n"
+                        + "Total Users: {9}\n"
+                        + "Home Guild: {10}\n"
+                        + "Users: {11}\n"
+                        + "Bots: {12}\n"
+                        + "Total Users: {13}",
+                BOOT_BANNER,
+                jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                JDAInfo.VERSION,
+                jda.selfUser.name,
+                jda.selfUser.id,
+                shardManager.guilds.size,
+                shardManager.shardsTotal,
+                shardManager.users.filter { !it.isBot }.size,
+                shardManager.users.filter { it.isBot }.size,
+                shardManager.users.size,
+                home?.name,
+                home?.members?.filter { !it.user.isBot }?.size,
+                home?.members?.filter { it.user.isBot }?.size,
+                home?.members?.size
+            )
+        }
 
         fun codeBox(text: String, lang: String): String {
             return MessageFormat.format("```{0}\n{1}```", lang, text)

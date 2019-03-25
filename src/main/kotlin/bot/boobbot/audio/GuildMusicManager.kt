@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
 import net.dv8tion.jda.core.audio.AudioSendHandler
 
-class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
+class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
     private var lastFrame: AudioFrame? = null
     val queue = mutableListOf<AudioTrack>()
@@ -63,20 +63,23 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
         }
     }
 
+
     // ----------------------------------------------
-    // catnip SEND HANDLER HOOKS
+    // JDA SEND HANDLER HOOKS
     // ----------------------------------------------
+
+    override fun provide20MsAudio(): ByteArray {
+        return lastFrame!!.data
+        // We know this won't be null here as JDA will only call this if canProvide is true
+        // And we already do null checks in canProvide
+    }
 
     override fun canProvide(): Boolean {
         lastFrame = player.provide()
         return lastFrame != null
     }
 
-    override fun provide20MsAudio(): ByteArray {
-        return lastFrame!!.data
-    }
-
-    override fun isOpus() = true
+    override fun isOpus(): Boolean = true
 
 
     // ----------------------------------------------
@@ -91,17 +94,17 @@ class GuildMusicManager(val guildId: String, val player: AudioPlayer) : AudioEve
         player.stopTrack()
         player.destroy()
 
-//        val guild = BoobBot.shardManager.getGuildById(guildId)
-//
-//        if (guild != null) {
-//            guild.audioManager.sendingHandler = null
-//            disconnect()
-//        }
+        val guild = BoobBot.shardManager.getGuildById(guildId)
+
+        if (guild != null) {
+            guild.audioManager.sendingHandler = null
+            disconnect()
+        }
 
         BoobBot.musicManagers.remove(guildId)
     }
 
     public fun disconnect() {
-        //BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
+        BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
     }
 }

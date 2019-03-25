@@ -8,6 +8,7 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.User
 import org.apache.commons.lang3.StringUtils
 import java.time.Instant
@@ -52,7 +53,7 @@ class Queue : VoiceCommand {
         ctx.embed {
             setAuthor(
                 "Current playlist",
-                BoobBot.inviteUrl,
+                ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
                 ctx.selfUser.effectiveAvatarUrl
             )
             setColor(Colors.getEffectiveColor(ctx.message))
