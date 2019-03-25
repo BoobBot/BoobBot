@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit
 
 
 class EventHandler : ListenerAdapter() {
-    var self: User? = null // just to hold self for discon webhooks
-
     private val shardHook = WebhookClientBuilder(config.readyWebhook).build()
     private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
     private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
@@ -68,7 +66,6 @@ class EventHandler : ListenerAdapter() {
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
             }
-            self = event.jda.selfUser // set
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Game.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.getReadyFormat())
 
