@@ -44,7 +44,8 @@ class EventHandler : ListenerAdapter() {
                     .setAuthor(
                         username,
                         avatar,
-                        avatar)
+                        avatar
+                    )
                     .setTimestamp(Instant.now())
                     .apply(builder)
                     .build()
