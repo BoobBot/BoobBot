@@ -49,6 +49,9 @@ class BoobBot {
         val startTime = System.currentTimeMillis()
         var autoPornChannels = 0
 
+        public const val selfId = 285480424904327179L
+        public const val inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
+
         var isDebug = false
             private set
 

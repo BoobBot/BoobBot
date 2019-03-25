@@ -53,7 +53,7 @@ class Queue : VoiceCommand {
         ctx.embed {
             setAuthor(
                 "Current playlist",
-                ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                BoobBot.inviteUrl,
                 ctx.selfUser.effectiveAvatarUrl
             )
             setColor(Colors.getEffectiveColor(ctx.message))

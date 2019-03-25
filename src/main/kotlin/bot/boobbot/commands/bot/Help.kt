@@ -27,8 +27,8 @@ class Help : Command {
             val builder = EmbedBuilder()
                 .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor(
-                    "${ctx.selfUser?.name} help ${Formats.MAGIC_EMOTE}",
-                    ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                    "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
+                    BoobBot.inviteUrl,
                     ctx.selfUser.effectiveAvatarUrl
                 )
 
@@ -88,7 +88,7 @@ class Help : Command {
             .setColor(Colors.getEffectiveColor(ctx.message))
             .setAuthor(
                 "${ctx.selfUser.name} Command Info",
-                ctx.selfUser.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                BoobBot.inviteUrl,
                 ctx.selfUser.effectiveAvatarUrl
             )
             .addField(

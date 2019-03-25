@@ -43,7 +43,7 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message): Boolean {
-        return  message.jda.selfUser.idLong == message.author.idLong ||
+        return  BoobBot.selfId == message.author.idLong ||
                 message.contentRaw.toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
     }
 

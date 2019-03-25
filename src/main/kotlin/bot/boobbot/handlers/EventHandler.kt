@@ -43,7 +43,7 @@ class EventHandler : ListenerAdapter() {
                         event.jda.selfUser.effectiveAvatarUrl
                     ).setTitle(
                         "```Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}```",
-                        event.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR)
+                        BoobBot.inviteUrl
                     )
                     .setTimestamp(now()).build()
             ).setUsername(event.jda.selfUser.name).setAvatarUrl(event.jda.selfUser.effectiveAvatarUrl)
@@ -67,7 +67,7 @@ class EventHandler : ListenerAdapter() {
                         )
                         .setTitle(
                             "${event.jda.selfUser.name} Fully Ready",
-                            event.jda.asBot().getInviteUrl(Permission.ADMINISTRATOR)
+                            BoobBot.inviteUrl
                         )
                         .setThumbnail(event.jda.selfUser.effectiveAvatarUrl).addField(
                             "Ready info",
@@ -157,15 +157,14 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    override fun onGuildJoin(event: GuildJoinEvent?) {
+    override fun onGuildJoin(event: GuildJoinEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         if (!BoobBot.isReady) {
             return
         }
-        val jda = event!!.jda
         val guild = event.guild
         if (!setGame) {
-            event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+            BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
         }
         BoobBot.log.info("New Guild Joined ${guild.name}(${guild.id})")
         val em = EmbedBuilder()
@@ -177,7 +176,7 @@ class EventHandler : ListenerAdapter() {
             .addField(
                 Formats.info("info"),
                 "**${guild.jda.shardInfo}**\n" +
-                        "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
+                        "Guilds: **${BoobBot.shardManager.guilds.size}**\n" +
                         "Owner: **${guild.owner.effectiveName}**\n" +
                         "Guild Users: **${guild.members.size}**\n",
                 false
@@ -201,15 +200,14 @@ class EventHandler : ListenerAdapter() {
 
     }
 
-    override fun onGuildLeave(event: GuildLeaveEvent?) {
+    override fun onGuildLeave(event: GuildLeaveEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         if (!BoobBot.isReady) {
             return
         }
-        val jda = event!!.jda
         val guild = event.guild
         if (!setGame) {
-            event.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+            BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
         }
         BoobBot.log.info("Guild left ${guild.name}(${guild.id})")
         val guildLeaveClient = WebhookClientBuilder(config.glWebhook).build()
@@ -226,7 +224,7 @@ class EventHandler : ListenerAdapter() {
                             .addField(
                                 Formats.info("info"),
                                 "**${guild.jda.shardInfo}**\n" +
-                                        "Guilds: **${jda.asBot().shardManager.guilds.size}**\n" +
+                                        "Guilds: **${BoobBot.shardManager.guilds.size}**\n" +
                                         "Owner: **${guild.owner.effectiveName}**\n" +
                                         "Guild Users: **${guild.members.size}**\n",
                                 false

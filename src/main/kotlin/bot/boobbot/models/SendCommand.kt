@@ -15,7 +15,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
 
-        if (user.idLong == ctx.selfUser.idLong) {
+        if (user.idLong == BoobBot.selfId) {
             return ctx.send("Don't you fucking touch me whore, i will end you.")
         }
 

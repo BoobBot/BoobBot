@@ -1,5 +1,6 @@
 package bot.boobbot.models
 
+import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
@@ -15,7 +16,7 @@ abstract class FunCommand(private val category: String) : AsyncCommand {
             }
         }
         val user = ctx.message.mentionedUsers.first()
-        if (user.idLong == ctx.selfUser.idLong) {
+        if (user.idLong == BoobBot.selfId) {
             return ctx.send("Don't you fucking touch me whore, i will end you.")
         }
         if (user.idLong == ctx.author.idLong) {

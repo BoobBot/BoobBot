@@ -182,7 +182,7 @@ class Formats {
                         + "Bots: {12}\n"
                         + "Total Users: {13}",
                 BOOT_BANNER,
-                jda.asBot().getInviteUrl(Permission.ADMINISTRATOR),
+                BoobBot.inviteUrl,
                 JDAInfo.VERSION,
                 jda.selfUser.name,
                 jda.selfUser.id,

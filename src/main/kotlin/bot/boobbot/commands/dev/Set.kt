@@ -38,7 +38,7 @@ class Set : Command {
                     "playing" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.playing(game))
+                        BoobBot.shardManager.setGame(Game.playing(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -46,7 +46,7 @@ class Set : Command {
                     "listening" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.listening(game))
+                        BoobBot.shardManager.setGame(Game.listening(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -54,8 +54,7 @@ class Set : Command {
                     "watching" -> {
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot()
-                            .shardManager.setGame(Game.watching(game)) // There is probly a better way to do this
+                        BoobBot.shardManager.setGame(Game.watching(game))
                         ctx.send(Formats.info("Yes daddy, game set"))
 
                     }
@@ -66,7 +65,7 @@ class Set : Command {
                         val name = ctx.args.drop(3).joinToString(" ")
 
                         BoobBot.setGame = true
-                        ctx.jda.asBot().shardManager.setGame(Game.streaming(name, url))
+                        BoobBot.shardManager.setGame(Game.streaming(name, url))
                         ctx.send(Formats.info("Yes daddy, Stream set"))
 
                     }
@@ -74,7 +73,7 @@ class Set : Command {
                     "clear" -> {
 
                         BoobBot.setGame = false
-                        ctx.jda.asBot().shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+                        BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
                         ctx.send(Formats.info("Yes daddy, cleared game"))
 
                     }

@@ -14,10 +14,8 @@ import java.util.concurrent.Executors
 class MessageHandler : ListenerAdapter() {
 
     private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-    private val executor = Executors.newFixedThreadPool(1000)
 
-
-    private fun processMessage(event: MessageReceivedEvent) {
+    override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
         if (!BoobBot.isReady) {
@@ -41,8 +39,8 @@ class MessageHandler : ListenerAdapter() {
         val messageContent = event.message.contentRaw
         val acceptablePrefixes = arrayOf(
             botPrefix,
-            "<@${event.jda.selfUser.id}> ",
-            "<@!${event.jda.selfUser.id}> "
+            "<@${BoobBot.selfId}> ",
+            "<@!${BoobBot.selfId}> "
         )
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
@@ -99,17 +97,6 @@ class MessageHandler : ListenerAdapter() {
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()
-        }
-    }
-
-
-    override fun onMessageReceived(event: MessageReceivedEvent) {
-        executor.submit {
-            try {
-                processMessage(event)
-            } catch (e: Exception) {
-                BoobBot.log.error("on message", e)
-            }
         }
     }
 }
