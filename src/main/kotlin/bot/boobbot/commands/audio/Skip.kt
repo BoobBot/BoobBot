@@ -10,8 +10,7 @@ import bot.boobbot.models.VoiceCommand
 @CommandProperties(
     description = "Skips current playing track",
     category = Category.AUDIO,
-    guildOnly = true,
-    nsfw = true
+    guildOnly = true
 )
 class Skip : VoiceCommand {
 
