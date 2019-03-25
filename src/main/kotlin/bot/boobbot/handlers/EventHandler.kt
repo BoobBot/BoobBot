@@ -2,16 +2,13 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.config
-import bot.boobbot.BoobBot.Companion.setGame
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.OnlineStatus
-import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.DisconnectEvent
 import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.ReconnectedEvent
@@ -22,10 +19,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessage
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
-import org.apache.commons.lang3.StringUtils
 import java.awt.Color
 import java.time.Instant
-import java.time.Instant.now
 import java.util.concurrent.TimeUnit
 
 

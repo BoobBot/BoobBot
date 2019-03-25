@@ -1,7 +1,10 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.*
+import bot.boobbot.flight.Category
+import bot.boobbot.flight.Command
+import bot.boobbot.flight.CommandProperties
+import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import net.dv8tion.jda.core.Permission
 import java.awt.Color
@@ -27,7 +30,8 @@ class AutoPorn : Command {
     )
     private val typeString = types.entries.joinToString(", ")
 
-    private val webhookRegex = Pattern.compile("https?://(\\w+\\.)?discordapp\\.com/api/webhooks/(\\d+)/([a-zA-Z0-9-_]+)")
+    private val webhookRegex =
+        Pattern.compile("https?://(\\w+\\.)?discordapp\\.com/api/webhooks/(\\d+)/([a-zA-Z0-9-_]+)")
 
     public fun getChannelId(url: String): String? {
         val match = webhookRegex.matcher(url)

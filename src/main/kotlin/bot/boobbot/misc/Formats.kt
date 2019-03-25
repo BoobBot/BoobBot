@@ -2,7 +2,6 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.core.JDAInfo
-import net.dv8tion.jda.core.Permission
 import java.text.MessageFormat
 
 

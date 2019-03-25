@@ -34,7 +34,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val res = BoobBot.waiter.waitForMessage({
             //println("${prompt.channelId()}-${it.channelId()}")
             it.channel.id == prompt.channel.id &&
-             it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n"
+                    it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n"
         }, 60000).await() ?: return ctx.send("${user.name} didn't respond") // timeout
 
         prompt.delete().queue()

@@ -1,4 +1,3 @@
-
 package bot.boobbot.commands.audio
 
 import bot.boobbot.flight.Category

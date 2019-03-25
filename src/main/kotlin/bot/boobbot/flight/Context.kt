@@ -32,7 +32,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
         get() = if (guild == null) null else BoobBot.getMusicManager(guild)
 
 
-    fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean{
+    fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean {
         return if (channel.type == ChannelType.PRIVATE) {
             true
         } else {

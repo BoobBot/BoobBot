@@ -8,7 +8,6 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import java.util.regex.Pattern
 
 @CommandProperties(

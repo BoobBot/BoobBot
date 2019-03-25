@@ -43,7 +43,7 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message): Boolean {
-        return  BoobBot.selfId == message.author.idLong ||
+        return BoobBot.selfId == message.author.idLong ||
                 message.contentRaw.toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
     }
 
@@ -62,16 +62,16 @@ class Clean : Command {
 
         ctx.message.delete()
         ctx.channel.history.retrievePast(100).queue { ms ->
-                val spam = ms.filter { !twoWeeks(it) && isSpam(it) }
+            val spam = ms.filter { !twoWeeks(it) && isSpam(it) }
 
-                if (spam.isEmpty()) {
-                    return@queue
-                }
+            if (spam.isEmpty()) {
+                return@queue
+            }
 
-                if (spam.size <= 2) {
-                    spam[0].delete()
-                    return@queue
-                }
+            if (spam.size <= 2) {
+                spam[0].delete()
+                return@queue
+            }
 
             ctx.channel.purgeMessages(*spam.toTypedArray())
             ctx.channel.sendMessage(Formats.info("I deleted ${spam.size} messages"))

@@ -9,7 +9,6 @@ import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
-import java.util.concurrent.Executors
 
 class MessageHandler : ListenerAdapter() {
 

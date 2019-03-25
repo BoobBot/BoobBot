@@ -2,7 +2,6 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
-import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Utils
@@ -28,7 +27,8 @@ class Stats : AsyncCommand {
 
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.getOnlineShards().size
-        val averageShardLatency = BoobBot.getShardLatencies().reduce { acc, l -> acc + l  } / BoobBot.shardManager.shardsTotal
+        val averageShardLatency =
+            BoobBot.getShardLatencies().reduce { acc, l -> acc + l } / BoobBot.shardManager.shardsTotal
 
         val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
@@ -87,7 +87,8 @@ class Stats : AsyncCommand {
 
         toSend.append("```ini\n")
             .append("[ JVM ]\n")
-            .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime)).append("\n")
+            .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
+            .append("\n")
             .append("Threads             = ").append(Thread.activeCount()).append("\n")
             .append("JVM_CPU_Usage       = ").append(procCpuUsage).append("%\n")
             .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
@@ -101,7 +102,8 @@ class Stats : AsyncCommand {
             .append("Users               = ").append(users).append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Auto_Porn_Channels  = ").append(autoPornChannels).append("\n")
-            .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards).append("\n") // shardsOnline
+            .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards)
+            .append("\n") // shardsOnline
             .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n") // averageShardLatency
             .append("[ Metrics_Since_Boot ]\n")
             .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")

@@ -10,7 +10,6 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.Permission
 import java.time.Instant
 
 @CommandProperties(

@@ -19,17 +19,8 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
-
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
-import org.reflections.Reflections
-import java.lang.reflect.Modifier
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import kotlin.collections.firstOrNull
-import kotlin.collections.forEach
-import kotlin.collections.set
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.JDA
@@ -40,7 +31,13 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.utils.cache.CacheFlag
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import org.reflections.Reflections
 import org.slf4j.LoggerFactory
+import java.lang.reflect.Modifier
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import kotlin.collections.set
 
 class BoobBot {
 
@@ -50,7 +47,8 @@ class BoobBot {
         var autoPornChannels = 0
 
         public const val selfId = 285480424904327179L
-        public const val inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
+        public const val inviteUrl =
+            "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
 
         var isDebug = false
             private set
