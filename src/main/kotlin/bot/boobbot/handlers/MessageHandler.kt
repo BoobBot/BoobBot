@@ -67,7 +67,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
-            event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`")
+            event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`").queue()
             return
         }
 
