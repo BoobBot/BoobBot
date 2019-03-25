@@ -43,21 +43,21 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
             "pornhub" -> send(track, pornhubIcon)
             "redtube" -> send(track, redtubeIcon)
             "youtube" -> send(track, youtubeIcon)
-            else -> BoobBot.log.warn("Wtf am i playing? ${ctx.message.content()} $source ${ctx.author}")
+            else -> BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} $source ${ctx.author}")
         }
     }
 
     private fun send(track: AudioTrack, trackIcon: String) {
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
-            author("Music", track.info.uri, trackIcon)
-            field(
+            setAuthor("Music", track.info.uri, trackIcon)
+            addField(
                 "Enqueued Track",
                 "**Title**: ${track.info.title}\n**Duration**: ${Utils.fTime(track.info.length)}\n**Link**: ${track.info.uri}",
                 false
             )
-            footer("Requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
-            timestamp(Instant.now())
+            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            setTimestamp(Instant.now())
             build()
         }
     }

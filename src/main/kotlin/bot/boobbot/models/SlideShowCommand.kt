@@ -7,10 +7,10 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
-import com.mewna.catnip.entity.builder.EmbedBuilder
-import com.mewna.catnip.entity.message.Message
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
+import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.entities.Message
 import java.awt.Color
 
 
@@ -19,8 +19,8 @@ abstract class SlideShowCommand : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                color(Color.red)
-                description(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
+                setColor(Color.red)
+                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
             }
         }
 
@@ -53,8 +53,8 @@ abstract class SlideShowCommand : AsyncCommand {
             }
             else -> {
                 return ctx.embed {
-                    color(Color.red)
-                    description(Formats.error("What?\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
+                    setColor(Color.red)
+                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
                 }
             }
         }
@@ -71,17 +71,17 @@ abstract class SlideShowCommand : AsyncCommand {
             delay(5000)
         }
 
-        ctx.message.delete("No spam")
-        msg.delete("No spam")
+        ctx.message.delete().queue()
+        msg.delete().queue()
     }
 
     private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
-        m.edit(
+        m.editMessage(
             EmbedBuilder()
-                .description("$num of 20")
-                .color(color)
-                .image(url)
+                .setColor(color)
+                .setDescription("$num of 20")
+                .setImage(url)
                 .build()
-        ).await()
+        ).submit().await()
     }
 }

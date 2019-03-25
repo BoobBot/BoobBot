@@ -26,8 +26,8 @@ class Printer : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                color(Color.red)
-                description(Formats.error("Missing Args\nbbprinter <type>\nTypes: boobs, ass, dick"))
+                setColor(Color.red)
+                setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: boobs, ass, dick"))
             }
         }
 
@@ -59,8 +59,8 @@ class Printer : AsyncCommand {
             }
             else -> {
                 return ctx.embed {
-                    color(Color.red)
-                    description(Formats.error("What?\nTypes: boobs, ass, dick"))
+                    setColor(Color.red)
+                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick"))
                 }
             }
         }

@@ -1,6 +1,6 @@
 package bot.boobbot.flight
 
-import com.mewna.catnip.entity.message.Message
+import net.dv8tion.jda.core.entities.Message
 import java.util.concurrent.CompletableFuture
 
 @Suppress("UNCHECKED_CAST")

@@ -9,7 +9,7 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
-import com.mewna.catnip.entity.builder.EmbedBuilder
+import net.dv8tion.jda.core.EmbedBuilder
 import java.time.Instant
 
 @CommandProperties(
@@ -24,14 +24,12 @@ class Help : Command {
 
         if (ctx.args.isEmpty() || ctx.args[0] == "--dm") {
             val builder = EmbedBuilder()
-
-            builder.author(
-                "${ctx.selfUser?.username()} help ${Formats.MAGIC_EMOTE}",
-                BoobBot.inviteUrl,
-                ctx.selfUser?.effectiveAvatarUrl()
-            )
-
-            builder.color(Colors.getEffectiveColor(ctx.message))
+                .setColor(Colors.getEffectiveColor(ctx.message))
+                .setAuthor(
+                    "${ctx.selfUser?.name} help ${Formats.MAGIC_EMOTE}",
+                    BoobBot.inviteUrl,
+                    ctx.selfUser.effectiveAvatarUrl
+                )
 
             Category.values().forEach { category ->
                 val list = commands
@@ -39,26 +37,25 @@ class Help : Command {
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
 
                 if (list.isNotEmpty()) {
-                    builder.field(category.title, list, false)
+                    builder.addField(category.title, list, false)
                 }
             }
 
-            builder.field("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
-            builder.footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
-            builder.timestamp(Instant.now())
+            builder.addField("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
+            builder.setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            builder.setTimestamp(Instant.now())
 
             if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
-                ctx.message.react("\uD83D\uDCEC")
+                ctx.message.addReaction("\uD83D\uDCEC").queue()
                 ctx.dm(builder.build())
             } else {
                 ctx.embed(builder.build())
             }
 
-            if (Config.owners.contains(ctx.author.idAsLong())) {
+            if (Config.owners.contains(ctx.author.idLong)) {
                 val d = EmbedBuilder()
-
-                d.title("You're a developer!")
-                d.color(Colors.getEffectiveColor(ctx.message))
+                    .setTitle("You're a developer!")
+                    .setColor(Colors.getEffectiveColor(ctx.message))
 
                 Category.values().forEach { category ->
                     val list = commands
@@ -66,7 +63,7 @@ class Help : Command {
                         .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
 
                     if (list.isNotEmpty()) {
-                        d.field(category.title, list, false)
+                        d.addField(category.title, list, false)
                     }
                 }
 
@@ -87,13 +84,13 @@ class Help : Command {
         val aliases = if (mappedAliases.isEmpty()) "None" else mappedAliases
 
         val commandHelp = EmbedBuilder()
-            .color(Colors.getEffectiveColor(ctx.message))
-            .author(
-                "${ctx.selfUser?.username()} Command Info",
+            .setColor(Colors.getEffectiveColor(ctx.message))
+            .setAuthor(
+                "${ctx.selfUser.name} Command Info",
                 BoobBot.inviteUrl,
-                ctx.selfUser?.effectiveAvatarUrl()
+                ctx.selfUser.effectiveAvatarUrl
             )
-            .field(
+            .addField(
                 Formats.info("Info"),
                 String.format(
                     "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**",
@@ -101,12 +98,12 @@ class Help : Command {
                 ),
                 false
             )
-            .footer("Help requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
-            .timestamp(Instant.now())
+            .setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            .setTimestamp(Instant.now())
 
         if (ctx.args.size >= 2 && ctx.args[1].toLowerCase() == "--dm") {
             ctx.dm(commandHelp.build())
-            ctx.message.react("\uD83D\uDCEC")
+            ctx.message.addReaction("\uD83D\uDCEC").queue()
         } else {
             ctx.embed(commandHelp.build())
         }

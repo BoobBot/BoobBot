@@ -6,10 +6,9 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
-import com.mewna.catnip.entity.message.Message
-import com.mewna.catnip.entity.util.Permission
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Message
 import java.util.concurrent.TimeUnit
-import java.util.stream.Collectors
 
 
 @CommandProperties(
@@ -40,46 +39,43 @@ class Clean : Command {
 
     private fun twoWeeks(message: Message): Boolean {
         val twoWeeksAgo = System.currentTimeMillis() - 14 * 24 * 60 * 60 * 1000 - DISCORD_EPOCH shl TIMESTAMP_OFFSET
-        return parseSnowflake(message.id()) < twoWeeksAgo
+        return parseSnowflake(message.id) < twoWeeksAgo
     }
 
     private fun isSpam(message: Message): Boolean {
-        return BoobBot.selfId == message.author().idAsLong() ||
-                message.content().toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
+        return BoobBot.selfId == message.author.idLong ||
+                message.contentRaw.toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
     }
 
     override fun execute(ctx: Context) {
-        if (!ctx.botCan(Permission.MANAGE_MESSAGES)) {
+        if (!ctx.botCan(Permission.MESSAGE_MANAGE)) {
             return ctx.send("\uD83D\uDEAB Hey whore, I lack the `MANAGE_MESSAGES` permission needed to do this")
         }
 
-        if (!ctx.botCan(Permission.READ_MESSAGE_HISTORY)) {
+        if (!ctx.botCan(Permission.MESSAGE_HISTORY)) {
             return ctx.send("\uD83D\uDEAB Hey whore, I lack the `MESSAGE_HISTORY` permission needed to do this")
         }
 
-        if (!ctx.userCan(Permission.MANAGE_MESSAGES)) {
+        if (!ctx.userCan(Permission.MESSAGE_MANAGE)) {
             return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_MESSAGES` permission needed to do this")
         }
 
         ctx.message.delete()
-        ctx.channel.fetchMessages().limit(100).fetch().thenAccept { ms ->
-            val spam = ms.filter { !twoWeeks(it) && isSpam(it) }
+        ctx.channel.history.retrievePast(100).queue { ms ->
+                val spam = ms.filter { !twoWeeks(it) && isSpam(it) }
 
-            if (spam.isEmpty()) {
-                return@thenAccept
-            }
+                if (spam.isEmpty()) {
+                    return@queue
+                }
 
-            if (spam.size <= 2) {
-                spam[0].delete()
-                return@thenAccept
-            }
+                if (spam.size <= 2) {
+                    spam[0].delete()
+                    return@queue
+                }
 
-            ctx.catnip.rest().channel().deleteMessages(ctx.channel.id(), spam.map { it.id() })
-
-            ctx.send(Formats.info("I deleted ${spam.size} messages"))
-                //.queue({ m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }, null)
-
-
+            ctx.channel.purgeMessages(*spam.toTypedArray())
+            ctx.channel.sendMessage(Formats.info("I deleted ${spam.size} messages"))
+                .queue { m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }
         }
     }
 

@@ -1,6 +1,5 @@
 package bot.boobbot.commands.audio
 
-import bot.boobbot.BoobBot.Companion.catnip
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.playerManager
 import bot.boobbot.audio.AudioLoader
@@ -20,9 +19,10 @@ class Moan : VoiceCommand {
 //            return
 //        }
 //
+        val voiceState = ctx.voiceState ?: return ctx.send("Join a voicechannel whore")
         val musicManager = getMusicManager(ctx.guild!!)
-        val voiceState = ctx.voiceState
-        //ctx.jda.openVoiceConnection(ctx.guild.id(), voiceState!!.channelId()!!)
+
+        ctx.guild.audioManager.openAudioConnection(voiceState.channel)
         playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
     }
 

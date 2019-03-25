@@ -37,7 +37,7 @@ class Volume : VoiceCommand {
         val oldVol = player.player.volume
         try {
             var newVol = Integer.parseInt(ctx.args[0])
-            if (newVol > 100 && !Config.owners.contains(ctx.author.idAsLong())) {
+            if (newVol > 100 && !Config.owners.contains(ctx.author.idLong)) {
                 newVol = 100
             }
             if (newVol < 0) {
@@ -46,8 +46,8 @@ class Volume : VoiceCommand {
 
             player.player.volume = newVol
             return ctx.embed {
-                color(Colors.getDominantColor(ctx.author))
-                field(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
+                setColor(Colors.getDominantColor(ctx.author))
+                addField(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
             }
 
         } catch (ex: NumberFormatException) {

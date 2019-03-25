@@ -1,12 +1,14 @@
 package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
-import com.mewna.catnip.entity.message.Message
+import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent
+import net.dv8tion.jda.core.hooks.ListenerAdapter
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class EventWaiter {
+class EventWaiter : ListenerAdapter() {
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
     private val pendingEvents = hashSetOf<WaitingEvent>()
@@ -26,11 +28,11 @@ class EventWaiter {
         return future
     }
 
-    public fun checkMessage(message: Message) {
+    public override fun onMessageReceived(event: MessageReceivedEvent) {
         try {
-            val passed = pendingEvents.filter { it.check(message) }
+            val passed = pendingEvents.filter { it.check(event.message) }
             pendingEvents.removeAll(passed)
-            passed.forEach { it.accept(message) }
+            passed.forEach { it.accept(event.message) }
         } catch (e: Exception) {
             BoobBot.log.error("Error in EventWaiter while checking message", e)
         }

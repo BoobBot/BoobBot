@@ -1,8 +1,8 @@
 package bot.boobbot.misc
 
-import com.mewna.catnip.entity.message.Message
-import com.mewna.catnip.entity.user.User
 import de.androidpit.colorthief.ColorThief
+import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.User
 import java.awt.Color
 import java.util.*
 
@@ -57,7 +57,7 @@ object Colors {
     }
 
     fun getDominantColor(user: User): Color {
-        val img = Utils.downloadAvatar(user.effectiveAvatarUrl()) ?: return rndColor
+        val img = Utils.downloadAvatar(user.effectiveAvatarUrl) ?: return rndColor
 
         val rgb = ColorThief.getColor(img)
 
@@ -69,7 +69,7 @@ object Colors {
     }
 
     fun getEffectiveColor(msg: Message): Color {
-        return msg.member()?.color() ?: getDominantColor(msg.author())
+        return msg.member?.color ?: getDominantColor(msg.author)
     }
 
     fun parseColor(colorString: String): Int {

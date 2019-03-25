@@ -93,13 +93,12 @@ class Set : Command {
 
                 if (ctx.botCan(Permission.NICKNAME_CHANGE)) {
                     val newNickname = ctx.args.drop(1).joinToString(" ")
-                    ctx.guild.changeNickName(newNickname, "BoobBot nick set")
-                        .thenAccept {
+                    ctx.guild.controller.setNickname(ctx.guild.selfMember, newNickname)
+                        .queue({
                             ctx.send(Formats.info("Yes daddy, nick set"))
-                        }
-                        .thenException {
+                        }, {
                             ctx.send(Formats.error(" Failed to set nick"))
-                        }
+                        })
                 }
 
             }

@@ -19,11 +19,11 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         ctx.embed {
-            description(Formats.LEWD_EMOTE)
-            color(Colors.getEffectiveColor(ctx.message))
-            image(res.getString("url"))
-            footer("Requested by ${ctx.author.username()}", ctx.author.effectiveAvatarUrl())
-            timestamp(Instant.now())
+            setDescription(Formats.LEWD_EMOTE)
+            setColor(Colors.getEffectiveColor(ctx.message))
+            setImage(res.getString("url"))
+            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            setTimestamp(Instant.now())
         }
     }
 }

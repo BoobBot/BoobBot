@@ -8,8 +8,7 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
-import com.mewna.catnip.entity.user.User
-import com.mewna.catnip.entity.util.Permission
+import net.dv8tion.jda.core.entities.User
 import org.apache.commons.lang3.StringUtils
 import java.time.Instant
 
@@ -42,7 +41,7 @@ class Queue : VoiceCommand {
                 )}\n" +
                         "**Duration**: ${Utils.fTime(it.info.length)}\n" +
                         "**Source**: ${it.sourceManager.sourceName.replace("local", "moan")}\n" +
-                        "**User**: ${(it.userData as User).username()}\n\n"
+                        "**User**: ${(it.userData as User).name}\n\n"
             }
         } else {
             "Nothing Queued"
@@ -51,30 +50,30 @@ class Queue : VoiceCommand {
         val total = Utils.fTime(q.asSequence().map { it.duration }.sum())
 
         ctx.embed {
-            author(
+            setAuthor(
                 "Current playlist",
                 BoobBot.inviteUrl,
-                ctx.selfUser?.effectiveAvatarUrl()
+                ctx.selfUser.effectiveAvatarUrl
             )
-                .color(Colors.getEffectiveColor(ctx.message))
-                .field(
-                    "Now Playing",
-                    "**Title**: ${StringUtils.abbreviate(
-                        track.info.title.replace("Unknown title", "Moan :tired_face:"),
-                        50
-                    )}\n" +
-                            "**Duration**: ${Utils.fTime(track.info.length)}\n" +
-                            "**Source**: ${track.sourceManager.sourceName.replace("local", "moan")}\n" +
-                            "**User**: ${(track.userData as User).username()}", false
-                )
-                .field(
-                    "Queue",
-                    qStr,
-                    false
-                )
-                .footer("Total duration $total", ctx.selfUser?.effectiveAvatarUrl())
-                .timestamp(Instant.now())
-                .build()
+            setColor(Colors.getEffectiveColor(ctx.message))
+            addField(
+                "Now Playing",
+                "**Title**: ${StringUtils.abbreviate(
+                    track.info.title.replace("Unknown title", "Moan :tired_face:"),
+                    50
+                )}\n" +
+                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
+                        "**Source**: ${track.sourceManager.sourceName.replace("local", "moan")}\n" +
+                        "**User**: ${(track.userData as User).name}", false
+            )
+            addField(
+                "Queue",
+                qStr,
+                false
+            )
+            setFooter("Total duration $total", ctx.selfUser.effectiveAvatarUrl)
+            setTimestamp(Instant.now())
+            build()
         }
 
     }

@@ -3,24 +3,24 @@ package bot.boobbot.models
 
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
-import com.mewna.catnip.entity.channel.VoiceChannel
-import com.mewna.catnip.entity.guild.Member
-import com.mewna.catnip.entity.user.User
-import com.mewna.catnip.entity.util.Permission
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Member
+import net.dv8tion.jda.core.entities.User
+import net.dv8tion.jda.core.entities.VoiceChannel
 
 interface VoiceCommand : Command {
 
     fun isDJ(member: Member): Boolean {
-        return member.roles().stream().anyMatch { x -> x.name().equals("dj", true) }
+        return member.roles.stream().anyMatch { x -> x.name.equals("dj", true) }
     }
 
     fun canSkip(ctx: Context): Boolean {
         val user = ctx.audioPlayer!!.player.playingTrack.userData as User
         //val vcId = ctx.catnip.cache().voiceState(ctx.guild!!.id(), ctx.member!!.id())?.channelId()
 
-        return ctx.userCan(Permission.MANAGE_MESSAGES)
-                || ctx.author.idAsLong() == user.idAsLong()
-                || Config.owners.contains(ctx.author.idAsLong())
+        return ctx.userCan(Permission.MESSAGE_MANAGE)
+                || ctx.author.idLong == user.idLong
+                || Config.owners.contains(ctx.author.idLong)
                 || isDJ(ctx.member!!)
                 //|| vcId != null && ctx.guild.channel(vcId)?.asVoiceChannel()?. // NO MEMBERS PROPERTY
                 //|| ctx.member.voiceState.channel.members.filter { !it.user.isBot }.size == 1
@@ -31,7 +31,7 @@ interface VoiceCommand : Command {
            return false
        }
 
-        if (ctx.voiceState!!.channel() == null) {
+        if (ctx.voiceState!!.channel == null) {
             ctx.send("Join a voicechannel, whore")
          return false
         }

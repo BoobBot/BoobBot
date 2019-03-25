@@ -9,7 +9,6 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
 import bot.boobbot.misc.jsonArray
-import com.mewna.catnip.entity.message.MessageOptions
 import java.awt.Color
 import java.net.URLEncoder
 
@@ -27,8 +26,8 @@ class Magik : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
-                color(Color.red)
-                description(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
+                setColor(Color.red)
+                setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
             }
         }
 
@@ -58,8 +57,8 @@ class Magik : AsyncCommand {
             }
             else -> {
                 return ctx.embed {
-                    color(Color.red)
-                    description(Formats.error("What?\nTypes: boobs, ass, dick"))
+                    setColor(Color.red)
+                    setDescription(Formats.error("What?\nTypes: boobs, ass, dick"))
                 }
             }
         }
@@ -74,11 +73,7 @@ class Magik : AsyncCommand {
 
         val body = res.body() ?: return ctx.send("rip some error, press f")
 
-        val opts = MessageOptions()
-            .addFile("magik.png", body.byteStream())
-            .content("\u200b")
-
-        ctx.channel.sendMessage(opts)
+        ctx.channel.sendFile(body.byteStream(), "magik.png").queue()
     }
 
 }

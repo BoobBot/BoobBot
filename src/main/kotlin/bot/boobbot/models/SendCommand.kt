@@ -13,33 +13,33 @@ abstract class SendCommand(private val category: String, private val endpoint: S
     private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
 
     override suspend fun executeAsync(ctx: Context) {
-        val user = ctx.message.mentionedUsers().firstOrNull() ?: ctx.author
+        val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
 
-        if (user.idAsLong() == ctx.selfUser?.idAsLong()) {
+        if (user.idLong == ctx.selfUser.idLong) {
             return ctx.send("Don't you fucking touch me whore, i will end you.")
         }
 
-        if (user.bot()) {
+        if (user.isBot) {
             return ctx.send("Bots can't appreciate $category, whore.")
         }
 
         val prompt = ctx.dmUserAsync(
             user,
-            "${ctx.author.username()} has sent you some NSFW $category!\nAre you 18+ and wish to view this content? (`y`/`n`)"
+            "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content? (`y`/`n`)"
         )
-            ?: return ctx.send("hey, this whore ${user.username()} has me blocked or their filter turned on \uD83D\uDD95")
+            ?: return ctx.send("hey, this whore ${user.name} has me blocked or their filter turned on \uD83D\uDD95")
 
-        ctx.send("Good job ${ctx.author.asMention()}")
+        ctx.send("Good job ${ctx.author.asMention}")
 
         val res = BoobBot.waiter.waitForMessage({
             //println("${prompt.channelId()}-${it.channelId()}")
-            it.channelId() == prompt.channelId() &&
-             it.content().toLowerCase() == "y" || it.content().toLowerCase() == "n"
-        }, 60000).await() ?: return ctx.send("${user.username()} didn't respond") // timeout
+            it.channel.id == prompt.channel.id &&
+             it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n"
+        }, 60000).await() ?: return ctx.send("${user.name} didn't respond") // timeout
 
-        prompt.delete().await()
+        prompt.delete().queue()
 
-        if (res.content().toLowerCase() == "y") { // yes
+        if (res.contentRaw.toLowerCase() == "y") { // yes
             val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
                 .await()?.json()?.getString("url")
                 ?: return ctx.send("wtf, api down?")

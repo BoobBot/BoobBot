@@ -4,12 +4,10 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
-import bot.boobbot.misc.canTalk
 import bot.boobbot.models.Config
-import com.mewna.catnip.entity.message.Message
-import com.mewna.catnip.entity.util.Permission
 import de.mxro.metrics.jre.Metrics
-import java.util.concurrent.Executors
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Message
 
 class MessageHandler {
 
@@ -34,7 +32,7 @@ class MessageHandler {
 //            return
 //        }
 
-        if (event.author().bot()) {
+        if (event.author.isBot) {
             return
         }
 //        if (shitUsers.getOrDefault(event.author.idLong, 0) > 75 && !Utils.checkDonor(event)) {
@@ -42,8 +40,8 @@ class MessageHandler {
 //            return
 //        }
 
-        if (event.channel().isGuild) {
-            if (event.guild()!!.unavailable() || !event.channel().asTextChannel().canTalk()) {
+        if (event.channelType.isGuild) {
+            if (!event.guild!!.isAvailable || !event.textChannel.canTalk()) {
                 return
             }
 
@@ -52,7 +50,7 @@ class MessageHandler {
             }
         }
 
-        val messageContent = event.content()
+        val messageContent = event.contentRaw
         val acceptablePrefixes = arrayOf(
             botPrefix,
             "<@${BoobBot.selfId}> ",
@@ -71,32 +69,32 @@ class MessageHandler {
             return
         }
 
-        if (command.properties.developerOnly && !Config.owners.contains(event.author().idAsLong())) {
+        if (command.properties.developerOnly && !Config.owners.contains(event.author.idLong)) {
             return
         }
 
-        if (command.properties.guildOnly && !event.channel().isGuild) {
-            event.channel().sendMessage("No, whore you can only use this in a guild")
+        if (command.properties.guildOnly && !event.channelType.isGuild) {
+            event.channel.sendMessage("No, whore you can only use this in a guild").queue()
             return
         }
 
-        if (command.properties.nsfw && event.channel().isGuild && !event.channel().asTextChannel().nsfw()) {
-            event.channel().sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`")
+        if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
+            event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`")
             return
         }
 
-        if (event.channel().isGuild && !event.guild()!!.selfMember().hasPermissions(event.channel().asTextChannel(), Permission.EMBED_LINKS)) {
-            event.channel().sendMessage("I do not have permission to use embeds, da fuck?")
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
+            event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
             return
         }
 
         if (command.properties.donorOnly && !Utils.checkDonor(event)) {
-            event.channel().sendMessage(
+            event.channel.sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
                 )
-            )
+            ).queue()
             return
                 /* event.channel.sendMessage(
                  Formats.info(
@@ -144,7 +142,7 @@ class MessageHandler {
             command.execute(Context(trigger, event, args.toTypedArray()))
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.react("\uD83D\uDEAB")
+            event.addReaction("\uD83D\uDEAB").queue()
         }
     }
 

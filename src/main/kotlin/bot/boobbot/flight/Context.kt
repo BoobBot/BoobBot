@@ -3,17 +3,6 @@ package bot.boobbot.flight
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.misc.thenException
-import com.mewna.catnip.entity.builder.EmbedBuilder
-import com.mewna.catnip.entity.channel.MessageChannel
-import com.mewna.catnip.entity.channel.TextChannel
-import com.mewna.catnip.entity.guild.Guild
-import com.mewna.catnip.entity.guild.Member
-import com.mewna.catnip.entity.message.Embed
-import com.mewna.catnip.entity.message.Message
-import com.mewna.catnip.entity.message.MessageOptions
-import com.mewna.catnip.entity.user.User
-import com.mewna.catnip.entity.user.VoiceState
-import com.mewna.catnip.entity.util.Permission
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.MessageBuilder
