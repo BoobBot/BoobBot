@@ -30,14 +30,21 @@ class EventHandler : ListenerAdapter() {
     private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
     private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
 
+    var avatar: String? = null
+
     fun composeEmbed(jda: JDA, builder: EmbedBuilder.() -> Unit): WebhookMessage {
+        val username = jda.selfUser?.name ?: "BoobBot"
+
         return WebhookMessageBuilder()
-            .setUsername(jda.selfUser.name)
-            .setAvatarUrl(jda.selfUser.effectiveAvatarUrl)
+            .setUsername(username)
+            .setAvatarUrl(avatar)
             .addEmbeds(
                 EmbedBuilder()
                     .setColor(Color.magenta) // defaults, can be overridden with `.apply`
-                    .setAuthor(jda.selfUser.name, jda.selfUser.effectiveAvatarUrl, jda.selfUser.effectiveAvatarUrl)
+                    .setAuthor(
+                        username,
+                        avatar,
+                        avatar)
                     .setTimestamp(Instant.now())
                     .apply(builder)
                     .build()
@@ -61,6 +68,8 @@ class EventHandler : ListenerAdapter() {
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
+
+        avatar = event.jda.selfUser.effectiveAvatarUrl
 
         safeSend(shardHook,composeEmbed(event.jda) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
