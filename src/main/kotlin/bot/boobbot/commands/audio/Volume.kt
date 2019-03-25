@@ -29,7 +29,7 @@ class Volume : VoiceCommand {
         }
 
         val player = ctx.audioPlayer!!
-
+        player.player.playingTrack ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
         if (!canSkip(ctx)) {
             return ctx.send(Formats.error("No whore, i can't let you do that"))
         }
