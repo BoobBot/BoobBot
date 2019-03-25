@@ -32,7 +32,10 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
 
     override fun noMatches() = ctx.send("No matches, tf?")
 
-    override fun loadFailed(e: FriendlyException) = BoobBot.log.error("wot", e)
+    override fun loadFailed(e: FriendlyException) {
+        ctx.send("Shit, track loading failed:\n`${e.localizedMessage}")
+        BoobBot.log.error("Track loading failed", e)
+    }
 
     private fun enqueueTrack(track: AudioTrack) {
         track.userData = ctx.author
