@@ -16,6 +16,8 @@ import java.awt.Color
 
 abstract class SlideShowCommand : AsyncCommand {
 
+    private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
+
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
@@ -58,7 +60,6 @@ abstract class SlideShowCommand : AsyncCommand {
                 }
             }
         }
-        val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
 
         val color = Colors.getEffectiveColor(ctx.message)
         val msg = ctx.sendAsync("\u200B")

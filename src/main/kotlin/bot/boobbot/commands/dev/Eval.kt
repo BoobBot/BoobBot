@@ -37,7 +37,6 @@ class Eval : Command {
         val bind = engine.createBindings()
         bind.putAll(bindings)
 
-        RestAction.setPassContext(true)
         evalThread.run {
             try {
                 val result = engine.eval("$bindString\n${ctx.args.joinToString(" ")}", bind)

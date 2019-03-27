@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.createHeaders
+import net.dv8tion.jda.core.Permission
 import okhttp3.HttpUrl
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
@@ -12,8 +13,13 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
     private val urlBuilder
         get() = HttpUrl.parse(endpointUrl)!!.newBuilder()
 
+    private val headers = createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
+
     override suspend fun executeAsync(ctx: Context) {
-        val headers = createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
+        if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
+            return ctx.send("I can't send images here, fix it whore.")
+        }
+
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
         val url = urlBuilder.addQueryParameter("avatar1", user.effectiveAvatarUrl).build()
 
