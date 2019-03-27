@@ -81,11 +81,22 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
-        val channel = user.openPrivateChannel().submit().await()
-        return channel.sendMessage(message).submit().await()
+        return try {
+            val channel = user.openPrivateChannel().submit().await()
+            channel.sendMessage(message).submit().await()
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
+        if (!botCan(Permission.MESSAGE_READ)) {
+            return
+            // Don't you just love it when people deny the bot
+            // access to a channel during command execution?
+            // https://sentry.io/share/issue/17c4b131f5ed48a6ac56c35ca276e4bf/
+        }
+
         channel.sendMessage(message.build()).queue(success, failure)
     }
 

@@ -74,7 +74,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
-            setDescription("Ping: ${event.jda.ping}") // Don't need status as it's included in title
+            setDescription("Ping: ${event.jda.ping}ms") // Don't need status as it's included in title
         })
 
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
@@ -88,7 +88,7 @@ class EventHandler : ListenerAdapter() {
 
             safeSend(shardHook, composeEmbed(event.jda) {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
-                setDescription("Average Shard Ping: ${BoobBot.shardManager.averagePing}")
+                setDescription("Average Shard Ping: ${BoobBot.shardManager.averagePing}ms")
                 setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
                 addField("Ready Info", "```\n${Formats.getReadyFormat()}```", false)
             })
@@ -101,7 +101,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD RECONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}")
+            setDescription("Ping: ${event.jda.ping}ms")
         })
     }
 
@@ -111,7 +111,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD RESUMED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}")
+            setDescription("Ping: ${event.jda.ping}ms")
         })
     }
 
@@ -121,7 +121,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD DISCONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}") // will probably be -1 or something lol
+            setDescription("Ping: ${event.jda.ping}ms") // will probably be -1 or something lol
         })
     }
 
