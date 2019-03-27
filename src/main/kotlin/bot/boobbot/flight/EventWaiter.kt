@@ -24,12 +24,16 @@ class EventWaiter : ListenerAdapter() {
 
         val st = System.currentTimeMillis()
         scheduler.schedule({
-            BoobBot.log.debug("Waiter ended for $addr, elapsed time: ${System.currentTimeMillis() - st}")
+            val et = System.currentTimeMillis()
+            val suspicious = (et - st) < timeout
+            BoobBot.log.debug("Waiter ended for $addr, elapsed time: ${et - st}, suspicious: $suspicious")
 
             if (pendingEvents.remove(we)) {
                 we.accept(null)
             }
         }, timeout, TimeUnit.MILLISECONDS)
+
+        // Consider moving scheduler to WaitingEvent that checks for completion before executing?
 
         return future
     }
