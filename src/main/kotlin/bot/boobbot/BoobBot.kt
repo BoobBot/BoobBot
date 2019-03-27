@@ -31,9 +31,11 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.utils.cache.CacheFlag
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import org.json.JSONObject
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
 import java.lang.reflect.Modifier
+import java.net.URL
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -107,6 +109,9 @@ class BoobBot {
 
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) config.debugToken else config.token
+
+            val sessionLimit = getRemainingSessionCount(token)
+            BoobBot.log.info("-- REMAINING LOGINS AVAILABLE: $sessionLimit")
 
             if (isDebug) {
                 log.warn("Running in debug mode")
@@ -186,6 +191,21 @@ class BoobBot {
 
         public fun getShardLatencies(): List<Long> {
             return shardManager.shards.map { it.ping }
+        }
+
+        public fun getRemainingSessionCount(token: String): Int {
+            return try {
+                val url = URL("https://discordapp.com/api/gateway/bot")
+                val connection = url.openConnection()
+                connection.setRequestProperty("Authorization", "Bot $token")
+
+                val res = Utils.readAll(connection.getInputStream())
+                val json = JSONObject(res)
+
+                json.getJSONObject("session_start_limit").getInt("remaining")
+            } catch (e: Exception) {
+                -1
+            }
         }
 
     }
