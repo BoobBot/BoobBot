@@ -14,13 +14,16 @@ class Info : Command {
 
     override fun execute(ctx: Context) {
         ctx.embed {
-            setAuthor("BoobBot (Revision ${BoobBot.VERSION})", ctx.selfUser.effectiveAvatarUrl)
+            setAuthor(
+                "BoobBot (Revision ${BoobBot.VERSION})",
+                ctx.selfUser.effectiveAvatarUrl,
+                ctx.selfUser.effectiveAvatarUrl
+            )
             setColor(Colors.getEffectiveColor(ctx.message))
             setDescription(
                 """
                     JDA: ${JDAInfo.VERSION}
                     LP: ${PlayerLibrary.VERSION}
-
                 """.trimIndent() // PYTHON TIME POGGERS
             )
         }

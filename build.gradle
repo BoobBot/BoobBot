@@ -34,25 +34,39 @@ repositories {
 
 
 dependencies {
-    implementation "net.dv8tion:JDA:$jda_version"
-    implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
-    implementation "org.reflections:reflections:$reflections_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
+    /* Discord Stuff */
+    implementation ("net.dv8tion:JDA:$jda_version") {
+        exclude module: 'opus-java'
+    }
+    implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
+
+    /* Audio */
+    implementation "com.sedmelluq:lavaplayer:$lp_version"
+    implementation "com.sedmelluq:jda-nas:$nas_version"
+
+    /* Kotlin Stuff */
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coro_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlin_coro_version"
+
+    /* Logging */
+    implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.sentry:sentry-logback:$sentry_version"
-    implementation "com.sedmelluq:lavaplayer:$lp_version"
-    implementation "com.sedmelluq:jda-nas:$nas_version"
+    implementation "org.codehaus.janino:janino:3.0.7"
+
+    /* Webserver */
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "io.ktor:ktor-websockets:$ktor_version"
     implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "com.google.code.gson:gson:2.8.5"
+
+    /* Misc */
+    implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
+    implementation "org.reflections:reflections:$reflections_version"
     implementation "io.github.cdimascio:java-dotenv:3.1.2"
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.codehaus.groovy:groovy:2.5.2'
-    implementation "com.google.code.gson:gson:2.8.5"
-    implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
 }
 

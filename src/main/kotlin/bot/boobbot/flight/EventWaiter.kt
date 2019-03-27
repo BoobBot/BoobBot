@@ -16,10 +16,16 @@ class EventWaiter : ListenerAdapter() {
     public fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
         val future = CompletableFuture<Message?>()
         val we = WaitingEvent(predicate, future)
+        val addr = we.toString().split(".").last()
+
+        BoobBot.log.debug("Waiter created @ $addr")
 
         pendingEvents.add(we)
 
+        val st = System.currentTimeMillis()
         scheduler.schedule({
+            BoobBot.log.debug("Waiter ended for $addr, elapsed time: ${System.currentTimeMillis() - st}")
+
             if (pendingEvents.remove(we)) {
                 we.accept(null)
             }

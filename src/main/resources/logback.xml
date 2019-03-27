@@ -33,6 +33,31 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="FILE-DEBUG"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+                <expression>return message.toLowerCase().contains("waiter");</expression>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>NEUTRAL</OnMatch>
+        </filter>
+        <file>${DEV_HOME}/bb-debug.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [ %-5level] [%logger{0}] %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${DEV_HOME}/archived/bb-debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
     <!-- Sentry appender  -->
     <appender name="Sentry" class="io.sentry.logback.SentryAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -44,6 +69,7 @@
     <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE-AUDIT"/>
+        <appender-ref ref="FILE-DEBUG" />
         <appender-ref ref="Sentry"/>
     </root>
 </configuration>
