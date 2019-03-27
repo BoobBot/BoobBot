@@ -2,7 +2,6 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
-import bot.boobbot.misc.thenException
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
@@ -88,10 +87,6 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
         channel.sendMessage(message.build()).queue(success, failure)
-    }
-
-    companion object {
-        private val channelMention = Pattern.compile("<#(\\d{17,21})>")
     }
 
 }

@@ -6,59 +6,50 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.models.Config
-import groovy.lang.Binding
-import groovy.lang.GroovyShell
-import net.dv8tion.jda.core.entities.Message
-import java.util.concurrent.Executors
+import bot.boobbot.misc.Utils
+import net.dv8tion.jda.core.requests.RestAction
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 
-@Suppress("LABEL_NAME_CLASH")
 @CommandProperties(description = "Eval", category = Category.DEV, developerOnly = true)
 class Eval : Command {
-    private val evalThreadGroup = ThreadGroup("Eval Thread Pool")
-    private val pool = Executors.newCachedThreadPool { r ->
-        Thread(
-            evalThreadGroup,
-            r,
-            evalThreadGroup.name + evalThreadGroup.activeCount()
-        )
+
+    private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
+    private val evalThread = Thread("fuck")
+
+    init {
+        evalThread.priority = Thread.MIN_PRIORITY
     }
 
-
     override fun execute(ctx: Context) {
-        evalThreadGroup.maxPriority = Thread.MIN_PRIORITY
-        val shell = this.createShell(ctx.message)
-        val code = ctx.args.joinToString(separator = " ") { it }
-        pool.execute {
+        val bindings = mapOf(
+            "bb" to BoobBot,
+            "ctx" to ctx,
+            "jda" to ctx.jda,
+            "sm" to BoobBot.shardManager,
+            "colors" to Colors,
+            "utils" to Utils
+        )
+
+        val bindString =
+            bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }
+                .joinToString("\n")
+        val bind = engine.createBindings()
+        bind.putAll(bindings)
+
+        RestAction.setPassContext(true)
+        evalThread.run {
             try {
-                val result = shell.evaluate(code)
-                if (result == null) {
-                    ctx.send("`null` **Executed successfully**")
-                    return@execute
+                val result = engine.eval("$bindString\n${ctx.args.joinToString(" ")}", bind)
+                ctx.channel.sendMessage("```\n$result```").queue(null) {
+                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue()
                 }
-                ctx.send("```groovy\n" + Formats.clean(result.toString()) + "```")
-            } catch (ex: Exception) {
-                ctx.send("\u274C **Error: **\n**$ex**")
+            } catch (e: Exception) {
+                val error = e.localizedMessage.split("\n").first()
+                ctx.channel.sendMessage("Engine Error\n```\n$error```").queue(null) {
+                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue(null, { println("fuc") })
+                }
             }
         }
     }
-
-    private fun createShell(e: Message): GroovyShell {
-        val binding = Binding()
-        binding.setVariable("log", BoobBot.log)
-        binding.setVariable("sm", BoobBot.shardManager)
-        binding.setVariable("jda", e.jda)
-        binding.setVariable("getEffectiveColor", Colors.getEffectiveColor(e))
-        binding.setVariable("channel", e.channel)
-        binding.setVariable("author", e.author)
-        binding.setVariable("message", e)
-//        binding.setVariable("Misc", Misc::class.java)
-        binding.setVariable("msg", e)
-        binding.setVariable("owner", Config.owners)
-        binding.setVariable("guild", e.guild)
-        return GroovyShell(binding)
-    }
-
 }

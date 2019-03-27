@@ -7,6 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.exceptions.ErrorResponseException
 import java.awt.Color
 import java.util.regex.Pattern
 
@@ -29,19 +30,6 @@ class AutoPorn : Command {
         "random" to "nsfw"
     )
     private val typeString = types.entries.joinToString(", ")
-
-    private val webhookRegex =
-        Pattern.compile("https?://(\\w+\\.)?discordapp\\.com/api/webhooks/(\\d+)/([a-zA-Z0-9-_]+)")
-
-    public fun getChannelId(url: String): String? {
-        val match = webhookRegex.matcher(url)
-
-        if (match.matches()) {
-            return match.group(2)
-        }
-
-        return null
-    }
 
     public fun formatWebhookUrl(channelId: String, token: String): String {
         return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
@@ -94,12 +82,19 @@ class AutoPorn : Command {
                         setDescription("Set Auto-Porn channel to ${channel.asMention}")
                     }
                 }, {
-                    BoobBot.log.error("Webhook creation error", it)
-                    ctx.send("Shit, something went wrong while generating the webhook\nThe error has been logged.")
+                    val erx = it as ErrorResponseException
+
+                    when (erx.errorCode) {
+                        30007 -> ctx.send("The provided channel has too many webhooks, wtf? delete some whore")
+                        else -> {
+                            BoobBot.log.error("Webhook creation error", it)
+                            ctx.send("Shit, couldn't make a webhook.\n${it.meaning}")
+                        }
+                    }
                 })
             }
 
-            "delete" -> {
+            "delete", "disable" -> {
                 if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
                     return ctx.embed {
                         setColor(Color.red)

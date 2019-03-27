@@ -72,7 +72,7 @@ class EventHandler : ListenerAdapter() {
 
         avatar = event.jda.selfUser.effectiveAvatarUrl
 
-        safeSend(shardHook,composeEmbed(event.jda) {
+        safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
             setDescription("Ping: ${event.jda.ping}") // Don't need status as it's included in title
         })

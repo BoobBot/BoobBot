@@ -33,13 +33,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import java.util.stream.Collectors
 import kotlin.collections.set
 
 class BoobBot {
@@ -175,11 +172,8 @@ class BoobBot {
         }
 
         fun getVersion() {
-            val proc = Runtime.getRuntime().exec("git rev-parse --short HEAD")
-            val reader = BufferedReader(InputStreamReader(proc.inputStream))
-
-            val out = reader.lines().collect(Collectors.joining("\n"))
-            VERSION = out
+            val revisionProc = Runtime.getRuntime().exec("git rev-parse --short HEAD")
+            VERSION = Utils.readAll(revisionProc.inputStream)
         }
 
         public fun isAllShardsConnected(): Boolean {

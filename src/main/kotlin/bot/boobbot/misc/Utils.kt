@@ -11,14 +11,17 @@ import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.awt.image.BufferedImage
+import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Paths
 import java.text.MessageFormat
 import java.time.Instant.now
 import java.util.*
+import java.util.stream.Collectors
 import javax.imageio.ImageIO
 
 
@@ -179,6 +182,12 @@ class Utils {
                 hours > 0 -> String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 else -> String.format("%02d:%02d", minutes, seconds)
             }
+        }
+
+        fun readAll(inputStream: InputStream): String {
+            return BufferedReader(
+                InputStreamReader(inputStream)
+            ).lines().collect(Collectors.joining("\n"))
         }
 
         private fun autoAvatar() {
