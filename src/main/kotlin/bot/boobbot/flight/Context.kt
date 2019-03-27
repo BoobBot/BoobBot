@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.AudioManager
+import java.util.concurrent.CompletableFuture
 import java.util.regex.Pattern
 
 class Context(val trigger: String, val message: Message, val args: Array<String>) {
@@ -57,7 +58,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
 
     private fun dm(message: Message) {
         author.openPrivateChannel().submit().thenAccept {
-            it.sendMessage(message)
+            it.sendMessage(message).queue()
         }
     }
 
@@ -87,6 +88,10 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
+        return BoobBot.waiter.waitForMessage(predicate, timeout)
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {

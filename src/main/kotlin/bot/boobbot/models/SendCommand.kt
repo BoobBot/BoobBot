@@ -7,10 +7,12 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
 import kotlinx.coroutines.future.await
+import net.dv8tion.jda.core.entities.Message
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
     private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
+    private val responses = arrayOf("y", "n")
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
@@ -30,10 +32,11 @@ abstract class SendCommand(private val category: String, private val endpoint: S
 
         ctx.send("Good job ${ctx.author.asMention}")
 
-        val res = BoobBot.waiter.waitForMessage({
-            it.channel.id == prompt.channel.id &&
-                    it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n"
-        }, 60000).await() ?: return ctx.send("${user.name} didn't respond") // timeout
+        val res = ctx.awaitMessage(
+            { it.channel.id == prompt.channel.id && it.author.id == ctx.author.id &&
+                    (it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n") },
+            60000
+        ).await() ?: return ctx.send("${user.name} didn't respond") // timeout
 
         prompt.delete().queue()
 
