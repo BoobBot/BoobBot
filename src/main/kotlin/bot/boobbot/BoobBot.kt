@@ -33,10 +33,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.reflections.Reflections
 import org.slf4j.LoggerFactory
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.lang.reflect.Modifier
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.stream.Collectors
 import kotlin.collections.set
 
 class BoobBot {
@@ -45,6 +48,9 @@ class BoobBot {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
         var autoPornChannels = 0
+
+        public lateinit var VERSION: String
+            private set
 
         public const val selfId = 285480424904327179L
         public const val inviteUrl =
@@ -83,6 +89,8 @@ class BoobBot {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
+            getVersion()
+
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
@@ -92,7 +100,7 @@ class BoobBot {
             val duration = Math.abs(shards * 5000)
             val currentTime = Calendar.getInstance()
 
-            log.info("--- BoobBot.jda ---")
+            log.info("--- BoobBot (Revision $VERSION) ---")
             log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
             log.info("Launching $shards shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("It\'s currently ${currentTime.time}")
@@ -166,6 +174,13 @@ class BoobBot {
             return manager
         }
 
+        fun getVersion() {
+            val proc = Runtime.getRuntime().exec("git rev-parse --short HEAD")
+            val reader = BufferedReader(InputStreamReader(proc.inputStream))
+
+            val out = reader.lines().collect(Collectors.joining("\n"))
+            VERSION = out
+        }
 
         public fun isAllShardsConnected(): Boolean {
             return shardManager.shards.all { it.status == JDA.Status.CONNECTED }

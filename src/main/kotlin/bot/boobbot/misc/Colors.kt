@@ -56,9 +56,19 @@ object Colors {
         sColorNameMap["teal"] = -0xff7f80
     }
 
-    fun getDominantColor(user: User): Color {
-        val img = Utils.downloadAvatar(user.effectiveAvatarUrl) ?: return rndColor
+    /**
+     * Returns the effective avatar of a user as a 256x256 PNG.
+     */
+    fun getStaticAvatar(user: User): String {
+        return if (user.avatarId == null) {
+            "https://cdn.discordapp.com/embed/avatars/${user.discriminator.toInt() % 5}.png"
+        } else {
+            "https://cdn.discordapp.com/avatars/${user.id}/${user.avatarId}.png?size=256"
+        }
+    }
 
+    fun getDominantColor(user: User): Color {
+        val img = Utils.downloadAvatar(getStaticAvatar(user)) ?: return rndColor
         val rgb = ColorThief.getColor(img)
 
         return if (rgb != null) {
