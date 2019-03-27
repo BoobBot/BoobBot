@@ -12,7 +12,6 @@ import net.dv8tion.jda.core.entities.Message
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
     private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
-    private val responses = arrayOf("y", "n")
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
