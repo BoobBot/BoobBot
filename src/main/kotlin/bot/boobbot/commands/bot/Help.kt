@@ -10,6 +10,7 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import net.dv8tion.jda.core.EmbedBuilder
+import net.dv8tion.jda.core.entities.MessageEmbed
 import java.time.Instant
 
 @CommandProperties(
@@ -23,6 +24,8 @@ class Help : Command {
         val commands = BoobBot.commands.values
 
         if (ctx.args.isEmpty() || ctx.args[0] == "--dm") {
+            val embeds = mutableListOf<MessageEmbed>()
+
             val builder = EmbedBuilder()
                 .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor(
@@ -30,53 +33,59 @@ class Help : Command {
                     BoobBot.inviteUrl,
                     ctx.selfUser.effectiveAvatarUrl
                 )
+                .setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+                .setTimestamp(Instant.now())
 
-            Category.values().forEach { category ->
-                val list = commands
+            for (category in Category.values()) {
+                val cmds = commands
                     .filter { it.properties.category == category && !it.properties.developerOnly }
                     .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
 
-                if (list.isNotEmpty()) {
-                    builder.addField(category.title, list, false)
+                if (cmds.isNotEmpty()) {
+                    builder.addField(category.title, cmds, false)
                 }
-            }
 
-            builder.addField("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
-            builder.setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
-            builder.setTimestamp(Instant.now())
+                if (builder.length() > 4500 || category.ordinal == Category.values().size - 1) { // 4500 chars or last category
+                    builder.addField("${Formats.LINK_EMOTE} Links", Formats.LING_MSG, false)
+                    embeds.add(builder.build())
 
-            if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
-                ctx.message.addReaction("\uD83D\uDCEC").queue()
-                ctx.dm(builder.build())
-            } else {
-                ctx.embed(builder.build())
+                    builder.clearFields()
+                }
             }
 
             if (Config.owners.contains(ctx.author.idLong)) {
-                val d = EmbedBuilder()
-                    .setTitle("You're a developer!")
-                    .setColor(Colors.getEffectiveColor(ctx.message))
-
-                Category.values().forEach { category ->
-                    val list = commands
+                for (category in Category.values()) {
+                    val cmds = commands
                         .filter { it.properties.category == category && it.properties.developerOnly }
                         .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
 
-                    if (list.isNotEmpty()) {
-                        d.addField(category.title, list, false)
+                    if (cmds.isNotEmpty()) {
+                        builder.addField(category.title, cmds, false)
                     }
                 }
 
-                if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
-                    ctx.dm(d.build())
-                } else {
-                    ctx.embed(d.build())
+                embeds.add(builder.build())
+            }
+
+            if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
+                ctx.message.addReaction("\uD83D\uDCEC").queue()
+
+                for (embed in embeds) {
+                    ctx.dm(embed)
+                }
+            } else {
+                for (embed in embeds) {
+                    ctx.embed(embed)
                 }
             }
 
             return
         }
 
+        sendCommandHelp(ctx)
+    }
+
+    fun sendCommandHelp(ctx: Context) {
         val command = Utils.getCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
 
