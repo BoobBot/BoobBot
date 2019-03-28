@@ -4,10 +4,7 @@ import bot.boobbot.BoobBot
 import net.dv8tion.jda.core.entities.Message
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
 import kotlin.concurrent.schedule
-import kotlin.concurrent.timer
 
 class WaitingEvent(
     private val id: Int,

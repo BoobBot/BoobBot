@@ -9,7 +9,6 @@ import bot.boobbot.misc.Formats
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.ErrorResponseException
 import java.awt.Color
-import java.util.regex.Pattern
 
 
 @CommandProperties(

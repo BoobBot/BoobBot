@@ -7,7 +7,6 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
 import kotlinx.coroutines.future.await
-import net.dv8tion.jda.core.entities.Message
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
@@ -32,8 +31,10 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         ctx.send("Good job ${ctx.author.asMention}")
 
         val res = ctx.awaitMessage(
-            { println("${it.channel.id}-${prompt.channel.id}"); it.channel.id == prompt.channel.id && it.author.id == ctx.author.id &&
-                    (it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n") },
+            {
+                it.channel.id == prompt.channel.id && it.author.id == ctx.author.id &&
+                        (it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n")
+            },
             60000
         ).await() ?: return ctx.send("${user.name} didn't respond") // timeout
 

@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.AudioManager
 import java.util.concurrent.CompletableFuture
-import java.util.regex.Pattern
 
 class Context(val trigger: String, val message: Message, val args: Array<String>) {
     val client = message.jda
@@ -91,8 +90,6 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
-        println(predicate)
-        predicate(this.message)
         return BoobBot.waiter.waitForMessage(predicate, timeout)
     }
 

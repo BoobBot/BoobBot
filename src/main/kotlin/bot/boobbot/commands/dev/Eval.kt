@@ -7,7 +7,6 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Utils
-import net.dv8tion.jda.core.requests.RestAction
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 
