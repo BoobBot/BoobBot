@@ -91,6 +91,8 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
+        println(predicate)
+        predicate(this.message)
         return BoobBot.waiter.waitForMessage(predicate, timeout)
     }
 

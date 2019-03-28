@@ -10,38 +10,27 @@ import java.util.concurrent.TimeUnit
 
 class EventWaiter : ListenerAdapter() {
 
-    private val scheduler = Executors.newSingleThreadScheduledExecutor()
+    private var totalWaiters = 0
     private val pendingEvents = hashSetOf<WaitingEvent>()
 
-    public fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
-        val future = CompletableFuture<Message?>()
-        val we = WaitingEvent(predicate, future)
-        val addr = we.toString().split(".").last()
+    public fun remove(we: WaitingEvent) {
+        pendingEvents.remove(we)
+    }
 
-        BoobBot.log.debug("Waiter created @ $addr")
+    public fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
+        totalWaiters++
+
+        val future = CompletableFuture<Message?>()
+        val we = WaitingEvent(totalWaiters, predicate, future)
 
         pendingEvents.add(we)
-
-        val st = System.currentTimeMillis()
-        scheduler.schedule({
-            val et = System.currentTimeMillis()
-            val suspicious = (et - st) < timeout
-            BoobBot.log.debug("Waiter ended for $addr, elapsed time: ${et - st}, suspicious: $suspicious")
-
-            if (pendingEvents.remove(we)) {
-                we.accept(null)
-            }
-        }, timeout, TimeUnit.MILLISECONDS)
-
-        // Consider moving scheduler to WaitingEvent that checks for completion before executing?
-
         return future
     }
 
     public override fun onMessageReceived(event: MessageReceivedEvent) {
         try {
             val passed = pendingEvents.filter { it.check(event.message) }
-            pendingEvents.removeAll(passed)
+//            pendingEvents.removeAll(passed)
             passed.forEach { it.accept(event.message) }
         } catch (e: Exception) {
             BoobBot.log.error("Error in EventWaiter while checking message", e)
