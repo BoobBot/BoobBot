@@ -75,7 +75,8 @@ class AutoPorn : Command {
 
                 channel.createWebhook("BoobBot").reason("Auto-Porn setup").queue({
                     val url = formatWebhookUrl(it.id, it.token!!)
-                    BoobBot.database.setWebhook(ctx.guild!!.id, url, types.getValue(ctx.args[1]), channel.id)
+                    val imageType = types.getValue(ctx.args[1].toLowerCase())
+                    BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
 
                     ctx.embed {
                         setColor(Color.red)
