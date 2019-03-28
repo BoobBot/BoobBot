@@ -44,8 +44,8 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
         return permissionCheck(author, channel, check)
     }
 
-    fun botCan(check: Permission): Boolean {
-        return permissionCheck(selfUser, channel, check)
+    fun botCan(vararg check: Permission): Boolean {
+        return permissionCheck(selfUser, channel, *check)
     }
 
     fun dm(embed: MessageEmbed) {
@@ -95,7 +95,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        if (!botCan(Permission.MESSAGE_READ)) {
+        if (!botCan(Permission.MESSAGE_READ, Permission.MESSAGE_WRITE)) {
             return
             // Don't you just love it when people deny the bot
             // access to a channel during command execution?
