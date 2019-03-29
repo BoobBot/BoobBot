@@ -12,18 +12,13 @@ class WaitingEvent(
     private val future: CompletableFuture<Message?>
 ) {
 
-    private val task: TimerTask = Timer().schedule(60000) {
-        accept(null)
-    }
-
     fun check(message: Message) = predicate(message)
 
     fun accept(message: Message?) {
         BoobBot.log.debug("Waiting-Event-$id completed with message $message")
         future.complete(message)
 
-        BoobBot.waiter.remove(this)
-        task.cancel()
+        //BoobBot.waiter.remove(this)
     }
 
 }
