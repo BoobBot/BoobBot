@@ -15,10 +15,6 @@ class EventWaiter : ListenerAdapter() {
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
-    public fun remove(we: WaitingEvent) {
-        pendingEvents.remove(we)
-    }
-
     public fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
         totalWaiters++
 
@@ -29,7 +25,7 @@ class EventWaiter : ListenerAdapter() {
             if (pendingEvents.remove(we)) {
                 we.accept(null)
             }
-        }, 60000L, TimeUnit.MILLISECONDS)
+        }, timeout, TimeUnit.MILLISECONDS)
 
         pendingEvents.add(we)
         return future
