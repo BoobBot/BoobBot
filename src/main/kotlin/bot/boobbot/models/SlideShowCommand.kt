@@ -49,10 +49,10 @@ abstract class SlideShowCommand : AsyncCommand {
         }
 
         if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
-            ctx.message.delete().queue()
+            ctx.message.delete().queue(null, {})
         }
 
-        msg.delete().queue()
+        msg.delete().queue(null, {})
     }
 
     private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
