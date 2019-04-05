@@ -22,12 +22,7 @@ class SubCommandWrapper(
 
     suspend fun executeAsync(ctx: Context, vararg additionalArgs: Any?) {
         suspendCoroutine<Unit> {
-            try {
-                method.invoke(kls, ctx, *additionalArgs, it)
-            } catch (e: Throwable) {
-                BoobBot.log.error("Error in subcommand $name", e)
-                ctx.message.addReaction("\uD83D\uDEAB").queue()
-            }
+            method.invoke(kls, ctx, *additionalArgs, it)
         }
     }
 

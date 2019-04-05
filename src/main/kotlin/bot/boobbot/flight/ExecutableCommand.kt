@@ -1,5 +1,6 @@
 package bot.boobbot.flight
 
+import bot.boobbot.BoobBot
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import net.dv8tion.jda.core.entities.Message
@@ -20,7 +21,12 @@ class ExecutableCommand(
 
             if (subcommand.async) {
                 GlobalScope.async {
-                    subcommand.executeAsync(ctx)
+                    try {
+                        subcommand.executeAsync(ctx)
+                    } catch (e: Throwable) {
+                        BoobBot.log.error("Error in subcommand $name", e)
+                        ctx.message.addReaction("\uD83D\uDEAB").queue()
+                    }
                 }
             } else {
                 subcommand.execute(ctx)
