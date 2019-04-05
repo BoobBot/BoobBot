@@ -3,7 +3,6 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
-import bot.boobbot.flight.Command
 import bot.boobbot.flight.EventWaiter
 import bot.boobbot.flight.ExecutableCommand
 import bot.boobbot.flight.Indexer
@@ -34,9 +33,7 @@ import net.dv8tion.jda.core.utils.cache.CacheFlag
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.json.JSONObject
-import org.reflections.Reflections
 import org.slf4j.LoggerFactory
-import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

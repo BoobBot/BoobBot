@@ -2,9 +2,7 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.core.entities.Message
-import java.util.*
 import java.util.concurrent.CompletableFuture
-import kotlin.concurrent.schedule
 
 class WaitingEvent(
     private val id: Int,

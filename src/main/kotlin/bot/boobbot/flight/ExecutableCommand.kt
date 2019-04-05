@@ -1,6 +1,5 @@
 package bot.boobbot.flight
 
-import bot.boobbot.BoobBot
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import net.dv8tion.jda.core.entities.Message

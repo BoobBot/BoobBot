@@ -1,7 +1,6 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config

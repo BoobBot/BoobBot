@@ -3,7 +3,7 @@ package bot.boobbot.flight
 import org.reflections.Reflections
 import java.lang.reflect.Modifier
 
-class Indexer(private val pkg: String) {
+class Indexer(pkg: String) {
 
     private val reflections = Reflections(pkg)
 
@@ -22,24 +22,6 @@ class Indexer(private val pkg: String) {
         }
 
         return cmds.toList()
-//            if (Modifier.isAbstract(command.modifiers) || command.isInterface) {
-//                return@forEach
-//            }
-//
-//            try {
-//                val cmd = command.getDeclaredConstructor().newInstance()
-//                if (!cmd.hasProperties) {
-//                    return@forEach BoobBot.log.warn("Command `${cmd.name}` is missing CommandProperties annotation. Will not load.")
-//                }
-//
-//                BoobBot.commands[cmd.name] = cmd
-//            } catch (e: InstantiationException) {
-//                BoobBot.log.error("Failed to load command `${command.simpleName}`", e)
-//            } catch (e: IllegalAccessException) {
-//                BoobBot.log.error("Failed to load command `${command.simpleName}`", e)
-//            }
-
-
     }
 
     public fun getSubCommands(kls: Command): List<SubCommandWrapper> {

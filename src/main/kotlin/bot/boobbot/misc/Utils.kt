@@ -3,7 +3,6 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
-import bot.boobbot.flight.Command
 import bot.boobbot.flight.ExecutableCommand
 import bot.boobbot.models.Config
 import net.dv8tion.jda.core.entities.*
