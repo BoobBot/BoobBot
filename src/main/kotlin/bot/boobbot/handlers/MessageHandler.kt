@@ -87,12 +87,11 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-
         try {
             Utils.logCommand(event.message)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
-            command.execute(Context(trigger, event.message, args.toTypedArray()))
+            command.execute(trigger, event.message, args)
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()

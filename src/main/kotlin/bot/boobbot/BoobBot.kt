@@ -5,6 +5,8 @@ import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.EventWaiter
+import bot.boobbot.flight.ExecutableCommand
+import bot.boobbot.flight.Indexer
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.ApiServer
@@ -73,7 +75,7 @@ class BoobBot {
         val config = Config.load()
         val database = Database()
 
-        val commands = HashMap<String, Command>()
+        val commands = HashMap<String, ExecutableCommand>()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
@@ -135,30 +137,15 @@ class BoobBot {
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.GAME))
                 .build()
 
-            loadCommands()
+            indexCommands()
             ApiServer().startServer()
         }
 
-        private fun loadCommands() {
-            val reflections = Reflections("bot.boobbot.commands")
+        private fun indexCommands() {
+            val indexer = Indexer("bot.boobbot.commands")
 
-            reflections.getSubTypesOf(Command::class.java).forEach { command ->
-                if (Modifier.isAbstract(command.modifiers) || command.isInterface) {
-                    return@forEach
-                }
-
-                try {
-                    val cmd = command.getDeclaredConstructor().newInstance()
-                    if (!cmd.hasProperties) {
-                        return@forEach log.warn("Command `${cmd.name}` is missing CommandProperties annotation. Will not load.")
-                    }
-
-                    commands[cmd.name] = cmd
-                } catch (e: InstantiationException) {
-                    log.error("Failed to load command `${command.simpleName}`", e)
-                } catch (e: IllegalAccessException) {
-                    log.error("Failed to load command `${command.simpleName}`", e)
-                }
+            for (cmd in indexer.getCommands()) {
+                commands[cmd.name] = cmd
             }
 
             log.info("Successfully loaded ${commands.size} commands!")

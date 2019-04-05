@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.Command
+import bot.boobbot.flight.ExecutableCommand
 import bot.boobbot.models.Config
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.GuildManager
@@ -152,7 +153,7 @@ class Utils {
             }
 
 
-        fun getCommand(commandName: String): Command? {
+        fun getCommand(commandName: String): ExecutableCommand? {
             val commands = BoobBot.commands
             return commands[commandName]
                 ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
