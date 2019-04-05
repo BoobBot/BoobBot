@@ -16,6 +16,10 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
     private val headers = createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
 
     override suspend fun executeAsync(ctx: Context) {
+        if (!ctx.botCan(Permission.MESSAGE_WRITE)) {
+            return
+        }
+
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
             return ctx.send("I can't send images here, fix it whore.")
         }
