@@ -72,7 +72,6 @@ dependencies {
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
-    implementation 'org.aspectj:aspectjrt:1.8.5'
 }
 
 shadowJar {
