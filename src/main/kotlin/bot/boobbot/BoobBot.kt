@@ -12,7 +12,7 @@ import bot.boobbot.misc.ApiServer
 import bot.boobbot.misc.RequestUtil
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
-import bot.boobbot.models.Database
+import bot.boobbot.misc.Database
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory

@@ -1,4 +1,4 @@
-package bot.boobbot.models
+package bot.boobbot.misc
 
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
