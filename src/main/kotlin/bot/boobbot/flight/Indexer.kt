@@ -1,6 +1,8 @@
 package bot.boobbot.flight
 
 import org.reflections.Reflections
+import org.reflections.scanners.MethodParameterNamesScanner
+import org.reflections.scanners.SubTypesScanner
 import java.lang.reflect.Modifier
 
 class Indexer(pkg: String) {

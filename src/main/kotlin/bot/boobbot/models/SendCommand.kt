@@ -32,7 +32,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
 
         val res = ctx.awaitMessage(
             {
-                it.channel.id == prompt.channel.id && it.author.id == ctx.author.id &&
+                it.channel.id == prompt.channel.id && it.author.id == user.id &&
                         (it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n")
             },
             60000
