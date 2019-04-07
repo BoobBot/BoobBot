@@ -1,8 +1,5 @@
 package bot.boobbot.flight
 
-import bot.boobbot.BoobBot
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import net.dv8tion.jda.core.entities.Message
 
 class ExecutableCommand(
@@ -14,28 +11,38 @@ class ExecutableCommand(
     public val hasProperties = cmd.hasProperties
     public val properties = cmd.properties
 
+    fun getSubCommand(key: String?): SubCommandWrapper? {
+        if (key == null) {
+            return null
+        }
+
+        val sc = subcommands.filter { it.key == key || it.value.aliases.contains(key) }
+
+        if (sc.isEmpty()) {
+            return null
+        }
+
+        return sc.values.firstOrNull()
+    }
+
     fun execute(trigger: String, message: Message, args: MutableList<String>) {
-        if (args.isNotEmpty() && subcommands.containsKey(args[0])) {
-            val subcommand = subcommands.getValue(args[0])
-            val ctx = Context(trigger, message, args.drop(1).toTypedArray())
+        val subcommand = getSubCommand(args.firstOrNull())
 
-            if (subcommand.async) {
-                GlobalScope.async {
-                    try {
-                        subcommand.executeAsync(ctx)
-                    } catch (e: Throwable) {
-                        BoobBot.log.error("Error in subcommand $name", e)
-                        ctx.message.addReaction("\uD83D\uDEAB").queue()
-                    }
-                }
-            } else {
-                subcommand.execute(ctx)
-            }
+        val ctx = if (subcommand != null) {
+            Context(trigger, message, args.drop(1).toTypedArray())
+        } else {
+            Context(trigger, message, args.toTypedArray())
+        }
 
+        if (!cmd.localCheck(ctx)) {
             return
         }
 
-        cmd.execute(Context(trigger, message, args.toTypedArray()))
+        if (subcommand != null) {
+            subcommand.execute(ctx)
+        } else {
+            cmd.execute(ctx)
+        }
     }
 
 }

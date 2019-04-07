@@ -9,10 +9,10 @@ import bot.boobbot.flight.Indexer
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.ApiServer
+import bot.boobbot.misc.Database
 import bot.boobbot.misc.RequestUtil
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
-import bot.boobbot.misc.Database
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory

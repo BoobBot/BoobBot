@@ -16,6 +16,15 @@ interface Command {
     val subcommands: Map<String, SubCommandWrapper>
         get() = BoobBot.commands.getValue(name).subcommands
 
+    /**
+     * Command-local check that is executed before the command or any subcommands are
+     * executed.
+     *
+     * @returns Boolean
+     *          Whether or not command execution can proceed.
+     */
+    fun localCheck(ctx: Context): Boolean = true
+
     fun execute(ctx: Context)
 
 }

@@ -49,6 +49,14 @@ class MessageHandler : ListenerAdapter() {
 
         val command = Utils.getCommand(commandString) ?: return
 
+        if (event.guild != null) {
+            val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
+
+            if (disabledCommands.contains(command.name)) {
+                return
+            }
+        }
+
         if (!command.properties.enabled) {
             return
         }
