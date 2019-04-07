@@ -48,7 +48,7 @@ abstract class SlideShowCommand : AsyncCommand {
             delay(5000)
         }
 
-        if (ctx.botCan(Permission.MESSAGE_MANAGE)) {
+        if (ctx.guild != null && ctx.botCan(Permission.MESSAGE_MANAGE)) {
             ctx.message.delete().queue(null, {})
         }
 
