@@ -23,33 +23,20 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             return ctx.send("Bots can't appreciate $category, whore.")
         }
 
-        val prompt = ctx.dmUserAsync(
-            user,
-            "${ctx.author.name} has sent you some NSFW $category!\nAre you 18+ and wish to view this content? (`y`/`n`)"
-        ) ?: return ctx.send("hey, this whore ${user.name} has me blocked or their filter turned on \uD83D\uDD95")
+        val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
 
-        ctx.send("Good job ${ctx.author.asMention}")
-
-        val res = ctx.awaitMessage(
-            {
-                it.channel.id == prompt.channel.id && it.author.id == user.id &&
-                        (it.contentRaw.toLowerCase() == "y" || it.contentRaw.toLowerCase() == "n")
-            },
-            60000
-        ).await() ?: return ctx.send("${user.name} didn't respond") // timeout
-
-        prompt.delete().queue()
-
-        if (res.contentRaw.toLowerCase() == "y") { // yes
-            val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
-                .await()?.json()?.getString("url")
-                ?: return ctx.send("wtf, api down?")
-
-            ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
-        } else {
-            ctx.dmUserAsync(user, "Alright then, I won't.")
+        if (!isUserReceivingNudes) {
+            return ctx.send("wtf, **${user.asTag}** opted out of receiving nudes. What a whore")
         }
 
+        val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
+            .await()?.json()?.getString("url")
+            ?: return ctx.send("wtf, api down?")
+
+        ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
+            ?: return ctx.send("wtf, I can't DM **${user.asTag}**?")
+
+        ctx.send("Good job ${ctx.author.asMention}")
     }
 
 }
