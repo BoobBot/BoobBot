@@ -10,13 +10,16 @@ class WaitingEvent(
     private val future: CompletableFuture<Message?>
 ) {
 
-    fun check(message: Message) = predicate(message)
+    fun check(message: Message): Boolean {
+        BoobBot.log.debug("Waiting-Event-$id checking message against predicate")
+        val r = predicate(message)
+        BoobBot.log.debug("Waiting-Event-$id predicate check returned $r")
+        return r
+    }
 
     fun accept(message: Message?) {
         BoobBot.log.debug("Waiting-Event-$id completed with message $message")
         future.complete(message)
-
-        //BoobBot.waiter.remove(this)
     }
 
 }

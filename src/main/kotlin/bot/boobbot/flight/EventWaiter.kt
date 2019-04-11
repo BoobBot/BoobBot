@@ -32,12 +32,15 @@ class EventWaiter : ListenerAdapter() {
     }
 
     public override fun onMessageReceived(event: MessageReceivedEvent) {
-        try {
-            val passed = pendingEvents.filter { it.check(event.message) }
-            pendingEvents.removeAll(passed)
-            passed.forEach { it.accept(event.message) }
-        } catch (e: Exception) {
-            BoobBot.log.error("Error in EventWaiter while checking message", e)
+        for (p in pendingEvents) {
+            try {
+                if (p.check(event.message)) {
+                    p.accept(event.message)
+                    pendingEvents.remove(p)
+                }
+            } catch (e: Exception) {
+                BoobBot.log.error("Error in EventWaiter while checking message", e)
+            }
         }
     }
 
