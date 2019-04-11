@@ -11,7 +11,7 @@ class WaitingEvent(
 ) {
 
     fun check(message: Message): Boolean {
-        BoobBot.log.debug("Waiting-Event-$id checking message against predicate")
+        BoobBot.log.debug("Waiting-Event-$id checking message $message")
         val r = predicate(message)
         BoobBot.log.debug("Waiting-Event-$id predicate check returned $r")
         return r

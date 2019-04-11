@@ -40,7 +40,7 @@
         </filter>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
             <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
-                <expression>return message.toLowerCase().contains("waiter");</expression>
+                <expression>return message.contains("Event");</expression>
             </evaluator>
             <OnMismatch>DENY</OnMismatch>
             <OnMatch>NEUTRAL</OnMatch>

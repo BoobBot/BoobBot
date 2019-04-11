@@ -111,10 +111,10 @@ class BoobBot {
 
             val sessionLimit = getRemainingSessionCount(token)
             BoobBot.log.info("-- REMAINING LOGINS AVAILABLE: $sessionLimit")
+            log.level = Level.DEBUG
 
             if (isDebug) {
                 log.warn("Running in debug mode")
-                log.level = Level.DEBUG
             } else {
                 Sentry.init(config.sentryDsn)
             }
