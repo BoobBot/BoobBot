@@ -2,6 +2,7 @@ package bot.boobbot.misc
 
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
+import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
@@ -15,12 +16,14 @@ class Database {
     private val autoPorn = mongo.getDatabase("autoporn")
     private val webhooks = autoPorn.getCollection("webhooks")
 
-    private val bb = mongo.getDatabase("boobbott")
+    private val bb = mongo.getDatabase("boobbot")
     private val guildSettings = bb.getCollection("settings")
     private val userSettings = bb.getCollection("usersettings")
     private val customCommands = bb.getCollection("customcoms")
 
-//auto porn
+    /**
+     * Webhooks
+     */
     fun getWebhook(guildId: String): Document? {
         return webhooks.find(BasicDBObject("_id", guildId))
             .firstOrNull()
@@ -41,7 +44,10 @@ class Database {
     fun deleteWebhook(guildId: String) {
         webhooks.deleteOne(eq("_id", guildId))
     }
-// com disable
+
+    /**
+     * Disable-able commands
+     */
     fun getDisabledCommands(guildId: String): List<String> {
         val s = guildSettings.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyList()
@@ -65,7 +71,9 @@ class Database {
         )
     }
 
-// nudes opt
+    /**
+     * Nudes opt-in/out
+     */
     fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) {
         val newSetting = Document("nudes", canReceive)
 
@@ -82,34 +90,48 @@ class Database {
             ?: false
     }
 
-
-    // cc
+    /**
+     * Custom commands
+     */
     fun addCustomCommand(guildId: String, name: String, content: String) {
+        val tag = Document("name", name)
+            .append("content", content)
+
         customCommands.updateOne(
             eq("_id", guildId),
-            Updates.addToSet("cc", Document("name", name).append("content", content)),
+            Updates.addToSet("cc", tag),
             UpdateOptions().upsert(true)
         )
     }
 
-    fun getCustomCommandListAsJsonBecauseBsonIsConfusingAndAnnoyingAsFuck(guildId: String): String? {
-        val s = customCommands.find(BasicDBObject("_id", guildId))
-            .firstOrNull()?.toJson()
-        return s ?: "{}"
+    fun removeCustomCommand(guildId: String, name: String) {
+        customCommands.updateOne(
+            eq("_id", guildId),
+            Updates.pull("cc", BasicDBObject("name", name)),
+            UpdateOptions().upsert(true)
+        )
     }
 
-    fun findCustomCommandOrNull(guildId: String, name: String): String? {
-        var guildDoc = JSONObject(getCustomCommandListAsJsonBecauseBsonIsConfusingAndAnnoyingAsFuck(guildId))
-        if (guildDoc.has("cc")) {
-            val cc = guildDoc.getJSONArray("cc")
-            for (i in 0 until cc!!.length()) {
-                val com = cc.getJSONObject(i)
-                if (com["name"] == name) {
-                    return com.getString("content")
-                }
-            }
-        }
-        return null
+    fun getCustomCommands(guildId: String): Map<String, String> {
+        val obj = customCommands.find(BasicDBObject("_id", guildId))
+            .firstOrNull() ?: return emptyMap()
+
+        val commands = obj.getList("cc", Document::class.java)
+        return commands.associateBy({ it.getString("name") }, { it.getString("content") })
+    }
+
+    fun findCustomCommand(guildId: String, name: String): String? {
+        val command = customCommands.find(
+            and(
+                eq("_id", guildId),
+                eq("cc.name", name)
+            )
+        )
+
+        return command.firstOrNull()
+            ?.getList("cc", Document::class.java)
+            ?.firstOrNull()
+            ?.getString("content")
     }
 
 }
