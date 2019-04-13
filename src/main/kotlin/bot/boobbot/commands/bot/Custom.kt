@@ -31,8 +31,9 @@ class Custom : Command {
         val tagName = ctx.args.firstOrNull()
             ?: return ctx.send("what tag do you want to delete, whore")
 
-        val cc = BoobBot.database.findCustomCommand(ctx.guild!!.id, tagName)
-            ?: return ctx.send("wtf, why are you trying to remove a non-existent command?")
+        if (BoobBot.database.findCustomCommand(ctx.guild!!.id, tagName) == null) {
+            return ctx.send("wtf, why are you trying to remove a non-existent command?")
+        }
 
         BoobBot.database.removeCustomCommand(ctx.guild.id, tagName)
         ctx.send("done whore")
