@@ -22,7 +22,7 @@ class Database {
     private val customCommands = bb.getCollection("customcoms")
 
     /**
-     * Webhooks
+     * Webhooks/Autoporn
      */
     fun getWebhook(guildId: String): Document? {
         return webhooks.find(BasicDBObject("_id", guildId))

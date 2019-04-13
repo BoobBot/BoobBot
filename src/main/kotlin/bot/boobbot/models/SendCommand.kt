@@ -6,7 +6,6 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
-import kotlinx.coroutines.future.await
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
@@ -26,7 +25,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
 
         if (!isUserReceivingNudes) {
-            return ctx.send("wtf, **${user.asTag}** opted out of receiving nudes. What a whore")
+            return ctx.send("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `bbopt in`")
         }
 
         val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
