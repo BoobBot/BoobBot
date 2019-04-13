@@ -20,6 +20,7 @@ import net.dv8tion.jda.webhook.WebhookClient
 import net.dv8tion.jda.webhook.WebhookClientBuilder
 import net.dv8tion.jda.webhook.WebhookMessage
 import net.dv8tion.jda.webhook.WebhookMessageBuilder
+import org.json.JSONObject
 import java.awt.Color
 import java.time.Instant
 import java.util.concurrent.TimeUnit
@@ -67,6 +68,13 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onReady(event: ReadyEvent) {
+
+
+        //BoobBot.database.addCustomCommand("440526421388165120","hi", "fuck off")
+        //BoobBot.log.info(BoobBot.database.findCustomCommandOrNull("55", "woof"))
+
+
+
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
 

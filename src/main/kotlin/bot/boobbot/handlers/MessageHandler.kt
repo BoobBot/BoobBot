@@ -47,7 +47,16 @@ class MessageHandler : ListenerAdapter() {
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
         val commandString = args.removeAt(0)
 
-        val command = Utils.getCommand(commandString) ?: return
+        val command = Utils.getCommand(commandString)
+        if (event.channelType.isGuild && command == null ) {
+            val cc = BoobBot.database.findCustomCommandOrNull(event.guild.id, commandString)
+            print(cc)
+            if (cc != null){
+                event.textChannel.sendMessage(cc).queue()
+            }
+
+        }
+        command ?: return
 
         if (event.guild != null) {
             val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
