@@ -18,6 +18,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.toMap
 import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
@@ -57,15 +58,14 @@ class ApiServer {
 
             val shards = BoobBot.shardManager.shardsTotal
             val shardsOnline =
-                BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }
-                    .count()
+                BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
             val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
 
             val osBean: OperatingSystemMXBean =
                 ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
             val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
             val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
-            val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.count()
+            val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.size
 
             var totalGarbageCollections = 0L
             var garbageCollectionTime = 0L
@@ -139,7 +139,6 @@ class ApiServer {
             install(ForwardedHeaderSupport)
             install(XForwardedHeaderSupport)
             install(ContentNegotiation) {
-
                 gson {
                     setPrettyPrinting()
                     disableHtmlEscaping()
@@ -190,8 +189,6 @@ class ApiServer {
 
                    }*/
 
-
-
                 get("/") {
                     BoobBot.metrics.record(Metrics.happened("request /"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
@@ -202,12 +199,11 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /bad-request"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val uri = call.request.uri
-                    BoobBot.log.info("bad-Request uri: $uri")
-                    val local: RequestConnectionPoint = call.request.local
-                    val origin: RequestConnectionPoint = call.request.origin
-                    BoobBot.log.info("${origin.host} ${local.host} ${origin.remoteHost}")
+                    val local = call.request.local
+                    val origin = call.request.origin
+                    BoobBot.log.info("Bad-Request ($uri) [${origin.host} ${local.host} ${origin.remoteHost}]: " +
+                            "${origin.uri} | HEADERS: ${call.request.headers.toMap().map { "${it.key} -> ${it.value}" }.joinToString(", ")}")
                     call.respond("no")
-
                 }
 
                 get("/stats") {
@@ -218,7 +214,6 @@ class ApiServer {
                         ContentType.Application.Json
                     )
                 }
-
 
                 get("/metrics") {
                     BoobBot.metrics.record(Metrics.happened("request /metrics"))

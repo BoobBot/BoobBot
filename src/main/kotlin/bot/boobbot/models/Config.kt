@@ -20,7 +20,7 @@ class Config(
     public val bbDbUrl: String,
     public val memerImgenKey: String,
     public val sentryDsn: String,
-    public val autoPornTime: String
+    public val patreonApiKey: String
 ) {
 
     companion object {
@@ -52,7 +52,7 @@ class Config(
                 dotenv.get("BB_DB_URL", ""),
                 dotenv.get("MEMER_IMGEN_KEY", ""),
                 dotenv.get("SENTRY_DSN", ""),
-                dotenv.get("AUTO_PORN_TIME", "")
+                dotenv.get("PATREON_KEY", "")
             )
         }
 

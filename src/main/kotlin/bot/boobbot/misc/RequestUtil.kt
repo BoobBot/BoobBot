@@ -107,7 +107,11 @@ class RequestUtil {
             .headers(headers)
             .url(url)
 
-        return PendingRequest(request.build(), useProxy)
+        return makeRequest(request.build(), useProxy)
+    }
+
+    fun makeRequest(req: Request, useProxy: Boolean = false): PendingRequest {
+        return PendingRequest(req, useProxy)
     }
 }
 
