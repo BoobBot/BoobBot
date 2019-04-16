@@ -42,9 +42,12 @@ class Clean : Command {
         return parseSnowflake(message.id) < twoWeeksAgo
     }
 
-    private fun isSpam(message: Message): Boolean {
+    private fun isSpam(message: Message, GuildId: String): Boolean {
         return BoobBot.selfId == message.author.idLong ||
-                message.contentRaw.toLowerCase().startsWith(if (BoobBot.isDebug) "!bb" else "bb")
+                BoobBot.database.getPrefix(GuildId).any {
+                    message.contentRaw.toLowerCase().startsWith(it)
+                }
+
     }
 
     override fun execute(ctx: Context) {
@@ -62,7 +65,7 @@ class Clean : Command {
 
         ctx.message.delete()
         ctx.channel.history.retrievePast(100).queue { ms ->
-            val spam = ms.filter { !twoWeeks(it) && isSpam(it) }
+            val spam = ms.filter { !twoWeeks(it) && isSpam(it, ctx.guild!!.id) }
 
             if (spam.isEmpty()) {
                 return@queue

@@ -21,11 +21,10 @@ import java.time.Instant
 class Help : Command {
 
     override fun execute(ctx: Context) {
+        val prefix = if (ctx.message.channelType.isGuild) BoobBot.database.getPrefix(ctx.guild!!.id)[0] else "bb"
         val commands = BoobBot.commands.values
-
         if (ctx.args.isEmpty() || ctx.args[0] == "--dm") {
             val embeds = mutableListOf<MessageEmbed>()
-
             val builder = EmbedBuilder()
                 .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor(
@@ -39,7 +38,7 @@ class Help : Command {
             for (category in Category.values()) {
                 val cmds = commands
                     .filter { it.properties.category == category && !it.properties.developerOnly }
-                    .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
+                    .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
 
                 if (cmds.isNotEmpty()) {
                     builder.addField(category.title, cmds, false)
@@ -57,7 +56,7 @@ class Help : Command {
                 for (category in Category.values()) {
                     val cmds = commands
                         .filter { it.properties.category == category && it.properties.developerOnly }
-                        .joinToString("\n") { "`bb${padEnd(it.name)}:` ${it.properties.description}" }
+                        .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
 
                     if (cmds.isNotEmpty()) {
                         builder.addField(category.title, cmds, false)
@@ -86,6 +85,7 @@ class Help : Command {
     }
 
     fun sendCommandHelp(ctx: Context) {
+        val prefix = if (ctx.message.channelType.isGuild) BoobBot.database.getPrefix(ctx.guild!!.id)[0] else "bb"
         val command = Utils.getCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
 
@@ -103,7 +103,7 @@ class Help : Command {
                 Formats.info("Info"),
                 String.format(
                     "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**",
-                    "bb", command.name, aliases, command.properties.description
+                    prefix, command.name, aliases, command.properties.description
                 ),
                 false
             )
