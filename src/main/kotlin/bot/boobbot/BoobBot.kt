@@ -94,19 +94,19 @@ class BoobBot {
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
-            val shards = config.shardCount
-            val duration = Math.abs(shards * 5000)
+            isDebug = args.firstOrNull()?.contains("debug") ?: false
+            val shardCount = if (isDebug) 2 else config.shardCount
+            val duration = Math.abs(shardCount * 5000)
             val currentTime = Calendar.getInstance()
 
             log.info("--- BoobBot (Revision $VERSION) ---")
             log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
-            log.info("Launching $shards shards at an estimated ${Utils.fTime(duration.toLong())}")
+            log.info("Launching $shardCount shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("It\'s currently ${currentTime.time}")
 
             currentTime.add(Calendar.MILLISECOND, duration)
             log.info("Estimated full boot by ${currentTime.time}")
 
-            isDebug = args.firstOrNull()?.contains("debug") ?: false
             val token = if (isDebug) config.debugToken else config.token
 
             val sessionLimit = getRemainingSessionCount(token)
@@ -125,7 +125,7 @@ class BoobBot {
 
             shardManager = DefaultShardManagerBuilder()
                 .setToken(token)
-                .setShardsTotal(config.shardCount)
+                .setShardsTotal(shardCount)
                 .setGame(Game.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .addEventListeners(waiter, MessageHandler(), EventHandler())

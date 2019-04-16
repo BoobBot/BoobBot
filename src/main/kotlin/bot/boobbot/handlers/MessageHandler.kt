@@ -16,9 +16,6 @@ class MessageHandler : ListenerAdapter() {
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-//        if (!BoobBot.isReady) {
-//            return
-//        }
 
         if (event.author.isBot) {
             return
