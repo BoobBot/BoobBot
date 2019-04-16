@@ -6,6 +6,8 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.flight.SubCommand
 import bot.boobbot.misc.Colors
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.Utils
 import net.dv8tion.jda.core.Permission
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
@@ -114,6 +116,17 @@ class Settings : Command {
 
     @SubCommand(aliases = ["prefix", "sp"])
     fun setPrefix(ctx: Context) {
+
+        if (!Utils.checkDonor(ctx.message)) {
+            ctx.channel.sendMessage(
+                Formats.error(
+                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                )
+            ).queue()
+            return
+        }
+
         if (BoobBot.database.hasPrefix(ctx.guild!!.id)) {
             return ctx.send("wtf, i have a prefix here, whore.")
         }

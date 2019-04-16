@@ -5,6 +5,9 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.flight.SubCommand
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.Utils
+import net.dv8tion.jda.core.Permission
 
 @CommandProperties(aliases = ["cc"], description = "Custom commands", guildOnly = true)
 class Custom : Command {
@@ -15,6 +18,22 @@ class Custom : Command {
 
     @SubCommand
     fun add(ctx: Context) {
+        if (!ctx.userCan(Permission.MANAGE_SERVER)) {
+            ctx.send("You don't have `MANAGE_SERVER` permission, whore.")
+            return
+
+        }
+
+        if (!Utils.checkDonor(ctx.message)) {
+            ctx.channel.sendMessage(
+                Formats.error(
+                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                )
+            ).queue()
+            return
+        }
+
         if (ctx.args.isEmpty() || ctx.args.size < 2) {
             return ctx.send("You need to specify tag name and content, whore.")
         }
@@ -28,6 +47,13 @@ class Custom : Command {
 
     @SubCommand(aliases = ["del", "remove", "rem"])
     fun delete(ctx: Context) {
+
+        if (!ctx.userCan(Permission.MANAGE_SERVER)) {
+            ctx.send("You don't have `MANAGE_SERVER` permission, whore.")
+            return
+
+        }
+
         val tagName = ctx.args.firstOrNull()
             ?: return ctx.send("what tag do you want to delete, whore")
 
