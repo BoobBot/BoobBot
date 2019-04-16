@@ -148,7 +148,9 @@ class Database {
         val acceptablePrefixes = arrayOf(
             botPrefix,
             "<@${BoobBot.selfId}> ",
-            "<@!${BoobBot.selfId}> "
+            "<@!${BoobBot.selfId}> ",
+            "<@499199815532675082>",
+            "<@!499199815532675082>"
         )
         if (s != null){
             val gp = s["prefix"] as ArrayList<String>
