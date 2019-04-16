@@ -53,7 +53,7 @@ class MessageHandler : ListenerAdapter() {
 
             val customCommand = BoobBot.database.findCustomCommand(event.guild.id, commandString)
                 ?: return
-
+            print(customCommand)
             event.channel.sendMessage(customCommand).queue()
 
             return

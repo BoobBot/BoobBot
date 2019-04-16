@@ -123,23 +123,13 @@ class Database {
     }
 
     fun findCustomCommand(guildId: String, name: String): String? {
-        val command = customCommands.find(
-            and(
-                eq("_id", guildId),
-                eq("cc.name", name)
-            )
-        )
-
-        return command.firstOrNull()
-            ?.getList("cc", Document::class.java)
-            ?.firstOrNull()
-            ?.getString("content")
+       return getCustomCommands(guildId).filter { it.key == name }.getValue(name)
     }
 
 
 
     /**
-     * Disable-able commands
+     * Guild Prefix
      */
     fun getPrefix(guildId: String): Array<String> {
         val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
