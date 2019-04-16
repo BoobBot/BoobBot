@@ -111,4 +111,29 @@ class Settings : Command {
         ctx.send("Enabled $d.")
     }
 
+
+    @SubCommand(aliases = ["prefix", "sp"])
+    fun setPrefix(ctx: Context) {
+        if (BoobBot.database.hasPrefix(ctx.guild!!.id)) {
+            return ctx.send("wtf, i have a prefix here, whore.")
+        }
+        if (ctx.args.isEmpty()) {
+            return ctx.send("wtf, i don't mind read. Specify what prefix you wanna set, whore.")
+        }
+        BoobBot.database.setPrefix(ctx.guild.id, ctx.args[0])
+        ctx.send("Set prefix to ${ctx.args[0]}")
+    }
+
+
+    @SubCommand(aliases = ["dp"])
+    fun removePrefix(ctx: Context) {
+        if (!BoobBot.database.hasPrefix(ctx.guild!!.id)) {
+            return ctx.send("wtf, i don't have a prefix here, whore.")
+        }
+
+        BoobBot.database.removePrefix(ctx.guild.id)
+        ctx.send("Done.")
+    }
+
+
 }
