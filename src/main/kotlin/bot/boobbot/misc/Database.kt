@@ -159,7 +159,9 @@ class Database {
                     gp[0],
                     botPrefix,
                     "<@${BoobBot.selfId}> ",
-                    "<@!${BoobBot.selfId}> "
+                    "<@!${BoobBot.selfId}> ",
+                    "<@499199815532675082>",
+                    "<@!499199815532675082>"
                 )
             }
         }
