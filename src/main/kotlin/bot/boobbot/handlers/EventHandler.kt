@@ -70,6 +70,22 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
 
+
+
+
+
+        BoobBot.log.info(BoobBot.database.getPrefix("7777").joinToString(","))
+        BoobBot.database.setPrefix("7777", "!!")
+        BoobBot.log.info(BoobBot.database.getPrefix("7777").joinToString(","))
+        BoobBot.database.removePrefix("7777")
+        BoobBot.log.info(BoobBot.database.getPrefix("7777").joinToString(","))
+
+
+
+
+
+
+
         avatar = event.jda.selfUser.effectiveAvatarUrl
 
         safeSend(shardHook, composeEmbed(event.jda) {

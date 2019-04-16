@@ -1,5 +1,6 @@
 package bot.boobbot.misc
 
+import bot.boobbot.BoobBot
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
 import com.mongodb.client.model.Filters.and
@@ -18,6 +19,7 @@ class Database {
 
     private val bb = mongo.getDatabase("boobbot")
     private val guildSettings = bb.getCollection("settings")
+    private val guildPrefix = bb.getCollection("prefix")
     private val userSettings = bb.getCollection("usersettings")
     private val customCommands = bb.getCollection("customcoms")
 
@@ -133,5 +135,65 @@ class Database {
             ?.firstOrNull()
             ?.getString("content")
     }
+
+
+
+    /**
+     * Disable-able commands
+     */
+    fun getPrefix(guildId: String): Array<String> {
+        val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
+        val s = guildPrefix.find(BasicDBObject("_id", guildId))
+            .firstOrNull()
+        val acceptablePrefixes = arrayOf(
+            botPrefix,
+            "<@${BoobBot.selfId}> ",
+            "<@!${BoobBot.selfId}> "
+        )
+        BoobBot.log.info(s.toString())
+        if (s != null){
+            val gp = s["prefix"] as ArrayList<String>
+            if (gp.size > 0) {
+                BoobBot.log.info(gp[0])
+                return arrayOf(
+                    gp[0],
+                    botPrefix,
+                    "<@${BoobBot.selfId}> ",
+                    "<@!${BoobBot.selfId}> "
+                )
+            }
+        }
+
+        return acceptablePrefixes
+    }
+
+    fun hasPrefix(guildId: String): Boolean {
+        val s = guildPrefix.find(BasicDBObject("_id", guildId))
+            .firstOrNull()
+        if (s != null){
+            val gp = s["prefix"] as ArrayList<String>
+            if (gp.size > 0) {
+               return true
+            }
+        }
+        return false
+    }
+
+    fun removePrefix(guildId: String) {
+        guildPrefix.updateOne(
+            eq("_id", guildId),
+            Updates.popFirst("prefix"),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+    fun setPrefix(guildId: String, prefix: String) {
+        guildPrefix.updateOne(
+            eq("_id", guildId),
+            Updates.addToSet("prefix", prefix),
+            UpdateOptions().upsert(true)
+        )
+    }
+
 
 }
