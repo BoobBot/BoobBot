@@ -43,7 +43,8 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message, GuildId: String): Boolean {
-        return BoobBot.selfId == message.author.idLong ||
+        val ids = arrayOf(BoobBot.selfId, 499199815532675082L)
+        return ids.any{it == message.author.idLong} ||
                 BoobBot.database.getPrefix(GuildId).any {
                     message.contentRaw.toLowerCase().startsWith(it)
                 }
