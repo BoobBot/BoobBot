@@ -150,11 +150,9 @@ class Database {
             "<@${BoobBot.selfId}> ",
             "<@!${BoobBot.selfId}> "
         )
-        BoobBot.log.info(s.toString())
         if (s != null){
             val gp = s["prefix"] as ArrayList<String>
             if (gp.size > 0) {
-                BoobBot.log.info(gp[0])
                 return arrayOf(
                     gp[0],
                     botPrefix,
