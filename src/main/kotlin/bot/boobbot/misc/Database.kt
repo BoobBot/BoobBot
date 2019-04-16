@@ -123,10 +123,11 @@ class Database {
     }
 
     fun findCustomCommand(guildId: String, name: String): String? {
-       return getCustomCommands(guildId).filter { it.key == name }.getValue(name)
+        if(getCustomCommands(guildId).filter { it.key == name }.isNotEmpty()) {
+            return getCustomCommands(guildId).filter { it.key == name }.getValue(name)
+        }
+        return null
     }
-
-
 
     /**
      * Guild Prefix
