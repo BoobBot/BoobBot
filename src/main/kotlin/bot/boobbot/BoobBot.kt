@@ -45,8 +45,6 @@ class BoobBot {
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
-        var autoPornChannels = 0
-
         public lateinit var VERSION: String
             private set
 
