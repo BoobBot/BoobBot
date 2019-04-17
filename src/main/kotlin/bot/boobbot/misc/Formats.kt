@@ -17,17 +17,17 @@ class Formats {
         const val DISCORD_EMOTE = "<:discord:486939267365470210>"
         const val BOT_EMOTE = "<:bot:486939322151338005>"
         const val LINK_EMOTE = "\uD83D\uDD17"
-        const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
+        //const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
         const val MAGIC_EMOTE = "✨"
         const val INFO_EMOTE = "<:info:486945488080338944>"
         const val PATREON_EMOTE = "<:p_:475801484282429450>"
         val LING_MSG = MessageFormat.format(
-            "\n{0} **Server**: [https://invite.boob.bot](https://invite.boob.bot)"
-                    + "\n{1} **Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
-                    + "\n{2} **Website**: [https:/boob.bot](https://boob.bot)"
-                    + "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
-                    + "\n{4} **Patreon**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
-            DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PAYPAL_EMOTE, PATREON_EMOTE
+            "\n{0} **Join the Server**: [https://invite.boob.bot](https://invite.boob.bot)"
+                    + "\n{1} **Add the Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
+                    + "\n{2} **Visit the Website**: [https:/boob.bot](https://boob.bot)"
+                   //+ "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
+                    + "\n{3} **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
+            DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PATREON_EMOTE
         )
         val tag = arrayOf(
             "Amateur",

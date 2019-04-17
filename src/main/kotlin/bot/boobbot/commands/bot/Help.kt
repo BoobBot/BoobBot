@@ -29,7 +29,7 @@ class Help : Command {
                 .setColor(Colors.getEffectiveColor(ctx.message))
                 .setAuthor(
                     "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
-                    BoobBot.inviteUrl,
+                    "https://boob.bot/commands",
                     ctx.selfUser.effectiveAvatarUrl
                 )
                 .setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
@@ -96,7 +96,7 @@ class Help : Command {
             .setColor(Colors.getEffectiveColor(ctx.message))
             .setAuthor(
                 "${ctx.selfUser.name} Command Info",
-                BoobBot.inviteUrl,
+                "https://boob.bot/commands",
                 ctx.selfUser.effectiveAvatarUrl
             )
             .addField(
