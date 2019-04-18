@@ -8,7 +8,6 @@ import io.ktor.application.install
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
-import io.ktor.http.RequestConnectionPoint
 import io.ktor.request.path
 import io.ktor.request.uri
 import io.ktor.response.respond
@@ -201,7 +200,10 @@ class ApiServer {
                     val local = call.request.local
                     val origin = call.request.origin
                     BoobBot.log.info("Bad-Request ($uri) [${origin.host} ${local.host} ${origin.remoteHost}]: " +
-                            "${origin.uri} | HEADERS: ${call.request.headers.toMap().map { "${it.key} -> ${it.value}" }.joinToString(", ")}")
+                            "${origin.uri} | HEADERS: ${call.request.headers.toMap().map { "${it.key} -> ${it.value}" }.joinToString(
+                                ", "
+                            )}"
+                    )
                     call.respond("no")
                 }
 

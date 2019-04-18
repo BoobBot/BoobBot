@@ -15,7 +15,7 @@ class EventWaiter : ListenerAdapter() {
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
-    public fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
+    fun waitForMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
         totalWaiters++
 
         val future = CompletableFuture<Message?>()
@@ -31,7 +31,7 @@ class EventWaiter : ListenerAdapter() {
         return future
     }
 
-    public override fun onMessageReceived(event: MessageReceivedEvent) {
+    override fun onMessageReceived(event: MessageReceivedEvent) {
         for (p in pendingEvents) {
             try {
                 if (p.check(event.message)) {

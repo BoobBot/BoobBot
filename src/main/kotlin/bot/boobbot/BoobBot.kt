@@ -45,11 +45,11 @@ class BoobBot {
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
-        public lateinit var VERSION: String
+        lateinit var VERSION: String
             private set
 
-        public const val selfId = 285480424904327179L
-        public const val inviteUrl =
+        const val selfId = 285480424904327179L
+        const val inviteUrl =
             "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
 
         var isDebug = false
@@ -163,19 +163,19 @@ class BoobBot {
             VERSION = Utils.readAll(revisionProc.inputStream)
         }
 
-        public fun isAllShardsConnected(): Boolean {
+        fun isAllShardsConnected(): Boolean {
             return shardManager.shards.all { it.status == JDA.Status.CONNECTED }
         }
 
-        public fun getOnlineShards(): List<JDA> {
+        fun getOnlineShards(): List<JDA> {
             return shardManager.shards.filter { it.status == JDA.Status.CONNECTED }
         }
 
-        public fun getShardLatencies(): List<Long> {
+        fun getShardLatencies(): List<Long> {
             return shardManager.shards.map { it.ping }
         }
 
-        public fun getRemainingSessionCount(token: String): Int {
+        fun getRemainingSessionCount(token: String): Int {
             return try {
                 val url = URL("https://discordapp.com/api/gateway/bot")
                 val connection = url.openConnection()

@@ -3,12 +3,10 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
-import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
-import org.json.JSONObject
 
 class Database {
 
@@ -123,7 +121,7 @@ class Database {
     }
 
     fun findCustomCommand(guildId: String, name: String): String? {
-        if(getCustomCommands(guildId).filter { it.key == name }.isNotEmpty()) {
+        if (getCustomCommands(guildId).filter { it.key == name }.isNotEmpty()) {
             return getCustomCommands(guildId).filter { it.key == name }.getValue(name)
         }
         return null
@@ -143,7 +141,7 @@ class Database {
             "<@499199815532675082>",
             "<@!499199815532675082>"
         )
-        if (s != null){
+        if (s != null) {
             val gp = s["prefix"] as ArrayList<String>
             if (gp.size > 0) {
                 return arrayOf(
@@ -163,10 +161,10 @@ class Database {
     fun hasPrefix(guildId: String): Boolean {
         val s = guildPrefix.find(BasicDBObject("_id", guildId))
             .firstOrNull()
-        if (s != null){
+        if (s != null) {
             val gp = s["prefix"] as ArrayList<String>
             if (gp.size > 0) {
-               return true
+                return true
             }
         }
         return false

@@ -24,13 +24,13 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     // CUSTOM FUNCTIONS
     // ----------------------------------------------
 
-    public fun addToQueue(track: AudioTrack) {
+    fun addToQueue(track: AudioTrack) {
         if (!player.startTrack(track, true)) {
             queue.add(track)
         }
     }
 
-    public fun playNext() {
+    fun playNext() {
         if (queue.size > 0) {
             player.startTrack(queue.removeAt(0), false)
         } else {
@@ -86,11 +86,11 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     // MISC
     // ----------------------------------------------
 
-    public enum class RepeatMode {
+    enum class RepeatMode {
         SINGLE, ALL, NONE
     }
 
-    public fun shutdown() {
+    fun shutdown() {
         player.stopTrack()
         player.destroy()
 
@@ -104,7 +104,7 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
         BoobBot.musicManagers.remove(guildId)
     }
 
-    public fun disconnect() {
+    fun disconnect() {
         BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
     }
 }

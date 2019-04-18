@@ -13,6 +13,10 @@ import net.dv8tion.jda.core.JDAInfo
 class Info : Command {
 
     override fun execute(ctx: Context) {
+        val shards = BoobBot.shardManager.shardsTotal
+        val shardsOnline = BoobBot.getOnlineShards().size
+        val averageShardLatency =
+            BoobBot.getShardLatencies().reduce { acc, l -> acc + l } / BoobBot.shardManager.shardsTotal
         ctx.embed {
             setAuthor(
                 "BoobBot (Revision ${BoobBot.VERSION})",
@@ -24,6 +28,8 @@ class Info : Command {
                 """
                     JDA: ${JDAInfo.VERSION}
                     LP: ${PlayerLibrary.VERSION}
+                    SHARDS: $shards\$shardsOnline
+                    PING: ${averageShardLatency}ms
                 """.trimIndent() // PYTHON TIME POGGERS
             )
         }

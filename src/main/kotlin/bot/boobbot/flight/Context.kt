@@ -2,6 +2,7 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
+import bot.boobbot.models.Config
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
@@ -32,7 +33,7 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
 
 
     fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean {
-        return if (channel.type == ChannelType.PRIVATE) {
+        return if (channel.type == ChannelType.PRIVATE || Config.owners.contains(user.idLong)) {
             true
         } else {
             guild!!.getMember(user).hasPermission(channel as TextChannel, *permissions)

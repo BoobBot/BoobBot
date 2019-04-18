@@ -2,12 +2,11 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.*
-import net.dv8tion.jda.core.Permission
 
 @CommandProperties(description = "Pong!", category = Category.MISC)
 class Ping : Command {
     override fun execute(ctx: Context) {
-        ctx.send("What do you want me to say, pong? No you can go fuck yourself~")// TODO: full shard pings
+        ctx.send("What do you want me to say, pong? No you can go fuck yourself~")
     }
 
     @SubCommand
@@ -19,6 +18,6 @@ class Ping : Command {
         ctx.send("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms")
 
 
-        }
+    }
 
 }

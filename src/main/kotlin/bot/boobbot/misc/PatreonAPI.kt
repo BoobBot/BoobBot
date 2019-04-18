@@ -38,7 +38,7 @@ class PatreonAPI(private val accessToken: String) {
         return future
     }
 
-    public fun fetchPledgesOfCampaign(campaignId: String): CompletableFuture<List<PatreonUser>> {
+    fun fetchPledgesOfCampaign(campaignId: String): CompletableFuture<List<PatreonUser>> {
         val future = CompletableFuture<List<PatreonUser>>()
 
         getPageOfPledge(campaignId, null) {
@@ -131,12 +131,12 @@ class PatreonAPI(private val accessToken: String) {
         }
 
         return PatreonUser(
-                userAttr.getString("first_name"),
-                userAttr.getString("last_name"),
-                userAttr.getString("email"),
-                pledgeAttr.getInt("amount_cents"),
-                !pledgeAttr.isNull("declined_since"),
-                discordId
+            userAttr.getString("first_name"),
+            userAttr.getString("last_name"),
+            userAttr.getString("email"),
+            pledgeAttr.getInt("amount_cents"),
+            !pledgeAttr.isNull("declined_since"),
+            discordId
         )
     }
 
@@ -148,10 +148,10 @@ class PatreonAPI(private val accessToken: String) {
 
 
 class PatreonUser(
-        val firstName: String,
-        val lastName: String,
-        val email: String,
-        val pledgeCents: Int,
-        val isDeclined: Boolean,
-        val discordId: Long?
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val pledgeCents: Int,
+    val isDeclined: Boolean,
+    val discordId: Long?
 )

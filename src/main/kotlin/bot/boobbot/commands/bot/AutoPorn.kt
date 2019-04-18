@@ -30,7 +30,7 @@ class AutoPorn : Command {
     )
     private val typeString = types.entries.joinToString(", ")
 
-    public fun formatWebhookUrl(channelId: String, token: String): String {
+    fun formatWebhookUrl(channelId: String, token: String): String {
         return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
     }
 

@@ -4,12 +4,12 @@ import net.dv8tion.jda.core.entities.Message
 
 class ExecutableCommand(
     private val cmd: Command,
-    public val subcommands: Map<String, SubCommandWrapper>
+    val subcommands: Map<String, SubCommandWrapper>
 ) {
 
-    public val name = cmd.name
-    public val hasProperties = cmd.hasProperties
-    public val properties = cmd.properties
+    val name = cmd.name
+    val hasProperties = cmd.hasProperties
+    val properties = cmd.properties
 
     fun getSubCommand(key: String?): SubCommandWrapper? {
         if (key == null) {

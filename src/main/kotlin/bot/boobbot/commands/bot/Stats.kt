@@ -37,7 +37,6 @@ class Stats : AsyncCommand {
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.count()
 
 
-
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed =
             if (metrics.has("command")) metrics.getJSONObject("command").getString("Total Events").toInt() else 0

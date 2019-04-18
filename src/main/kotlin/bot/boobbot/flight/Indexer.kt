@@ -7,7 +7,7 @@ class Indexer(pkg: String) {
 
     private val reflections = Reflections(pkg)
 
-    public fun getCommands(): List<ExecutableCommand> {
+    fun getCommands(): List<ExecutableCommand> {
         val allCommands = reflections.getSubTypesOf(Command::class.java)
             .filter { !Modifier.isAbstract(it.modifiers) && !it.isInterface }
 
@@ -24,7 +24,7 @@ class Indexer(pkg: String) {
         return cmds.toList()
     }
 
-    public fun getSubCommands(kls: Command): List<SubCommandWrapper> {
+    fun getSubCommands(kls: Command): List<SubCommandWrapper> {
         val subcommands = mutableListOf<SubCommandWrapper>()
 
         for (meth in kls::class.java.methods) { // WAS' BREWING Y'ALLL

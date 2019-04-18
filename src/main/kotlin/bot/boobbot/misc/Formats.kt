@@ -25,7 +25,7 @@ class Formats {
             "\n{0} **Join the Server**: [https://invite.boob.bot](https://invite.boob.bot)"
                     + "\n{1} **Add the Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
                     + "\n{2} **Visit the Website**: [https:/boob.bot](https://boob.bot)"
-                   //+ "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
+                    //+ "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
                     + "\n{3} **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
             DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PATREON_EMOTE
         )

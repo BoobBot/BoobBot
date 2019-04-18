@@ -6,26 +6,26 @@ import java.nio.file.Paths
 import java.util.*
 
 class Config(
-    public val token: String,
-    public val debugToken: String,
-    public val shardCount: Int,
-    public val homeGuild: String,
-    public val readyWebhook: String,
-    public val gjWebhook: String,
-    public val glWebhook: String,
-    public val bbApiKey: String,
-    public val lbotsApiKey: String,
-    public val bbApiUrl: String,
-    public val bbDbKey: String,
-    public val bbDbUrl: String,
-    public val memerImgenKey: String,
-    public val sentryDsn: String,
-    public val patreonApiKey: String
+    val token: String,
+    val debugToken: String,
+    val shardCount: Int,
+    val homeGuild: String,
+    val readyWebhook: String,
+    val gjWebhook: String,
+    val glWebhook: String,
+    val bbApiKey: String,
+    val lbotsApiKey: String,
+    val bbApiUrl: String,
+    val bbDbKey: String,
+    val bbDbUrl: String,
+    val memerImgenKey: String,
+    val sentryDsn: String,
+    val patreonApiKey: String
 ) {
 
     companion object {
 
-        public val owners = Arrays.asList(
+        val owners = Arrays.asList(
             248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L, 180093157554388993L
         )
 
