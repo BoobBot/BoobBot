@@ -63,7 +63,7 @@ class Printer : Command {
             .await()
             ?: return ctx.send("rip some error, press f")
 
-        if (res.isSuccessful) {
+        if (!res.isSuccessful) {
             return ctx.send("API error, shit")
         }
 

@@ -116,12 +116,13 @@ class ApiServer {
             return pings
         }
 
-        embeddedServer(Netty, 8888) {
+        embeddedServer(Netty, 8769) {
             install(AutoHeadResponse)
             install(CallLogging) {
                 level = Level.INFO
                 filter { call -> call.request.path().startsWith("/") }
             }
+
             // insatll cors broke? lets do this
             install(DefaultHeaders) {
                 header("Access-Control-Allow-Origin", "*")
