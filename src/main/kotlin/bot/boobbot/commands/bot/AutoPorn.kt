@@ -1,10 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
+import bot.boobbot.flight.*
 import bot.boobbot.misc.Formats
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.ErrorResponseException
@@ -45,103 +42,98 @@ class AutoPorn : Command {
                 setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
             }
         }
+    }
+        @SubCommand
+        fun set(ctx: Context) {
 
-        when (ctx.args[0]) {
-            "set" -> {
-                if (ctx.args.size < 2 ||
-                    ctx.args[1].isEmpty() ||
-                    !types.containsKey(ctx.args[1].toLowerCase()) ||
-                    ctx.message.mentionedChannels.isEmpty()
-                ) {
-                    return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
-                    }
+            if (ctx.args.size < 2 ||
+                ctx.args[0].isEmpty() ||
+                !types.containsKey(ctx.args[0].toLowerCase()) ||
+                ctx.message.mentionedChannels.isEmpty()
+            ) {
+                return ctx.embed {
+                    setColor(Color.red)
+                    setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
                 }
-
-                val channel = ctx.message.mentionedChannels[0]
-
-                if (!channel.isNSFW) {
-                    return ctx.embed {
-                        setColor(Color.red)
-                        setDescription(Formats.error("That channel isn't marked NSFW you fuck"))
-                    }
-                }
-
-                if (!ctx.selfMember!!.hasPermission(channel, Permission.MANAGE_WEBHOOKS)) {
-                    return ctx.send("\uD83D\uDEAB Hey whore, I need `MANAGE_WEBHOOKS` permission to do this")
-                }
-
-                channel.createWebhook("BoobBot").reason("Auto-Porn setup").queue({
-                    val url = formatWebhookUrl(it.id, it.token!!)
-                    val imageType = types.getValue(ctx.args[1].toLowerCase())
-                    BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
-
-                    ctx.embed {
-                        setColor(Color.red)
-                        setDescription("Set Auto-Porn channel to ${channel.asMention}")
-                    }
-                }, {
-                    val erx = it as ErrorResponseException
-
-                    when (erx.errorCode) {
-                        30007 -> ctx.send("The provided channel has too many webhooks, wtf? delete some whore")
-                        else -> {
-                            BoobBot.log.error("Webhook creation error", it)
-                            ctx.send("Shit, couldn't make a webhook.\n${it.meaning}")
-                        }
-                    }
-                })
             }
 
-            "delete", "disable" -> {
-                if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
-                    return ctx.embed {
-                        setColor(Color.red)
-                        setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
-                    }
-                }
+            val channel = ctx.message.mentionedChannels[0]
 
-                BoobBot.database.deleteWebhook(ctx.guild.id)
+            if (!channel.isNSFW) {
+                return ctx.embed {
+                    setColor(Color.red)
+                    setDescription(Formats.error("That channel isn't marked NSFW you fuck"))
+                }
+            }
+
+            if (!ctx.selfMember!!.hasPermission(channel, Permission.MANAGE_WEBHOOKS)) {
+                return ctx.send("\uD83D\uDEAB Hey whore, I need `MANAGE_WEBHOOKS` permission to do this")
+            }
+
+            channel.createWebhook("BoobBot").reason("Auto-Porn setup").queue({
+                val url = formatWebhookUrl(it.id, it.token!!)
+                val imageType = types.getValue(ctx.args[0].toLowerCase())
+                BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
+
                 ctx.embed {
                     setColor(Color.red)
-                    setDescription("Auto-Porn is now disabled for this server")
+                    setDescription("Set Auto-Porn channel to ${channel.asMention}")
                 }
-            }
+            }, {
+                val erx = it as ErrorResponseException
 
-            "status" -> {
-                val wh = BoobBot.database.getWebhook(ctx.guild!!.id) ?: return ctx.embed {
+                when (erx.errorCode) {
+                    30007 -> ctx.send("The provided channel has too many webhooks, wtf? delete some whore")
+                    else -> {
+                        BoobBot.log.error("Webhook creation error", it)
+                        ctx.send("Shit, couldn't make a webhook.\n${it.meaning}")
+                    }
+                }
+            })
+        }
+
+
+        @SubCommand(aliases = ["disable"])
+        fun delete(ctx: Context) {
+            if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
+                return ctx.embed {
                     setColor(Color.red)
                     setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
                 }
-
-                val channel = ctx.guild.getTextChannelById(wh.getString("channelId"))
-
-                if (channel == null) {
-                    BoobBot.database.deleteWebhook(ctx.guild.id)
-
-                    return ctx.embed {
-                        setColor(Color.red)
-                        setDescription("The channel used for Auto-Porn no longer exists, wtf?")
-                    }
-                }
-
-                val category = wh.getString("category")
-
-                ctx.embed {
-                    setColor(Color.red)
-                    setDescription("Auto-Porn is set up for ${channel.asMention} (**$category**)")
-                }
             }
 
-            else -> {
-                return ctx.embed {
-                    setColor(Color.red)
-                    setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
-                }
+            BoobBot.database.deleteWebhook(ctx.guild.id)
+            ctx.embed {
+                setColor(Color.red)
+                setDescription("Auto-Porn is now disabled for this server")
             }
+
         }
 
+        @SubCommand
+        fun status(ctx: Context) {
+            val wh = BoobBot.database.getWebhook(ctx.guild!!.id) ?: return ctx.embed {
+                setColor(Color.red)
+                setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
+            }
+
+            val channel = ctx.guild.getTextChannelById(wh.getString("channelId"))
+
+            if (channel == null) {
+                BoobBot.database.deleteWebhook(ctx.guild.id)
+
+                return ctx.embed {
+                    setColor(Color.red)
+                    setDescription("The channel used for Auto-Porn no longer exists, wtf?")
+                }
+            }
+
+            val category = wh.getString("category")
+
+            ctx.embed {
+                setColor(Color.red)
+                setDescription("Auto-Porn is set up for ${channel.asMention} (**$category**)")
+            }
+        }
     }
 
-}
