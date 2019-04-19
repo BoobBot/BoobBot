@@ -13,19 +13,19 @@ class Opt : Command {
         ctx.send("`bbopt <${subcommands.keys.joinToString("|")}>`")
     }
 
-    @SubCommand
+    @SubCommand(aliases = ["In"])
     fun `in`(ctx: Context) {
         BoobBot.database.setUserCanReceiveNudes(ctx.author.id, true)
         ctx.send("You're now able to receive nudes :thumbsup:")
     }
 
-    @SubCommand
+    @SubCommand(aliases = ["Out"])
     fun out(ctx: Context) {
         BoobBot.database.setUserCanReceiveNudes(ctx.author.id, false)
         ctx.send("You can no longer receive nudes. Whore.")
     }
 
-    @SubCommand
+    @SubCommand(aliases = ["Status"])
     fun status(ctx: Context) {
         val current = BoobBot.database.getCanUserReceiveNudes(ctx.author.id)
         val s = if (current) "can" else "can't"
