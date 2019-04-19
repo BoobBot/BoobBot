@@ -39,7 +39,7 @@ class Printer : Command {
 
     @SubCommand(async = true)
     suspend fun ass(ctx: Context) {
-        val res = BoobBot.requestUtil.get("http://api.obutts.ru/boobs/0/1/random")
+        val res = BoobBot.requestUtil.get("http://api.obutts.ru/butts/0/1/random")
             .await()
             ?.jsonArray() ?: return ctx.send("Some API error, shit")
 
