@@ -48,7 +48,7 @@ class BoobBot {
         lateinit var VERSION: String
             private set
 
-        const val selfId = 285480424904327179L
+        const val mainSelfId = 285480424904327179L
         const val inviteUrl =
             "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
 
@@ -60,6 +60,13 @@ class BoobBot {
 
         var isReady = false
             internal set
+
+        val selfId: Long
+            get() = shardManager.shards
+                .firstOrNull { it.selfUser != null }
+                ?.selfUser
+                ?.idLong
+                ?: mainSelfId
 
         var setGame = false
             internal set
