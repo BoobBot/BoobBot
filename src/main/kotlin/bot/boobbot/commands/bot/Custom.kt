@@ -21,7 +21,6 @@ class Custom : Command {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             ctx.send("You don't have `MANAGE_SERVER` permission, whore.")
             return
-
         }
 
         if (!Utils.checkDonor(ctx.message)) {
@@ -47,11 +46,9 @@ class Custom : Command {
 
     @SubCommand(aliases = ["del", "remove", "rem"])
     fun delete(ctx: Context) {
-
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             ctx.send("You don't have `MANAGE_SERVER` permission, whore.")
             return
-
         }
 
         val tagName = ctx.args.firstOrNull()

@@ -130,29 +130,20 @@ class Database {
     /**
      * Guild Prefix
      */
-    fun getPrefix(guildId: String): List<String> {
-        val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-        val acceptablePrefixes = mutableListOf(
-            botPrefix,
-            "<@${BoobBot.selfId}> ",
-            "<@!${BoobBot.selfId}> "
-        )
-
+    fun getPrefix(guildId: String): String? {
         val custom = guildPrefix.find(BasicDBObject("_id", guildId))
             .firstOrNull()
-            ?: return acceptablePrefixes
+            ?: return null
 
         val prefix = custom["prefix"]!!
 
         if (String::class.java.isAssignableFrom(prefix::class.java)) {
-            acceptablePrefixes.add(custom.getString("prefix"))
-        } else {
-            val prefixes = custom.getList("prefix", String::class.java)
-            if (prefixes.isNotEmpty()) {
-                acceptablePrefixes.add(prefixes[0])
-            }
+            return custom.getString("prefix")
         }
-        return acceptablePrefixes
+
+        val prefixes = custom.getList("prefix", String::class.java)
+
+        return prefixes.firstOrNull()
     }
 
     fun hasPrefix(guildId: String): Boolean {

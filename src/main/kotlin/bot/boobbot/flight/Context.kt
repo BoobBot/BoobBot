@@ -28,6 +28,10 @@ class Context(val trigger: String, val message: Message, val args: Array<String>
     val channel = message.channel
     val textChannel: TextChannel? = message.textChannel
 
+    val isFromGuild = message.channelType.isGuild
+
+    val customPrefix = if (isFromGuild) BoobBot.database.getPrefix(guild!!.id) else null
+
     val audioPlayer: GuildMusicManager?
         get() = if (guild == null) null else BoobBot.getMusicManager(guild)
 

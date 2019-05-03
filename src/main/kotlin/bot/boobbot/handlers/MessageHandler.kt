@@ -11,8 +11,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 
 class MessageHandler : ListenerAdapter() {
 
-    private val botPrefix = if (BoobBot.isDebug) "!bb" else "bb"
-
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
@@ -32,13 +30,19 @@ class MessageHandler : ListenerAdapter() {
         }
 
         val messageContent = event.message.contentRaw
-        val acceptablePrefixes = if (event.channelType.isGuild)
-            BoobBot.database.getPrefix(event.guild.id)
-        else listOf(
-            botPrefix,
-            "<@${BoobBot.selfId}> ",
-            "<@!${BoobBot.selfId}> "
+        val acceptablePrefixes = mutableListOf(
+            BoobBot.defaultPrefix,
+            "<@${event.jda.selfUser.id}> ",
+            "<@!${event.jda.selfUser.id}> "
         )
+
+        if (event.channelType.isGuild) {
+            val custom = BoobBot.database.getPrefix(event.guild.id)
+
+            if (custom != null) {
+                acceptablePrefixes.add(custom)
+            }
+        }
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
             ?: return

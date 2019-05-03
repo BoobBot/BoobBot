@@ -21,7 +21,8 @@ import java.time.Instant
 class Help : Command {
 
     override fun execute(ctx: Context) {
-        val prefix = if (ctx.message.channelType.isGuild) BoobBot.database.getPrefix(ctx.guild!!.id)[0] else "bb"
+        val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
+
         val commands = BoobBot.commands.values
         if (ctx.args.isEmpty() || ctx.args[0] == "--dm") {
             val embeds = mutableListOf<MessageEmbed>()
@@ -85,7 +86,8 @@ class Help : Command {
     }
 
     fun sendCommandHelp(ctx: Context) {
-        val prefix = if (ctx.message.channelType.isGuild) BoobBot.database.getPrefix(ctx.guild!!.id)[0] else "bb"
+        val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
+
         val command = Utils.getCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
 

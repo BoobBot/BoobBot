@@ -42,10 +42,10 @@ class Clean : Command {
         return parseSnowflake(message.id) < twoWeeksAgo
     }
 
-    private fun isSpam(message: Message, GuildId: String): Boolean {
+    private fun isSpam(message: Message, guildId: String): Boolean {
         val ids = arrayOf(BoobBot.selfId, 499199815532675082L)
         return ids.any { it == message.author.idLong } ||
-                BoobBot.database.getPrefix(GuildId).any {
+                BoobBot.database.getPrefix(guildId).any {
                     message.contentRaw.toLowerCase().startsWith(it)
                 }
 
