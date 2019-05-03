@@ -116,7 +116,6 @@ class Settings : Command {
 
     @SubCommand(aliases = ["prefix", "sp"])
     fun setPrefix(ctx: Context) {
-
         if (!Utils.checkDonor(ctx.message)) {
             ctx.channel.sendMessage(
                 Formats.error(
@@ -127,18 +126,16 @@ class Settings : Command {
             return
         }
 
-        if (BoobBot.database.hasPrefix(ctx.guild!!.id)) {
-            return ctx.send("wtf, i have a prefix here, whore.")
-        }
         if (ctx.args.isEmpty()) {
             return ctx.send("wtf, i don't mind read. Specify what prefix you wanna set, whore.")
         }
-        BoobBot.database.setPrefix(ctx.guild.id, ctx.args[0])
+
+        BoobBot.database.setPrefix(ctx.guild!!.id, ctx.args[0])
         ctx.send("Set prefix to ${ctx.args[0]}")
     }
 
 
-    @SubCommand(aliases = ["dp"])
+    @SubCommand(aliases = ["clearprefix", "dp"])
     fun removePrefix(ctx: Context) {
         if (!BoobBot.database.hasPrefix(ctx.guild!!.id)) {
             return ctx.send("wtf, i don't have a prefix here, whore.")
@@ -147,6 +144,5 @@ class Settings : Command {
         BoobBot.database.removePrefix(ctx.guild.id)
         ctx.send("Done.")
     }
-
 
 }
