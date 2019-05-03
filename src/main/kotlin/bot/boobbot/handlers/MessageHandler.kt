@@ -32,7 +32,9 @@ class MessageHandler : ListenerAdapter() {
         }
 
         val messageContent = event.message.contentRaw
-        val acceptablePrefixes = if (event.channelType.isGuild) BoobBot.database.getPrefix(event.guild.id) else arrayOf(
+        val acceptablePrefixes = if (event.channelType.isGuild)
+            BoobBot.database.getPrefix(event.guild.id)
+        else listOf(
             botPrefix,
             "<@${BoobBot.selfId}> ",
             "<@!${BoobBot.selfId}> "
