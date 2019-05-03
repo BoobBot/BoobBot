@@ -142,7 +142,16 @@ class Database {
             .firstOrNull()
             ?: return acceptablePrefixes
 
-        acceptablePrefixes.add(custom.getString("prefix"))
+        val prefix = custom["prefix"]!!
+
+        if (String::class.java.isAssignableFrom(prefix::class.java)) {
+            acceptablePrefixes.add(custom.getString("prefix"))
+        } else {
+            val prefixes = custom.getList("prefix", String::class.java)
+            if (prefixes.isNotEmpty()) {
+                acceptablePrefixes.add(prefixes[0])
+            }
+        }
         return acceptablePrefixes
     }
 
