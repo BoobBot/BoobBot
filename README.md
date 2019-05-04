@@ -3,11 +3,11 @@
 
 # BoobBot
 
-This Repository is meant for education and allowing people to improve the current bot more than anything, However if you insist on self-hosting you will need to do several things see prerequisites for more information
+This repository is intended for eductional purposes, and to allow people to contribute towards/improve the bot's codebase. While we don't encourage self-hosting, if you insist on doing so you will need to do several things to get it in a useable state. See `prerequisites` for more information.
 
 ## Prerequisites
 
-* You will need ether a env file named bb.env placed in [Resources](src/main/resources) or to supply your env variables some other way on boot, See [Constants](src/main/java/bot/boobbot/misc/Constants.kt) for the variable names
+* You will need to create a `bb.env` file in [Resources](src/main/resources), or supply your env variables some other way on boot. See [Constants](src/main/java/bot/boobbot/misc/Constants.kt) for the variable names
 * You will need a bbapi key which you can purchase [here](https://www.patreon.com/OfficialBoobBot)
 * You will need a dank memer API key which you can purchase from [Mel](https://github.com/melmsie)/
 * You will need several proxies for large-scale support Which can be found in [Utils](src/main/java/bot/boobbot/misc/Utils.kt)
@@ -15,7 +15,7 @@ This Repository is meant for education and allowing people to improve the curren
 
 ## Built With
 
-* [JDA](https://github.com/DV8FromTheWorld/JDA) - Java wrapper Discord 
+* [JDA](https://github.com/DV8FromTheWorld/JDA) - A Java Discord API Wrapper 
 * [Gradle](https://gradle.org/) - Dependency Management
 * [Kotlin](https://kotlinlang.org/) - Do more with less code
 
