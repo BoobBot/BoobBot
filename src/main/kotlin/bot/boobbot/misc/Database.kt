@@ -121,10 +121,8 @@ class Database {
     }
 
     fun findCustomCommand(guildId: String, name: String): String? {
-        if (getCustomCommands(guildId).filter { it.key == name }.isNotEmpty()) {
-            return getCustomCommands(guildId).filter { it.key == name }.getValue(name)
-        }
-        return null
+        val custom = getCustomCommands(guildId)
+        return custom.filter { it.key == name }.values.firstOrNull()
     }
 
     /**
@@ -142,7 +140,6 @@ class Database {
         }
 
         val prefixes = custom.getList("prefix", String::class.java)
-
         return prefixes.firstOrNull()
     }
 

@@ -43,12 +43,20 @@ class Clean : Command {
     }
 
     private fun isSpam(message: Message, guildId: String): Boolean {
-        val ids = arrayOf(BoobBot.selfId, 499199815532675082L)
-        return ids.any { it == message.author.idLong } ||
-                BoobBot.database.getPrefix(guildId).any {
-                    message.contentRaw.toLowerCase().startsWith(it)
-                }
+        val prefixes = mutableListOf(
+            BoobBot.defaultPrefix,
+            "<@${message.jda.selfUser.id}> ",
+            "<@!${message.jda.selfUser.id}> "
+        )
 
+        val custom = BoobBot.database.getPrefix(guildId)
+
+        if (custom != null) {
+            prefixes.add(custom)
+        }
+
+        return message.author.idLong == message.jda.selfUser.idLong ||
+                prefixes.any { message.contentRaw.toLowerCase().startsWith(it) }
     }
 
     override fun execute(ctx: Context) {
