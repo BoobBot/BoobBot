@@ -9,15 +9,12 @@ import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.request.path
-import io.ktor.request.uri
-import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.util.toMap
 import net.dv8tion.jda.core.JDA
 import org.json.JSONArray
 import org.json.JSONObject
@@ -31,20 +28,6 @@ typealias DelayProvider = suspend (ms: Int) -> Unit
 class ApiServer {
     fun startServer() {
 
-        /* fun isJSONValid(json: String): Boolean {
-             try {
-                 JSONObject(json)
-             } catch (ex: JSONException) {
-                 try {
-                     JSONArray(json)
-                 } catch (ex1: JSONException) {
-                     return false
-                 }
-
-             }
-
-             return true
-         }*/
 
         fun getStats(): JSONObject {
             val dpFormatter = DecimalFormat("0.00")
@@ -147,46 +130,8 @@ class ApiServer {
 
                 }
             }
-            /*install(WebSockets) {
-                pingPeriod = Duration.ofSeconds(60)
-                timeout = Duration.ofSeconds(15)
-                maxFrameSize = Long.MAX_VALUE
-                masking = false
-            }*/
-
             routing {
-                /* just things
-                   val baos = ByteArrayOutputStream()
-                   System.setOut(PrintStream(baos))
-                   webSocket("/ws") {
-                       BoobBot.metrics.record(Metrics.happened("ws connected"))
-                       if (BoobBot.isDebug){ BoobBot.log.info("incoming ws connect from ${call.request.origin.host}") }
-                       incoming.mapNotNull { it as? Frame.Text }.consumeEach { frame ->
-                           val inText = frame.readText()
-                           BoobBot.metrics.record(Metrics.happened("incoming frame"))
-                           if (BoobBot.isDebug){ BoobBot.log.info("incoming ws frame \n text: ${frame.readText()}") }
-                           if (inText.equals("bye", ignoreCase = true)) {
-                               close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
-                           }
-                           if (inText.equals("metrics", ignoreCase = true)) {
-                               outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
-                           }
-                           if (isJSONValid(inText)) {
-                               val json = JSONObject(inText)
-                               if (json.has("data")){
-                                   BoobBot.log.info(json.getString("data"))
-                                   if (json.get("data").toString().equals("metrics", ignoreCase = true)) {
-                                       outgoing.send(Frame.Text("{\"data\": ${BoobBot.metrics.render().get()}}"))
-                                   }
-                               }
 
-                           }
-                           outgoing.send(Frame.Text("{\"this\": $inText}"))
-                           baos.use {
-                               outgoing.send(Frame.Text("{\"data\": ${it.toString()}}")) }
-                       }
-
-                   }*/
 
                 get("/") {
                     BoobBot.metrics.record(Metrics.happened("request /"))
@@ -194,19 +139,6 @@ class ApiServer {
                     call.respondRedirect("https://boob.bot", true)
                 }
 
-                get("/bad-request") {
-                    BoobBot.metrics.record(Metrics.happened("request /bad-request"))
-                    BoobBot.metrics.record(Metrics.happened("requests"))
-                    val uri = call.request.uri
-                    val local = call.request.local
-                    val origin = call.request.origin
-                    BoobBot.log.info("Bad-Request ($uri) [${origin.host} ${local.host} ${origin.remoteHost}]: " +
-                            "${origin.uri} | HEADERS: ${call.request.headers.toMap().map { "${it.key} -> ${it.value}" }.joinToString(
-                                ", "
-                            )}"
-                    )
-                    call.respond("no")
-                }
 
                 get("/stats") {
                     BoobBot.metrics.record(Metrics.happened("request /stats"))

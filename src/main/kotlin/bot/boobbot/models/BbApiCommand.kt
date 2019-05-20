@@ -19,7 +19,8 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         ctx.embed {
-            setDescription(Formats.LEWD_EMOTE)
+            setTitle("${Formats.LEWD_EMOTE} Click me!", "https://discord.gg/WY2zr5f")
+            //setDescription(Formats.LEWD_EMOTE)
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))
             setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
