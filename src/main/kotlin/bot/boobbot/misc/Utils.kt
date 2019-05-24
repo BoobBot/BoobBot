@@ -54,19 +54,23 @@ class Utils {
             }
         )
 
-        /** DEPRECATED */
-//        fun isDonor(user: User): Boolean {
-//            val member = BoobBot.home?.getMember(user) ?: return false
-//            return member.roles.any { r -> r.idLong == 528615837305929748L }
-//        }
-//
-//        fun isDonorPlus(user: User): Boolean {
-//            val member = BoobBot.home?.getMember(user) ?: return false
-//            return member.roles.any { r -> r.idLong == 528615882709008430L }
-//        }
+        /** LEGACY */
+        fun isDonor(user: User): Boolean {
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 528615837305929748L }
+        }
+
+        fun isDonorPlus(user: User): Boolean {
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 528615882709008430L }
+        }
 
         fun checkDonor(event: Message): Boolean {
-            return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
+            val legacyChecks = isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild!!.owner.user))
+
+            // getDonorType automatically checks developer status.
+            return legacyChecks
+                    || BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
                     || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
         }
 
