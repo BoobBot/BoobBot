@@ -54,29 +54,20 @@ class Utils {
             }
         )
 
-        fun isDonor(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615837305929748L }
-        }
-
-        fun isDonorPlus(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615882709008430L }
-        }
+        /** DEPRECATED */
+//        fun isDonor(user: User): Boolean {
+//            val member = BoobBot.home?.getMember(user) ?: return false
+//            return member.roles.any { r -> r.idLong == 528615837305929748L }
+//        }
+//
+//        fun isDonorPlus(user: User): Boolean {
+//            val member = BoobBot.home?.getMember(user) ?: return false
+//            return member.roles.any { r -> r.idLong == 528615882709008430L }
+//        }
 
         fun checkDonor(event: Message): Boolean {
-            if (isDonor(event.author)) {
-                return true
-            }
-            if (event.channelType.isGuild) {
-                if (isDonorPlus(event.guild!!.owner.user)) {
-                    return true
-                }
-            }
-            if (Config.owners.contains(event.author.idLong)) {
-                return true
-            }
-            return false
+            return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
+                    || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
         }
 
         fun getRandomFunString(key: String): String {

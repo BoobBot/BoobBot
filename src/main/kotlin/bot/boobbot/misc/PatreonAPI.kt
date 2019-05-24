@@ -11,6 +11,7 @@ import java.net.URI
 import java.net.URLDecoder
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class PatreonAPI(private val accessToken: String) {
 
@@ -20,10 +21,8 @@ class PatreonAPI(private val accessToken: String) {
     private val monitor = Executors.newSingleThreadScheduledExecutor { Thread(it, "Pledge-Monitor") }
 
     init {
-        monitorPledges()
+        monitor.scheduleAtFixedRate({ monitorPledges() }, 0, 1, TimeUnit.DAYS)
     }
-    // $5 = paid commands for current user
-    // $30 = paid commands for everyone in all servers owned by the user
 
     fun getDonorType(userId: String): DonorType {
         if (Config.owners.contains(userId.toLong())) {
@@ -47,7 +46,6 @@ class PatreonAPI(private val accessToken: String) {
             println("Found ${users.size} in ${e - s}ms")
 
             if (users.isEmpty()) {
-                println("empty, fuck")
                 return@thenAccept log.warn("[SUSPICIOUS] Scheduled pledge clean failed: No users to check")
             }
 
