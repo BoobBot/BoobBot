@@ -154,9 +154,11 @@ class Database {
     }
 
     fun setPrefix(guildId: String, prefix: String) {
+        val doc = Document("prefix", prefix)
+
         guildPrefix.updateOne(
             eq("_id", guildId),
-            Document("\$set", prefix),
+            Document("\$set", doc),
             UpdateOptions().upsert(true)
         )
     }
