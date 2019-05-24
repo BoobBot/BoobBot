@@ -81,7 +81,7 @@ class EventHandler : ListenerAdapter() {
         if (allShardsReady() && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
-                BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 1, 2, TimeUnit.HOURS)
+                BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)
             }
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Game.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.getReadyFormat())
