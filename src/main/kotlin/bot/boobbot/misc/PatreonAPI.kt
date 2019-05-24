@@ -1,14 +1,71 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Context
+import bot.boobbot.models.Config
 import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
 import org.json.JSONObject
+import org.slf4j.LoggerFactory
 import java.net.URI
 import java.net.URLDecoder
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 class PatreonAPI(private val accessToken: String) {
+
+    /**
+     * Scheduler stuff
+     */
+    private val monitor = Executors.newSingleThreadScheduledExecutor { Thread(it, "Pledge-Monitor") }
+
+    init {
+        monitorPledges()
+    }
+    // $5 = paid commands for current user
+    // $30 = paid commands for everyone in all servers owned by the user
+
+    fun getDonorType(userId: String): DonorType {
+        if (Config.owners.contains(userId.toLong())) {
+            return DonorType.DEVELOPER
+        }
+
+        val pledge = BoobBot.database.getDonor(userId)
+        return DonorType.which(pledge)
+    }
+
+    fun monitorPledges() {
+        log.info("Checking pledges...")
+
+        fetchPledgesOfCampaign("1928035").thenAccept { users ->
+            if (users.isEmpty()) {
+                return@thenAccept log.warn("[SUSPICIOUS] Scheduled pledge clean failed: No users to check")
+            }
+
+//            Database.getDonorIds().forEach { id ->
+//                val pledge = users.firstOrNull { it.discordId != null && it.discordId == id }
+//
+//                if (pledge == null || pledge.isDeclined) {
+//                    BoobBot.database.removeDonor(id)
+//                    log.info("Removed $id from donors")
+//                    return@forEach
+//                }
+//
+//                val amount = pledge.pledgeCents.toDouble() / 100
+//                val p = BoobBot.database.getDonor(id)
+//
+//                if (p != amount) {
+//                    log.info("Adjusting $id's pledge (saved: $p, current: $amount)")
+//                    BoobBot.database.setDonor(id, amount)
+//                }
+//            }
+        }
+    }
+
+
+    /**
+     * Functional stuff
+     */
 
     fun getCampaigns(): CompletableFuture<List<JSONObject>> {
         val url = "$BASE_URL/current_user/campaigns"
@@ -142,6 +199,7 @@ class PatreonAPI(private val accessToken: String) {
     companion object {
         private const val BASE_URL = "https://www.patreon.com/api/oauth2/api/"
         private val CHARSET = Charsets.UTF_8
+        private val log = LoggerFactory.getLogger(PatreonAPI::class.java)
     }
 }
 
@@ -154,3 +212,20 @@ class PatreonUser(
     val isDeclined: Boolean,
     val discordId: Long?
 )
+
+enum class DonorType(val tier: Int) {
+    NONE(0),
+    SUPPORTER(1),
+    SERVER_OWNER(2),
+    DEVELOPER(3);
+
+    companion object {
+        fun which(pledgeAmount: Double): DonorType {
+            return when {
+                pledgeAmount >= 30 -> SERVER_OWNER
+                pledgeAmount >= 5 -> SUPPORTER
+                else -> NONE
+            }
+        }
+    }
+}

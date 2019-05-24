@@ -20,6 +20,8 @@ class Database {
     private val guildPrefix = bb.getCollection("prefix")
     private val userSettings = bb.getCollection("usersettings")
     private val customCommands = bb.getCollection("customcoms")
+    private val donor = bb.getCollection("donor")
+
 
     /**
      * Webhooks/Autoporn
@@ -157,6 +159,30 @@ class Database {
             Document("\$set", prefix),
             UpdateOptions().upsert(true)
         )
+    }
+
+    /**
+     * Donor Stuff
+     */
+    fun getDonor(userId: String): Double {
+        return donor.find(BasicDBObject("_id", userId))
+            .firstOrNull()
+            ?.getDouble("pledge")
+            ?: 0.0
+    }
+
+    fun setDonor(userId: String, pledge: Double) {
+        val doc = Document("pledge", pledge)
+
+        donor.updateOne(
+            eq("_id", userId),
+            Document("\$set", doc),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+    fun removeDonor(userId: String) {
+        donor.deleteOne(eq("_id", userId))
     }
 
 
