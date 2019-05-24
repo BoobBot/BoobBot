@@ -34,31 +34,46 @@ class PatreonAPI(private val accessToken: String) {
         return DonorType.which(pledge)
     }
 
+    fun getDonorType(amount: Double): DonorType {
+        return DonorType.which(amount)
+    }
+
     fun monitorPledges() {
         log.info("Checking pledges...")
+        val s = System.currentTimeMillis()
 
         fetchPledgesOfCampaign("1928035").thenAccept { users ->
+            val e = System.currentTimeMillis()
+            println("Found ${users.size} in ${e - s}ms")
+
             if (users.isEmpty()) {
+                println("empty, fuck")
                 return@thenAccept log.warn("[SUSPICIOUS] Scheduled pledge clean failed: No users to check")
             }
 
-//            Database.getDonorIds().forEach { id ->
-//                val pledge = users.firstOrNull { it.discordId != null && it.discordId == id }
-//
-//                if (pledge == null || pledge.isDeclined) {
-//                    BoobBot.database.removeDonor(id)
-//                    log.info("Removed $id from donors")
-//                    return@forEach
-//                }
-//
-//                val amount = pledge.pledgeCents.toDouble() / 100
-//                val p = BoobBot.database.getDonor(id)
-//
-//                if (p != amount) {
-//                    log.info("Adjusting $id's pledge (saved: $p, current: $amount)")
-//                    BoobBot.database.setDonor(id, amount)
-//                }
-//            }
+            val allDonors = BoobBot.database.getAllDonors()
+
+            for (( id, pledge ) in allDonors) {
+                val idLong = id.toLong()
+                val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
+
+                if (user == null || user.isDeclined) {
+                    BoobBot.database.removeDonor(id)
+                    log.info("Removed $id from donors")
+                    continue
+                }
+
+                val amount = user.pledgeCents.toDouble() / 100
+
+                if (pledge != amount) {
+                    log.info("Adjusting $id's pledge (saved: $pledge, current: $amount)")
+                    BoobBot.database.setDonor(id, amount)
+                }
+            }
+
+            // The above only handles users that have registered into the system.
+            // To register into the system, users can run `bbperks` to receive their rewards after
+            // pledging on Patreon.
         }
     }
 

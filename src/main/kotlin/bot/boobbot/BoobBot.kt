@@ -8,10 +8,7 @@ import bot.boobbot.flight.ExecutableCommand
 import bot.boobbot.flight.Indexer
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.misc.ApiServer
-import bot.boobbot.misc.Database
-import bot.boobbot.misc.RequestUtil
-import bot.boobbot.misc.Utils
+import bot.boobbot.misc.*
 import bot.boobbot.models.Config
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
@@ -87,6 +84,10 @@ class BoobBot {
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         var scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val metrics = Metrics.create()!!
+
+        /* Experimental as fuck */
+        val pApi = PatreonAPI(config.patreonApiKey)
+
 
         val home: Guild?
             get() = shardManager.getGuildById(config.homeGuild)

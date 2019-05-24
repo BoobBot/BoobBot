@@ -173,6 +173,11 @@ class Database {
             ?: 0.0
     }
 
+    fun getAllDonors(): Map<String, Double> {
+        return donor.find()
+            .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
+    }
+
     fun setDonor(userId: String, pledge: Double) {
         val doc = Document("pledge", pledge)
 
