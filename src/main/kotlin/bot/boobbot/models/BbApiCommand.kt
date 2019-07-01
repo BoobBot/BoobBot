@@ -22,7 +22,6 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
 
         ctx.embed {
             setTitle("${Formats.LEWD_EMOTE} No image? Click me!", link)
-            //setDescription(Formats.LEWD_EMOTE)
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(link)
             setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)

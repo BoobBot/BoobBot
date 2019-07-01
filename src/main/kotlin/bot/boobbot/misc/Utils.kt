@@ -55,6 +55,11 @@ class Utils {
         )
 
         /** LEGACY */
+        fun isBooster(user: User): Boolean {
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 585533009797578759L }
+        }
+
         fun isDonor(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
             return member.roles.any { r -> r.idLong == 528615837305929748L }
