@@ -25,7 +25,7 @@ class AutoPorn : Command {
         "gay" to "gay",
         "random" to "nsfw"
     )
-    private val typeString = types.entries.joinToString(", ")
+    private val typeString = types.keys.joinToString(", ")
 
     fun formatWebhookUrl(channelId: String, token: String): String {
         return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
