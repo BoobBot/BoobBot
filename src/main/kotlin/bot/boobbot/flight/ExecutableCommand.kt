@@ -16,13 +16,8 @@ class ExecutableCommand(
             return null
         }
 
-        val sc = subcommands.filter { it.key == key || it.value.aliases.contains(key) }
-
-        if (sc.isEmpty()) {
-            return null
-        }
-
-        return sc.values.firstOrNull()
+        return subcommands[key]
+            ?: subcommands.values.firstOrNull { it.aliases.contains(key) }
     }
 
     fun execute(trigger: String, message: Message, args: MutableList<String>) {

@@ -20,8 +20,7 @@ interface Command {
      * Command-local check that is executed before the command or any subcommands are
      * executed.
      *
-     * @returns Boolean
-     *          Whether or not command execution can proceed.
+     * @returns Whether or not command execution can proceed.
      */
     fun localCheck(ctx: Context): Boolean = true
 
