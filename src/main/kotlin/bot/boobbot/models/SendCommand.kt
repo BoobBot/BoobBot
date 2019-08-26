@@ -28,6 +28,14 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             return ctx.send("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `bbopt in`")
         }
 
+        if (category == "dicks") {
+            val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.id)
+
+            if (isUserCockBlocked) {
+                return ctx.send("wtf, **${user.asTag}** is cockblocked. Whore.")
+            }
+        }
+
         val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
             .await()?.json()?.getString("url")
             ?: return ctx.send("wtf, api down?")

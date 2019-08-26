@@ -16,7 +16,7 @@ class Opt : Command {
     @SubCommand(aliases = ["In"])
     fun `in`(ctx: Context) {
         BoobBot.database.setUserCanReceiveNudes(ctx.author.id, true)
-        ctx.send("You're now able to receive nudes :thumbsup:")
+        ctx.send("You're now able to receive nudes <:moans:583453348984913933>")
     }
 
     @SubCommand(aliases = ["Out"])

@@ -92,6 +92,22 @@ class Database {
             ?: false
     }
 
+    fun setUserCockBlocked(userId: String, cockblocked: Boolean) {
+        val newSetting = Document("cockblocked", cockblocked)
+
+        userSettings.updateOne(
+            eq("_id", userId),
+            Document("\$set", newSetting),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+    fun getUserCockBlocked(userId: String): Boolean {
+        return userSettings.find(BasicDBObject("_id", userId))
+            .firstOrNull()?.getBoolean("cockblocked")
+            ?: false
+    }
+
     /**
      * Custom commands
      */
