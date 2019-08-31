@@ -28,7 +28,7 @@ class Utils {
     companion object {
         private val rand = Random()
         private val path = Paths.get("").toAbsolutePath().toString()
-        private val ips = Arrays.asList(
+        private val ips = listOf(
             "104.247.201.235:8564", //Atlanta
             "104.247.211.200:4041", //PeachtreeCity
             "104.237.210.97:4974", //Chicago
