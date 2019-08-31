@@ -4,18 +4,21 @@ import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.models.Config
 import kotlinx.coroutines.future.await
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.MessageBuilder
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.*
-import net.dv8tion.jda.core.managers.AudioManager
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.MessageBuilder
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.managers.AudioManager
 import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val message: Message, val args: List<String>) {
+    val channelType = message.channelType
+    val isFromGuild = channelType.isGuild
+
     val client = message.jda
     val jda: JDA = message.jda
-    val guild: Guild? = message.guild
+    val guild: Guild? = if (isFromGuild) message.guild else null
     val audioManager: AudioManager? = guild?.audioManager
 
     val selfUser = client.selfUser
@@ -26,9 +29,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     val voiceState = member?.voiceState
 
     val channel = message.channel
-    val textChannel: TextChannel? = message.textChannel
-
-    val isFromGuild = message.channelType.isGuild
+    val textChannel: TextChannel? = if (isFromGuild) message.textChannel else null
 
     val customPrefix = if (isFromGuild) BoobBot.database.getPrefix(guild!!.id) else null
 
@@ -37,11 +38,9 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
 
     fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean {
-        return if (channel.type == ChannelType.PRIVATE || Config.owners.contains(user.idLong)) {
-            true
-        } else {
-            guild!!.getMember(user).hasPermission(channel as TextChannel, *permissions)
-        }
+        return !isFromGuild ||
+                Config.owners.contains(user.idLong) ||
+                guild!!.getMember(user)!!.hasPermission(channel as TextChannel, *permissions)
     }
 
     fun userCan(check: Permission): Boolean {

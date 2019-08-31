@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     /* Discord Stuff */
-    implementation ("net.dv8tion:JDA:$jda_version") {
+    implementation ("com.github.DV8FromTheWorld:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
     implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
@@ -78,12 +78,6 @@ shadowJar {
     baseName = "bb"
     classifier = null
     version = null
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
 
 configurations.all {
