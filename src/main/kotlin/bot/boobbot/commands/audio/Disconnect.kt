@@ -12,13 +12,11 @@ import net.dv8tion.jda.core.Permission
 @CommandProperties(
     description = "Disconnects bot",
     category = Category.AUDIO,
-    guildOnly = true,
-    nsfw = false
+    guildOnly = true
 )
 class Disconnect : VoiceCommand {
 
     override fun execute(ctx: Context) {
-
         val player = ctx.audioPlayer!!
         if (
             ctx.userCan(Permission.MESSAGE_MANAGE)

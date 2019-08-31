@@ -11,6 +11,7 @@ import bot.boobbot.misc.json
 import bot.boobbot.misc.jsonArray
 import java.awt.Color
 import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @CommandProperties(
     description = "Super freaky porn <:p_:475801484282429450>",
@@ -65,7 +66,7 @@ class Magik : AsyncCommand {
 
         val res = BoobBot.requestUtil
             .get(
-                "https://dankmemer.services/api/magik?avatar1=${URLEncoder.encode(url, Charsets.UTF_8.name())}",
+                "https://dankmemer.services/api/magik?avatar1=${URLEncoder.encode(url, StandardCharsets.UTF_8)}",
                 createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
             )
             .await()
