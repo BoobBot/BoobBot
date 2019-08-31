@@ -2,18 +2,16 @@ package bot.boobbot.misc
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
-import java.net.URL
+import java.net.URI
 
 fun Dotenv.get(key: String, default: String): String = get(key) ?: default
 
-fun <T> Array<T>.separate(): Pair<T, List<T>> = Pair(first(), drop(1))
 fun <T> List<T>.separate(): Pair<T, List<T>> = Pair(first(), drop(1))
 
-fun String.toUrlOrNull(): URL? {
+fun String.toUriOrNull(): URI? {
     return try {
-        URL(this)
+        URI(this)
     } catch (e: Exception) {
         return null
     }

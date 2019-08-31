@@ -7,7 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
-import bot.boobbot.misc.toUrlOrNull
+import bot.boobbot.misc.toUriOrNull
 import bot.boobbot.models.VoiceCommand
 
 @CommandProperties(
@@ -33,9 +33,14 @@ class Play : VoiceCommand {
         val query = ctx.args[0].replace("<", "").replace(">", "")
 
         if (!Utils.isDonor(ctx.author)) {
-            val url = query.toUrlOrNull()
+            val uri = query.toUriOrNull()
+            val domain = if (uri?.host?.startsWith("www.") == true) {
+                uri.host?.substring(4)
+            } else {
+                uri?.host
+            }
 
-            if (url != null && (url.host == "youtube.com" || url.host == "youtu.be") ||
+            if (domain != null && (domain == "youtube.com" || domain == "youtu.be") ||
                 query.startsWith("ytsearch:")
             ) {
                 ctx.send(
