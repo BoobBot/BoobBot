@@ -112,7 +112,7 @@ class MessageHandler : ListenerAdapter() {
         if (command.properties.boosterOnly && !Utils.isBooster(event.message.author)) {
             event.channel.sendMessage(
                 Formats.error(
-                    " Sorry this command is only available to our Nrito boosters.\n"
+                    " Sorry this command is only available to our Nitro boosters.\n"
                             + "Stop being a fuck and boost today!\nhttps://invite.boob.bot"
                 )
             ).queue()
