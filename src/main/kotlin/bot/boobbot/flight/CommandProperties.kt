@@ -8,6 +8,7 @@ annotation class CommandProperties(
     val category: Category = Category.MISC,
     val developerOnly: Boolean = false,
     val donorOnly: Boolean = false,
+    val boosterOnly: Boolean = false,
     val nsfw: Boolean = false,
     val enabled: Boolean = true,
     val guildOnly: Boolean = false

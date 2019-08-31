@@ -109,6 +109,17 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
+        if (command.properties.boosterOnly && !Utils.isBooster(event.message.author)) {
+            event.channel.sendMessage(
+                Formats.error(
+                    " Sorry this command is only available to our Nrito boosters.\n"
+                            + "Stop being a fuck and boost today!\nhttps://invite.boob.bot"
+                )
+            ).queue()
+            return
+        }
+
+
         try {
             Utils.logCommand(event.message)
             BoobBot.metrics.record(Metrics.happened("command"))
