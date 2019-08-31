@@ -229,6 +229,10 @@ class Formats {
             return text.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
         }
 
+        fun monospaced(items: List<String>): String {
+            return items.joinToString("`, `", prefix = "`", postfix = "`")
+        }
+
 
     }
 }

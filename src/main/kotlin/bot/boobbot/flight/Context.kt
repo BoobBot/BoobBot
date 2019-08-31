@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.AudioManager
 import java.util.concurrent.CompletableFuture
 
-class Context(val trigger: String, val message: Message, val args: Array<String>) {
+class Context(val trigger: String, val message: Message, val args: List<String>) {
     val client = message.jda
     val jda: JDA = message.jda
     val guild: Guild? = message.guild

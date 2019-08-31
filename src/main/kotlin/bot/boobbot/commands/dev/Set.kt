@@ -3,6 +3,7 @@ package bot.boobbot.commands.dev
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.*
 import bot.boobbot.misc.Formats
+import bot.boobbot.misc.separate
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.Icon
@@ -29,45 +30,36 @@ class Set : Command {
         )
     }
 
-    @SubCommand
+    @SubCommand(aliases = ["activity"])
     fun game(ctx: Context) {
         if (ctx.args.isEmpty()) {
-            return ctx.send("to what, whore?")
+            return ctx.send("${ctx.trigger}set game <type> <content...>")
         }
 
-        val args = ctx.args.drop(1).joinToString(" ")
+        val validTypes = Game.GameType.values().map { it.name.toLowerCase() }
+        val (type, content) = ctx.args.separate()
 
-        when (ctx.args[0]) {
-            "playing" -> {
-                BoobBot.setGame = true
-                BoobBot.shardManager.setGame(Game.playing(args))
-                ctx.send(Formats.info("Yes daddy, game set"))
-            }
-            "listening" -> {
-                BoobBot.setGame = true
-                BoobBot.shardManager.setGame(Game.listening(args))
-                ctx.send(Formats.info("Yes daddy, game set"))
-            }
-            "watching" -> {
-                BoobBot.setGame = true
-                BoobBot.shardManager.setGame(Game.watching(args))
-                ctx.send(Formats.info("Yes daddy, game set"))
-            }
-            "streaming" -> {
-                val url = ctx.args[1]
-                val name = ctx.args.drop(2).joinToString(" ")
-
-                BoobBot.setGame = true
-                BoobBot.shardManager.setGame(Game.streaming(name, url))
-                ctx.send(Formats.info("Yes daddy, Stream set"))
-            }
-            "clear" -> {
-                BoobBot.setGame = false
-                BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
-                ctx.send(Formats.info("Yes daddy, cleared game"))
-            }
-            else -> ctx.send("`playing`, `listening`, `watching`, `streaming`, `clear`")
+        if (type == "clear") {
+            BoobBot.setGame = false
+            BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+            return ctx.send(Formats.info("Yes daddy, cleared game"))
         }
+
+        if (!validTypes.contains(type)) {
+            return ctx.send(Formats.monospaced(validTypes))
+        }
+
+        val activityType = gameTypeByString(type)
+
+        if (activityType == Game.GameType.STREAMING) { // Special handling
+            val (url, extra) = content.separate()
+            BoobBot.shardManager.setGame(Game.of(activityType, extra.joinToString(" "), url))
+        } else {
+            BoobBot.shardManager.setGame(Game.of(activityType, content.joinToString(" ")))
+        }
+
+        BoobBot.setGame = true
+        ctx.send(Formats.info("Yes daddy, status set"))
     }
 
     @SubCommand
@@ -116,5 +108,15 @@ class Set : Command {
             BoobBot.log.info("Setting New icons")
             BoobBot.manSetAvatar = true
         }
+    }
+
+    fun gameTypeByString(s: String): Game.GameType {
+        val t = s.toUpperCase()
+
+        if (t == "PLAYING") { // TABLEFLIP
+            return Game.GameType.DEFAULT
+        }
+
+        return Game.GameType.valueOf(s)
     }
 }

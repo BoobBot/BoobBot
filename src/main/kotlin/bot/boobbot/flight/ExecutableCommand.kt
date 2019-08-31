@@ -24,9 +24,9 @@ class ExecutableCommand(
         val subcommand = getSubCommand(args.firstOrNull())
 
         val ctx = if (subcommand != null) {
-            Context(trigger, message, args.drop(1).toTypedArray())
+            Context(trigger, message, args.drop(1))
         } else {
-            Context(trigger, message, args.toTypedArray())
+            Context(trigger, message, args)
         }
 
         if (!cmd.localCheck(ctx)) {
