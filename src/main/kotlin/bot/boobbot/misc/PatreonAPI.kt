@@ -1,7 +1,6 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Context
 import bot.boobbot.models.Config
 import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
@@ -51,7 +50,7 @@ class PatreonAPI(private val accessToken: String) {
 
             val allDonors = BoobBot.database.getAllDonors()
 
-            for (( id, pledge ) in allDonors) {
+            for ((id, pledge) in allDonors) {
                 val idLong = id.toLong()
                 val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
 
@@ -118,8 +117,10 @@ class PatreonAPI(private val accessToken: String) {
         return future
     }
 
-    private fun getPageOfPledge(campaignId: String, offset: String? = null,
-                                users: MutableSet<PatreonUser> = mutableSetOf(), cb: (List<PatreonUser>) -> Unit) {
+    private fun getPageOfPledge(
+        campaignId: String, offset: String? = null,
+        users: MutableSet<PatreonUser> = mutableSetOf(), cb: (List<PatreonUser>) -> Unit
+    ) {
         val url = URIBuilder("$BASE_URL/campaigns/$campaignId/pledges")
 
         url.addParameter("include", "pledge,patron")

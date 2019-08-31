@@ -1,6 +1,5 @@
 package bot.boobbot.misc
 
-import bot.boobbot.BoobBot
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
 import com.mongodb.client.model.Filters.eq

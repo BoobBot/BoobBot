@@ -64,7 +64,7 @@ class BoobBot {
                 ?.selfUser
                 ?.idLong
                 ?: mainSelfId
-        
+
         val defaultPrefix: String
             get() = if (isDebug) "!bb" else "bb"
 

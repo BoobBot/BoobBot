@@ -1,10 +1,7 @@
 package bot.boobbot.misc
 
 import io.github.cdimascio.dotenv.Dotenv
-import net.dv8tion.jda.core.entities.Game
-import java.lang.Exception
 import java.net.URL
-import java.util.concurrent.CompletionStage
 
 fun Dotenv.get(key: String, default: String): String = get(key) ?: default
 

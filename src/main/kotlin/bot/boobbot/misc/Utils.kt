@@ -4,7 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.ExecutableCommand
-import bot.boobbot.models.Config
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.managers.GuildManager
 import okhttp3.Headers
@@ -71,7 +70,8 @@ class Utils {
         }
 
         fun checkDonor(event: Message): Boolean {
-            val legacyChecks = isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild!!.owner.user))
+            val legacyChecks =
+                isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild!!.owner.user))
 
             // getDonorType automatically checks developer status.
             return legacyChecks

@@ -7,10 +7,8 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
-import bot.boobbot.misc.toURLOrNull
 import bot.boobbot.misc.toUrlOrNull
 import bot.boobbot.models.VoiceCommand
-import java.util.regex.Pattern
 
 @CommandProperties(
     description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",
@@ -38,7 +36,8 @@ class Play : VoiceCommand {
             val url = query.toUrlOrNull()
 
             if (url != null && (url.host == "youtube.com" || url.host == "youtu.be") ||
-                    query.startsWith("ytsearch:")) {
+                query.startsWith("ytsearch:")
+            ) {
                 ctx.send(
                     Formats.error(
                         " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "

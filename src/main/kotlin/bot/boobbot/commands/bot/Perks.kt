@@ -25,7 +25,11 @@ class Perks : Command {
 
             val pledgeAmount = pledge.pledgeCents.toDouble() / 100
             val pledgeFriendly = String.format("%1$,.2f", pledgeAmount)
-            ctx.send("Thanks for your donation, **${ctx.author.asTag}**! Your tier: `${BoobBot.pApi.getDonorType(pledgeAmount)}` ($$pledgeFriendly)")
+            ctx.send(
+                "Thanks for your donation, **${ctx.author.asTag}**! Your tier: `${BoobBot.pApi.getDonorType(
+                    pledgeAmount
+                )}` ($$pledgeFriendly)"
+            )
 
             BoobBot.database.setDonor(ctx.author.id, pledgeAmount)
         }
