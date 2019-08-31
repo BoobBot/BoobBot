@@ -4,8 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.ExecutableCommand
-import net.dv8tion.jda.core.entities.*
-import net.dv8tion.jda.core.managers.GuildManager
+import net.dv8tion.jda.api.entities.*
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -71,7 +70,7 @@ class Utils {
 
         fun checkDonor(event: Message): Boolean {
             val legacyChecks =
-                isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild!!.owner.user))
+                isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
 
             // getDonorType automatically checks developer status.
             return legacyChecks
@@ -122,7 +121,7 @@ class Utils {
 
         fun connectToVoiceChannel(message: Message) {
             if (!message.guild.audioManager.isConnected && !message.guild.audioManager.isAttemptingToConnect) {
-                message.guild.audioManager.openAudioConnection(message.member.voiceState.channel)
+                message.guild.audioManager.openAudioConnection(message.member!!.voiceState!!.channel)
             }
         }
 
@@ -144,7 +143,7 @@ class Utils {
                     message.contentRaw,
                     message.channel.name,
                     message.channel.id,
-                    message.guild!!.name,
+                    message.guild.name,
                     message.guild.id,
                     now()
                 )
@@ -193,8 +192,7 @@ class Utils {
         private fun autoAvatar() {
             if (!manSetAvatar) {
                 val icon = Icon.from(getRandomAvatar())
-                val gm = GuildManager(BoobBot.home)
-                gm.setIcon(icon).queue()
+                BoobBot.home?.manager?.setIcon(icon)?.queue()
                 BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
                 BoobBot.log.info("Setting New Guild icon/Avatar")
             }

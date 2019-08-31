@@ -7,7 +7,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.flight.SubCommand
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
-import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.api.Permission
 
 @CommandProperties(aliases = ["cc"], description = "Custom commands", guildOnly = true)
 class Custom : Command {

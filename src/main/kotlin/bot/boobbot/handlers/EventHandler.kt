@@ -4,22 +4,23 @@ import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.config
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.misc.toWebhookEmbed
+import club.minnced.discord.webhook.WebhookClient
+import club.minnced.discord.webhook.WebhookClientBuilder
+import club.minnced.discord.webhook.send.WebhookMessage
+import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.OnlineStatus
-import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.events.DisconnectEvent
-import net.dv8tion.jda.core.events.ReadyEvent
-import net.dv8tion.jda.core.events.ReconnectedEvent
-import net.dv8tion.jda.core.events.ResumedEvent
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent
-import net.dv8tion.jda.core.events.guild.GuildLeaveEvent
-import net.dv8tion.jda.core.hooks.ListenerAdapter
-import net.dv8tion.jda.webhook.WebhookClient
-import net.dv8tion.jda.webhook.WebhookClientBuilder
-import net.dv8tion.jda.webhook.WebhookMessage
-import net.dv8tion.jda.webhook.WebhookMessageBuilder
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.OnlineStatus
+import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.events.DisconnectEvent
+import net.dv8tion.jda.api.events.ReadyEvent
+import net.dv8tion.jda.api.events.ReconnectedEvent
+import net.dv8tion.jda.api.events.ResumedEvent
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
 import java.time.Instant
 import java.util.concurrent.TimeUnit
@@ -33,7 +34,7 @@ class EventHandler : ListenerAdapter() {
     var avatar: String? = null
 
     fun composeEmbed(jda: JDA, builder: EmbedBuilder.() -> Unit): WebhookMessage {
-        val username = jda.selfUser?.name ?: "BoobBot"
+        val username = jda.selfUser.name ?: "BoobBot"
 
         return WebhookMessageBuilder()
             .setUsername(username)
@@ -49,6 +50,7 @@ class EventHandler : ListenerAdapter() {
                     .setTimestamp(Instant.now())
                     .apply(builder)
                     .build()
+                    .toWebhookEmbed()
             )
             .build()
     }
@@ -68,13 +70,13 @@ class EventHandler : ListenerAdapter() {
 
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
-        BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.ping}ms, Status: ${event.jda.status}")
+        BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
 
         avatar = event.jda.selfUser.effectiveAvatarUrl
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
-            setDescription("Ping: ${event.jda.ping}ms") // Don't need status as it's included in title
+            setDescription("Ping: ${event.jda.gatewayPing}ms") // Don't need status as it's included in title
         })
 
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
@@ -83,12 +85,12 @@ class EventHandler : ListenerAdapter() {
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)
             }
-            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Game.playing("bbhelp || bbinvite"))
+            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.getReadyFormat())
 
             safeSend(shardHook, composeEmbed(event.jda) {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
-                setDescription("Average Shard Ping: ${BoobBot.shardManager.averagePing}ms")
+                setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
                 setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
                 addField("Ready Info", "```\n${Formats.getReadyFormat()}```", false)
             })
@@ -101,7 +103,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD RECONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}ms")
+            setDescription("Ping: ${event.jda.gatewayPing}ms")
         })
     }
 
@@ -111,7 +113,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD RESUMED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}ms")
+            setDescription("Ping: ${event.jda.gatewayPing}ms")
         })
     }
 
@@ -121,7 +123,7 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook, composeEmbed(event.jda) {
             setTitle("SHARD DISCONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.ping}ms") // will probably be -1 or something lol
+            setDescription("Ping: ${event.jda.gatewayPing}ms") // will probably be -1 or something lol
         })
     }
 
@@ -138,7 +140,7 @@ class EventHandler : ListenerAdapter() {
                 "${Formats.info("info")}\n" +
                         "On Shard: ${event.jda.shardInfo.shardId}\n" +
                         "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
-                        "Owner: ${guild.owner.user.asTag} (${guild.owner.user.id})\n" +
+                        "Owner: ${guild.owner!!.user.asTag} (${guild.owner!!.user.id})\n" +
                         "Members: ${guild.members.size}"
             )
             setThumbnail(guild.iconUrl)
@@ -156,7 +158,7 @@ class EventHandler : ListenerAdapter() {
                 "${Formats.info("info")}\n" +
                         "On Shard: ${event.jda.shardInfo.shardId}\n" +
                         "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
-                        "Owner: ${guild.owner.user.asTag} (${guild.owner.user.id})\n" +
+                        "Owner: ${guild.owner!!.user.asTag} (${guild.owner!!.user.id})\n" +
                         "Members: ${guild.members.size}"
             )
             setThumbnail(guild.iconUrl)

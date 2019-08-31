@@ -1,6 +1,6 @@
 package bot.boobbot.flight
 
-import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.api.entities.Message
 
 class ExecutableCommand(
     private val cmd: Command,

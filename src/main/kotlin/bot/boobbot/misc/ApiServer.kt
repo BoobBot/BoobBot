@@ -15,7 +15,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import net.dv8tion.jda.core.JDA
+import net.dv8tion.jda.api.JDA
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
@@ -41,7 +41,7 @@ class ApiServer {
             val shards = BoobBot.shardManager.shardsTotal
             val shardsOnline =
                 BoobBot.shardManager.shards.asSequence().filter { s -> s.status == JDA.Status.CONNECTED }.count()
-            val averageShardLatency = BoobBot.shardManager.averagePing.toInt()
+            val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
 
             val osBean: OperatingSystemMXBean =
                 ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
@@ -94,7 +94,7 @@ class ApiServer {
                 JSONObject().put(
                     "shard",
                     e.key.shardInfo.shardId
-                ).put("ping", e.key.ping).put("status", e.value)
+                ).put("ping", e.key.gatewayPing).put("status", e.value)
             )
             return pings
         }
@@ -159,7 +159,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /health"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     call.respondText(
-                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averagePing}}",
+                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averageGatewayPing}}",
                         ContentType.Application.Json
                     )
                 }

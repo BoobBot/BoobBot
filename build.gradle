@@ -38,6 +38,8 @@ dependencies {
     implementation ("com.github.DV8FromTheWorld:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
+    implementation "club.minnced:discord-webhooks:$webhooks_version"
+
     implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
 
     /* Audio */
@@ -78,6 +80,10 @@ shadowJar {
     baseName = "bb"
     classifier = null
     version = null
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 configurations.all {

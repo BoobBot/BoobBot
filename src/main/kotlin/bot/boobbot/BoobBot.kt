@@ -19,14 +19,14 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
-import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
-import net.dv8tion.jda.bot.sharding.ShardManager
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.JDAInfo
-import net.dv8tion.jda.core.OnlineStatus
-import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.entities.Guild
-import net.dv8tion.jda.core.utils.cache.CacheFlag
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDAInfo
+import net.dv8tion.jda.api.OnlineStatus
+import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
+import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.utils.cache.CacheFlag
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.json.JSONObject
@@ -59,8 +59,7 @@ class BoobBot {
             internal set
 
         val selfId: Long
-            get() = shardManager.shards
-                .firstOrNull { it.selfUser != null }
+            get() = shardManager.shards.first()
                 ?.selfUser
                 ?.idLong
                 ?: mainSelfId
@@ -119,7 +118,7 @@ class BoobBot {
             val token = if (isDebug) config.debugToken else config.token
 
             val sessionLimit = getRemainingSessionCount(token)
-            BoobBot.log.info("-- REMAINING LOGINS AVAILABLE: $sessionLimit")
+            log.info("-- REMAINING LOGINS AVAILABLE: $sessionLimit")
             log.level = Level.DEBUG
 
             if (isDebug) {
@@ -129,18 +128,18 @@ class BoobBot {
             }
 
             val jdaHttp = OkHttpClient.Builder()
-                .protocols(Arrays.asList(Protocol.HTTP_1_1))
+                .protocols(listOf(Protocol.HTTP_1_1))
                 .build()
 
             shardManager = DefaultShardManagerBuilder()
                 .setToken(token)
                 .setShardsTotal(shardCount)
-                .setGame(Game.playing("Booting...."))
+                .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .addEventListeners(waiter, MessageHandler(), EventHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
-                .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.GAME))
+                .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .build()
 
             indexCommands()
@@ -183,7 +182,7 @@ class BoobBot {
         }
 
         fun getShardLatencies(): List<Long> {
-            return shardManager.shards.map { it.ping }
+            return shardManager.shards.map { it.gatewayPing }
         }
 
         fun getRemainingSessionCount(token: String): Int {

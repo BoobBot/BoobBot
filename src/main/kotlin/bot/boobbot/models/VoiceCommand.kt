@@ -2,10 +2,10 @@ package bot.boobbot.models
 
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.entities.User
-import net.dv8tion.jda.core.entities.VoiceChannel
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.VoiceChannel
 
 interface VoiceCommand : Command {
 
@@ -20,7 +20,7 @@ interface VoiceCommand : Command {
                 || ctx.author.idLong == user.idLong
                 || Config.owners.contains(ctx.author.idLong)
                 || isDJ(ctx.member!!)
-                || ctx.member.voiceState.channel.members.filter { !it.user.isBot }.size == 1
+                || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
     }
 
     fun performVoiceChecks(ctx: Context): Boolean {
@@ -34,7 +34,7 @@ interface VoiceCommand : Command {
         }
 
         if (ctx.audioManager!!.connectedChannel == null) {
-            val error = checkVoiceChannelPermissions(ctx.voiceState.channel)
+            val error = checkVoiceChannelPermissions(ctx.voiceState.channel!!)
 
             return if (error == null) {
                 ctx.audioManager.openAudioConnection(ctx.voiceState.channel)
@@ -45,7 +45,7 @@ interface VoiceCommand : Command {
             }
         }
 
-        if (ctx.voiceState.channel.idLong != ctx.audioManager.connectedChannel.idLong) {
+        if (ctx.voiceState.channel!!.idLong != ctx.audioManager.connectedChannel!!.idLong) {
             ctx.send("You gotta be in my voicechannel, whore.")
             return false
         }

@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.createHeaders
-import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.api.Permission
 import okhttp3.HttpUrl
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {

@@ -7,7 +7,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
-import net.dv8tion.jda.core.JDAInfo
+import net.dv8tion.jda.api.JDAInfo
 
 @CommandProperties(description = "Displays bot info.", category = Category.MISC)
 class Info : Command {
@@ -15,7 +15,7 @@ class Info : Command {
     override fun execute(ctx: Context) {
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.getOnlineShards().size
-        val averageShardLatency = BoobBot.shardManager.averagePing
+        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
         ctx.embed {
             setAuthor(
                 "BoobBot (Revision ${BoobBot.VERSION})",

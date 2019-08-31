@@ -4,9 +4,9 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.*
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.separate
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.entities.Icon
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.Icon
 
 
 @CommandProperties(description = "Settings", category = Category.DEV, developerOnly = true)
@@ -36,12 +36,12 @@ class Set : Command {
             return ctx.send("${ctx.trigger}set game <type> <content...>")
         }
 
-        val validTypes = Game.GameType.values().map { it.name.toLowerCase() }
+        val validTypes = Activity.ActivityType.values().map { it.name.toLowerCase() }
         val (type, content) = ctx.args.separate()
 
         if (type == "clear") {
             BoobBot.setGame = false
-            BoobBot.shardManager.setGame(Game.playing("bbhelp || bbinvite"))
+            BoobBot.shardManager.setActivity(Activity.playing("bbhelp || bbinvite"))
             return ctx.send(Formats.info("Yes daddy, cleared game"))
         }
 
@@ -51,11 +51,11 @@ class Set : Command {
 
         val activityType = gameTypeByString(type)
 
-        if (activityType == Game.GameType.STREAMING) { // Special handling
+        if (activityType == Activity.ActivityType.STREAMING) { // Special handling
             val (url, extra) = content.separate()
-            BoobBot.shardManager.setGame(Game.of(activityType, extra.joinToString(" "), url))
+            BoobBot.shardManager.setActivity(Activity.of(activityType, extra.joinToString(" "), url))
         } else {
-            BoobBot.shardManager.setGame(Game.of(activityType, content.joinToString(" ")))
+            BoobBot.shardManager.setActivity(Activity.of(activityType, content.joinToString(" ")))
         }
 
         BoobBot.setGame = true
@@ -72,7 +72,7 @@ class Set : Command {
             return ctx.send("Missing `NICKNAME_CHANGE` permission.")
         }
 
-        ctx.guild.controller.setNickname(ctx.selfMember, ctx.args.joinToString(" "))
+        ctx.guild.selfMember.modifyNickname(ctx.args.joinToString(" "))
             .reason("BoobBot nick set")
             .queue(
                 { ctx.send(Formats.info("Yes daddy, nick set")) },
@@ -110,13 +110,13 @@ class Set : Command {
         }
     }
 
-    fun gameTypeByString(s: String): Game.GameType {
+    fun gameTypeByString(s: String): Activity.ActivityType {
         val t = s.toUpperCase()
 
         if (t == "PLAYING") { // TABLEFLIP
-            return Game.GameType.DEFAULT
+            return Activity.ActivityType.DEFAULT
         }
 
-        return Game.GameType.valueOf(s)
+        return Activity.ActivityType.valueOf(s)
     }
 }

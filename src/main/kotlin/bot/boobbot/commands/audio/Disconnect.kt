@@ -7,7 +7,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
 import bot.boobbot.models.Config
 import bot.boobbot.models.VoiceCommand
-import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
     description = "Disconnects bot",

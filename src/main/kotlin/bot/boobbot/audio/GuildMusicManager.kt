@@ -1,12 +1,14 @@
 package bot.boobbot.audio
 
+
 import bot.boobbot.BoobBot
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
-import net.dv8tion.jda.core.audio.AudioSendHandler
+import net.dv8tion.jda.api.audio.AudioSendHandler
+import java.nio.ByteBuffer
 
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
@@ -68,8 +70,8 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     // JDA SEND HANDLER HOOKS
     // ----------------------------------------------
 
-    override fun provide20MsAudio(): ByteArray {
-        return lastFrame!!.data
+    override fun provide20MsAudio(): ByteBuffer {
+        return ByteBuffer.wrap(lastFrame!!.data)
         // We know this won't be null here as JDA will only call this if canProvide is true
         // And we already do null checks in canProvide
     }

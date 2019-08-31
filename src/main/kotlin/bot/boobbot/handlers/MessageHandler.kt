@@ -5,9 +5,9 @@ import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import net.dv8tion.jda.core.hooks.ListenerAdapter
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class MessageHandler : ListenerAdapter() {
 

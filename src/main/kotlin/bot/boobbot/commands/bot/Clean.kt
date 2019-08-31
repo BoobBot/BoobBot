@@ -6,8 +6,8 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Message
 import java.util.concurrent.TimeUnit
 
 
