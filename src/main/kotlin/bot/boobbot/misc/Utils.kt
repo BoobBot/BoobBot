@@ -53,6 +53,12 @@ class Utils {
         )
 
         /** LEGACY */
+
+        fun isStreamer(user: User): Boolean {
+            val member = BoobBot.home?.getMember(user) ?: return false
+            return member.roles.any { r -> r.idLong == 618266918754713610L }
+        }
+
         fun isBooster(user: User): Boolean {
             val member = BoobBot.home?.getMember(user) ?: return false
             return member.roles.any { r -> r.idLong == 585533009797578759L }

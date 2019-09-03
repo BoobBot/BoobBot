@@ -19,7 +19,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.channelType.isGuild) {
-            if (!event.guild!!.isAvailable || !event.textChannel.canTalk()) {
+            if (!event.guild.isAvailable || !event.textChannel.canTalk()) {
                 return
             }
 
@@ -66,10 +66,9 @@ class MessageHandler : ListenerAdapter() {
 
         if (event.guild != null) {
             val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
-
-            if (disabledCommands.contains(command.name)) {
-                return
-            }
+                if (disabledCommands.contains(command.name)) {
+                    return
+                }
         }
 
         if (!command.properties.enabled) {
