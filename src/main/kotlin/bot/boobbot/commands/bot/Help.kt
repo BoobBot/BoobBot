@@ -38,7 +38,7 @@ class Help : Command {
 
             for (category in Category.values()) {
                 val cmds = commands
-                    .filter { it.properties.category == category && !it.properties.developerOnly }
+                    .filter { it.properties.category == category && !it.properties.developerOnly && !it.properties.hidden }
                     .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
 
                 if (cmds.isNotEmpty()) {

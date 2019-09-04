@@ -11,6 +11,7 @@ annotation class CommandProperties(
     val boosterOnly: Boolean = false,
     val nsfw: Boolean = false,
     val enabled: Boolean = true,
-    val guildOnly: Boolean = false
+    val guildOnly: Boolean = false,
+    val hidden: Boolean = false
 )
 

@@ -24,7 +24,7 @@ abstract class PhCommand : AsyncCommand {
             "https://www.pornhub.com/webmasters/search?search=${if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(
                 Formats.tag.size
             )]}&output=json${(0..99999).first}",
-            useProxy = true
+            useProxy = false
         ).await()?.json()
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
         val video = rt.getJSONArray("videos").getJSONObject(0)

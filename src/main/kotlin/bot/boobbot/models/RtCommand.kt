@@ -27,7 +27,7 @@ abstract class RtCommand : AsyncCommand {
                             Formats.tag.size
                         )]) +
                         "&thumbsize=big&ordering=mostviewed&page=1",
-                useProxy = true
+                useProxy = false
             ).await()?.json()
                 ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 

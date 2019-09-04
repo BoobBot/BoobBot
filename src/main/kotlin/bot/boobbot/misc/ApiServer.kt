@@ -175,7 +175,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /commands"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val response = JSONObject()
-                    BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" }
+                    BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" && !command.properties.hidden}
                         .forEach { command ->
                             if (!response.has(command.properties.category.name)) {
                                 response.put(command.properties.category.name, JSONArray())
