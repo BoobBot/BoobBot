@@ -64,7 +64,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.guild != null) {
+        if (event.message.isFromGuild) {
             val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
                 if (disabledCommands.contains(command.name)) {
                     return
@@ -89,7 +89,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(
+        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(
                 event.textChannel,
                 Permission.MESSAGE_EMBED_LINKS
             )
