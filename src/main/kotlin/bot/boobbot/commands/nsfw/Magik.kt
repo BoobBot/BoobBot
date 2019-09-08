@@ -49,6 +49,7 @@ class Magik : AsyncCommand {
 
                 url = obutts.getString("url")
             }
+
             "dick" -> {
                 val bb = BoobBot.requestUtil
                     .get("https://boob.bot/api/v2/img/penis", headers).await()?.json()
