@@ -54,25 +54,14 @@ class Utils {
 
         /** LEGACY */
 
-        fun isStreamer(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 618266918754713610L }
+        fun hasRole(user: User, roleId: Long): Boolean {
+            return BoobBot.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
         }
 
-        fun isBooster(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 585533009797578759L }
-        }
-
-        fun isDonor(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615837305929748L }
-        }
-
-        fun isDonorPlus(user: User): Boolean {
-            val member = BoobBot.home?.getMember(user) ?: return false
-            return member.roles.any { r -> r.idLong == 528615882709008430L }
-        }
+        fun isStreamer(user: User) = hasRole(user, 618266918754713610L)
+        fun isBooster(user: User) = hasRole(user, 585533009797578759L)
+        fun isDonor(user: User) = hasRole(user, 528615837305929748L)
+        fun isDonorPlus(user: User) = hasRole(user, 528615882709008430L)
 
         fun checkDonor(event: Message): Boolean {
             val legacyChecks =
@@ -92,7 +81,7 @@ class Utils {
         fun getRandomMoan(): File {
             val arr = jsonArrays.getJSONArray("moan")
             val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            return (File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
+            return File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}")
         }
 
         private fun getRandomAvatar(): InputStream {
@@ -102,8 +91,8 @@ class Utils {
             return if (file.exists()) {
                 file.inputStream()
             } else {
-                (BoobBot::class.java.classLoader.getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}"))
-
+                BoobBot::class.java.classLoader
+                    .getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}")!!
             }
         }
 
@@ -119,10 +108,6 @@ class Utils {
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
             return HttpHost(parts[0], parts[1].toInt(), "http")
 
-        }
-
-        fun disconnectFromVoice(channel: VoiceChannel) {
-            getMusicManager(channel.guild).shutdown()
         }
 
         fun connectToVoiceChannel(message: Message) {
@@ -204,8 +189,7 @@ class Utils {
             }
         }
 
-        fun auto(): Runnable = Runnable { autoAvatar() }
-
+        fun auto() = Runnable { autoAvatar() }
 
         inline fun suppressExceptions(block: () -> Unit) {
             try {

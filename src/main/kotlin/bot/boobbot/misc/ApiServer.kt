@@ -1,6 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Category
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
@@ -175,7 +176,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request /commands"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     val response = JSONObject()
-                    BoobBot.commands.values.filter { command -> command.properties.category.name != "DEV" && !command.properties.hidden}
+                    BoobBot.commands.values.filter { command -> command.properties.category != Category.DEV && !command.properties.hidden}
                         .forEach { command ->
                             if (!response.has(command.properties.category.name)) {
                                 response.put(command.properties.category.name, JSONArray())

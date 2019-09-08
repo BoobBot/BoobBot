@@ -34,16 +34,14 @@ class EventHandler : ListenerAdapter() {
     var avatar: String? = null
 
     fun composeEmbed(jda: JDA, builder: EmbedBuilder.() -> Unit): WebhookMessage {
-        val username = "BoobBot"
-
         return WebhookMessageBuilder()
-            .setUsername(username)
+            .setUsername("BoobBot")
             .setAvatarUrl(avatar)
             .addEmbeds(
                 EmbedBuilder()
                     .setColor(Color.magenta) // defaults, can be overridden with `.apply`
                     .setAuthor(
-                        username,
+                        "BoobBot",
                         avatar,
                         avatar
                     )
