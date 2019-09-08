@@ -36,6 +36,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import kotlin.collections.set
+import kotlin.math.abs
 
 class BoobBot {
 
@@ -45,7 +46,8 @@ class BoobBot {
         lateinit var VERSION: String
             private set
 
-        const val mainSelfId = 285480424904327179L
+        private const val mainSelfId = 285480424904327179L
+        const val selfId = mainSelfId
         const val inviteUrl =
             "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
 
@@ -57,12 +59,6 @@ class BoobBot {
 
         var isReady = false
             internal set
-
-        val selfId: Long
-            get() = shardManager.shards.first()
-                ?.selfUser
-                ?.idLong
-                ?: mainSelfId
 
         val defaultPrefix: String
             get() = if (isDebug) "!bb" else "bb"
@@ -104,7 +100,7 @@ class BoobBot {
 
             isDebug = args.firstOrNull()?.contains("debug") ?: false
             val shardCount = if (isDebug) 2 else config.shardCount
-            val duration = Math.abs(shardCount * 5000)
+            val duration = abs(shardCount * 5000)
             val currentTime = Calendar.getInstance()
 
             log.info("--- BoobBot (Revision $VERSION) ---")
@@ -168,7 +164,7 @@ class BoobBot {
             return manager
         }
 
-        fun getVersion() {
+        private fun getVersion() {
             val revisionProc = Runtime.getRuntime().exec("git rev-parse --short HEAD")
             VERSION = Utils.readAll(revisionProc.inputStream)
         }
@@ -185,7 +181,7 @@ class BoobBot {
             return shardManager.shards.map { it.gatewayPing }
         }
 
-        fun getRemainingSessionCount(token: String): Int {
+        private fun getRemainingSessionCount(token: String): Int {
             return try {
                 val url = URL("https://discordapp.com/api/gateway/bot")
                 val connection = url.openConnection()
