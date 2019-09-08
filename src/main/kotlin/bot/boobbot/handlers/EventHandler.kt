@@ -34,7 +34,7 @@ class EventHandler : ListenerAdapter() {
     var avatar: String? = null
 
     fun composeEmbed(jda: JDA, builder: EmbedBuilder.() -> Unit): WebhookMessage {
-        val username = jda.selfUser.name ?: "BoobBot"
+        val username = "BoobBot"
 
         return WebhookMessageBuilder()
             .setUsername(username)
