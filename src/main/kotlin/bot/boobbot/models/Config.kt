@@ -20,7 +20,14 @@ class Config(
     val bbDbUrl: String,
     val memerImgenKey: String,
     val sentryDsn: String,
-    val patreonApiKey: String
+    val patreonApiKey: String,
+    val discordTokenUrl: String,
+    val discordAuthUrl: String,
+    val discordRevocationUrl: String,
+    val discordClientSecret: String,
+    val RedirectUrl: String
+
+
 ) {
 
     companion object {
@@ -52,7 +59,12 @@ class Config(
                 dotenv.get("BB_DB_URL", ""),
                 dotenv.get("MEMER_IMGEN_KEY", ""),
                 dotenv.get("SENTRY_DSN", ""),
-                dotenv.get("PATREON_KEY", "")
+                dotenv.get("PATREON_KEY", ""),
+                dotenv.get("DISCORD_TOKEN_URL","https://discordapp.com/api/oauth2/token"),
+                dotenv.get("DISCORD_AUTH_URL","https://discordapp.com/api/oauth2/authorize"),
+                dotenv.get("DISCORD_REVOKE_URL", "https://discordapp.com/api/oauth2/token/revoke"),
+                dotenv.get("DISCORD_CLIENT_SECRET",""),
+                dotenv.get("OAUTH_REDIRECT_URL","")
             )
         }
 

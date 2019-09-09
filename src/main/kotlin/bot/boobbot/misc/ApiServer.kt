@@ -6,9 +6,13 @@ import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.request.path
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
@@ -29,8 +33,20 @@ typealias DelayProvider = suspend (ms: Int) -> Unit
 class ApiServer {
     fun startServer() {
 
+        val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
+            name = "discord",
+            authorizeUrl = BoobBot.config.discordAuthUrl, // OAuth authorization endpoint
+            accessTokenUrl = BoobBot.config.discordTokenUrl, // OAuth token endpoint
+            clientId = BoobBot.selfId.toString(),
+            clientSecret = BoobBot.config.discordClientSecret,
+            // basic auth implementation is not "OAuth style" so falling back to post body
+            accessTokenRequiresBasicAuth = false,
+            requestMethod = HttpMethod.Post, // must POST to token endpoint
+            defaultScopes = listOf("email", "identify") // what scopes to explicitly request
+        )
 
         fun getStats(): JSONObject {
+
             val dpFormatter = DecimalFormat("0.00")
             val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
             val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
@@ -101,6 +117,13 @@ class ApiServer {
         }
 
         embeddedServer(Netty, 8769) {
+            install(Authentication) {
+                oauth("discord") {
+                    client = HttpClient(Apache)
+                    providerLookup = { clientSettings }
+                    urlProvider = { "http://localhost:8769/oauth" }
+                }
+            }
             install(AutoHeadResponse)
             install(CallLogging) {
                 level = Level.INFO
@@ -133,8 +156,19 @@ class ApiServer {
             }
             routing {
 
-
                 get("/") {
+                    call.respondText("""Click <a href="/oauth">here</a> to get tokens""", ContentType.Text.Html)
+                }
+
+                authenticate("discord") {
+                    get("/oauth") {
+                        val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
+
+                        call.respondText("Access Token = $principal")
+                    }
+                }
+
+                get("/1") {
                     BoobBot.metrics.record(Metrics.happened("request /"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
                     call.respondRedirect("https://boob.bot", true)
