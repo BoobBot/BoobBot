@@ -6,14 +6,10 @@ import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
-import bot.boobbot.misc.jsonArray
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import java.awt.Color
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @CommandProperties(
     description = "Super freaky porn <:p_:475801484282429450>",
@@ -53,9 +49,6 @@ class Magik : AsyncCommand {
         ctx.channel.sendFile(image.byteStream(), "magik.png").queue()
     }
 
-    /**
-     * @returns URL to the image.
-     */
     private suspend fun getImage(category: String): String? {
         return BoobBot.requestUtil
             .get(
@@ -66,5 +59,4 @@ class Magik : AsyncCommand {
             ?.json()
             ?.getString("url")
     }
-
 }
