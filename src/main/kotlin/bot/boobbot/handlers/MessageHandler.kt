@@ -88,11 +88,13 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
-            val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").block()?.json()
-                ?: return event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
-            event.channel.sendMessage("This isn't a NSFW channel you whore, so have some sfw pussy.\n" +
-                    "${res.getString("url" )}\n" +
-                "Confused? try `bbhuh`").queue()
+            BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
+                val j = it?.json()
+                    ?: return@queue event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
+
+                event.channel.sendMessage("This isn't an NSFW channel whore, so have some SFW pussy.\n" +
+                        "Confused? Try `bbhuh`\n${j.getString("url")}").queue()
+            }
             return
         }
 
