@@ -1,14 +1,17 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.misc.json
 import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.time.Instant
 
 class MessageHandler : ListenerAdapter() {
 
@@ -85,7 +88,11 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
-            event.channel.sendMessage("This isn't a NSFW channel you whore. Confused? try `bbhuh`").queue()
+            val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").block()?.json()
+                ?: return event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
+            event.channel.sendMessage("This isn't a NSFW channel you whore, so have some sfw pussy.\n" +
+                    "${res.getString("url" )}\n" +
+                "Confused? try `bbhuh`").queue()
             return
         }
 

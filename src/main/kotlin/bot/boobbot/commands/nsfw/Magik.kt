@@ -37,17 +37,17 @@ class Magik : AsyncCommand {
         when (ctx.args[0]) {
             "boobs" -> {
                 val oboobs = BoobBot.requestUtil
-                    .get("http://api.oboobs.ru/boobs/0/1/random").await()?.jsonArray()
+                    .get("https://boob.bot/api/v2/img/boobs", headers).await()?.json()
                     ?: return ctx.send("rip some error, press f")
 
-                url = "http://media.oboobs.ru/" + oboobs.getJSONObject(0).getString("preview")
+                url = oboobs.getString("url")
             }
             "ass" -> {
                 val obutts = BoobBot.requestUtil
-                    .get("http://api.obutts.ru/butts/0/1/random").await()?.jsonArray()
+                    .get("https://boob.bot/api/v2/img/ass", headers).await()?.json()
                     ?: return ctx.send("rip some error, press f")
 
-                url = "http://media.obutts.ru/" + obutts.getJSONObject(0).getString("preview")
+                url = obutts.getString("url")
             }
             "dick" -> {
                 val bb = BoobBot.requestUtil
@@ -73,7 +73,6 @@ class Magik : AsyncCommand {
             ?: return ctx.send("rip some error, press f")
 
         val body = res.body() ?: return ctx.send("rip some error, press f")
-
         ctx.channel.sendFile(body.byteStream(), "magik.png").queue()
     }
 
