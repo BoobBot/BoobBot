@@ -60,7 +60,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     private fun dm(message: Message) {
-        author.openPrivateChannel().submit().thenAccept {
+        author.openPrivateChannel().queue {
             it.sendMessage(message).queue()
         }
     }
