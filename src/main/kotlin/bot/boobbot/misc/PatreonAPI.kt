@@ -202,7 +202,7 @@ class PatreonAPI(private val accessToken: String) {
 
         return PatreonUser(
             userAttr.getString("first_name"),
-            userAttr.getString("last_name"),
+            userAttr.get("last_name").toString(),
             userAttr.getString("email"),
             pledgeAttr.getInt("amount_cents"),
             !pledgeAttr.isNull("declined_since"),
@@ -211,7 +211,7 @@ class PatreonAPI(private val accessToken: String) {
     }
 
     companion object {
-        private const val BASE_URL = "https://www.patreon.com/api/oauth2/api/"
+        private const val BASE_URL = "https://www.patreon.com/api/oauth2/api"
         private val CHARSET = Charsets.UTF_8
         private val log = LoggerFactory.getLogger(PatreonAPI::class.java)
     }
