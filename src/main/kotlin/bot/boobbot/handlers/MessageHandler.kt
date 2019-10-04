@@ -23,12 +23,12 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.channelType.isGuild) {
-            if (!event.guild.isAvailable || !event.textChannel.canTalk()) {
-                return
-            }
-
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
+            }
+
+            if (!event.textChannel.canTalk()) {
+                return
             }
         }
 
