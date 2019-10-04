@@ -136,6 +136,7 @@ class BoobBot {
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
+                .setRelativeRateLimit(false)
                 .build()
 
             indexCommands()
