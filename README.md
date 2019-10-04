@@ -1,5 +1,4 @@
 ![](https://cdn.discordapp.com/attachments/377619690513498133/406183455123177481/OpenSauce.svg) ![](https://cdn.discordapp.com/attachments/330777295952543744/478325842188042241/license.svg) [![CircleCI](https://circleci.com/gh/BoobBot/BoobBot.svg?style=svg)](https://circleci.com/gh/BoobBot/BoobBot) [![Patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/OfficialBoobBot) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/boobbot)  
-[![JetBrains](https://cdn.discordapp.com/attachments/440683853364068381/570687889634099238/untitled.svg)](https://www.jetbrains.com/?from=BoobBot)
 
 # BoobBot
 
@@ -27,4 +26,9 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details
 
+## Projects Powering BoobBot
 
+[![Yourkit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/java/profiler)  
+BoobBot uses Yourkit to profile the application and provide statistics for the performance of the bot.
+
+[![JetBrains](https://cdn.discordapp.com/attachments/440683853364068381/570687889634099238/untitled.svg)](https://www.jetbrains.com/?from=BoobBot)
