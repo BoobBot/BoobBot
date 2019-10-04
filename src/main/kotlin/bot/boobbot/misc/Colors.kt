@@ -79,7 +79,8 @@ object Colors {
     }
 
     fun getEffectiveColor(msg: Message): Color {
-        return msg.member?.color ?: getDominantColor(msg.author)
+        return msg.member?.color ?: Color(255, 0, 128)
+        //return msg.member?.color ?: getDominantColor(msg.author)
     }
 
     fun parseColor(colorString: String): Int {

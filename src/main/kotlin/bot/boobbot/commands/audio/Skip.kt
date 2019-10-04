@@ -33,13 +33,13 @@ class Skip : VoiceCommand {
 
         if (player.player.playingTrack != null) {
             return ctx.embed {
-                setColor(Colors.getDominantColor(ctx.author))
+                setColor(Colors.getEffectiveColor(ctx.message))
                 addField(Formats.info(""), "Skipped: ${track.info.title}\nNow Playing: ${player.player.playingTrack.info.title}", false)
             }
         }
 
         ctx.embed {
-            setColor(Colors.getDominantColor(ctx.author))
+            setColor(Colors.getEffectiveColor(ctx.message))
             addField(Formats.info(""), "Skipped: ${track.info.title}", false)
         }
     }

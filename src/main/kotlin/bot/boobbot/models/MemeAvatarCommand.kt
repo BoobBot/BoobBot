@@ -3,8 +3,8 @@ package bot.boobbot.models
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.createHeaders
 import net.dv8tion.jda.api.Permission
+import okhttp3.Headers
 import okhttp3.HttpUrl
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
@@ -13,7 +13,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
     private val urlBuilder
         get() = HttpUrl.parse(endpointUrl)!!.newBuilder()
 
-    private val headers = createHeaders(Pair("Authorization", BoobBot.config.memerImgenKey))
+    private val headers = Headers.of("Authorization", BoobBot.config.memerImgenKey)
 
     override suspend fun executeAsync(ctx: Context) {
         if (!ctx.botCan(Permission.MESSAGE_WRITE)) {

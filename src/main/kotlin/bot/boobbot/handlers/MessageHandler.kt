@@ -1,17 +1,14 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.json
 import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import java.time.Instant
 
 class MessageHandler : ListenerAdapter() {
 

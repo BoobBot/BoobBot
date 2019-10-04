@@ -1,10 +1,12 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
 import bot.boobbot.flight.ExecutableCommand
-import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.Icon
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.User
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject

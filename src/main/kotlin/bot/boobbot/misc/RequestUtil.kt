@@ -3,28 +3,15 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import kotlinx.coroutines.future.await
 import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
-//will leave incase needed, tho lets remove spam
-internal class LoggingInterceptor : Interceptor {
-    @Throws(IOException::class)
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        //BoobBot.log.info(request.toString())
-        val response = chain.proceed(request)
-        //BoobBot.log.info(response.toString())
-        return response
-    }
-}
 
 class RequestUtil {
     private val userAgent =
         "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
@@ -32,22 +19,17 @@ class RequestUtil {
         .addInterceptor(LoggingInterceptor())
         .connectionPool(ConnectionPool(200, 5L, TimeUnit.MINUTES))
         .retryOnConnectionFailure(true)
-        .protocols(Arrays.asList(Protocol.HTTP_1_1))
+        .protocols(listOf(Protocol.HTTP_1_1))
         .build()
 
-    inner class PendingRequest(private val request: Request, private var useProxy: Boolean = false) {
+    private val proxiedHttpClient: OkHttpClient
+        get() = httpClient.newBuilder().proxy(Utils.getProxy()).build()
 
-
+    inner class PendingRequest(private val request: Request, private val useProxy: Boolean = false) {
         fun queue(success: (Response?) -> Unit) {
-            var client = if (useProxy) {
-                httpClient.newBuilder().proxy(Utils.getProxy())
-                    .build() // this is needed for ph/rt reqs due to rape-limits
-            } else {
-                httpClient
-            }
+            val client = if (useProxy) proxiedHttpClient else httpClient
 
             client.newCall(request).enqueue(object : Callback {
-
                 override fun onFailure(call: Call, e: IOException) {
                     BoobBot.log.error("An error occurred during a HTTP request to ${call.request().url()}", e)
                     success(null) // This could/should be `failure` but this method allows us to do
@@ -57,17 +39,12 @@ class RequestUtil {
                 override fun onResponse(call: Call, response: Response) {
                     success(response)
                 }
-
             })
         }
 
         suspend fun await(): Response? {
             val future = CompletableFuture<Response?>()
-
-            queue {
-                future.complete(it)
-            }
-
+            queue { future.complete(it) }
             return future.await()
         }
 
@@ -84,14 +61,6 @@ class RequestUtil {
 
     fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {
         return makeRequest(useProxy, "GET", url, null, headers)
-    }
-
-    fun delete(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {
-        return makeRequest(useProxy, "DELETE", url, null, headers)
-    }
-
-    fun post(url: String, body: RequestBody, headers: Headers, useProxy: Boolean = false): PendingRequest {
-        return makeRequest(useProxy, "POST", url, body, headers)
     }
 
     fun makeRequest(
@@ -113,38 +82,16 @@ class RequestUtil {
     fun makeRequest(req: Request, useProxy: Boolean = false): PendingRequest {
         return PendingRequest(req, useProxy)
     }
-}
 
-fun Response.json(): JSONObject? {
-    val body = body()
-
-    body().use {
-        return if (isSuccessful && body != null) {
-            JSONObject(body()!!.string())
-        } else {
-            null
+    companion object {
+        internal class LoggingInterceptor : Interceptor {
+            @Throws(IOException::class)
+            override fun intercept(chain: Interceptor.Chain): Response {
+                val request = chain.request()
+                //BoobBot.log.info(request.toString())
+                //BoobBot.log.info(response.toString())
+                return chain.proceed(request)
+            }
         }
     }
-}
-
-fun Response.jsonArray(): JSONArray? {
-    val body = body()
-
-    body().use {
-        return if (isSuccessful && body != null) {
-            JSONArray(body()!!.string())
-        } else {
-            null
-        }
-    }
-}
-
-fun createHeaders(vararg kv: Pair<String, String>): Headers {
-    val builder = Headers.Builder()
-
-    for (header in kv) {
-        builder.add(header.first, header.second)
-    }
-
-    return builder.build()
 }
