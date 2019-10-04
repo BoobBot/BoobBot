@@ -15,6 +15,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.ClassCastException
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Paths
@@ -212,6 +213,27 @@ class Utils {
             val r = block()
             BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
             return r
+        }
+
+        fun tryGet(obj: JSONObject, node: String, default: String): String {
+            val nodes = node.split(".")
+
+            var o = obj
+            for ((i, n) in nodes.withIndex()) {
+                if (i + 1 != nodes.size) {
+                    if (o.has(n) && o.get(n) is JSONObject) {
+                        o = o.getJSONObject(n)
+                    } else {
+                        return default
+                    }
+                } else {
+                    if (o.has(n)) {
+                        return o.get(n).toString()
+                    }
+                }
+            }
+
+            return default
         }
     }
 }
