@@ -7,6 +7,7 @@ import bot.boobbot.misc.Utils
 import bot.boobbot.misc.toWebhookEmbed
 import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
+import club.minnced.discord.webhook.exception.HttpException
 import club.minnced.discord.webhook.send.WebhookMessage
 import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.mxro.metrics.jre.Metrics
@@ -40,11 +41,7 @@ class EventHandler : ListenerAdapter() {
             .addEmbeds(
                 EmbedBuilder()
                     .setColor(Color.magenta) // defaults, can be overridden with `.apply`
-                    .setAuthor(
-                        "BoobBot",
-                        avatar,
-                        avatar
-                    )
+                    .setAuthor("BoobBot", avatar, avatar)
                     .setTimestamp(Instant.now())
                     .apply(builder)
                     .build()
@@ -55,9 +52,13 @@ class EventHandler : ListenerAdapter() {
 
     private fun safeSend(whClient: WebhookClient, message: WebhookMessage) {
         try {
-            whClient.send(message)
-        } catch (e: Exception) {
-            BoobBot.log.error("Failed to send message to webhook", e)
+            if (!BoobBot.isDebug) {
+                whClient.send(message)
+            }
+        } catch (e: HttpException) {
+            if (!e.localizedMessage.contains("Unknown Webhook")) {
+                BoobBot.log.error("Failed to send message to webhook", e)
+            }
         }
     }
 
