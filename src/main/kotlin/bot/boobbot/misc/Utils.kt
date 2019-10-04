@@ -15,7 +15,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.ClassCastException
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Paths
