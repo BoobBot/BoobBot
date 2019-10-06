@@ -137,7 +137,7 @@ class Settings : Command {
 
     @SubCommand(aliases = ["clearprefix", "dp"])
     fun removePrefix(ctx: Context) {
-        if (!BoobBot.database.hasPrefix(ctx.guild!!.id)) {
+        if (BoobBot.database.getPrefix(ctx.guild!!.id) == null) {
             return ctx.send("wtf, i don't have a prefix here, whore.")
         }
 

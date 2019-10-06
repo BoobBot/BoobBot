@@ -2,6 +2,7 @@ package bot.boobbot.misc
 
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
+import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
@@ -11,10 +12,12 @@ class Database {
 
     private val mongo = MongoClients.create()
 
-    private val autoPorn = mongo.getDatabase("autoporn")
-    private val webhooks = autoPorn.getCollection("webhooks")
-
+    /** Databases **/
     private val bb = mongo.getDatabase("boobbot")
+    private val autoPorn = mongo.getDatabase("autoporn")
+
+    /** Tables **/
+    private val webhooks = autoPorn.getCollection("webhooks")
     private val guildSettings = bb.getCollection("settings")
     private val guildPrefix = bb.getCollection("prefix")
     private val userSettings = bb.getCollection("usersettings")
@@ -46,6 +49,7 @@ class Database {
         webhooks.deleteOne(eq("_id", guildId))
     }
 
+
     /**
      * Disable-able commands
      */
@@ -72,40 +76,6 @@ class Database {
         )
     }
 
-    /**
-     * Nudes opt-in/out
-     */
-    fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) {
-        val newSetting = Document("nudes", canReceive)
-
-        userSettings.updateOne(
-            eq("_id", userId),
-            Document("\$set", newSetting),
-            UpdateOptions().upsert(true)
-        )
-    }
-
-    fun getCanUserReceiveNudes(userId: String): Boolean {
-        return userSettings.find(BasicDBObject("_id", userId))
-            .firstOrNull()?.getBoolean("nudes")
-            ?: false
-    }
-
-    fun setUserCockBlocked(userId: String, cockblocked: Boolean) {
-        val newSetting = Document("cockblocked", cockblocked)
-
-        userSettings.updateOne(
-            eq("_id", userId),
-            Document("\$set", newSetting),
-            UpdateOptions().upsert(true)
-        )
-    }
-
-    fun getUserCockBlocked(userId: String): Boolean {
-        return userSettings.find(BasicDBObject("_id", userId))
-            .firstOrNull()?.getBoolean("cockblocked")
-            ?: false
-    }
 
     /**
      * Custom commands
@@ -142,6 +112,7 @@ class Database {
         return custom.filter { it.key == name }.values.firstOrNull()
     }
 
+
     /**
      * Guild Prefix
      */
@@ -160,52 +131,46 @@ class Database {
         return prefixes.firstOrNull()
     }
 
-    fun hasPrefix(guildId: String): Boolean {
-        return guildPrefix.find(BasicDBObject("_id", guildId)).count() > 0
-    }
 
-    fun removePrefix(guildId: String) {
-        guildPrefix.deleteOne(eq("_id", guildId))
-    }
+    fun getDonor(userId: String) = get(donor, userId, "pledge", 0.0)
+    fun setDonor(userId: String, pledge: Double) = set(donor, userId, "pledge", pledge)
+    fun removeDonor(userId: String) = remove(donor, userId)
+    fun getAllDonors() = donor.find()
+        .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
 
-    fun setPrefix(guildId: String, prefix: String) {
-        val doc = Document("prefix", prefix)
+    fun removePrefix(guildId: String) = remove(guildPrefix, guildId)
+    fun setPrefix(guildId: String, prefix: String) = set(guildPrefix, guildId, "prefix", prefix)
 
-        guildPrefix.updateOne(
-            eq("_id", guildId),
-            Document("\$set", doc),
-            UpdateOptions().upsert(true)
-        )
-    }
+    fun getCanUserReceiveNudes(userId: String) = get(userSettings, userId, "nudes", false)
+    fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(userSettings, userId, "nudes", canReceive)
+
+    fun getUserCockBlocked(userId: String) = get(userSettings, userId, "cockblocked", false)
+    fun setUserCockBlocked(userId: String, cockblocked: Boolean) = set(userSettings, userId, "cockblocked", cockblocked)
+
 
     /**
-     * Donor Stuff
+     * Common Functions
      */
-    fun getDonor(userId: String): Double {
-        return donor.find(BasicDBObject("_id", userId))
+    private inline fun <reified T> get(c: MongoCollection<Document>, id: String,
+                                       key: String, default: T): T {
+        return c.find(BasicDBObject("_id", id))
             .firstOrNull()
-            ?.getDouble("pledge")
-            ?: 0.0
+            ?.get(key, T::class.java)
+            ?: default
     }
 
-    fun getAllDonors(): Map<String, Double> {
-        return donor.find()
-            .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
-    }
+    private fun set(c: MongoCollection<Document>, id: String, k: String, v: Any) {
+        val doc = Document(k, v)
 
-    fun setDonor(userId: String, pledge: Double) {
-        val doc = Document("pledge", pledge)
-
-        donor.updateOne(
-            eq("_id", userId),
+        c.updateOne(
+            eq("_id", id),
             Document("\$set", doc),
             UpdateOptions().upsert(true)
         )
     }
 
-    fun removeDonor(userId: String) {
-        donor.deleteOne(eq("_id", userId))
+    private fun remove(c: MongoCollection<Document>, id: String) {
+        c.deleteOne(eq("_id", id))
     }
-
 
 }
