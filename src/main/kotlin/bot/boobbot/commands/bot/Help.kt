@@ -88,7 +88,7 @@ class Help : Command {
     fun sendCommandHelp(ctx: Context) {
         val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
 
-        val command = Utils.getCommand(ctx.args[0])
+        val command = BoobBot.commands.findCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
 
         val mappedAliases = command.properties.aliases.joinToString(", ")

@@ -29,7 +29,7 @@ class Stats : AsyncCommand {
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.size
 
         val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.getOnlineShards().size
+        val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
 
         val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)

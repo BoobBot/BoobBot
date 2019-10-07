@@ -55,9 +55,8 @@ class Utils {
         )
 
         /** LEGACY */
-
         fun hasRole(user: User, roleId: Long): Boolean {
-            return BoobBot.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
+            return BoobBot.shardManager.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
         }
 
         fun isStreamer(user: User) = hasRole(user, 618266918754713610L)
@@ -143,13 +142,6 @@ class Utils {
                 BoobBot.log.info(msg)
             }
 
-
-        fun getCommand(commandName: String): ExecutableCommand? {
-            val commands = BoobBot.commands
-            return commands[commandName]
-                ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
-        }
-
         fun downloadAvatar(url: String): BufferedImage? {
             val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
                 ?: return null
@@ -185,7 +177,7 @@ class Utils {
         private fun autoAvatar() {
             if (!manSetAvatar) {
                 val icon = Icon.from(getRandomAvatar())
-                BoobBot.home?.manager?.setIcon(icon)?.queue()
+                BoobBot.shardManager.home?.manager?.setIcon(icon)?.queue()
                 BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
                 BoobBot.log.info("Setting New Guild icon/Avatar")
             }
@@ -212,27 +204,6 @@ class Utils {
             val r = block()
             BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
             return r
-        }
-
-        fun tryGet(obj: JSONObject, node: String, default: String): String {
-            val nodes = node.split(".")
-
-            var o = obj
-            for ((i, n) in nodes.withIndex()) {
-                if (i + 1 != nodes.size) {
-                    if (o.has(n) && o.get(n) is JSONObject) {
-                        o = o.getJSONObject(n)
-                    } else {
-                        return default
-                    }
-                } else {
-                    if (o.has(n)) {
-                        return o.get(n).toString()
-                    }
-                }
-            }
-
-            return default
         }
     }
 }

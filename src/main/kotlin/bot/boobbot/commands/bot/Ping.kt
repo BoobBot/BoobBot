@@ -12,7 +12,7 @@ class Ping : Command {
     @SubCommand
     fun please(ctx: Context) {
         val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.getOnlineShards().size
+        val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
         ctx.send("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms")
     }

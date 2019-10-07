@@ -62,11 +62,6 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    fun allShardsReady(): Boolean {
-        return BoobBot.shardManager.shards.all { it.status == JDA.Status.CONNECTED || it.status == JDA.Status.LOADING_SUBSYSTEMS }
-        // LOADING_SYSTEMS = receiving info from Discord, so technically connected, and should be ready in a few seconds.
-    }
-
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
@@ -79,7 +74,7 @@ class EventHandler : ListenerAdapter() {
         })
 
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
-        if (allShardsReady() && !BoobBot.isReady) {
+        if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
             BoobBot.isReady = true
             if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)

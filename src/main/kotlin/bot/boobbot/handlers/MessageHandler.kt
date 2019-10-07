@@ -50,7 +50,7 @@ class MessageHandler : ListenerAdapter() {
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
         val commandString = args.removeAt(0)
 
-        val command = Utils.getCommand(commandString)
+        val command = BoobBot.commands.findCommand(commandString)
 
         if (command == null) {
             if (!event.channelType.isGuild) {

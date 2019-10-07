@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.entities.Icon
 @CommandProperties(description = "Settings", category = Category.DEV, developerOnly = true)
 class Set : Command {
 
+    var isCustomGameSet = false
+        private set
+
     override fun execute(ctx: Context) {
         ctx.send("Specify a subcommand: ${subcommands.keys.joinToString(", ")}")
     }
@@ -40,7 +43,7 @@ class Set : Command {
         val (type, content) = ctx.args.separate()
 
         if (type == "clear") {
-            BoobBot.setGame = false
+            isCustomGameSet = false
             BoobBot.shardManager.setActivity(Activity.playing("bbhelp || bbinvite"))
             return ctx.send(Formats.info("Yes daddy, cleared game"))
         }
@@ -58,7 +61,7 @@ class Set : Command {
             BoobBot.shardManager.setActivity(Activity.of(activityType, content.joinToString(" ")))
         }
 
-        BoobBot.setGame = true
+        isCustomGameSet = true
         ctx.send(Formats.info("Yes daddy, status set"))
     }
 
@@ -100,7 +103,7 @@ class Set : Command {
             val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch image")
             val icon = Icon.from(image)
 
-            BoobBot.home?.manager?.setIcon(icon)?.queue()
+            BoobBot.shardManager.home?.manager?.setIcon(icon)?.queue()
             ctx.jda.selfUser.manager.setAvatar(icon).queue(
                 { ctx.send(Formats.info("Yes daddy, icons set")) },
                 { ctx.send(Formats.error(" Failed to set avatar")) }
