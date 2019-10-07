@@ -95,7 +95,7 @@ class BoobBot {
             log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
             log.level = Level.DEBUG
 
-            if (!isDebug) {
+            if (isDebug) {
                 log.warn("Running in debug mode")
             } else {
                 CustomSentryClient.create(config.sentryDsn)
