@@ -3,48 +3,35 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
+import bot.boobbot.flight.CommandRegistry
 import bot.boobbot.flight.EventWaiter
-import bot.boobbot.flight.ExecutableCommand
-import bot.boobbot.flight.Indexer
-import bot.boobbot.handlers.EventHandler
-import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.*
 import bot.boobbot.models.Config
+import bot.boobbot.models.CustomSentryClient
+import bot.boobbot.models.CustomShardManager
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
-import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
-import io.sentry.Sentry
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDAInfo
-import net.dv8tion.jda.api.OnlineStatus
-import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
-import net.dv8tion.jda.api.sharding.ShardManager
-import net.dv8tion.jda.api.utils.cache.CacheFlag
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
-import org.json.JSONObject
+import net.dv8tion.jda.api.exceptions.ContextException
 import org.slf4j.LoggerFactory
-import java.net.URL
+import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import kotlin.collections.set
 import kotlin.math.abs
 
 class BoobBot {
-
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
-        lateinit var VERSION: String
-            private set
+        const val VERSION = "1.3.420.69"
 
         private const val mainSelfId = 285480424904327179L
         const val selfId = mainSelfId
@@ -54,7 +41,7 @@ class BoobBot {
         var isDebug = false
             private set
 
-        lateinit var shardManager: ShardManager
+        lateinit var shardManager: CustomShardManager
             private set
 
         var isReady = false
@@ -63,16 +50,13 @@ class BoobBot {
         val defaultPrefix: String
             get() = if (isDebug) "!bb" else "bb"
 
-        var setGame = false
-            internal set
-
         var manSetAvatar = false
             internal set
 
         val config = Config.load()
         val database = Database()
 
-        val commands = HashMap<String, ExecutableCommand>()
+        val commands = CommandRegistry.load()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
@@ -84,15 +68,9 @@ class BoobBot {
         val pApi = PatreonAPI(config.patreonApiKey)
 
 
-        val home: Guild?
-            get() = shardManager.getGuildById(config.homeGuild)
-
-
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            getVersion()
-
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())
@@ -112,50 +90,30 @@ class BoobBot {
             log.info("Estimated full boot by ${currentTime.time}")
 
             val token = if (isDebug) config.debugToken else config.token
+            shardManager = CustomShardManager.create(token, shardCount)
 
-            val sessionLimit = getRemainingSessionCount(token)
-            log.info("-- REMAINING LOGINS AVAILABLE: $sessionLimit")
+            log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
             log.level = Level.DEBUG
 
             if (isDebug) {
                 log.warn("Running in debug mode")
             } else {
-                Sentry.init(config.sentryDsn)
+                CustomSentryClient.create(config.sentryDsn)
+                    .ignore(
+                        ContextException::class.java,
+                        SocketException::class.java,
+                        SocketTimeoutException::class.java
+                    )
             }
 
-            val jdaHttp = OkHttpClient.Builder()
-                .protocols(listOf(Protocol.HTTP_1_1))
-                .build()
-
-            shardManager = DefaultShardManagerBuilder()
-                .setToken(token)
-                .setShardsTotal(shardCount)
-                .setActivity(Activity.playing("Booting...."))
-                .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(waiter, MessageHandler(), EventHandler())
-                .setAudioSendFactory(NativeAudioSendFactory())
-                .setHttpClient(jdaHttp)
-                .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
-                .build()
-
-            indexCommands()
             ApiServer().startServer()
         }
 
-        private fun indexCommands() {
-            val indexer = Indexer("bot.boobbot.commands")
-
-            for (cmd in indexer.getCommands()) {
-                commands[cmd.name] = cmd
-            }
-
-            log.info("Successfully loaded ${commands.size} commands!")
-        }
-
         fun getMusicManager(g: Guild): GuildMusicManager {
-            val manager =
-                musicManagers.computeIfAbsent(g.idLong) { GuildMusicManager(g.idLong, playerManager.createPlayer()) }
             val audioManager = g.audioManager
+            val manager = musicManagers.computeIfAbsent(g.idLong) {
+                GuildMusicManager(g.idLong, playerManager.createPlayer())
+            }
 
             if (audioManager.sendingHandler == null) {
                 audioManager.sendingHandler = manager
@@ -163,39 +121,6 @@ class BoobBot {
 
             return manager
         }
-
-        private fun getVersion() {
-            val revisionProc = Runtime.getRuntime().exec("git rev-parse --short HEAD")
-            VERSION = Utils.readAll(revisionProc.inputStream)
-        }
-
-        fun isAllShardsConnected(): Boolean {
-            return shardManager.shards.all { it.status == JDA.Status.CONNECTED }
-        }
-
-        fun getOnlineShards(): List<JDA> {
-            return shardManager.shards.filter { it.status == JDA.Status.CONNECTED }
-        }
-
-        fun getShardLatencies(): List<Long> {
-            return shardManager.shards.map { it.gatewayPing }
-        }
-
-        private fun getRemainingSessionCount(token: String): Int {
-            return try {
-                val url = URL("https://discordapp.com/api/gateway/bot")
-                val connection = url.openConnection()
-                connection.setRequestProperty("Authorization", "Bot $token")
-
-                val res = Utils.readAll(connection.getInputStream())
-                val json = JSONObject(res)
-
-                json.getJSONObject("session_start_limit").getInt("remaining")
-            } catch (e: Exception) {
-                -1
-            }
-        }
-
     }
 
 }

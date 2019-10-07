@@ -1,10 +1,11 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.BoobBot.Companion.getMusicManager
 import bot.boobbot.BoobBot.Companion.manSetAvatar
-import bot.boobbot.flight.ExecutableCommand
-import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.Icon
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.User
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -53,9 +54,8 @@ class Utils {
         )
 
         /** LEGACY */
-
         fun hasRole(user: User, roleId: Long): Boolean {
-            return BoobBot.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
+            return BoobBot.shardManager.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
         }
 
         fun isStreamer(user: User) = hasRole(user, 618266918754713610L)
@@ -141,13 +141,6 @@ class Utils {
                 BoobBot.log.info(msg)
             }
 
-
-        fun getCommand(commandName: String): ExecutableCommand? {
-            val commands = BoobBot.commands
-            return commands[commandName]
-                ?: commands.values.firstOrNull { it.properties.aliases.contains(commandName) }
-        }
-
         fun downloadAvatar(url: String): BufferedImage? {
             val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
                 ?: return null
@@ -183,7 +176,7 @@ class Utils {
         private fun autoAvatar() {
             if (!manSetAvatar) {
                 val icon = Icon.from(getRandomAvatar())
-                BoobBot.home?.manager?.setIcon(icon)?.queue()
+                BoobBot.shardManager.home?.manager?.setIcon(icon)?.queue()
                 BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
                 BoobBot.log.info("Setting New Guild icon/Avatar")
             }
@@ -196,6 +189,20 @@ class Utils {
                 block()
             } catch (e: Exception) {
             }
+        }
+
+        fun <T> timed(timerName: String, block: () -> T): T {
+            val start = System.currentTimeMillis()
+            val r = block()
+            BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
+            return r
+        }
+
+        suspend fun <T> suspendTimed(timerName: String, block: suspend () -> T): T {
+            val start = System.currentTimeMillis()
+            val r = block()
+            BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
+            return r
         }
     }
 }

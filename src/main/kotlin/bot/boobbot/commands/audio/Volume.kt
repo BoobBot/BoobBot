@@ -47,7 +47,7 @@ class Volume : VoiceCommand {
 
             player.player.volume = newVol
             return ctx.embed {
-                setColor(Colors.getDominantColor(ctx.author))
+                setColor(Colors.getEffectiveColor(ctx.message))
                 addField(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
             }
 

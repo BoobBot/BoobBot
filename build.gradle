@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     /* Discord Stuff */
-    implementation ("com.github.DV8FromTheWorld:JDA:$jda_version") {
+    implementation ("net.dv8tion:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
     implementation "club.minnced:discord-webhooks:$webhooks_version"

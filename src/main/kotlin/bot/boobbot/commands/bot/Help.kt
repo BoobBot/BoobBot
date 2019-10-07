@@ -7,7 +7,6 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
 import bot.boobbot.models.Config
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -88,7 +87,7 @@ class Help : Command {
     fun sendCommandHelp(ctx: Context) {
         val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
 
-        val command = Utils.getCommand(ctx.args[0])
+        val command = BoobBot.commands.findCommand(ctx.args[0])
             ?: return ctx.send("That command doesn't exist")
 
         val mappedAliases = command.properties.aliases.joinToString(", ")

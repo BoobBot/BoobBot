@@ -162,8 +162,8 @@ class Formats {
 
         fun getReadyFormat(): String {
             val shardManager = BoobBot.shardManager
+            val home = shardManager.home
             val jda = shardManager.shards[0]
-            val home = BoobBot.home
 
             return MessageFormat.format(
                 "Logging in {0}\n"

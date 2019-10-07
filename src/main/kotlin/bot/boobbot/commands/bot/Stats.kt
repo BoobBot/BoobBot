@@ -6,9 +6,11 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Utils
 import com.sun.management.OperatingSystemMXBean
+import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONObject
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
+import kotlin.math.max
 
 @CommandProperties(description = "Overview of BoobBot's process")
 class Stats : AsyncCommand {
@@ -24,65 +26,53 @@ class Stats : AsyncCommand {
 
         val servers = BoobBot.shardManager.guildCache.size()
         val users = BoobBot.shardManager.userCache.size()
+        val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.size
 
         val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.getOnlineShards().size
-        val averageShardLatency =
-            BoobBot.getShardLatencies().reduce { acc, l -> acc + l } / BoobBot.shardManager.shardsTotal
+        val shardsOnline = BoobBot.shardManager.onlineShards.size
+        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
 
-        val osBean: OperatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+        val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
 
-        val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.count()
-
-
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed =
-            if (metrics.has("command")) metrics.getJSONObject("command").getString("Total Events").toInt() else 0
+            if (metrics.has("command")) metrics.getJSONObject("command").getInt("Total Events") else 0
         val comsPerSec =
-            if (metrics.has("command")) metrics.getJSONObject("command").getString("Events per Second (last Minute)").toDouble() else 0.0
+            if (metrics.has("command")) metrics.getJSONObject("command").getDouble("Events per Second (last Minute)") else 0.0
 
         val guildJoin =
-            if (metrics.has("GuildJoin")) metrics.getJSONObject("GuildJoin").getString("Total Events").toInt() else 0
+            if (metrics.has("GuildJoin")) metrics.getJSONObject("GuildJoin").getInt("Total Events") else 0
         val guildLeave =
-            if (metrics.has("GuildLeave")) metrics.getJSONObject("GuildLeave").getString("Total Events").toInt() else 0
+            if (metrics.has("GuildLeave")) metrics.getJSONObject("GuildLeave").getInt("Total Events") else 0
 
         val ready =
-            if (metrics.has("Ready")) metrics.getJSONObject("Ready").getString("Total Events").toInt() else 0 // can never be null
+            if (metrics.has("Ready")) metrics.getJSONObject("Ready").getInt("Total Events") else 0 // can never be null
 
         val reconnected =
-            if (metrics.has("Reconnected")) metrics.getJSONObject("Reconnected").getString("Total Events").toInt() else 0
+            if (metrics.has("Reconnected")) metrics.getJSONObject("Reconnected").getInt("Total Events") else 0
         val resumed =
-            if (metrics.has("Resumed")) metrics.getJSONObject("Resumed").getString("Total Events").toInt() else 0
+            if (metrics.has("Resumed")) metrics.getJSONObject("Resumed").getInt("Total Events") else 0
         val disconnect =
-            if (metrics.has("Disconnect")) metrics.getJSONObject("Disconnect").getString("Total Events").toInt() else 0
+            if (metrics.has("Disconnect")) metrics.getJSONObject("Disconnect").getInt("Total Events") else 0
 
-        val msgSeen = metrics.getJSONObject("MessageReceived").getString("Total Events").toInt() // can never be null
-        val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getString("Events per Second (last Minute)")
-            .toDouble() // can never be null
+        val msgSeen = metrics.getJSONObject("MessageReceived").getInt("Total Events") // can never be null
+        val msgSeenPerSec = metrics.getJSONObject("MessageReceived").getDouble("Events per Second (last Minute)")
 
         val everyOneSeen =
-            if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getString("Total Events").toInt() else 0
+            if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getInt("Total Events") else 0
 
-        var totalGarbageCollections = 0L
-        var garbageCollectionTime = 0L
-        val totalGarbageCollectionTime: Long
-        ManagementFactory.getGarbageCollectorMXBeans().forEach { gc ->
-            val count = gc.collectionCount
-            if (count >= 0) {
-                totalGarbageCollections += count
-            }
-            val time = gc.collectionTime
-            if (time >= 0) {
-                garbageCollectionTime += time
-            }
+        val beans = Utils.timed("beanCollection") {
+            ManagementFactory.getGarbageCollectorMXBeans()
         }
-        totalGarbageCollectionTime = if (garbageCollectionTime > 0 && totalGarbageCollections > 0) {
-            garbageCollectionTime / totalGarbageCollections
-        } else {
-            0L
-        }
+
+        val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
+        val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
+        val averageCollectionTime = if (totalCollections > 0 && totalCollectionTime > 0)
+            totalCollectionTime / totalCollections
+        else
+            0
 
         toSend.append("```ini\n")
             .append("[ JVM ]\n")
@@ -92,9 +82,9 @@ class Stats : AsyncCommand {
             .append("JVM_CPU_Usage       = ").append(procCpuUsage).append("%\n")
             .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
             .append("RAM_Usage           = ").append(usedMB).append("MB (").append(rPercent).append("%)\n")
-            .append("Total_GC_Count      = ").append(totalGarbageCollections).append("\n")
-            .append("Total_GC_Time       = ").append(garbageCollectionTime).append("ms").append("\n")
-            .append("Avg_GC_Cycle        = ").append(dpFormatter.format(totalGarbageCollectionTime)).append("ms")
+            .append("Total_GC_Count      = ").append(totalCollections).append("\n")
+            .append("Total_GC_Time       = ").append(totalCollectionTime).append("ms").append("\n")
+            .append("Avg_GC_Cycle        = ").append(dpFormatter.format(averageCollectionTime)).append("ms")
             .append("\n\n")
             .append("[ BoobBot ]\n")
             .append("Guilds              = ").append(servers).append("\n")

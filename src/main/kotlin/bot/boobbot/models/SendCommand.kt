@@ -4,12 +4,12 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
+import okhttp3.Headers
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
-    private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
+    private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author

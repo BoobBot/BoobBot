@@ -36,7 +36,7 @@ class PatreonAPI(private val accessToken: String) {
         return DonorType.which(amount)
     }
 
-    fun monitorPledges() {
+    private fun monitorPledges() {
         log.info("Checking pledges...")
         val s = System.currentTimeMillis()
 
@@ -78,34 +78,6 @@ class PatreonAPI(private val accessToken: String) {
     /**
      * Functional stuff
      */
-
-    fun getCampaigns(): CompletableFuture<List<JSONObject>> {
-        val url = "$BASE_URL/current_user/campaigns"
-        val request = createRequest(url)
-        val future = CompletableFuture<List<JSONObject>>()
-
-        BoobBot.requestUtil.makeRequest(request).queue {
-            if (it == null || !it.isSuccessful) {
-                BoobBot.log.error("Unable to get list of campaigns ({}): {}", it?.code(), it?.message())
-                it?.close()
-
-                future.complete(emptyList())
-                return@queue
-            }
-
-            val j = it.json()
-
-            if (j == null) {
-                future.complete(emptyList())
-                return@queue
-            }
-
-            val a = j.getJSONArray("data").map { o -> o as JSONObject }.toList() // todo unshit
-            future.complete(a)
-        }
-
-        return future
-    }
 
     fun fetchPledgesOfCampaign(campaignId: String): CompletableFuture<List<PatreonUser>> {
         val future = CompletableFuture<List<PatreonUser>>()
@@ -165,21 +137,16 @@ class PatreonAPI(private val accessToken: String) {
         return parseQueryString(links.getString("next"))["page[cursor]"]
     }
 
-    fun parseQueryString(url: String): HashMap<String, String> {
-        val query = URI(url).query
-        val pairs = query.split("&")
-        val map = hashMapOf<String, String>()
+    private fun parseQueryString(url: String): Map<String, String> {
+        val pairs = URI(url).query.split("&")
 
-        for (pair in pairs) {
-            val nameValue = pair.split("=")
-            val key = URLDecoder.decode(nameValue[0], CHARSET)
-            val value = URLDecoder.decode(nameValue[1], CHARSET)
-
-            map[key] = value
-        }
-
-        return map
+        return pairs
+            .map { it.split("=") }
+            .map { Pair(decode(it[0]), decode(it[1])) }
+            .toMap()
     }
+
+    private fun decode(s: String) = URLDecoder.decode(s, Charsets.UTF_8)
 
     private fun createRequest(url: String): Request {
         return Request.Builder()
@@ -202,7 +169,7 @@ class PatreonAPI(private val accessToken: String) {
 
         return PatreonUser(
             userAttr.getString("first_name"),
-            userAttr.getString("last_name"),
+            userAttr.optString("last_name", ""),
             userAttr.getString("email"),
             pledgeAttr.getInt("amount_cents"),
             !pledgeAttr.isNull("declined_since"),
@@ -210,22 +177,20 @@ class PatreonAPI(private val accessToken: String) {
         )
     }
 
+    inner class PatreonUser(
+        val firstName: String,
+        val lastName: String,
+        val email: String,
+        val pledgeCents: Int,
+        val isDeclined: Boolean,
+        val discordId: Long?
+    )
+
     companion object {
-        private const val BASE_URL = "https://www.patreon.com/api/oauth2/api/"
-        private val CHARSET = Charsets.UTF_8
+        private const val BASE_URL = "https://www.patreon.com/api/oauth2/api"
         private val log = LoggerFactory.getLogger(PatreonAPI::class.java)
     }
 }
-
-
-class PatreonUser(
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val pledgeCents: Int,
-    val isDeclined: Boolean,
-    val discordId: Long?
-)
 
 enum class DonorType(val tier: Int) {
     NONE(0),

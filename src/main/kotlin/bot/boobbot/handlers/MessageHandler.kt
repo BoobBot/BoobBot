@@ -1,17 +1,14 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.json
 import bot.boobbot.models.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import java.time.Instant
 
 class MessageHandler : ListenerAdapter() {
 
@@ -23,12 +20,12 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.channelType.isGuild) {
-            if (!event.guild.isAvailable || !event.textChannel.canTalk()) {
-                return
-            }
-
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
+            }
+
+            if (!event.textChannel.canTalk()) {
+                return
             }
         }
 
@@ -53,7 +50,7 @@ class MessageHandler : ListenerAdapter() {
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
         val commandString = args.removeAt(0)
 
-        val command = Utils.getCommand(commandString)
+        val command = BoobBot.commands.findCommand(commandString)
 
         if (command == null) {
             if (!event.channelType.isGuild) {
@@ -88,11 +85,15 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
-            val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").block()?.json()
-                ?: return event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
-            event.channel.sendMessage("This isn't a NSFW channel you whore, so have some sfw pussy.\n" +
-                    "${res.getString("url" )}\n" +
-                "Confused? try `bbhuh`").queue()
+            BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
+                val j = it?.json()
+                    ?: return@queue event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
+
+                event.channel.sendMessage(
+                    "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
+                            "Confused? Try `bbhuh`\n${j.getString("url")}"
+                ).queue()
+            }
             return
         }
 

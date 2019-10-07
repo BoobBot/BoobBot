@@ -14,7 +14,7 @@ class Info : Command {
 
     override fun execute(ctx: Context) {
         val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.getOnlineShards().size
+        val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
         ctx.embed {
             setAuthor(

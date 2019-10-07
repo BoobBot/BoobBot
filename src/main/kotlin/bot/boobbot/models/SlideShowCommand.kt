@@ -5,19 +5,19 @@ import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.createHeaders
 import bot.boobbot.misc.json
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
+import okhttp3.Headers
 import java.awt.Color
 
 
 abstract class SlideShowCommand : AsyncCommand {
 
-    private val headers = createHeaders(Pair("Key", BoobBot.config.bbApiKey))
+    private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
 
     private val aliases = mapOf(
         "dick" to "penis",
@@ -30,7 +30,7 @@ abstract class SlideShowCommand : AsyncCommand {
         if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].toLowerCase())) {
             return ctx.embed {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: boobs, ass, dick, gif, gay, tiny, cumsluts, collared"))
+                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: $endpointStr"))
             }
         }
 
