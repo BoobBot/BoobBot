@@ -1,5 +1,6 @@
-package bot.boobbot
+package bot.boobbot.models
 
+import bot.boobbot.BoobBot
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Utils

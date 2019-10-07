@@ -7,6 +7,8 @@ import bot.boobbot.flight.CommandRegistry
 import bot.boobbot.flight.EventWaiter
 import bot.boobbot.misc.*
 import bot.boobbot.models.Config
+import bot.boobbot.models.CustomSentryClient
+import bot.boobbot.models.CustomShardManager
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
@@ -15,9 +17,19 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
+import io.sentry.event.Event
+import io.sentry.event.helper.ShouldSendEventCallback
+import io.sentry.event.interfaces.ExceptionInterface
+import net.dv8tion.jda.api.AccountType
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.exceptions.AccountTypeException
+import net.dv8tion.jda.api.exceptions.ContextException
+import net.dv8tion.jda.api.exceptions.ErrorResponseException
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.slf4j.LoggerFactory
+import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -91,10 +103,15 @@ class BoobBot {
             log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
             log.level = Level.DEBUG
 
-            if (isDebug) {
+            if (!isDebug) {
                 log.warn("Running in debug mode")
             } else {
-                Sentry.init(config.sentryDsn)
+                CustomSentryClient.create(config.sentryDsn)
+                    .ignore(
+                        ContextException::class.java,
+                        SocketException::class.java,
+                        SocketTimeoutException::class.java
+                    )
             }
 
             ApiServer().startServer()
