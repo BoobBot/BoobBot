@@ -24,7 +24,6 @@ import java.util.concurrent.Executors
 import kotlin.math.abs
 
 class BoobBot {
-
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
@@ -113,7 +112,6 @@ class BoobBot {
 
             return manager
         }
-
     }
 
 }
