@@ -161,7 +161,7 @@ class ApiServer {
                     val categories = hashMapOf<String, JSONArray>()
 
                     BoobBot.commands.values
-                        .filterNot { it.properties.category != Category.DEV && !it.properties.hidden }
+                        .filter { it.properties.category != Category.DEV && !it.properties.hidden }
                         .forEach {
                             val category = categories.computeIfAbsent(it.properties.category.name) { JSONArray() }
 
