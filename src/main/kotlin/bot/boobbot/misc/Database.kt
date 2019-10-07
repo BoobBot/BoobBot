@@ -151,8 +151,10 @@ class Database {
     /**
      * Common Functions
      */
-    private inline fun <reified T> get(c: MongoCollection<Document>, id: String,
-                                       key: String, default: T): T {
+    private inline fun <reified T> get(
+        c: MongoCollection<Document>, id: String,
+        key: String, default: T
+    ): T {
         return c.find(BasicDBObject("_id", id))
             .firstOrNull()
             ?.get(key, T::class.java)

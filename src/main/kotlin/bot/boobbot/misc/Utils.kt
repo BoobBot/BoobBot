@@ -2,7 +2,6 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.manSetAvatar
-import bot.boobbot.flight.ExecutableCommand
 import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.Message

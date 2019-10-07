@@ -28,7 +28,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
 
     val shardLatencies: Map<Int, Long>
         get() = this.shards.associate { Pair(it.shardInfo.shardId, it.gatewayPing) }
-    
+
     val home: Guild?
         get() = this.getGuildById(BoobBot.config.homeGuild)
 

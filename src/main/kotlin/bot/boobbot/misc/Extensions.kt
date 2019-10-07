@@ -28,7 +28,11 @@ fun MessageEmbed.toWebhookEmbed(): WebhookEmbed {
         this.image?.url,
         if (this.footer != null) WebhookEmbed.EmbedFooter(this.footer!!.text ?: "", this.footer!!.iconUrl) else null,
         WebhookEmbed.EmbedTitle(this.title ?: "", this.url),
-        if (this.author != null) WebhookEmbed.EmbedAuthor(this.author!!.name ?: "", this.author!!.iconUrl, this.author!!.url) else null,
+        if (this.author != null) WebhookEmbed.EmbedAuthor(
+            this.author!!.name ?: "",
+            this.author!!.iconUrl,
+            this.author!!.url
+        ) else null,
         this.fields.map { WebhookEmbed.EmbedField(it.isInline, it.name ?: "", it.value ?: "") }
     )
 }

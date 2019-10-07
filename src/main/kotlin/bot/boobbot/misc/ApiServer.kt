@@ -82,11 +82,13 @@ class ApiServer {
     private fun getPings(): JSONArray {
         return JSONArray().also {
             for ((jda, status) in BoobBot.shardManager.statuses) {
-                it.put(mapOf(
-                    "shard" to jda.shardInfo.shardId,
-                    "ping" to jda.gatewayPing,
-                    "status" to status
-                ))
+                it.put(
+                    mapOf(
+                        "shard" to jda.shardInfo.shardId,
+                        "ping" to jda.gatewayPing,
+                        "status" to status
+                    )
+                )
             }
         }
     }
@@ -165,12 +167,14 @@ class ApiServer {
                         .forEach {
                             val category = categories.computeIfAbsent(it.properties.category.name) { JSONArray() }
 
-                            val j = JSONObject(mapOf(
-                                "command" to it.name,
-                                "category" to it.properties.category,
-                                "description" to it.properties.description,
-                                "aliases" to "[${it.properties.aliases.joinToString(", ")}]"
-                            ))
+                            val j = JSONObject(
+                                mapOf(
+                                    "command" to it.name,
+                                    "category" to it.properties.category,
+                                    "description" to it.properties.description,
+                                    "aliases" to "[${it.properties.aliases.joinToString(", ")}]"
+                                )
+                            )
 
                             category.put(j)
                         }

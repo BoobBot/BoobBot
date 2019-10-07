@@ -16,17 +16,9 @@ import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
-import io.sentry.Sentry
-import io.sentry.event.Event
-import io.sentry.event.helper.ShouldSendEventCallback
-import io.sentry.event.interfaces.ExceptionInterface
-import net.dv8tion.jda.api.AccountType
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.exceptions.AccountTypeException
 import net.dv8tion.jda.api.exceptions.ContextException
-import net.dv8tion.jda.api.exceptions.ErrorResponseException
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.slf4j.LoggerFactory
 import java.net.SocketException
 import java.net.SocketTimeoutException

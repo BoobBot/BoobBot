@@ -89,8 +89,10 @@ class PatreonAPI(private val accessToken: String) {
         return future
     }
 
-    private fun getPageOfPledge(campaignId: String, offset: String? = null,
-                                users: MutableSet<PatreonUser> = mutableSetOf(), cb: (List<PatreonUser>) -> Unit) {
+    private fun getPageOfPledge(
+        campaignId: String, offset: String? = null,
+        users: MutableSet<PatreonUser> = mutableSetOf(), cb: (List<PatreonUser>) -> Unit
+    ) {
         val url = URIBuilder("$BASE_URL/campaigns/$campaignId/pledges")
 
         url.addParameter("include", "pledge,patron")

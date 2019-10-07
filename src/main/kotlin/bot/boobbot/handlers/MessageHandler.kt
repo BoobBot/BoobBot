@@ -89,8 +89,10 @@ class MessageHandler : ListenerAdapter() {
                 val j = it?.json()
                     ?: return@queue event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
 
-                event.channel.sendMessage("This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                        "Confused? Try `bbhuh`\n${j.getString("url")}").queue()
+                event.channel.sendMessage(
+                    "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
+                            "Confused? Try `bbhuh`\n${j.getString("url")}"
+                ).queue()
             }
             return
         }

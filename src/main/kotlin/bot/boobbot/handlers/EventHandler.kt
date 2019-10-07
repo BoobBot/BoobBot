@@ -12,7 +12,6 @@ import club.minnced.discord.webhook.send.WebhookMessage
 import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.DisconnectEvent
