@@ -48,7 +48,7 @@ class Set : Command {
             return ctx.send(Formats.info("Yes daddy, cleared game"))
         }
 
-        if (!validTypes.contains(type)) {
+        if (!validTypes.contains(type) && type != "playing") {
             return ctx.send(Formats.monospaced(validTypes))
         }
 
@@ -120,6 +120,6 @@ class Set : Command {
             return Activity.ActivityType.DEFAULT
         }
 
-        return Activity.ActivityType.valueOf(s)
+        return Activity.ActivityType.valueOf(t)
     }
 }
