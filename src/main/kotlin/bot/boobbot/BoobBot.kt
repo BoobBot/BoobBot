@@ -3,12 +3,12 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
-import bot.boobbot.flight.CommandRegistry
+import bot.boobbot.internals.CommandRegistry
 import bot.boobbot.flight.EventWaiter
 import bot.boobbot.misc.*
 import bot.boobbot.models.Config
-import bot.boobbot.models.CustomSentryClient
-import bot.boobbot.models.CustomShardManager
+import bot.boobbot.internals.CustomSentryClient
+import bot.boobbot.internals.CustomShardManager
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager

@@ -1,4 +1,4 @@
-package bot.boobbot.models
+package bot.boobbot.internals
 
 import io.sentry.Sentry
 import io.sentry.SentryClient
