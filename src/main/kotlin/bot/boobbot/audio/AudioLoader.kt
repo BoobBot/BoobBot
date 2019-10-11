@@ -40,13 +40,12 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     private fun enqueueTrack(track: AudioTrack) {
         track.userData = ctx.author
         musicManager.addToQueue(track)
-        val source = track.sourceManager.sourceName
-        when (source) {
+        when (val source = track.sourceManager.sourceName) {
             "local" -> ctx.send(":tired_face:")
             "pornhub" -> send(track, pornhubIcon)
             "redtube" -> send(track, redtubeIcon)
             "youtube" -> send(track, youtubeIcon)
-            else -> BoobBot.log.warn("Wtf am i playing? ${ctx.message.contentRaw} $source ${ctx.author}")
+            else -> ctx.send("`$source` is unsupported, whore")
         }
     }
 
