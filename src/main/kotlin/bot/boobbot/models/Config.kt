@@ -24,8 +24,7 @@ class Config(
 ) {
 
     companion object {
-
-        val owners = Arrays.asList(
+        val owners = listOf(
             248294452307689473L, 180093157554388993L
         )
 
@@ -55,7 +54,6 @@ class Config(
                 dotenv.get("PATREON_KEY", "")
             )
         }
-
     }
 
 }
