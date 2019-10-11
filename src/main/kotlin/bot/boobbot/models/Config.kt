@@ -26,7 +26,7 @@ class Config(
     companion object {
 
         val owners = Arrays.asList(
-            248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L, 180093157554388993L
+            248294452307689473L, 180093157554388993L
         )
 
         fun load(path: String = Paths.get("").toAbsolutePath().toString()): Config {
