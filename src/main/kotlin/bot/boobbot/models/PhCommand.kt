@@ -12,6 +12,9 @@ import java.util.*
 
 
 abstract class PhCommand : AsyncCommand {
+    private fun urlFor(query: String): String {
+        return "https://www.pornhub.com/webmasters/search?search=$query&output=json${(0..99999).random()}"
+    }
 
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
@@ -20,14 +23,14 @@ abstract class PhCommand : AsyncCommand {
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
         }
-        val rt = BoobBot.requestUtil.get(
-            "https://www.pornhub.com/webmasters/search?search=${if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag[Random().nextInt(
-                Formats.tag.size
-            )]}&output=json${(0..99999).first}",
-            useProxy = false
-        ).await()?.json()
+
+        val query = if (ctx.args[0].toLowerCase() != "random") ctx.args[0].toLowerCase() else Formats.tag.random()
+
+        val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
+
         val video = rt.getJSONArray("videos").getJSONObject(0)
+
         ctx.embed {
             setAuthor(
                 "PornHub video search",
