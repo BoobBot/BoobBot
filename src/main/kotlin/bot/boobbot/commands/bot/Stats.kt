@@ -30,7 +30,7 @@ class Stats : AsyncCommand {
 
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
-        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
+        val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
 
         val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)

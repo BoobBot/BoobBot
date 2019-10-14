@@ -31,7 +31,6 @@ import kotlin.math.max
 class ApiServer {
 
     private fun getStats(): JSONObject {
-        val dpFormatter = DecimalFormat("0.00")
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
@@ -43,17 +42,23 @@ class ApiServer {
         val shardsOnline = BoobBot.shardManager.shards.filter { it.status == JDA.Status.CONNECTED }.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
 
-        val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+        val osBean = Utils.timed("osBean") {
+            ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+        }
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
-        val players = BoobBot.musicManagers.filter { p -> p.value.player.playingTrack != null }.size
+        val players = BoobBot.musicManagers.values.filter { it.player.playingTrack != null }.size
 
         val beans = Utils.timed("beanCollection") {
             ManagementFactory.getGarbageCollectorMXBeans()
         }
 
-        val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
-        val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
+        val totalCollections = Utils.timed("sumBeanCollectionCount") {
+            beans.sumByLong { max(it.collectionCount, 0) }
+        }
+        val totalCollectionTime = Utils.timed("sumBeanCollectionTime") {
+            beans.sumByLong { max(it.collectionTime, 0) }
+        }
         val averageCollectionTime = if (totalCollections > 0 && totalCollectionTime > 0)
             totalCollectionTime / totalCollections
         else
@@ -187,6 +192,6 @@ class ApiServer {
     }
 
     companion object {
-        private val timingKey = AttributeKey<Long>("requestReceived")
+        val dpFormatter = DecimalFormat("0.00")
     }
 }
