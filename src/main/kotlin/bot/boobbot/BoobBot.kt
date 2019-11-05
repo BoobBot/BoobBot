@@ -17,6 +17,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.JDAInfo
+import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.exceptions.ContextException
 import org.slf4j.LoggerFactory
@@ -33,8 +34,10 @@ class BoobBot {
         val startTime = System.currentTimeMillis()
         const val VERSION = "1.3.420.69"
 
-        var selfId = 0L
-        var inviteUrl = ""
+        lateinit var application: ApplicationInfo
+        val selfId: Long
+            get() = application.idLong
+        lateinit var inviteUrl: String
 
         var isDebug = false
             private set
@@ -89,6 +92,8 @@ class BoobBot {
 
             val token = if (isDebug) config.debugToken else config.token
             shardManager = CustomShardManager.create(token, shardCount)
+            application = shardManager.retrieveApplicationInfo().complete()
+            inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
 
             log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
             log.level = Level.DEBUG
@@ -104,7 +109,6 @@ class BoobBot {
                     )
             }
 
-            loadSelfInfo(token)
             ApiServer().startServer()
         }
 
@@ -119,13 +123,6 @@ class BoobBot {
             }
 
             return manager
-        }
-
-        fun loadSelfInfo(token: String) {
-            val (userId, timestamp, hmac) = token.split('.')
-            selfId = String(Base64.getDecoder().decode(userId)).toLong()
-
-            inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$userId&scope=bot"
         }
     }
 
