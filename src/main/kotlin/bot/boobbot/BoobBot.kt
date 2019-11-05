@@ -33,10 +33,8 @@ class BoobBot {
         val startTime = System.currentTimeMillis()
         const val VERSION = "1.3.420.69"
 
-        private const val mainSelfId = 285480424904327179L
-        const val selfId = mainSelfId
-        const val inviteUrl =
-            "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
+        var selfId = 0L
+        var inviteUrl = ""
 
         var isDebug = false
             private set
@@ -106,6 +104,7 @@ class BoobBot {
                     )
             }
 
+            loadSelfInfo(token)
             ApiServer().startServer()
         }
 
@@ -120,6 +119,13 @@ class BoobBot {
             }
 
             return manager
+        }
+
+        fun loadSelfInfo(token: String) {
+            val (userId, timestamp, hmac) = token.split('.')
+            selfId = String(Base64.getDecoder().decode(userId)).toLong()
+
+            inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$userId&scope=bot"
         }
     }
 
