@@ -19,9 +19,9 @@ class TimerUtil(val identifier: String) {
         }
 
         suspend fun <T> inlineSuspended(timerName: String, block: suspend () -> T): T {
-            val start = System.currentTimeMillis()
+            val timer = TimerUtil(timerName)
             val r = block()
-            BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
+            timer.stop()
             return r
         }
     }
