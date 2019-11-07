@@ -30,12 +30,11 @@ class MessageHandler : ListenerAdapter() {
         }
 
         val messageContent = event.message.contentRaw
-        val acceptablePrefixes = mutableListOf("excuse me, how did you find this prefix?")
-        //val acceptablePrefixes = mutableListOf(
-        //    BoobBot.defaultPrefix,
-        //    "<@${event.jda.selfUser.id}> ",
-        //    "<@!${event.jda.selfUser.id}> "
-        //)
+        val acceptablePrefixes = mutableListOf(
+            BoobBot.defaultPrefix,
+            "<@${event.jda.selfUser.id}> ",
+            "<@!${event.jda.selfUser.id}> "
+        )
 
         if (event.channelType.isGuild) {
             val custom = BoobBot.database.getPrefix(event.guild.id)
