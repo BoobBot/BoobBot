@@ -30,9 +30,9 @@ class CustomSentryClient(private val sentryClient: SentryClient) : ShouldSendEve
         val se = getLastRecordedException(event)
             ?: return true
 
-        if (se.exceptionMessage != event.message) {
-            return true
-        }
+//        if (se.exceptionMessage != event.message) {
+//            return true
+//        }
 
         return !ignoredExceptions.contains(se.exceptionClassName)
     }
