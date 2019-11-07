@@ -1,5 +1,6 @@
 package bot.boobbot.internals
 
+import bot.boobbot.BoobBot
 import com.neovisionaries.ws.client.OpeningHandshakeException
 import net.dv8tion.jda.api.AccountType
 import net.dv8tion.jda.api.JDA
@@ -71,7 +72,7 @@ class SessionController : SessionController {
 
     class SessionWorker(
         private val manager: SessionManager,
-        private val delay: Long = 10000
+        private val delay: Long = BoobBot.config.shardIdentifyDelay
         // 10 seconds. This takes 130 seconds (2 minutes 10 seconds) to boot 208 shards.
         // This should be 5 seconds (1 minute 5 seconds) but a low delay makes the server shit itself.
     ) : Thread("Session-Worker-${manager.id}") {

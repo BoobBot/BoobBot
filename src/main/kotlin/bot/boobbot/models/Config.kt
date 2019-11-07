@@ -20,7 +20,9 @@ class Config(
     val bbDbUrl: String,
     val memerImgenKey: String,
     val sentryDsn: String,
-    val patreonApiKey: String
+    val patreonApiKey: String,
+    val mongoDbUrl: String,
+    val shardIdentifyDelay: Long
 ) {
 
     companion object {
@@ -51,7 +53,9 @@ class Config(
                 dotenv.get("BB_DB_URL", ""),
                 dotenv.get("MEMER_IMGEN_KEY", ""),
                 dotenv.get("SENTRY_DSN", ""),
-                dotenv.get("PATREON_KEY", "")
+                dotenv.get("PATREON_KEY", ""),
+                dotenv.get("MONGO_DB_URL", ""),
+                dotenv.get("SHARD_IDENTIFY_DELAY", "5000").toLong()
             )
         }
     }
