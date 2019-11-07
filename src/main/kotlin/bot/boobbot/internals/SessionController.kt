@@ -32,15 +32,14 @@ class SessionController : SessionController {
 
     override fun removeSession(node: SessionController.SessionConnectNode) {
         val managerId = node.shardInfo.shardId % 16
-        val manager = sessionManagers.computeIfAbsent(managerId) { SessionManager(it) }
-        manager.removeSession(node)
+        sessionManagers[managerId]?.removeSession(node)
     }
 
     override fun getGateway(api: JDA): String {
         val route = Route.Misc.GATEWAY.compile()
-        return RestActionImpl<String>(
-            api, route
-        ) { response, _ -> response.getObject().getString("url") }.complete()
+        return RestActionImpl<String>(api, route) { response, _ ->
+            response.getObject().getString("url")
+        }.complete()
     }
 
     override fun getGatewayBot(api: JDA): Pair<String, Int> {
