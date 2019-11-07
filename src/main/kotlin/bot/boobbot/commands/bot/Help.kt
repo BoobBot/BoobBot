@@ -66,7 +66,7 @@ class Help : Command {
                 embeds.add(builder.build())
             }
 
-            if (!ctx.args.isEmpty() && ctx.args[0] == "--dm") {
+            if (ctx.args.isNotEmpty() && ctx.args[0] == "--dm") {
                 ctx.message.addReaction("\uD83D\uDCEC").queue()
 
                 for (embed in embeds) {
