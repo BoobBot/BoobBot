@@ -1,4 +1,4 @@
-package bot.boobbot.models
+package bot.boobbot.internals
 
 import bot.boobbot.BoobBot
 import bot.boobbot.handlers.EventHandler
@@ -62,6 +62,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
+                .setSessionController(SessionController())
                 .build()
 
             return CustomShardManager(token, sm)
