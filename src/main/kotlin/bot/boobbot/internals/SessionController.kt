@@ -111,7 +111,6 @@ class SessionController : SessionController {
             var isMultiple = manager.connectQueue.size > 1
             while (manager.connectQueue.isNotEmpty()) {
                 val node = manager.connectQueue.poll()
-                log.info("Logging in shard ${node.shardInfo.shardId}")
                 try {
                     node.run(isMultiple && manager.connectQueue.isEmpty())
                     isMultiple = true
@@ -140,7 +139,6 @@ class SessionController : SessionController {
         val connectQueue = ConcurrentLinkedQueue<SessionController.SessionConnectNode>()
         var lastConnect = 0L
         val lock = Object()
-
         var worker: Thread? = null
 
         fun appendSession(node: SessionController.SessionConnectNode) {
@@ -160,7 +158,6 @@ class SessionController : SessionController {
                 }
             }
         }
-
     }
 
     companion object {
