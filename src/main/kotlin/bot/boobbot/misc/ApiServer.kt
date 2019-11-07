@@ -31,38 +31,46 @@ import kotlin.math.max
 class ApiServer {
 
     private fun getStats(): JSONObject {
+        val ramTimer = TimerUtil("ram")
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
+        ramTimer.stop()
 
+        val cacheTimer = TimerUtil("cache")
         val servers = BoobBot.shardManager.guildCache.size()
         val users = BoobBot.shardManager.userCache.size()
+        cacheTimer.stop()
 
+        val shardTimer = TimerUtil("shards")
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.shards.filter { it.status == JDA.Status.CONNECTED }.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
+        shardTimer.stop()
 
-        val osBean = Utils.timed("osBean") {
+        val osBean = TimerUtil.inline("osBean") {
             ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         }
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
         val players = BoobBot.musicManagers.values.filter { it.player.playingTrack != null }.size
 
-        val beans = Utils.timed("beanCollection") {
+        val beans = TimerUtil.inline("beanCollection") {
             ManagementFactory.getGarbageCollectorMXBeans()
         }
 
-        val totalCollections = Utils.timed("sumBeanCollectionCount") {
+        val totalCollections = TimerUtil.inline("sumBeanCollectionCount") {
             beans.sumByLong { max(it.collectionCount, 0) }
         }
-        val totalCollectionTime = Utils.timed("sumBeanCollectionTime") {
+        val totalCollectionTime = TimerUtil.inline("sumBeanCollectionTime") {
             beans.sumByLong { max(it.collectionTime, 0) }
         }
         val averageCollectionTime = if (totalCollections > 0 && totalCollectionTime > 0)
             totalCollectionTime / totalCollections
         else
             0
+
+        val jsonTimer = TimerUtil("json-construction")
 
         val jvm = JSONObject()
             .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
@@ -80,6 +88,8 @@ class ApiServer {
             .put("Audio_Players", players)
             .put("Shards_Online", "$shardsOnline/$shards")
             .put("Average_Latency", "${averageShardLatency}ms")
+
+        jsonTimer.stop()
 
         return JSONObject().put("bb", bb).put("jvm", jvm)
     }
@@ -133,7 +143,7 @@ class ApiServer {
                     BoobBot.metrics.record(Metrics.happened("request ${call.request.path()}"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
 
-                    Utils.suspendTimed("request:${call.request.path()}") {
+                    TimerUtil.inlineSuspended("request:${call.request.path()}") {
                         proceed()
                     }
                 }
@@ -143,8 +153,9 @@ class ApiServer {
                 }
 
                 get("/stats") {
+                    val stats = TimerUtil.inline("getStats") { getStats() }
                     call.respondText(
-                        "{\"stats\": ${getStats()}}",
+                        "{\"stats\": $stats}",
                         ContentType.Application.Json
                     )
                 }

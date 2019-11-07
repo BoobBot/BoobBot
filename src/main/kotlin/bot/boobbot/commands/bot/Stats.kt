@@ -63,9 +63,7 @@ class Stats : AsyncCommand {
         val everyOneSeen =
             if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getInt("Total Events") else 0
 
-        val beans = Utils.timed("beanCollection") {
-            ManagementFactory.getGarbageCollectorMXBeans()
-        }
+        val beans = ManagementFactory.getGarbageCollectorMXBeans()
 
         val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
         val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
