@@ -37,10 +37,6 @@ class ApiServer {
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
         ramTimer.stop()
 
-        val cacheTimer = TimerUtil("cache")
-        val servers = BoobBot.shardManager.guilds.size
-        val users = BoobBot.shardManager.users.size
-        cacheTimer.stop()
 
         val shardTimer = TimerUtil("shards")
         val shards = BoobBot.shardManager.shardsTotal
@@ -83,8 +79,6 @@ class ApiServer {
             .put("Avg_GC_Cycle", "${dpFormatter.format(averageCollectionTime)}ms")
 
         val bb = JSONObject()
-            .put("Guilds", servers)
-            .put("Users", users)
             .put("Audio_Players", players)
             .put("Shards_Online", "$shardsOnline/$shards")
             .put("Average_Latency", "${averageShardLatency}ms")
