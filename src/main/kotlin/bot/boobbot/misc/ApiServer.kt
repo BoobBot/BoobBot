@@ -37,7 +37,6 @@ class ApiServer {
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
         ramTimer.stop()
 
-
         val shardTimer = TimerUtil("shards")
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.shards.filter { it.status == JDA.Status.CONNECTED }.size

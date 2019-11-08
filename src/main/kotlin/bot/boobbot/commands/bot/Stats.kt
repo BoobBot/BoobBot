@@ -24,8 +24,8 @@ class Stats : AsyncCommand {
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-        val servers = BoobBot.shardManager.guildCache.size()
-        val users = BoobBot.shardManager.userCache.size()
+//        val servers = BoobBot.shardManager.guildCache.size()
+//        val users = BoobBot.shardManager.userCache.size()
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.size
 
         val shards = BoobBot.shardManager.shardsTotal
@@ -85,8 +85,8 @@ class Stats : AsyncCommand {
             .append("Avg_GC_Cycle        = ").append(dpFormatter.format(averageCollectionTime)).append("ms")
             .append("\n\n")
             .append("[ BoobBot ]\n")
-            .append("Guilds              = ").append(servers).append("\n")
-            .append("Users               = ").append(users).append("\n")
+            .append("Guilds              = ").append(">=250,000").append("\n")
+            .append("Users               = ").append("A lot").append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards)
             .append("\n") // shardsOnline
