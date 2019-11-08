@@ -38,8 +38,8 @@ class ApiServer {
         ramTimer.stop()
 
         val cacheTimer = TimerUtil("cache")
-        val servers = BoobBot.shardManager.guildCache.size()
-        val users = BoobBot.shardManager.userCache.size()
+        val servers = BoobBot.shardManager.guilds.size
+        val users = BoobBot.shardManager.users.size
         cacheTimer.stop()
 
         val shardTimer = TimerUtil("shards")
