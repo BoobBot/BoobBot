@@ -169,7 +169,7 @@ class PatreonAPI(private val accessToken: String) {
 
         return PatreonUser(
             userAttr.getString("first_name"),
-            userAttr.optString("last_name", ""),
+            userAttr.get("last_name").toString(),
             userAttr.getString("email"),
             pledgeAttr.getInt("amount_cents"),
             !pledgeAttr.isNull("declined_since"),
