@@ -12,7 +12,7 @@ class Kick : ModCommand() {
         val auditReason = reason ?: "No reason was given"
 
         if (target == null) {
-            return ctx.send("How in the fuck would i know who you want to kick if you don't mention a user?")
+            return ctx.send("How in the fuck would i know who you want to kick if you don't give me a valid target?")
         }
 
         if (target.idLong == ctx.author.idLong) {

@@ -30,6 +30,10 @@ abstract class ModCommand : Command {
             ctx.guild.getMemberByTag(arg)
         } else if (arg.length > 17 && arg.toLongOrNull() != null) {
             ctx.guild.getMemberById(arg)
+        } else if (arg.startsWith("<@") && arg.endsWith(">")) {
+            val delimiter = if (arg.contains('!')) '!' else '@'
+            val snowflake = arg.substringAfter(delimiter).substringBefore('>')
+            return ctx.guild.getMemberById(snowflake)
         } else {
             ctx.guild.getMembersByName(arg, false).firstOrNull()
         }
