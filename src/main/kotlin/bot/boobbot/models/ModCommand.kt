@@ -21,7 +21,7 @@ abstract class ModCommand : Command {
         return Pair(target, reason)
     }
 
-    fun resolveTarget(ctx: Context, arg: String): Member? {
+    private fun resolveTarget(ctx: Context, arg: String): Member? {
         if (ctx.guild == null) {
             throw IllegalStateException("Cannot resolve target when guild is null!")
         }
