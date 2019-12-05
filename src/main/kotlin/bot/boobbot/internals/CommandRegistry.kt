@@ -1,6 +1,8 @@
-package bot.boobbot.flight
+package bot.boobbot.internals
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.ExecutableCommand
+import bot.boobbot.flight.Indexer
 
 class CommandRegistry(
     private val commands: Map<String, ExecutableCommand>

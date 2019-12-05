@@ -1,4 +1,4 @@
-package bot.boobbot.models
+package bot.boobbot.internals
 
 import io.sentry.Sentry
 import io.sentry.SentryClient
@@ -30,9 +30,9 @@ class CustomSentryClient(private val sentryClient: SentryClient) : ShouldSendEve
         val se = getLastRecordedException(event)
             ?: return true
 
-        if (se.exceptionMessage != event.message) {
-            return true
-        }
+//        if (se.exceptionMessage != event.message) {
+//            return true
+//        }
 
         return !ignoredExceptions.contains(se.exceptionClassName)
     }

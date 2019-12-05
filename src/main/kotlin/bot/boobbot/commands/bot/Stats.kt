@@ -24,13 +24,13 @@ class Stats : AsyncCommand {
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-        val servers = BoobBot.shardManager.guildCache.size()
-        val users = BoobBot.shardManager.userCache.size()
+//        val servers = BoobBot.shardManager.guildCache.size()
+//        val users = BoobBot.shardManager.userCache.size()
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.size
 
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
-        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
+        val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
 
         val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
@@ -63,9 +63,7 @@ class Stats : AsyncCommand {
         val everyOneSeen =
             if (!metrics.isNull("atEveryoneSeen")) metrics.getJSONObject("atEveryoneSeen").getInt("Total Events") else 0
 
-        val beans = Utils.timed("beanCollection") {
-            ManagementFactory.getGarbageCollectorMXBeans()
-        }
+        val beans = ManagementFactory.getGarbageCollectorMXBeans()
 
         val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
         val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
@@ -87,8 +85,8 @@ class Stats : AsyncCommand {
             .append("Avg_GC_Cycle        = ").append(dpFormatter.format(averageCollectionTime)).append("ms")
             .append("\n\n")
             .append("[ BoobBot ]\n")
-            .append("Guilds              = ").append(servers).append("\n")
-            .append("Users               = ").append(users).append("\n")
+            .append("Guilds              = ").append(">=250,000").append("\n")
+            .append("Users               = ").append("A lot").append("\n")
             .append("Audio_Players       = ").append(players).append("\n")
             .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards)
             .append("\n") // shardsOnline

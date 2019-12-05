@@ -21,19 +21,13 @@ class Config(
     val memerImgenKey: String,
     val sentryDsn: String,
     val patreonApiKey: String,
-    val discordTokenUrl: String,
-    val discordAuthUrl: String,
-    val discordRevocationUrl: String,
-    val discordClientSecret: String,
-    val RedirectUrl: String
-
-
+    val mongoDbUrl: String,
+    val shardIdentifyDelay: Long
 ) {
 
     companion object {
-
-        val owners = Arrays.asList(
-            248294452307689473L, 95645231248048128L, 472573259108319237L, 173237945149423619L, 180093157554388993L
+        val owners = listOf(
+            248294452307689473L, 180093157554388993L
         )
 
         fun load(path: String = Paths.get("").toAbsolutePath().toString()): Config {
@@ -60,14 +54,10 @@ class Config(
                 dotenv.get("MEMER_IMGEN_KEY", ""),
                 dotenv.get("SENTRY_DSN", ""),
                 dotenv.get("PATREON_KEY", ""),
-                dotenv.get("DISCORD_TOKEN_URL","https://discordapp.com/api/oauth2/token"),
-                dotenv.get("DISCORD_AUTH_URL","https://discordapp.com/api/oauth2/authorize"),
-                dotenv.get("DISCORD_REVOKE_URL", "https://discordapp.com/api/oauth2/token/revoke"),
-                dotenv.get("DISCORD_CLIENT_SECRET",""),
-                dotenv.get("OAUTH_REDIRECT_URL","")
+                dotenv.get("MONGO_DB_URL", ""),
+                dotenv.get("SHARD_IDENTIFY_DELAY", "5000").toLong()
             )
         }
-
     }
 
 }

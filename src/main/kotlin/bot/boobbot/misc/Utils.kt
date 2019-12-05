@@ -184,26 +184,7 @@ class Utils {
 
         fun auto() = Runnable { autoAvatar() }
 
-        inline fun suppressExceptions(block: () -> Unit) {
-            try {
-                block()
-            } catch (e: Exception) {
-            }
-        }
-
-        fun <T> timed(timerName: String, block: () -> T): T {
-            val start = System.currentTimeMillis()
-            val r = block()
-            BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
-            return r
-        }
-
-        suspend fun <T> suspendTimed(timerName: String, block: suspend () -> T): T {
-            val start = System.currentTimeMillis()
-            val r = block()
-            BoobBot.log.info("[Timer:$timerName] Took ${System.currentTimeMillis() - start}ms")
-            return r
-        }
+        inline fun suppressExceptions(block: () -> Unit) = try { block() } catch (e: Exception) {}
     }
 }
 

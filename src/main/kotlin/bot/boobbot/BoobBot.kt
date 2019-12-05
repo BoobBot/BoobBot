@@ -3,12 +3,12 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
-import bot.boobbot.flight.CommandRegistry
+import bot.boobbot.internals.CommandRegistry
 import bot.boobbot.flight.EventWaiter
 import bot.boobbot.misc.*
 import bot.boobbot.models.Config
-import bot.boobbot.models.CustomSentryClient
-import bot.boobbot.models.CustomShardManager
+import bot.boobbot.internals.CustomSentryClient
+import bot.boobbot.internals.CustomShardManager
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
@@ -17,6 +17,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.JDAInfo
+import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.exceptions.ContextException
 import org.slf4j.LoggerFactory
@@ -33,10 +34,10 @@ class BoobBot {
         val startTime = System.currentTimeMillis()
         const val VERSION = "1.3.420.69"
 
-        private const val mainSelfId = 285480424904327179L
-        const val selfId = mainSelfId
-        const val inviteUrl =
-            "https://discordapp.com/oauth2/authorize?permissions=8&client_id=285480424904327179&scope=bot"
+        lateinit var application: ApplicationInfo
+        val selfId: Long
+            get() = application.idLong
+        lateinit var inviteUrl: String
 
         var isDebug = false
             private set
@@ -91,6 +92,8 @@ class BoobBot {
 
             val token = if (isDebug) config.debugToken else config.token
             shardManager = CustomShardManager.create(token, shardCount)
+            application = shardManager.retrieveApplicationInfo().complete()
+            inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
 
             log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
             log.level = Level.DEBUG
