@@ -31,7 +31,7 @@ class Ban : ModCommand() {
             return ctx.send("I dont have permission to do that, Fix it or fuck off")
         }
 
-        target.kick("ban by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
+        target.ban(7,"ban by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
             .queue(
                 { ctx.send("done, good riddance stupid bitch") },
                 { ctx.send("what the fuck i couldn't ban?") }
