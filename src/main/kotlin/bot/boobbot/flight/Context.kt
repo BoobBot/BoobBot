@@ -30,6 +30,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     val channel = message.channel
     val textChannel: TextChannel? = if (isFromGuild) message.textChannel else null
+    val guildChannel: GuildChannel? = if (isFromGuild) guild!!.getGuildChannelById(channel.idLong) else null
 
     val customPrefix = if (isFromGuild) BoobBot.database.getPrefix(guild!!.id) else null
 
@@ -59,7 +60,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         dm(msg)
     }
 
-    private fun dm(message: Message) {
+    fun dm(message: Message) {
         author.openPrivateChannel().queue {
             it.sendMessage(message).queue()
         }
