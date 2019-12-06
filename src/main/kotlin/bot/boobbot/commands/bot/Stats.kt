@@ -19,8 +19,6 @@ class Stats : AsyncCommand {
     private val dpFormatter = DecimalFormat("0.00")
 
     override suspend fun executeAsync(ctx: Context) {
-        //TODO move all this to a func
-        val toSend = StringBuilder()
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
