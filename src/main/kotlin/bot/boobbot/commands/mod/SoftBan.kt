@@ -4,10 +4,8 @@ import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.awaitSuppressed
-import bot.boobbot.misc.getOrNull
 import bot.boobbot.misc.thenException
 import bot.boobbot.models.ModCommand
-import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
@@ -15,12 +13,11 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 @CommandProperties(
-    description = "quickly ban-unban a user to clean there messages ",
+    description = "Quickly ban+unban a user to clean their messages.",
     donorOnly = true,
     guildOnly = true
 )
 class SoftBan : AsyncCommand, ModCommand() {
-
 
     override suspend fun executeAsync(ctx: Context) {
         val (target, reason) = resolveTargetAndReason(ctx)
