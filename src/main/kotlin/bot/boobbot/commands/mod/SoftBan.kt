@@ -61,7 +61,7 @@ class SoftBan : AsyncCommand, ModCommand() {
             .thenAccept { ctx.send("done") }
             .thenException {
                 if (it is ErrorResponseException) {
-                    ctx.send("what the fuck an error occurred while trying to soft-ban\n```\n${it.meaning}")
+                    ctx.send("what the fuck an error occurred while trying to soft-ban\n```\n${it.meaning}```")
                 } else {
                     ctx.send("what the fuck i couldn't soft-ban?")
                 }
