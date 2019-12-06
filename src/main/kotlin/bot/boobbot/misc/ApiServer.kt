@@ -31,41 +31,26 @@ import kotlin.math.max
 class ApiServer {
 
     private fun getStats(): JSONObject {
-        val ramTimer = TimerUtil("ram")
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
-        ramTimer.stop()
 
-        val shardTimer = TimerUtil("shards")
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.shards.filter { it.status == JDA.Status.CONNECTED }.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
-        shardTimer.stop()
 
-        val osBean = TimerUtil.inline("osBean") {
-            ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
-        }
+        val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
         val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
         val players = BoobBot.musicManagers.values.filter { it.player.playingTrack != null }.size
 
-        val beans = TimerUtil.inline("beanCollection") {
-            ManagementFactory.getGarbageCollectorMXBeans()
-        }
-
-        val totalCollections = TimerUtil.inline("sumBeanCollectionCount") {
-            beans.sumByLong { max(it.collectionCount, 0) }
-        }
-        val totalCollectionTime = TimerUtil.inline("sumBeanCollectionTime") {
-            beans.sumByLong { max(it.collectionTime, 0) }
-        }
+        val beans = ManagementFactory.getGarbageCollectorMXBeans()
+        val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
+        val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
         val averageCollectionTime = if (totalCollections > 0 && totalCollectionTime > 0)
             totalCollectionTime / totalCollections
         else
             0
-
-        val jsonTimer = TimerUtil("json-construction")
 
         val jvm = JSONObject()
             .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
@@ -82,21 +67,18 @@ class ApiServer {
             .put("Shards_Online", "$shardsOnline/$shards")
             .put("Average_Latency", "${averageShardLatency}ms")
 
-        jsonTimer.stop()
-
         return JSONObject().put("bb", bb).put("jvm", jvm)
     }
 
     private fun getPings(): JSONArray {
         return JSONArray().also {
             for ((jda, status) in BoobBot.shardManager.statuses) {
-                it.put(
-                    mapOf(
-                        "shard" to jda.shardInfo.shardId,
-                        "ping" to jda.gatewayPing,
-                        "status" to status
-                    )
-                )
+                val obj = JSONObject()
+                    .put("shard", jda.shardInfo.shardId)
+                    .put("ping", jda.gatewayPing)
+                    .put("status", status)
+
+                it.put(obj)
             }
         }
     }
@@ -175,15 +157,11 @@ class ApiServer {
                         .filter { it.properties.category != Category.DEV && !it.properties.hidden }
                         .forEach {
                             val category = categories.computeIfAbsent(it.properties.category.name) { JSONArray() }
-
-                            val j = JSONObject(
-                                mapOf(
-                                    "command" to it.name,
-                                    "category" to it.properties.category,
-                                    "description" to it.properties.description,
-                                    "aliases" to "[${it.properties.aliases.joinToString(", ")}]"
-                                )
-                            )
+                            val j = JSONObject()
+                                .put("command", it.name)
+                                .put("category", it.properties.category)
+                                .put("description", it.properties.description)
+                                .put("aliases", "[${it.properties.aliases.joinToString(", ")}]")
 
                             category.put(j)
                         }
