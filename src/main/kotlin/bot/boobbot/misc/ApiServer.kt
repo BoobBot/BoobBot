@@ -17,7 +17,6 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.util.AttributeKey
 import net.dv8tion.jda.api.JDA
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONArray

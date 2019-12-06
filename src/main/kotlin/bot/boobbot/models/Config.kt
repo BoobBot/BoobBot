@@ -3,7 +3,6 @@ package bot.boobbot.models
 import bot.boobbot.misc.get
 import io.github.cdimascio.dotenv.dotenv
 import java.nio.file.Paths
-import java.util.*
 
 class Config(
     val token: String,

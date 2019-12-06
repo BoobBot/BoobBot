@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.exceptions.AccountTypeException
 import net.dv8tion.jda.api.requests.Request
 import net.dv8tion.jda.api.requests.Response
 import net.dv8tion.jda.api.utils.SessionController
-import net.dv8tion.jda.api.utils.SessionControllerAdapter
 import net.dv8tion.jda.internal.requests.RestActionImpl
 import net.dv8tion.jda.internal.requests.Route
 import net.dv8tion.jda.internal.utils.tuple.Pair

@@ -4,7 +4,12 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.ModCommand
 
-@CommandProperties(description = "Boot an asshat from the server.", donorOnly = true, guildOnly = true, aliases = ["gtfo", "fuckoff", "bye"])
+@CommandProperties(
+    description = "Boot an asshat from the server.",
+    donorOnly = true,
+    guildOnly = true,
+    aliases = ["gtfo", "fuckoff", "bye"]
+)
 class Ban : ModCommand() {
 
     override fun execute(ctx: Context) {
@@ -31,7 +36,7 @@ class Ban : ModCommand() {
             return ctx.send("I dont have permission to do that, Fix it or fuck off")
         }
 
-        target.ban(7,"Banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
+        target.ban(7, "Banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
             .queue(
                 { ctx.send("done, good riddance stupid bitch") },
                 { ctx.send("what the fuck i couldn't ban?") }

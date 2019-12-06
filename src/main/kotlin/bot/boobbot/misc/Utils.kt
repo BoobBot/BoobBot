@@ -184,7 +184,10 @@ class Utils {
 
         fun auto() = Runnable { autoAvatar() }
 
-        inline fun suppressExceptions(block: () -> Unit) = try { block() } catch (e: Exception) {}
+        inline fun suppressExceptions(block: () -> Unit) = try {
+            block()
+        } catch (e: Exception) {
+        }
     }
 }
 

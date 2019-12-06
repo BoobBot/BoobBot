@@ -4,7 +4,7 @@ enum class Category(val title: String, val description: String, val nsfw: Boolea
     GENERAL("<:Ass:520247323343978509> General NSFW", "Vanilla content that's sure to please.", true),
     KINKS("<:whip:440551663804350495> Kinks", "BDSM, Tentacles, Pegging, you'll find it here!", true),
     VIDEOSEARCHING("\uD83D\uDCF9 Video Searching", "Search homework websites for your favourite videos.", true),
-    FANTASY("<:Pantsu:443870754107555842> Non-Real", "Cat-girls when?",true),
+    FANTASY("<:Pantsu:443870754107555842> Non-Real", "Cat-girls when?", true),
     HOLIDAY("\uD83C\uDF85 Holiday", "Holiday-themed content.", true),
     SEND("\uD83D\uDCE7 Send Commands", "Share porn with other users.", false),
     FUN("\u2728 Fun Commands", "Entertainment! (Who am I kidding, we have porn...)", false),
