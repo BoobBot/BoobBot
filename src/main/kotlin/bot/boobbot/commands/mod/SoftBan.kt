@@ -75,10 +75,7 @@ class SoftBan : AsyncCommand, ModCommand() {
             ctx.guildChannel.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1)
                 .submit()
                 .thenAccept { fut.complete(it) }
-                .exceptionally {
-                    fut.complete(null)
-                    return@exceptionally null
-                }
+                .thenException { fut.complete(null) }
         } else {
             fut.complete(null)
         }
