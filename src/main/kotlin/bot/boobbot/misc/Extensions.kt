@@ -2,10 +2,13 @@ package bot.boobbot.misc
 
 import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
+import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.entities.MessageEmbed
 import okhttp3.Response
 import org.json.JSONObject
 import java.net.URI
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 fun Dotenv.get(key: String, default: String): String = get(key) ?: default
 
@@ -46,5 +49,20 @@ fun Response.json(): JSONObject? {
         } else {
             null
         }
+    }
+}
+
+suspend fun <T> CompletableFuture<T>.awaitSuppressed(): T? {
+    return try {
+        this.await()
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun <T> CompletableFuture<T>.thenException(block: (Throwable) -> Unit) {
+    this.exceptionally {
+        block(it)
+        return@exceptionally null
     }
 }

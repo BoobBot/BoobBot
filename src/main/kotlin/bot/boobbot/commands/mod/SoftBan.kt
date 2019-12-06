@@ -1,9 +1,17 @@
 package bot.boobbot.commands.mod
 
+import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.awaitSuppressed
+import bot.boobbot.misc.getOrNull
+import bot.boobbot.misc.thenException
 import bot.boobbot.models.ModCommand
+import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Invite
+import net.dv8tion.jda.api.exceptions.ErrorResponseException
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 @CommandProperties(
@@ -11,10 +19,10 @@ import java.util.concurrent.TimeUnit
     donorOnly = true,
     guildOnly = true
 )
-class SoftBan : ModCommand() {
+class SoftBan : AsyncCommand, ModCommand() {
 
 
-    override fun execute(ctx: Context) {
+    override suspend fun executeAsync(ctx: Context) {
         val (target, reason) = resolveTargetAndReason(ctx)
         val auditReason = reason ?: "No reason was given"
 
@@ -38,26 +46,46 @@ class SoftBan : ModCommand() {
             return ctx.send("I don't have permission to do that, Fix it or fuck off")
         }
 
-        if (ctx.selfMember.hasPermission(Permission.CREATE_INSTANT_INVITE)) {
-            ctx.guildChannel!!.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1).queue { invite ->
-                val url = invite.url
-                target.user.openPrivateChannel().queue { privateChannel ->
-                    privateChannel.sendMessage(
-                        "You have been soft-banned in ${ctx.guild!!.name} " +
-                                "for: $auditReason \nHere is a invite, don't be a dick.\n${url}"
-                    )
+        val invite = generateInvite(ctx).awaitSuppressed()
+        val extraMsg = invite?.let { "\nHere is an invite, don't be a dick.\n${it.url}" } ?: ""
+        val banMsg = """
+            You have been soft-banned in **${ctx.guild!!.name}** by **${ctx.author.asTag}** for: $auditReason
+            $extraMsg
+        """.trimIndent()
 
-                        .queue()
-                }
-            }
-        }
+        target.user.openPrivateChannel().submit()
+            .thenCompose { it.sendMessage(banMsg).submit() }
+            .thenCompose { it.privateChannel.close().submit() }
+            .awaitSuppressed()
 
         target.ban(7, "Soft-banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
-            .queue(
-                {
-                    ctx.send("done.")
-               },
-               { ctx.send("what the fuck i couldn't ban?") })
-        ctx.guild!!.unban(target.user).queue()
+            .submit()
+            .thenCompose { ctx.guild.unban(target.id).submit() }
+            .thenAccept { ctx.send("done") }
+            .thenException {
+                if (it is ErrorResponseException) {
+                    ctx.send("what the fuck an error occurred while trying to soft-ban\n```\n${it.meaning}")
+                } else {
+                    ctx.send("what the fuck i couldn't soft-ban?")
+                }
+            }
+    }
+
+    fun generateInvite(ctx: Context): CompletableFuture<Invite?> {
+        val fut = CompletableFuture<Invite?>()
+
+        if (ctx.selfMember!!.hasPermission(ctx.guildChannel!!, Permission.CREATE_INSTANT_INVITE)) {
+            ctx.guildChannel.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1)
+                .submit()
+                .thenAccept { fut.complete(it) }
+                .exceptionally {
+                    fut.complete(null)
+                    return@exceptionally null
+                }
+        } else {
+            fut.complete(null)
+        }
+
+        return fut
     }
 }
