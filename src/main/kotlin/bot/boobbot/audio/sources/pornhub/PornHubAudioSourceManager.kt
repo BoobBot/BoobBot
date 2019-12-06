@@ -11,7 +11,6 @@ import com.sedmelluq.discord.lavaplayer.tools.io.HttpConfigurable
 import com.sedmelluq.discord.lavaplayer.track.*
 import org.apache.commons.io.IOUtils
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.client.utils.URIBuilder
@@ -116,8 +115,9 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
                         .contains("playlist")
                 }
 
-            if (videos.isEmpty())
+            if (videos.isEmpty()) {
                 return AudioReference.NO_TRACK
+            }
 
             val tracks = ArrayList<AudioTrack>()
 
@@ -126,8 +126,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
                 val title = anchor.text()
                 val identifier = anchor.parents().select("li.videoBox").first().attr("_vkey")
                 val url = anchor.absUrl("href")
-                val durationStr =
-                    anchor.parents().select("div.videoPreviewBg .marker-overlays var").firstOrNull()?.text()
+                val durationStr = anchor.parents().select("div.videoPreviewBg .marker-overlays var").firstOrNull()?.text()
                 val duration = if (durationStr != null) parseDuration(durationStr) else 0L
 
                 tracks.add(buildTrackObject(url, identifier, title, "Unknown Uploader", false, duration))
@@ -156,14 +155,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
         }
     }
 
-    private fun buildTrackObject(
-        uri: String,
-        identifier: String,
-        title: String,
-        uploader: String,
-        isStream: Boolean,
-        duration: Long
-    ): PornHubAudioTrack {
+    private fun buildTrackObject(uri: String, identifier: String, title: String, uploader: String, isStream: Boolean, duration: Long): PornHubAudioTrack {
         return PornHubAudioTrack(
             AudioTrackInfo(title, uploader, duration, identifier, isStream, uri),
             this
@@ -178,15 +170,12 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
         return mins + secs
     }
 
-    private fun makeHttpRequest(request: HttpUriRequest): CloseableHttpResponse {
-        return httpInterfaceManager.`interface`.use {
-            it.execute(request)
-        }
+    private fun makeHttpRequest(request: HttpUriRequest) = httpInterfaceManager.`interface`.use {
+        it.execute(request)
     }
 
     companion object {
-        private val VIDEO_REGEX =
-            Pattern.compile("^https?://www\\.pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
+        private val VIDEO_REGEX = Pattern.compile("^https?://www\\.pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
         private val VIDEO_INFO_REGEX = Pattern.compile("var flashvars_\\d{7,9} = (\\{.+})")
         private const val VIDEO_SEARCH_PREFIX = "phsearch:"
     }
