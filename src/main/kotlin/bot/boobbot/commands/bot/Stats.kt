@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.CodeblockBuilder
 import bot.boobbot.misc.Utils
 import com.sun.management.OperatingSystemMXBean
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
@@ -72,40 +73,39 @@ class Stats : AsyncCommand {
         else
             0
 
-        toSend.append("```ini\n")
-            .append("[ JVM ]\n")
-            .append("Uptime              = ").append(Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
-            .append("\n")
-            .append("Threads             = ").append(Thread.activeCount()).append("\n")
-            .append("JVM_CPU_Usage       = ").append(procCpuUsage).append("%\n")
-            .append("System_CPU_Usage    = ").append(sysCpuUsage).append("%\n")
-            .append("RAM_Usage           = ").append(usedMB).append("MB (").append(rPercent).append("%)\n")
-            .append("Total_GC_Count      = ").append(totalCollections).append("\n")
-            .append("Total_GC_Time       = ").append(totalCollectionTime).append("ms").append("\n")
-            .append("Avg_GC_Cycle        = ").append(dpFormatter.format(averageCollectionTime)).append("ms")
-            .append("\n\n")
-            .append("[ BoobBot ]\n")
-            .append("Guilds              = ").append(">=250,000").append("\n")
-            .append("Users               = ").append("A lot").append("\n")
-            .append("Audio_Players       = ").append(players).append("\n")
-            .append("Shards_Online       = ").append(shardsOnline).append("/").append(shards)
-            .append("\n") // shardsOnline
-            .append("Average_Latency     = ").append(averageShardLatency).append("ms\n\n") // averageShardLatency
-            .append("[ Metrics_Since_Boot ]\n")
-            .append("At_Everyone_Seen    = ").append(everyOneSeen).append("\n")
-            .append("Commands_Used       = ").append(comsUsed).append("\n")
-            .append("Commands_Per_second = ").append(dpFormatter.format(comsPerSec)).append("/sec").append("\n")
-            .append("Messages_Seen       = ").append(msgSeen).append("\n")
-            .append("Messages_Per_second = ").append(dpFormatter.format(msgSeenPerSec)).append("/sec").append("\n")
-            .append("Guilds_Joined       = ").append(guildJoin).append("\n")
-            .append("Guilds_Left         = ").append(guildLeave).append("\n")
-            .append("Ready_Events        = ").append(ready).append("\n")
-            .append("Resumed_Events      = ").append(resumed).append("\n")
-            .append("Reconnected_Events  = ").append(reconnected).append("\n")
-            .append("Disconnect_Events   = ").append(disconnect).append("\n")
-            .append("```")
+        val block = CodeblockBuilder("ini") {
+            +"[ JVM ]"
+            "Uptime              = "..Utils.fTime(System.currentTimeMillis() - BoobBot.startTime)
+            "Threads             = "..Thread.activeCount()
+            "JVM_CPU_Usage       = "..procCpuUsage
+            "System_CPU_Usage    = "..sysCpuUsage
+            "RAM_Usage           = ".."$usedMB MB ($rPercent)"
+            "Total_GC_Count      = "..totalCollections
+            "Total_GC_Time       = ".."${totalCollectionTime}ms"
+            "Avg_GC_Cycle        = ".."${dpFormatter.format(averageCollectionTime)}ms"
+            +""
+            +"[ BoobBot ]"
+            "Guilds              = "..">=250K"
+            "Users               = ".."More than PornHub"
+            "Audio_Players       = "..players
+            "Shards_Online       = ".."$shardsOnline/$shards"
+            "Average_Latency     = ".."${averageShardLatency}ms"
+            +""
+            +"[ Metrics ]"
+            "At_Everyone_Seen    = "..everyOneSeen
+            "Commands_Used       = "..comsUsed
+            "Commands_Per_second = ".."${dpFormatter.format(comsPerSec)}/sec"
+            "Messages_Seen       = "..msgSeen
+            "Messages_Per_second = ".."${dpFormatter.format(msgSeenPerSec)}/sec"
+            "Guilds_Joined       = "..guildJoin
+            "Guilds_Left         = "..guildLeave
+            "Ready_Events        = "..ready
+            "Resumed_Events      = "..resumed
+            "Reconnected_Events  = "..reconnected
+            "Disconnect_Events   = "..disconnect
+        }.build()
 
-        ctx.send(toSend.toString())
+        ctx.send(block)
     }
 
 }

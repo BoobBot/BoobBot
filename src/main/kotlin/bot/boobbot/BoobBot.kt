@@ -78,7 +78,7 @@ class BoobBot {
             playerManager.registerSourceManager(LocalAudioSourceManager())
 
             isDebug = args.firstOrNull()?.contains("debug") ?: false
-            val shardCount = if (isDebug) 2 else config.shardCount
+            val shardCount = if (isDebug) 1 else config.shardCount
             val duration = abs(shardCount * 5000)
             val currentTime = Calendar.getInstance()
 
