@@ -4,7 +4,7 @@ class CodeblockBuilder(language: String, private val builder: ContentBuilder.() 
     private val stringBuilder = StringBuilder("```").append(language).append("\n")
 
     fun build(): String {
-        val cb = ContentBuilder().apply(builder)
+        ContentBuilder().apply(builder)
         stringBuilder.append("```")
         return stringBuilder.toString()
     }
