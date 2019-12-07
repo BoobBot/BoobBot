@@ -190,8 +190,8 @@ class Utils {
         }
 
         fun updateStats() {
-            BoobBot.guilds = BoobBot.shardManager.guilds.size.toString()
-            BoobBot.users = BoobBot.shardManager.users.size.toString()
+            BoobBot.guilds = BoobBot.shardManager.guildCache.size().toString()
+            BoobBot.users = BoobBot.shardManager.userCache.size().toString()
         }
     }
 }
