@@ -1,6 +1,7 @@
 package bot.boobbot.commands.mod
 
 import bot.boobbot.flight.AsyncCommand
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.awaitSuppressed
@@ -15,7 +16,8 @@ import java.util.concurrent.TimeUnit
 @CommandProperties(
     description = "Quickly ban+unban a user to clean their messages.",
     donorOnly = true,
-    guildOnly = true
+    guildOnly = true,
+    category = Category.MOD
 )
 class SoftBan : AsyncCommand, ModCommand() {
 

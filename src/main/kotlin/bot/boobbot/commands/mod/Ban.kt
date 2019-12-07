@@ -1,5 +1,6 @@
 package bot.boobbot.commands.mod
 
+import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.ModCommand
@@ -8,7 +9,8 @@ import bot.boobbot.models.ModCommand
     description = "Boot an asshat from the server.",
     donorOnly = true,
     guildOnly = true,
-    aliases = ["gtfo", "fuckoff", "bye"]
+    aliases = ["gtfo", "fuckoff", "bye"],
+    category = Category.MOD
 )
 class Ban : ModCommand() {
 
