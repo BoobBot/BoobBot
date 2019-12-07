@@ -62,7 +62,6 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onReady(event: ReadyEvent) {
-        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
 
@@ -81,7 +80,7 @@ class EventHandler : ListenerAdapter() {
             }
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.getReadyFormat())
-
+            Utils.updateStats()
             safeSend(shardHook, composeEmbed {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
                 setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
