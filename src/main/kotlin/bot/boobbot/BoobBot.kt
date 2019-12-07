@@ -64,6 +64,9 @@ class BoobBot {
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         var scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val metrics = Metrics.create()!!
+        lateinit var guilds: String
+        lateinit var users: String
+
 
         /* Experimental as fuck */
         val pApi = PatreonAPI(config.patreonApiKey)

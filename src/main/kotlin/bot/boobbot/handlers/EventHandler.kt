@@ -31,7 +31,7 @@ class EventHandler : ListenerAdapter() {
     private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
     private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
 
-    var avatar: String? = null
+    private var avatar: String? = null
 
     private fun composeEmbed(builder: EmbedBuilder.() -> Unit): WebhookMessage {
         return WebhookMessageBuilder()
@@ -62,6 +62,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onReady(event: ReadyEvent) {
+        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
 
@@ -91,6 +92,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onReconnect(event: ReconnectedEvent) {
+        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -101,6 +103,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onResume(event: ResumedEvent) {
+        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -121,6 +124,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildJoin(event: GuildJoinEvent) {
+        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         // Don't set presence on guildJoin and leave, this is probably an easy way to hit ratelimit if someone spams.
 
@@ -141,6 +145,7 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
+        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         val guild = event.guild
 

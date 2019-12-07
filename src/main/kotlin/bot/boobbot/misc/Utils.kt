@@ -188,6 +188,11 @@ class Utils {
             block()
         } catch (e: Exception) {
         }
+
+        fun updateStats() {
+            BoobBot.guilds = BoobBot.shardManager.guilds.size.toString()
+            BoobBot.users = BoobBot.shardManager.users.size.toString()
+        }
     }
 }
 

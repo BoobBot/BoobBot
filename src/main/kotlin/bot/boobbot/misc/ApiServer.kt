@@ -64,6 +64,8 @@ class ApiServer {
         val bb = JSONObject()
             .put("Audio_Players", players)
             .put("Shards_Online", "$shardsOnline/$shards")
+            .put("Guilds", BoobBot.guilds)
+            .put("Users", BoobBot.users)
             .put("Average_Latency", "${averageShardLatency}ms")
 
         return JSONObject().put("bb", bb).put("jvm", jvm)
