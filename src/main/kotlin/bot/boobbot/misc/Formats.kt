@@ -20,11 +20,11 @@ object Formats {
     const val PATREON_EMOTE = "<:p_:475801484282429450>"
     //const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
     val LING_MSG = String.format(
-        "\n{0} **Join the Server**: [https://invite.boob.bot](https://invite.boob.bot)"
-                + "\n{1} **Add the Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
-                + "\n{2} **Visit the Website**: [https:/boob.bot](https://boob.bot)"
-                //+ "\n{3} **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
-                + "\n{3} **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
+        "\n%s **Join the Server**: [https://invite.boob.bot](https://invite.boob.bot)"
+                + "\n%s **Add the Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
+                + "\n%s **Visit the Website**: [https:/boob.bot](https://boob.bot)"
+                //+ "\n%s **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
+                + "\n%s **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
         DISCORD_EMOTE, BOT_EMOTE, LINK_EMOTE, PATREON_EMOTE
     )
 
@@ -165,34 +165,34 @@ object Formats {
         val jda = shardManager.shards[0]
 
         String.format(
-            "Logging in {0}\n"
-                    + "Oauth link: {1}\n"
-                    + "JDA Version: {2}\n"
+            "Logging in %s\n"
+                    + "Oauth link: %s\n"
+                    + "JDA Version: %s\n"
                     + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
-                    + "Logged in as: {3} ({4})\n"
-                    + "Guilds: {5}\n"
-                    + "Shards: {6}\n"
-                    + "Users: {7}\n"
-                    + "Bots: {8}\n"
-                    + "Total Users: {9}\n"
-                    + "Home Guild: {10}\n"
-                    + "Users: {11}\n"
-                    + "Bots: {12}\n"
-                    + "Total Users: {13}",
+                    + "Logged in as: %s (%s)\n"
+                    + "Guilds: %d\n"
+                    + "Shards: %d\n"
+                    + "Users: %d\n"
+                    + "Bots: %d\n"
+                    + "Total Users: %d\n"
+                    + "Home Guild: %s\n"
+                    + "Users: %d\n"
+                    + "Bots: %d\n"
+                    + "Total Users: %d",
             BOOT_BANNER,
             BoobBot.inviteUrl,
             JDAInfo.VERSION,
             jda.selfUser.name,
             jda.selfUser.id,
-            shardManager.guilds.size,
+            shardManager.guildCache.size(),
             shardManager.shardsTotal,
             shardManager.users.filter { !it.isBot }.size,
             shardManager.users.filter { it.isBot }.size,
-            shardManager.users.size,
+            shardManager.userCache.size(),
             home?.name,
             home?.members?.filter { !it.user.isBot }?.size,
             home?.members?.filter { it.user.isBot }?.size,
-            home?.members?.size
+            home?.memberCache?.size()
         )
     }
 
