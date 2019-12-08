@@ -1,5 +1,7 @@
 package bot.boobbot.audio.sources.pornhub
 
+import bot.boobbot.BoobBot
+
 object Utils {
 
     //private val assignmentPattern = "(var.+?mediastring[^<]+)".toPattern()
@@ -34,6 +36,7 @@ object Utils {
         val matcher = assignmentPattern.matcher(script)
 
         if (!matcher.find()) {
+            BoobBot.log.error("No assignments found within script\n{}", script)
             throw IllegalStateException("No assignments found within the script!")
         }
 
