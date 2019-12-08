@@ -8,7 +8,6 @@ import bot.boobbot.misc.toWebhookEmbed
 import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
 import club.minnced.discord.webhook.exception.HttpException
-import club.minnced.discord.webhook.send.WebhookMessage
 import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.EmbedBuilder
@@ -23,34 +22,36 @@ import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
 import java.time.Instant
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 
 class EventHandler : ListenerAdapter() {
+    private val statsUpdateThread = Executors.newSingleThreadExecutor { Thread("bb-stats-update") }
+
     private val shardHook = WebhookClientBuilder(config.readyWebhook).build()
     private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
     private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
 
     private var avatar: String? = null
 
-    private fun composeEmbed(builder: EmbedBuilder.() -> Unit): WebhookMessage {
-        return WebhookMessageBuilder()
+    private fun safeSend(whClient: WebhookClient, builder: EmbedBuilder.() -> Unit) {
+        val message = WebhookMessageBuilder()
             .setUsername("BoobBot")
             .setAvatarUrl(avatar)
             .addEmbeds(
                 EmbedBuilder()
-                    .setColor(Color.magenta) // defaults, can be overridden with `.apply`
-                    .setAuthor("BoobBot", avatar, avatar)
-                    .setTimestamp(Instant.now())
+                    .apply {
+                        setColor(Color.magenta)
+                        setAuthor("BoobBot", avatar, avatar)
+                        setTimestamp(Instant.now())
+                    }
                     .apply(builder)
                     .build()
                     .toWebhookEmbed()
             )
             .build()
-    }
 
-    private fun safeSend(whClient: WebhookClient, message: WebhookMessage) {
         try {
             if (!BoobBot.isDebug) {
                 whClient.send(message)
@@ -68,10 +69,10 @@ class EventHandler : ListenerAdapter() {
 
         avatar = event.jda.selfUser.effectiveAvatarUrl
 
-        safeSend(shardHook, composeEmbed {
+        safeSend(shardHook) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
             setDescription("Ping: ${event.jda.gatewayPing}ms") // Don't need status as it's included in title
-        })
+        }
 
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
         if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
@@ -80,16 +81,16 @@ class EventHandler : ListenerAdapter() {
                 BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)
             }
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
-            BoobBot.log.info(Formats.getReadyFormat())
-            thread() {
-                Utils.updateStats()
-            }.start()
-            safeSend(shardHook, composeEmbed {
+            BoobBot.log.info(Formats.readyFormat)
+
+            safeSend(shardHook) {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
                 setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
                 setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
-                addField("Ready Info", "```\n${Formats.getReadyFormat()}```", false)
-            })
+                addField("Ready Info", "```\n${Formats.readyFormat}```", false)
+            }
+
+            statsUpdateThread.submit { Utils.updateStats() }
         }
     }
 
@@ -97,42 +98,40 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook, composeEmbed {
+        safeSend(shardHook) {
             setTitle("SHARD RECONNECTED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms")
-        })
+        }
     }
 
     override fun onResume(event: ResumedEvent) {
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook, composeEmbed {
+        safeSend(shardHook) {
             setTitle("SHARD RESUMED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms")
-        })
+        }
     }
 
     override fun onDisconnect(event: DisconnectEvent) {
         BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook, composeEmbed {
+        safeSend(shardHook) {
             setTitle("SHARD DISCONNECTED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms") // will probably be -1 or something lol
-        })
+        }
     }
 
     override fun onGuildJoin(event: GuildJoinEvent) {
-        thread() {
-            Utils.updateStats()
-        }.start()
+        statsUpdateThread.submit { Utils.updateStats() }
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         // Don't set presence on guildJoin and leave, this is probably an easy way to hit ratelimit if someone spams.
 
         val guild = event.guild
 
-        safeSend(joinHook, composeEmbed {
+        safeSend(joinHook) {
             setColor(Color.green)
             setTitle("Guild Joined: ${guild.name}")
             setDescription(
@@ -143,17 +142,15 @@ class EventHandler : ListenerAdapter() {
                         "Members: ${guild.members.size}"
             )
             setThumbnail(guild.iconUrl)
-        })
+        }
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
-        thread() {
-            Utils.updateStats()
-        }.start()
+        statsUpdateThread.submit { Utils.updateStats() }
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         val guild = event.guild
 
-        safeSend(leaveHook, composeEmbed {
+        safeSend(leaveHook) {
             setColor(Color.red)
             setTitle("Guild Left: ${guild.name}")
             setDescription(
@@ -164,6 +161,6 @@ class EventHandler : ListenerAdapter() {
                         "Members: ${guild.members.size}"
             )
             setThumbnail(guild.iconUrl)
-        })
+        }
     }
 }
