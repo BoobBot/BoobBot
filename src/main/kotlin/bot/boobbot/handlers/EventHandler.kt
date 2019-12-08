@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
 import java.time.Instant
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 
 class EventHandler : ListenerAdapter() {
@@ -80,7 +81,9 @@ class EventHandler : ListenerAdapter() {
             }
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.getReadyFormat())
-            Utils.updateStats()
+            thread() {
+                Utils.updateStats()
+            }.start()
             safeSend(shardHook, composeEmbed {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
                 setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
@@ -91,7 +94,6 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onReconnect(event: ReconnectedEvent) {
-        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -102,7 +104,6 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onResume(event: ResumedEvent) {
-        Utils.updateStats()
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -123,7 +124,9 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildJoin(event: GuildJoinEvent) {
-        Utils.updateStats()
+        thread() {
+            Utils.updateStats()
+        }.start()
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         // Don't set presence on guildJoin and leave, this is probably an easy way to hit ratelimit if someone spams.
 
@@ -144,7 +147,9 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
-        Utils.updateStats()
+        thread() {
+            Utils.updateStats()
+        }.start()
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         val guild = event.guild
 
