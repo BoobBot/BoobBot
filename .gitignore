@@ -368,3 +368,4 @@ logs/
 /bb.env
 /src/main/java/bot/boobbot/misc/Constants.kt
 /src/main/resources/bb.env
+/src/main/resources/version.txt
