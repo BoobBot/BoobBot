@@ -116,14 +116,13 @@ class BoobBot {
             }
 
             RestAction.setPassContext(false)
-
             ApiServer().startServer()
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {
             val audioManager = g.audioManager
             val manager = musicManagers.computeIfAbsent(g.idLong) {
-                GuildMusicManager(g.idLong, playerManager.createPlayer())
+                GuildMusicManager(it, playerManager.createPlayer())
             }
 
             if (audioManager.sendingHandler == null) {
