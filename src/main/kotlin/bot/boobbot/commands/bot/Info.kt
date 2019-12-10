@@ -6,6 +6,7 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
+import bot.boobbot.misc.Utils
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import net.dv8tion.jda.api.JDAInfo
 
@@ -18,7 +19,7 @@ class Info : Command {
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
         ctx.embed {
             setAuthor(
-                "BoobBot (Revision ${BoobBot.VERSION})",
+                "BoobBot (Revision ${Utils.version})",
                 ctx.selfUser.effectiveAvatarUrl,
                 ctx.selfUser.effectiveAvatarUrl
             )

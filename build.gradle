@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
 
     repositories {
@@ -91,4 +93,17 @@ compileKotlin {
 configurations.all {
     resolutionStrategy.cacheDynamicVersionsFor 1, 'seconds'
     resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
+}
+
+task writeVersion() {
+    def gitVersion = new ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-parse", "--short", "HEAD")
+        standardOutput = gitVersion
+    }
+    new File("src/main/resources", "version.txt").text = gitVersion.toString().trim()
+}
+
+build {
+    dependsOn writeVersion
 }

@@ -41,6 +41,11 @@ class Utils {
             "67.227.66.102:7498" // Las Vegas
         )
 
+        val version by lazy {
+            val stream = BoobBot::class.java.classLoader.getResourceAsStream("version.txt")!!
+            return@lazy InputStreamReader(stream).readText()
+        }
+
         private val jsonArrays = JSONObject(
             if (File("$path/arrays.json").exists()) {
                 (File("$path/arrays.json").inputStream())
