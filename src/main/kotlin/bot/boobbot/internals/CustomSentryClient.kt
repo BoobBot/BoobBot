@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory
 
 class CustomSentryClient(private val sentryClient: SentryClient) : ShouldSendEventCallback {
 
+    init {
+        sentryClient.addShouldSendEventCallback(this)
+    }
+
     private val ignoredExceptions = mutableSetOf<String>()
 
     fun ignore(vararg throwable: Class<out Throwable>) {
@@ -40,10 +44,7 @@ class CustomSentryClient(private val sentryClient: SentryClient) : ShouldSendEve
     companion object {
         fun create(dsn: String): CustomSentryClient {
             val sentryClient = Sentry.init(dsn)
-            val customSentryClient = CustomSentryClient(sentryClient)
-
-            sentryClient.addShouldSendEventCallback(customSentryClient)
-            return customSentryClient
+            return CustomSentryClient(sentryClient)
         }
 
         private val log = LoggerFactory.getLogger(CustomSentryClient::class.java)

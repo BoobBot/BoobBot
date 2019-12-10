@@ -11,6 +11,7 @@ import bot.boobbot.misc.*
 import bot.boobbot.models.Config
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import com.fasterxml.jackson.core.JsonParseException
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
@@ -20,7 +21,9 @@ import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.exceptions.ContextException
+import net.dv8tion.jda.api.requests.RestAction
 import org.slf4j.LoggerFactory
+import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.*
@@ -67,8 +70,6 @@ class BoobBot {
         lateinit var guilds: String
         lateinit var users: String
 
-
-        /* Experimental as fuck */
         val pApi = PatreonAPI(config.patreonApiKey)
 
 
@@ -108,9 +109,13 @@ class BoobBot {
                     .ignore(
                         ContextException::class.java,
                         SocketException::class.java,
-                        SocketTimeoutException::class.java
+                        SocketTimeoutException::class.java,
+                        IOException::class.java,
+                        JsonParseException::class.java
                     )
             }
+
+            RestAction.setPassContext(false)
 
             ApiServer().startServer()
         }
