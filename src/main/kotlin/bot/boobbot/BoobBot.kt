@@ -35,7 +35,6 @@ class BoobBot {
     companion object {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
-        const val VERSION = "1.3.420.69"
 
         lateinit var application: ApplicationInfo
         val selfId: Long
@@ -86,7 +85,7 @@ class BoobBot {
             val duration = abs(shardCount * 5000)
             val currentTime = Calendar.getInstance()
 
-            log.info("--- BoobBot (Revision $VERSION) ---")
+            log.info("--- BoobBot (Revision ${Utils.version}) ---")
             log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
             log.info("Launching $shardCount shards at an estimated ${Utils.fTime(duration.toLong())}")
             log.info("It\'s currently ${currentTime.time}")
