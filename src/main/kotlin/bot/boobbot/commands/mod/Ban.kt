@@ -6,7 +6,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.models.ModCommand
 
 @CommandProperties(
-    description = "Boot an asshat from the server.",
+    description = "Boot an asshat from the server. <:p_:475801484282429450>",
     donorOnly = true,
     guildOnly = true,
     aliases = ["gtfo", "fuckoff", "bye"],
