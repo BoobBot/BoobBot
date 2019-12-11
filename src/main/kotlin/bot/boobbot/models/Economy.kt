@@ -26,12 +26,23 @@ data class User(
     var inJail: Boolean,
     var jailRemaining: Int,
     var coolDownCount: Int,
+    // guild lvl for roles
+    var guilds: List<Guilds>?,
     var inventory: Inventory?,
     var lastSeen: Instant?
 
 
 )
 
+data class Guild(
+    val id: String,
+    var experience: Int,
+    var level: Int
+)
+
+data class Guilds(
+    var guilds: List<Guild>
+)
 
 data class Inventory(
     val items: List<Item>?
@@ -73,7 +84,7 @@ fun calculateLewdLevel(user: bot.boobbot.models.User): Int {
 }
 
 
-fun updateUser(ctx: Context, user: bot.boobbot.models.User) {
+fun handleMessage(ctx: Context, user: bot.boobbot.models.User) {
     if (user.blacklisted) {
         return
     }
