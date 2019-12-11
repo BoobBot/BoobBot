@@ -37,6 +37,18 @@ data class Inventory(
     val items: List<Item>?
 )
 
+data class StoreInventory(
+    val items: List<StoreItem>?
+)
+
+data class StoreItem(
+    val item: Item,
+    val price: Int,
+    val onSale: Boolean,
+    val saleDiscount: Float
+)
+
+
 data class Item(
     val name: String,
     val isUnique: Boolean,
