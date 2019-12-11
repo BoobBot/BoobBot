@@ -51,11 +51,11 @@ class RedTube : AsyncCommand {
             addField(
                 "Video stats",
                 "Views: ${video.get("views")}\n" +
-                        "Rating: ${video.getString("rating")}\n" +
-                        "Ratings: ${video.getString("ratings")}\n" +
-                        "Duration: ${video.getString("duration")}\n" +
-                        "Date published: ${video.getString("publish_date")}\n" +
-                        "Url: ${video.getString("url")}",
+                        "Rating: ${video.get("rating")}\n" +
+                        "Ratings: ${video.get("ratings")}\n" +
+                        "Duration: ${video.get("duration")}\n" +
+                        "Date published: ${video.get("publish_date")}\n" +
+                        "Url: ${video.get("url")}",
                 false
             )
             setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
