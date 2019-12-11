@@ -79,6 +79,9 @@ fun updateUser(ctx: Context, user: bot.boobbot.models.User) {
     }
     if (user.inJail) {
         user.jailRemaining = min(user.jailRemaining - 1, 0)
+        if (user.jailRemaining == 0){
+            user.inJail = false
+        }
         //TODO save user
         return
     }
