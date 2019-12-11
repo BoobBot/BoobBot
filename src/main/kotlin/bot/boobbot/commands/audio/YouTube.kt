@@ -1,7 +1,5 @@
 package bot.boobbot.commands.audio
 
-import bot.boobbot.BoobBot.Companion.playerManager
-import bot.boobbot.audio.AudioLoader
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
@@ -18,20 +16,22 @@ import bot.boobbot.models.VoiceCommand
 class YouTube : VoiceCommand {
 
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
+        /* val shouldPlay = performVoiceChecks(ctx)
 
-        if (!shouldPlay) {
-            return
-        }
+         if (!shouldPlay) {
+             return
+         }
 
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
-            return ctx.send("Gotta specify a search query, whore")
-        }
+         if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+             return ctx.send("Gotta specify a search query, whore")
+         }
 
-        val player = ctx.audioPlayer!!
-        val query = "ytsearch:${ctx.args.joinToString(" ")}"
+         val player = ctx.audioPlayer!!
+         val query = "ytsearch:${ctx.args.joinToString(" ")}"
 
-        playerManager.loadItem(query, AudioLoader(player, ctx))
+         playerManager.loadItem(query, AudioLoader(player, ctx))
 
+     }*/
+        ctx.send(":x: Youtube blocked us, Use rythm")
     }
 }
