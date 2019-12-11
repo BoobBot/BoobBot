@@ -77,9 +77,9 @@ class EventHandler : ListenerAdapter() {
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
         if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
             BoobBot.isReady = true
-            if (!BoobBot.isDebug) { // dont need this is testing
+            /*if (!BoobBot.isDebug) { // dont need this is testing
                 BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)
-            }
+            }*/
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.readyFormat)
 
