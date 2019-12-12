@@ -1,9 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.BoobBot.Companion.manSetAvatar
 import net.dv8tion.jda.api.entities.ChannelType
-import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import okhttp3.Headers
@@ -89,18 +87,6 @@ class Utils {
             return File("$path/moan/${fileOjb.get("name")}.${fileOjb.get("ext")}")
         }
 
-        private fun getRandomAvatar(): InputStream {
-            val arr = jsonArrays.getJSONArray("avatar")
-            val fileOjb = arr.getJSONObject(rand.nextInt(arr.length()))
-            val file = File("$path/avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}")
-            return if (file.exists()) {
-                file.inputStream()
-            } else {
-                BoobBot::class.java.classLoader
-                    .getResourceAsStream("avatar/${fileOjb.get("name")}.${fileOjb.get("ext")}")!!
-            }
-        }
-
         fun getProxy(): Proxy {
             val proxy = ips[rand.nextInt(ips.size)]
             val parts = proxy.split(":".toRegex(), 2).toTypedArray()
@@ -177,17 +163,6 @@ class Utils {
                 InputStreamReader(inputStream)
             ).lines().collect(Collectors.joining("\n"))
         }
-
-        private fun autoAvatar() {
-            if (!manSetAvatar) {
-                val icon = Icon.from(getRandomAvatar())
-                BoobBot.shardManager.home?.manager?.setIcon(icon)?.queue()
-                BoobBot.shardManager.shards[0].selfUser.manager.setAvatar(icon).queue()
-                BoobBot.log.info("Setting New Guild icon/Avatar")
-            }
-        }
-
-        fun auto() = Runnable { autoAvatar() }
 
         inline fun suppressExceptions(block: () -> Unit) = try {
             block()

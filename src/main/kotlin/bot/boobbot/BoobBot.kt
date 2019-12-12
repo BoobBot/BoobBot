@@ -53,9 +53,6 @@ class BoobBot {
         val defaultPrefix: String
             get() = if (isDebug) "!bb" else "bb"
 
-        var manSetAvatar = false
-            internal set
-
         val config = Config.load()
         val database = Database()
 
