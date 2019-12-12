@@ -93,7 +93,6 @@ class Set : Command {
                 { ctx.send(Formats.error(" Failed to set avatar")) }
             )
             BoobBot.log.info("Setting New Avatar")
-            BoobBot.manSetAvatar = true
         }
     }
 
@@ -109,7 +108,7 @@ class Set : Command {
                 { ctx.send(Formats.error(" Failed to set avatar")) }
             )
             BoobBot.log.info("Setting New icons")
-            BoobBot.manSetAvatar = true
+
         }
     }
 
