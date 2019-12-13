@@ -29,6 +29,7 @@ import java.net.SocketTimeoutException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 class BoobBot {
@@ -112,6 +113,7 @@ class BoobBot {
             }
 
             RestAction.setPassContext(false)
+            scheduler.scheduleAtFixedRate(Utils.stat(), 0, 5, TimeUnit.MINUTES)
             ApiServer().startServer()
         }
 

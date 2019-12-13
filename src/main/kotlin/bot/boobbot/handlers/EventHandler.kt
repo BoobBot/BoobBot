@@ -3,7 +3,6 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.config
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
 import bot.boobbot.misc.toWebhookEmbed
 import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
@@ -22,13 +21,9 @@ import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
 import java.time.Instant
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class EventHandler : ListenerAdapter() {
-    private val statsUpdateThread = Executors.newSingleThreadExecutor { Thread("bb-stats-update") }
-
     private val shardHook = WebhookClientBuilder(config.readyWebhook).build()
     private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
     private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
@@ -77,12 +72,8 @@ class EventHandler : ListenerAdapter() {
         // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
         if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
             BoobBot.isReady = true
-            /*if (!BoobBot.isDebug) { // dont need this is testing
-                BoobBot.scheduler.scheduleAtFixedRate(Utils.auto(), 4, 5, TimeUnit.HOURS)
-            }*/
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
             BoobBot.log.info(Formats.readyFormat)
-
             safeSend(shardHook) {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
                 setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
@@ -90,7 +81,6 @@ class EventHandler : ListenerAdapter() {
                 addField("Ready Info", "```\n${Formats.readyFormat}```", false)
             }
 
-            statsUpdateThread.submit { Utils.updateStats() }
         }
     }
 
@@ -125,7 +115,6 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildJoin(event: GuildJoinEvent) {
-        statsUpdateThread.submit { Utils.updateStats() }
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
         // Don't set presence on guildJoin and leave, this is probably an easy way to hit ratelimit if someone spams.
 
@@ -146,7 +135,6 @@ class EventHandler : ListenerAdapter() {
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
-        statsUpdateThread.submit { Utils.updateStats() }
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         val guild = event.guild
 

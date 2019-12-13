@@ -164,15 +164,19 @@ class Utils {
             ).lines().collect(Collectors.joining("\n"))
         }
 
+
         inline fun suppressExceptions(block: () -> Unit) = try {
             block()
         } catch (e: Exception) {
         }
 
         fun updateStats() {
+            print("hi/")
             BoobBot.guilds = BoobBot.shardManager.guildCache.size().toString()
             BoobBot.users = BoobBot.shardManager.userCache.size().toString()
         }
+
+        fun stat() = Runnable { updateStats() }
     }
 }
 
