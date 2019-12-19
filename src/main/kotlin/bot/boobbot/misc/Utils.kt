@@ -108,29 +108,15 @@ class Utils {
         }
 
 
-        fun logCommand(message: Message) =
-            if (message.channelType == ChannelType.PRIVATE) {
-                val msg = MessageFormat.format(
-                    "{3}: {0} Used {1} in DM ({2})",
-                    message.author.name,
-                    message.contentRaw,
-                    message.channel.id,
-                    now()
-                )
-                BoobBot.log.info(msg)
+        fun logCommand(m: Message) {
+            val msg = if (m.isFromGuild) {
+                "[${m.guild.name} (${m.guild.id})/${m.channel.name} (${m.channel.id})] ${m.author.asTag} (${m.author.id}): ${m.contentDisplay}"
             } else {
-                val msg = MessageFormat.format(
-                    "{6}: {0} Used {1} on Guild:{4}({5}) in Channel: {2}({3})",
-                    message.author.name,
-                    message.contentRaw,
-                    message.channel.name,
-                    message.channel.id,
-                    message.guild.name,
-                    message.guild.id,
-                    now()
-                )
-                BoobBot.log.info(msg)
+                "[DM/${m.channel.name} (${m.channel.id})] ${m.author.asTag} (${m.author.id}): ${m.contentDisplay}"
             }
+
+            BoobBot.log.info(msg)
+        }
 
         fun downloadAvatar(url: String): BufferedImage? {
             val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
