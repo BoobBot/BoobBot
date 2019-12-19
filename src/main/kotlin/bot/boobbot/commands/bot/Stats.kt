@@ -23,10 +23,7 @@ class Stats : AsyncCommand {
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
 
-//        val servers = BoobBot.shardManager.guildCache.size()
-//        val users = BoobBot.shardManager.userCache.size()
         val players = BoobBot.musicManagers.filter { it.value.player.playingTrack != null }.size
-
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
