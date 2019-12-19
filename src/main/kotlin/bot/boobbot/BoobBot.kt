@@ -52,7 +52,7 @@ class BoobBot {
             internal set
 
         val defaultPrefix by lazy {
-            if (isDebug) "!bb" else "bb"
+            if (isDebug) ".bb" else "bb"
         }
 
         val config = Config.load()
