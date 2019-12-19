@@ -20,9 +20,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm {
-
     var guildCount = 0L
         private set
+
     var userCount = 0L
         private set
 
