@@ -17,8 +17,14 @@ import okhttp3.Protocol
 import org.json.JSONObject
 import java.net.URL
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm {
+
+    var guildCount = 0L
+        private set
+    var userCount = 0L
+        private set
 
     val allShardsConnected: Boolean
         get() = this.shards.all { it.status == JDA.Status.CONNECTED || it.status == JDA.Status.LOADING_SUBSYSTEMS }
@@ -31,6 +37,16 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
 
     val home: Guild?
         get() = this.getGuildById(BoobBot.config.homeGuild)
+
+    init {
+        BoobBot.scheduler.scheduleAtFixedRate(::updateStats, 0, 5, TimeUnit.MINUTES)
+    }
+
+    fun updateStats() {
+        BoobBot.log.debug("Updating stats count!")
+        guildCount = guildCache.size()
+        userCount = userCache.size()
+    }
 
     fun retrieveRemainingSessionCount(): Int {
         return try {

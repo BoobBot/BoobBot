@@ -1,5 +1,4 @@
 buildscript {
-
     repositories {
         jcenter()
         mavenCentral()
@@ -21,7 +20,7 @@ plugins {
 
 
 group "bot.boobbot"
-version boobbot_version
+version getBuildVersion()
 mainClassName = "bot.boobbot.BoobBot"
 
 
@@ -93,13 +92,17 @@ configurations.all {
     resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
 }
 
-task writeVersion() {
+def getBuildVersion() {
     def gitVersion = new ByteArrayOutputStream()
     exec {
         commandLine("git", "rev-parse", "--short", "HEAD")
         standardOutput = gitVersion
     }
-    new File("src/main/resources", "version.txt").text = gitVersion.toString().trim()
+    return gitVersion.toString().trim()
+}
+
+task writeVersion() {
+    new File("src/main/resources", "version.txt").text = getBuildVersion()
 }
 
 build {

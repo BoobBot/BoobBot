@@ -51,8 +51,9 @@ class BoobBot {
         var isReady = false
             internal set
 
-        val defaultPrefix: String
-            get() = if (isDebug) "!bb" else "bb"
+        val defaultPrefix by lazy {
+            if (isDebug) "!bb" else "bb"
+        }
 
         val config = Config.load()
         val database = Database()
@@ -62,11 +63,8 @@ class BoobBot {
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-        var scheduler = Executors.newSingleThreadScheduledExecutor()!!
+        val scheduler = Executors.newSingleThreadScheduledExecutor()!!
         val metrics = Metrics.create()!!
-        lateinit var guilds: String
-        lateinit var users: String
-
         val pApi = PatreonAPI(config.patreonApiKey)
 
 
@@ -113,7 +111,6 @@ class BoobBot {
             }
 
             RestAction.setPassContext(false)
-            scheduler.scheduleAtFixedRate(Utils.stat(), 0, 5, TimeUnit.MINUTES)
             ApiServer().startServer()
         }
 
