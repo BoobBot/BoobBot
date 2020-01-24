@@ -2,20 +2,21 @@ package bot.boobbot.models
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.AsyncCommand
+import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.json
+import bot.boobbot.misc.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Headers
 import java.awt.Color
+import java.util.concurrent.TimeUnit
 
 
-abstract class SlideShowCommand : AsyncCommand {
+abstract class SlideShowCommand : Command {
 
     private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
 
@@ -26,7 +27,7 @@ abstract class SlideShowCommand : AsyncCommand {
     private val allowedEndpoints = arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared")
     private val endpointStr = allowedEndpoints.joinToString(", ")
 
-    override suspend fun executeAsync(ctx: Context) {
+    override fun execute(ctx: Context) {
         if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].toLowerCase())) {
             return ctx.embed {
                 setColor(Color.red)
@@ -34,34 +35,36 @@ abstract class SlideShowCommand : AsyncCommand {
             }
         }
 
-        val query = ctx.args[0].toLowerCase()
-        val endpoint = aliases[query] ?: query
-
-        val color = Colors.getEffectiveColor(ctx.message)
-        val msg = ctx.sendAsync("\u200B")
-
-        for (i in 1 until 21) { // 1-20
-            val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers).await()?.json()
-                ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
-
-            editMessage(msg, res.getString("url"), i, color)
-            delay(5000)
-        }
-
         if (ctx.guild != null && ctx.botCan(Permission.MESSAGE_MANAGE)) {
             ctx.message.delete().queue(null, {})
         }
 
-        msg.delete().queue(null, {})
+        val query = ctx.args[0].toLowerCase()
+        val endpoint = aliases[query] ?: query
+        val color = Colors.getEffectiveColor(ctx.message)
+
+        BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint?count=20", headers).queue { res ->
+            val json = res?.json()
+                ?: return@queue ctx.send("\uD83D\uDEAB oh? something broken af")
+
+            val (first, images) = json.getJSONArray("urls").map { it.toString() }.separate()
+
+            ctx.channel.sendMessage(embedWith(1, first, color))
+                .delay(5, TimeUnit.SECONDS)
+                .intersect(images) { m, i, e ->
+                    m.editMessage(embedWith(i + 2, e, color))
+                        .delay(5, TimeUnit.SECONDS)
+                }
+                .flatMap(Message::delete)
+                .queue()
+        }
     }
 
-    private suspend fun editMessage(m: Message, url: String, num: Int, color: Color) {
-        m.editMessage(
-            EmbedBuilder()
-                .setColor(color)
-                .setDescription("$num of 20")
-                .setImage(url)
-                .build()
-        ).submit().await()
-    }
+    fun embedWith(num: Int, url: String, color: Color) = EmbedBuilder()
+        .apply {
+            setColor(color)
+            setDescription("$num of 20")
+            setImage(url)
+        }
+        .build()
 }

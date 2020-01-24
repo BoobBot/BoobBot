@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Response
 import org.json.JSONObject
 import java.net.URI
@@ -64,4 +65,12 @@ fun <T> CompletableFuture<T>.thenException(block: (Throwable) -> Unit) {
         block(it)
         return@exceptionally null
     }
+}
+
+fun <T, O> RestAction<T>.intersect(other: List<O>, apply: (T, Int, O) -> RestAction<T>): RestAction<T> {
+    var last = this
+    for ((i, e) in other.withIndex()) {
+        last = last.flatMap { apply(it, i, e) }
+    }
+    return last
 }

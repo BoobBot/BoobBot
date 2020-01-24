@@ -87,8 +87,10 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
         return try {
-            val channel = user.openPrivateChannel().submit().await()
-            channel.sendMessage(message).submit().await()
+            user.openPrivateChannel()
+                .flatMap { it.sendMessage(message) }
+                .submit()
+                .await()
         } catch (e: Exception) {
             null
         }

@@ -75,7 +75,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
-                .setSessionController(SessionController())
+                .setSessionController(SessionController2ElectricBoogaloo())
                 .build()
 
             return CustomShardManager(token, sm)

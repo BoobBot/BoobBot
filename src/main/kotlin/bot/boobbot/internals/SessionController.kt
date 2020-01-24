@@ -59,7 +59,7 @@ class SessionController : SessionController {
                             val shards = `object`.getInt("shards")
                             request.onSuccess(SessionController.ShardedGateway(url, shards))
                         }
-                        response.code == 401 -> this.api.get().verifyToken(true)
+                        response.code == 401 -> this.api.verifyToken(true)
                         else -> request.onFailure(LoginException("When verifying the authenticity of the provided token, Discord returned an unknown response:\n$response"))
                     }
                 } catch (e: Exception) {

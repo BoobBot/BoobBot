@@ -52,22 +52,20 @@ class SoftBan : AsyncCommand, ModCommand() {
             $extraMsg
         """.trimIndent()
 
-        target.user.openPrivateChannel().submit()
-            .thenCompose { it.sendMessage(banMsg).submit() }
-            .thenCompose { it.privateChannel.close().submit() }
-            .awaitSuppressed()
+        target.user.openPrivateChannel()
+            .flatMap { it.sendMessage(banMsg) }
+            .flatMap { it.privateChannel.close() }
+            .queue()
 
         target.ban(7, "Soft-banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
-            .submit()
-            .thenCompose { ctx.guild.unban(target.id).submit() }
-            .thenAccept { ctx.send("done") }
-            .thenException {
+            .flatMap { ctx.guild.unban(target.id) }
+            .queue({ ctx.send("done") }, {
                 if (it is ErrorResponseException) {
                     ctx.send("what the fuck an error occurred while trying to soft-ban\n```\n${it.meaning}```")
                 } else {
                     ctx.send("what the fuck i couldn't soft-ban?")
                 }
-            }
+            })
     }
 
     fun generateInvite(ctx: Context): CompletableFuture<Invite?> {
