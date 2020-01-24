@@ -55,7 +55,8 @@ class SoftBan : AsyncCommand, ModCommand() {
         target.user.openPrivateChannel()
             .flatMap { it.sendMessage(banMsg) }
             .flatMap { it.privateChannel.close() }
-            .queue()
+            .submit()
+            .awaitSuppressed()
 
         target.ban(7, "Soft-banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
             .flatMap { ctx.guild.unban(target.id) }
