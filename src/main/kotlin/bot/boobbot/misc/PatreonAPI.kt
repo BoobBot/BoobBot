@@ -56,6 +56,8 @@ class PatreonAPI(private val accessToken: String) {
 
                 if (user == null || user.isDeclined) {
                     BoobBot.database.removeDonor(id)
+                    BoobBot.database.setUserCockBlocked(id, false)
+                    BoobBot.database.setUserAnonymity(id, false)
                     log.info("Removed $id from donors")
                     continue
                 }
