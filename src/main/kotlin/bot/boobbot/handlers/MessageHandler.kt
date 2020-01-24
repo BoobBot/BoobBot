@@ -87,7 +87,7 @@ class MessageHandler : ListenerAdapter() {
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
-                    ?: return@queue event.channel.sendMessage("\uD83D\uDEAB oh? something broken af").queue()
+                    ?: return@queue event.channel.sendMessage("This channel isn't NSFW, whore.").queue()
 
                 event.channel.sendMessage(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
@@ -126,6 +126,11 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
+        if (event.channelType.isGuild
+            && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
+            && BoobBot.database.getUserAnonymity(event.author.id)) {
+            event.message.delete().queue(null, {})
+        }
 
         try {
             Utils.logCommand(event.message)

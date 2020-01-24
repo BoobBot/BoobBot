@@ -100,6 +100,8 @@ class Help : Command {
     }
 
     private fun builder(ctx: Context): EmbedBuilder {
+        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
+
         return EmbedBuilder()
             .setColor(Colors.getEffectiveColor(ctx.message))
             .setAuthor(
@@ -107,7 +109,7 @@ class Help : Command {
                 "https://boob.bot/commands",
                 ctx.selfUser.effectiveAvatarUrl
             )
-            .setFooter("Help requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            .setFooter("Help requested by ${requester.name}", requester.effectiveAvatarUrl)
             .setTimestamp(Instant.now())
     }
 

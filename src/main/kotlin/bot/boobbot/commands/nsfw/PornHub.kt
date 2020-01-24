@@ -38,6 +38,7 @@ class PornHub : AsyncCommand {
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         val video = rt.getJSONArray("videos").getJSONObject(0)
+        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         ctx.embed {
             setAuthor(
@@ -59,7 +60,7 @@ class PornHub : AsyncCommand {
                         "Url: ${video.getString("url")}",
                 false
             )
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
             build()
         }

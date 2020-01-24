@@ -1,6 +1,7 @@
 package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Utils
@@ -50,6 +51,8 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
     }
 
     private fun send(track: AudioTrack, trackIcon: String) {
+        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
+
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
             setAuthor("Music", track.info.uri, trackIcon)
@@ -58,7 +61,7 @@ class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: 
                 "**Title**: ${track.info.title}\n**Duration**: ${Utils.fTime(track.info.length)}\n**Link**: ${track.info.uri}",
                 false
             )
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
             build()
         }

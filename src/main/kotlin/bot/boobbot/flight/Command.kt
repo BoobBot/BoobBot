@@ -1,6 +1,9 @@
 package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
+import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.internal.JDAImpl
+import net.dv8tion.jda.internal.entities.UserImpl
 
 interface Command {
 

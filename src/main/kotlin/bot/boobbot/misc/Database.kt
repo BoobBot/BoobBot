@@ -148,6 +148,9 @@ class Database {
     fun getUserCockBlocked(userId: String) = get(userSettings, userId, "cockblocked", false)
     fun setUserCockBlocked(userId: String, cockblocked: Boolean) = set(userSettings, userId, "cockblocked", cockblocked)
 
+    fun getUserAnonymity(userId: String) = get(userSettings, userId, "anonymity", false)
+    fun setUserAnonymity(userId: String, anonymity: Boolean) = set(userSettings, userId, "anonymity", anonymity)
+
 
     /**
      * Common Functions

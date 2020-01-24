@@ -38,6 +38,8 @@ class RedTube : AsyncCommand {
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
+        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
+
         ctx.embed {
             setAuthor(
                 "RedTube video search",
@@ -58,7 +60,7 @@ class RedTube : AsyncCommand {
                         "Url: ${video.get("url")}",
                 false
             )
-            setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+            setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
             build()
         }

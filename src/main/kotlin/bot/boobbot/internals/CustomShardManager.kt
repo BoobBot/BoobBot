@@ -1,6 +1,7 @@
 package bot.boobbot.internals
 
 import bot.boobbot.BoobBot
+import bot.boobbot.flight.Context
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Utils
@@ -9,9 +10,12 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import net.dv8tion.jda.api.utils.cache.CacheFlag
+import net.dv8tion.jda.internal.JDAImpl
+import net.dv8tion.jda.internal.entities.UserImpl
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.json.JSONObject
@@ -35,6 +39,13 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     val home: Guild?
         get() = this.getGuildById(BoobBot.config.homeGuild)
 
+    val anonymousUser = UserImpl(0L, sm.shards.first() as JDAImpl)
+        .setAvatarId(null)
+        .setBot(false)
+        .setFake(false)
+        .setName("Hidden User")
+        .setDiscriminator("0000")
+
     init {
         BoobBot.scheduler.scheduleAtFixedRate(::updateStats, 0, 5, TimeUnit.MINUTES)
     }
@@ -57,6 +68,14 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
             json.getJSONObject("session_start_limit").getInt("remaining")
         } catch (e: Exception) {
             -1
+        }
+    }
+
+    fun authorOrAnonymous(ctx: Context): User {
+        return if (BoobBot.database.getUserAnonymity(ctx.author.id)) {
+            BoobBot.shardManager.anonymousUser
+        } else {
+            ctx.author
         }
     }
 
