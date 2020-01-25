@@ -27,6 +27,7 @@ class SessionController : SessionController {
     override fun appendSession(node: SessionController.SessionConnectNode) {
         val managerId = node.shardInfo.shardId % 16
         val manager = sessionManagers.computeIfAbsent(managerId) { SessionManager(it) }
+        manager.removeSession(node)
         manager.appendSession(node)
     }
 
