@@ -58,13 +58,12 @@ class Settings : Command {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable, whore.")
         }
 
-        val toDisable = ctx.args.map { it.toLowerCase() }
+        val toDisable = ctx.args.map(String::toLowerCase)
         val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
-        val alreadyDisabled = toDisable.filter { disabled.contains(it) }
+        val alreadyDisabled = toDisable.filter(disabled::contains)
 
         if (alreadyDisabled.isNotEmpty()) {
-            val fmt = alreadyDisabled.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-            return ctx.send("$fmt ${englishIsHard(alreadyDisabled)} already disabled.")
+            return ctx.send("${Formats.monospaced(alreadyDisabled)} ${englishIsHard(alreadyDisabled)} already disabled.")
         }
 
         val invalid = toDisable.filter {
@@ -74,56 +73,108 @@ class Settings : Command {
         }
 
         if (invalid.isNotEmpty()) {
-            val fmt = invalid.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-            return ctx.send("$fmt ${englishIsHard(invalid)} invalid. Fix it whore")
+            return ctx.send("${Formats.monospaced(invalid)} ${englishIsHard(invalid)} invalid. Fix it whore")
         }
 
         BoobBot.database.disableCommands(ctx.guild.id, toDisable)
-
-        val d = toDisable.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-        ctx.send("Disabled $d.")
+        ctx.send("Disabled ${Formats.monospaced(toDisable)}.")
     }
 
     @SubCommand(aliases = ["enable", "ec"])
     fun enableCmds(ctx: Context) {
         if (ctx.args.isEmpty()) {
-            return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable, whore.")
+            return ctx.send("wtf, i don't mind read. Specify what commands you wanna re-enable, whore.")
         }
 
-        val toEnable = ctx.args.map { it.toLowerCase() }
+        val toEnable = ctx.args.map(String::toLowerCase)
         val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
-
-        val invalid = toEnable.filter { !BoobBot.commands.containsKey(it) }
+        val invalid = toEnable.filterNot(BoobBot.commands::containsKey)
 
         if (invalid.isNotEmpty()) {
-            val fmt = invalid.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-            return ctx.send("$fmt ${englishIsHard(invalid)} invalid. Fix it whore")
+            return ctx.send("${Formats.monospaced(invalid)} ${englishIsHard(invalid)} invalid. Fix it whore")
         }
 
-        val alreadyEnabled = toEnable.filter { !disabled.contains(it) }
+        val alreadyEnabled = toEnable.filterNot(disabled::contains)
 
         if (alreadyEnabled.isNotEmpty()) {
-            val fmt = alreadyEnabled.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-            return ctx.send("$fmt ${englishIsHard(alreadyEnabled)} already enabled.")
+            return ctx.send("${Formats.monospaced(alreadyEnabled)} ${englishIsHard(alreadyEnabled)} already enabled.")
         }
 
         BoobBot.database.enableCommands(ctx.guild.id, toEnable)
-
-        val d = toEnable.joinToString(prefix = "`", postfix = "`", separator = "`, `")
-        ctx.send("Enabled $d.")
+        ctx.send("Enabled ${Formats.monospaced(toEnable)}.")
     }
 
+    @SubCommand(aliases = ["vdh"])
+    fun viewDisabledHere(ctx: Context) {
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val disabledFmt = if (disabled.isEmpty()) "*No commands disabled in this channel.*" else disabled.sorted().joinToString(", ")
+
+        ctx.embed {
+            setColor(Colors.getEffectiveColor(ctx.message))
+            setTitle("Commands Disabled in ${ctx.channel.name}")
+            setDescription(disabledFmt)
+        }
+    }
+
+    @SubCommand(aliases = ["dh"])
+    fun disableHere(ctx: Context) {
+        if (ctx.args.isEmpty()) {
+            return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable for this channel, whore.")
+        }
+
+        val toDisable = ctx.args.map(String::toLowerCase)
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val alreadyDisabled = toDisable.filter(disabled::contains)
+
+        if (alreadyDisabled.isNotEmpty()) {
+            return ctx.send("${Formats.monospaced(alreadyDisabled)} ${englishIsHard(alreadyDisabled)} already disabled.")
+        }
+
+        val invalid = toDisable.filter {
+            !BoobBot.commands.containsKey(it) ||
+                    prohibitDisable.contains(it) ||
+                    BoobBot.commands[it]?.properties?.developerOnly ?: false
+        }
+
+        if (invalid.isNotEmpty()) {
+            return ctx.send("${Formats.monospaced(invalid)} ${englishIsHard(invalid)} invalid. Fix it whore")
+        }
+
+        BoobBot.database.disableForChannel(ctx.guild.id, ctx.channel.id, toDisable)
+        ctx.send("Disabled ${Formats.monospaced(toDisable)} for this channel.")
+    }
+
+    @SubCommand(aliases = ["eh"])
+    fun enableHere(ctx: Context) {
+        if (ctx.args.isEmpty()) {
+            return ctx.send("wtf, i don't mind read. Specify what commands you wanna re-enable for this channel, whore.")
+        }
+
+        val toEnable = ctx.args.map(String::toLowerCase)
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val invalid = toEnable.filterNot(BoobBot.commands::containsKey)
+
+        if (invalid.isNotEmpty()) {
+            return ctx.send("${Formats.monospaced(invalid)} ${englishIsHard(invalid)} invalid. Fix it whore")
+        }
+
+        val alreadyEnabled = toEnable.filterNot(disabled::contains)
+
+        if (alreadyEnabled.isNotEmpty()) {
+            return ctx.send("${Formats.monospaced(alreadyEnabled)} ${englishIsHard(alreadyEnabled)} already enabled.")
+        }
+
+        BoobBot.database.enableForChannel(ctx.guild.id, ctx.channel.id, toEnable)
+        ctx.send("Enabled ${Formats.monospaced(toEnable)} for this channel.")
+    }
 
     @SubCommand(aliases = ["prefix", "sp"])
     fun setPrefix(ctx: Context) {
         if (!Utils.checkDonor(ctx.message)) {
-            ctx.channel.sendMessage(
-                Formats.error(
-                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
-                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
-                )
-            ).queue()
-            return
+            return ctx.send(
+                Formats.error(" Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                        + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")
+            )
         }
 
         if (ctx.args.isEmpty()) {

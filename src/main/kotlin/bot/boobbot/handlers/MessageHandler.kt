@@ -65,8 +65,9 @@ class MessageHandler : ListenerAdapter() {
 
         if (event.isFromGuild) {
             val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
+            val disabledForChannel = BoobBot.database.getDisabledForChannel(event.guild.id, event.channel.id)
 
-            if (disabledCommands.contains(command.name)) {
+            if (disabledCommands.contains(command.name) || disabledForChannel.contains(command.name)) {
                 return
             }
         }

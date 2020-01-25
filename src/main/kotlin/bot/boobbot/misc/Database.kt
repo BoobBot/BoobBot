@@ -58,7 +58,7 @@ class Database {
         val s = guildSettings.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyList()
 
-        return s.getList("disabled", String::class.java)
+        return s.getList("disabled", String::class.java, emptyList())
     }
 
     fun disableCommands(guildId: String, commands: List<String>) {
@@ -73,6 +73,36 @@ class Database {
         guildSettings.updateOne(
             eq("_id", guildId),
             Updates.pullAll("disabled", commands),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+    fun getDisabledForChannel(guildId: String, channelId: String): List<String> {
+        val s = guildSettings.find(BasicDBObject("_id", guildId))
+            .firstOrNull() ?: return emptyList()
+
+        val allDisabled = s.getList("channelDisabled", Document::class.java)
+
+        return allDisabled.filter { it.getString("channelId") == channelId }
+            .map { it.getString("name") }
+    }
+
+    fun disableForChannel(guildId: String, channelId: String, commands: List<String>) {
+        val toAdd = commands.map { Document("name", it).append("channelId", channelId) }
+
+        guildSettings.updateOne(
+            eq("_id", guildId),
+            Updates.addEachToSet("channelDisabled", toAdd),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+    fun enableForChannel(guildId: String, channelId: String, commands: List<String>) {
+        val toRemove = commands.map { Document("name", it).append("channelId", channelId) }
+
+        guildSettings.updateOne(
+            eq("_id", guildId),
+            Updates.pullAll("channelDisabled", toRemove),
             UpdateOptions().upsert(true)
         )
     }
