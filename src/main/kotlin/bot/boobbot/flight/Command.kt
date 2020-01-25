@@ -1,9 +1,13 @@
 package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
+import bot.boobbot.misc.Colors
+import bot.boobbot.misc.Formats
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.internal.JDAImpl
 import net.dv8tion.jda.internal.entities.UserImpl
+import java.time.Instant
 
 interface Command {
 
@@ -28,5 +32,28 @@ interface Command {
     fun localCheck(ctx: Context): Boolean = true
 
     fun execute(ctx: Context)
+
+    fun sendSubcommandHelp(ctx: Context) {
+        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
+        val embed = EmbedBuilder()
+                .setColor(Colors.getEffectiveColor(ctx.message))
+                .setAuthor(
+                    "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
+                    "https://boob.bot/commands",
+                    ctx.selfUser.effectiveAvatarUrl
+                )
+                .setFooter("Help requested by ${requester.name}", requester.effectiveAvatarUrl)
+                .setTimestamp(Instant.now())
+
+        for (sc in this.subcommands.values.sortedBy { it.name }) {
+            embed.appendDescription("`${padEnd(sc.name, 16)}:` ${sc.description}\n")
+        }
+
+        ctx.embed(embed.build())
+    }
+
+    private fun padEnd(str: String, length: Int = 15): String {
+        return str + "\u200B ".repeat(length - str.length)
+    }
 
 }

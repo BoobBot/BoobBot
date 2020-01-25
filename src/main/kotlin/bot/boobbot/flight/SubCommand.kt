@@ -4,5 +4,6 @@ package bot.boobbot.flight
 @Target(AnnotationTarget.FUNCTION)
 annotation class SubCommand(
     val async: Boolean = false,
-    val aliases: Array<String> = []
+    val aliases: Array<String> = [],
+    val description: String = "too lazy to fill this in"
 )
