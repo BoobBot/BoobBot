@@ -81,7 +81,7 @@ class Database {
         val s = guildSettings.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyList()
 
-        val allDisabled = s.getList("channelDisabled", Document::class.java)
+        val allDisabled = s.getList("channelDisabled", Document::class.java, emptyList())
 
         return allDisabled.filter { it.getString("channelId") == channelId }
             .map { it.getString("name") }
