@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.managers.AudioManager
 import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val message: Message, val args: List<String>) {
+    val triggerIsMention = BOT_MENTIONS.any { it == trigger }
     val channelType = message.channelType
     val isFromGuild = channelType.isGuild
 
@@ -34,8 +35,14 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     val customPrefix = if (isFromGuild) BoobBot.database.getPrefix(guild!!.id) else null
 
-    val audioPlayer: GuildMusicManager?
-        get() = if (guild == null) null else BoobBot.getMusicManager(guild)
+    val audioPlayer: GuildMusicManager
+        get() {
+            check(guild != null) { "Cannot retrieve a GuildMusicManager when guild is null!" }
+            return BoobBot.getMusicManager(guild)
+        }
+
+    val mentions: List<User>
+        get() = if (triggerIsMention) message.mentionedUsers.minus(message.jda.selfUser) else message.mentionedUsers
 
 
     fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean {
@@ -109,6 +116,10 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         }
 
         channel.sendMessage(message.build()).queue(success, failure)
+    }
+
+    companion object {
+        val BOT_MENTIONS = listOf("<@${BoobBot.selfId}> ", "<@!${BoobBot.selfId}> ")
     }
 
 }

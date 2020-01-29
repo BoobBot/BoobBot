@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.utils.ChunkingFilter
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.JDAImpl
 import net.dv8tion.jda.internal.entities.UserImpl
@@ -56,21 +57,6 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
         userCount = userCache.size()
     }
 
-    fun retrieveRemainingSessionCount(): Int {
-        return try {
-            val url = URL("https://discordapp.com/api/gateway/bot")
-            val connection = url.openConnection()
-            connection.setRequestProperty("Authorization", "Bot $token")
-
-            val res = Utils.readAll(connection.getInputStream())
-            val json = JSONObject(res)
-
-            json.getJSONObject("session_start_limit").getInt("remaining")
-        } catch (e: Exception) {
-            -1
-        }
-    }
-
     fun authorOrAnonymous(ctx: Context): User {
         return if (BoobBot.database.getUserAnonymity(ctx.author.id)) {
             BoobBot.shardManager.anonymousUser
@@ -80,7 +66,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     }
 
     companion object {
-        fun create(token: String, shardCount: Int = -1): CustomShardManager {
+        fun create(token: String, shardCount: Int = -1, noCache: Boolean = false): CustomShardManager {
             val jdaHttp = OkHttpClient.Builder()
                 .protocols(listOf(Protocol.HTTP_1_1))
                 .build()
@@ -95,9 +81,27 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setSessionController(SessionController())
-                .build()
 
-            return CustomShardManager(token, sm)
+            if (noCache) {
+                sm.setGuildSubscriptionsEnabled(false)
+            }
+
+            return CustomShardManager(token, sm.build())
+        }
+
+        fun retrieveRemainingSessionCount(token: String): Int {
+            return try {
+                val url = URL("https://discordapp.com/api/gateway/bot")
+                val connection = url.openConnection()
+                connection.setRequestProperty("Authorization", "Bot $token")
+
+                val res = Utils.readAll(connection.getInputStream())
+                val json = JSONObject(res)
+
+                json.getJSONObject("session_start_limit").getInt("remaining")
+            } catch (e: Exception) {
+                -1
+            }
         }
     }
 

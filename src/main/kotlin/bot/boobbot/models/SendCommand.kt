@@ -12,7 +12,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
     private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
 
     override suspend fun executeAsync(ctx: Context) {
-        val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
+        val user = ctx.mentions.firstOrNull() ?: ctx.author
 
         if (user.idLong == BoobBot.selfId) {
             return ctx.send("Don't you fucking touch me whore, i will end you.")

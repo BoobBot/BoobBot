@@ -26,35 +26,34 @@ class Play : VoiceCommand {
         }
 
         if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
-            return ctx.send("Gotta specify a link, whore")
+            return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
         }
 
-        val player = ctx.audioPlayer!!
+        val player = ctx.audioPlayer
         val query = ctx.args[0].replace("<", "").replace(">", "")
 
-        if (!Utils.isDonor(ctx.author)) {
-            val uri = query.toUriOrNull()
-            val domain = if (uri?.host?.startsWith("www.") == true) {
-                uri.host?.substring(4)
-            } else {
-                uri?.host
-            }
-
-            if (domain != null && (domain == "youtube.com" || domain == "youtu.be") ||
-                query.startsWith("ytsearch:")
-            ) {
-                ctx.send(
-                    Formats.error(
-                        " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
-                                + "Stop being a cheap fuck and join today! https://www.patreon.com/OfficialBoobBot"
-                    )
+        if (!Utils.isDonor(ctx.author) && isYouTubeTrack(query)) {
+            return ctx.send(
+                Formats.error(
+                    " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
+                            + "Stop being a cheap fuck and join today! https://www.patreon.com/OfficialBoobBot"
                 )
-                return
-            }
+            )
         }
 
         playerManager.loadItem(query, AudioLoader(player, ctx))
+    }
 
+    fun isYouTubeTrack(query: String): Boolean {
+        val uri = query.toUriOrNull()
+        val domain = if (uri?.host?.startsWith("www.") == true) {
+            uri.host?.substring(4)
+        } else {
+            uri?.host
+        }
+
+        return query.startsWith("ytsearch:") ||
+                domain?.let { it == "youtube.com" || domain == "youtu.be" } ?: false
     }
 
 }

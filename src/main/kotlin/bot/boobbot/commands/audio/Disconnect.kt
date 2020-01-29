@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.Permission
 class Disconnect : VoiceCommand {
 
     override fun execute(ctx: Context) {
-        val player = ctx.audioPlayer!!
+        val player = ctx.audioPlayer
         if (
             ctx.userCan(Permission.MESSAGE_MANAGE)
             || Config.owners.contains(ctx.author.idLong)

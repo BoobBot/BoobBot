@@ -21,7 +21,7 @@ class Skip : VoiceCommand {
             return
         }
 
-        val player = ctx.audioPlayer!!
+        val player = ctx.audioPlayer
         val track = player.player.playingTrack
             ?: return ctx.send(Formats.error("Wtf whore, How can i skip when im not playing anything?!"))
 

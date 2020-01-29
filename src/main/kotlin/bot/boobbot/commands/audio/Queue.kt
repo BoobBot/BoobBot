@@ -28,7 +28,7 @@ class Queue : VoiceCommand {
             return
         }
 
-        val player = ctx.audioPlayer!!
+        val player = ctx.audioPlayer
         val track = player.player.playingTrack
             ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
 

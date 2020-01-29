@@ -71,33 +71,21 @@ class BoobBot {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
-            playerManager.registerSourceManager(PornHubAudioSourceManager())
-            playerManager.registerSourceManager(RedTubeAudioSourceManager())
-            playerManager.registerSourceManager(YoutubeAudioSourceManager())
-            playerManager.registerSourceManager(LocalAudioSourceManager())
-
-            isDebug = args.firstOrNull()?.contains("debug") ?: false
+            isDebug = args.any { it == "--debug" }
+            val noCaching = args.any { it == "--no-cache" }
             val shardCount = if (isDebug) 1 else config.shardCount
-            val duration = abs(shardCount * 5000)
-            val currentTime = Calendar.getInstance()
+            val token = if (isDebug) config.debugToken else config.token
 
             log.info("--- BoobBot (Revision ${Utils.version}) ---")
-            log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION}")
-            log.info("Launching $shardCount shards at an estimated ${Utils.fTime(duration.toLong())}")
-            log.info("It\'s currently ${currentTime.time}")
+            log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION} | $shardCount shards | " +
+                    "${CustomShardManager.retrieveRemainingSessionCount(token)} logins")
 
-            currentTime.add(Calendar.MILLISECOND, duration)
-            log.info("Estimated full boot by ${currentTime.time}")
-
-            val token = if (isDebug) config.debugToken else config.token
-            shardManager = CustomShardManager.create(token, shardCount)
+            shardManager = CustomShardManager.create(token, shardCount, noCaching)
             application = shardManager.retrieveApplicationInfo().complete()
             inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
 
-            log.info("-- REMAINING LOGINS AVAILABLE: ${shardManager.retrieveRemainingSessionCount()}")
-            log.level = Level.DEBUG
-
             if (isDebug) {
+                log.level = Level.DEBUG
                 log.warn("Running in debug mode")
             } else {
                 CustomSentryClient.create(config.sentryDsn)
@@ -110,8 +98,16 @@ class BoobBot {
                     )
             }
 
+            setupAudioSystem()
             RestAction.setPassContext(false)
             ApiServer().startServer()
+        }
+
+        fun setupAudioSystem() {
+            playerManager.registerSourceManager(PornHubAudioSourceManager())
+            playerManager.registerSourceManager(RedTubeAudioSourceManager())
+            playerManager.registerSourceManager(YoutubeAudioSourceManager())
+            playerManager.registerSourceManager(LocalAudioSourceManager())
         }
 
         fun getMusicManager(g: Guild): GuildMusicManager {

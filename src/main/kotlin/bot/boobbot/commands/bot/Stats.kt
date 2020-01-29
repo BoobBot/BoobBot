@@ -74,7 +74,7 @@ class Stats : AsyncCommand {
             "Threads             = "..Thread.activeCount()
             "JVM_CPU_Usage       = "..procCpuUsage
             "System_CPU_Usage    = "..sysCpuUsage
-            "RAM_Usage           = ".."$usedMB MB ($rPercent)"
+            "RAM_Usage           = ".."$usedMB MB ($rPercent%)"
             "Total_GC_Count      = "..totalCollections
             "Total_GC_Time       = ".."${totalCollectionTime}ms"
             "Avg_GC_Cycle        = ".."${dpFormatter.format(averageCollectionTime)}ms"

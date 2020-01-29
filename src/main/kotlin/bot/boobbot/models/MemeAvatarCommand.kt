@@ -24,7 +24,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
             return ctx.send("I can't send images here, fix it whore.")
         }
 
-        val user = ctx.message.mentionedUsers.firstOrNull() ?: ctx.author
+        val user = ctx.mentions.firstOrNull() ?: ctx.author
         val url = urlBuilder.addQueryParameter("avatar1", user.effectiveAvatarUrl).build()
 
         val res = BoobBot.requestUtil.get(url.toString(), headers).await()?.body()

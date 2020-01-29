@@ -14,7 +14,7 @@ interface VoiceCommand : Command {
     }
 
     fun canSkip(ctx: Context): Boolean {
-        val user = ctx.audioPlayer!!.player.playingTrack.userData as User
+        val user = ctx.audioPlayer.player.playingTrack.userData as User
 
         return ctx.userCan(Permission.MESSAGE_MANAGE)
                 || ctx.author.idLong == user.idLong

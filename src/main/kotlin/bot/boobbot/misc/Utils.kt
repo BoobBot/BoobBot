@@ -1,7 +1,6 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import okhttp3.Headers
