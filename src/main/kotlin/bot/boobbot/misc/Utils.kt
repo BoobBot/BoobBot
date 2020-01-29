@@ -66,12 +66,12 @@ class Utils {
         fun isDonorPlus(user: User) = hasRole(user, 528615882709008430L)
 
         fun checkDonor(event: Message): Boolean {
-            val legacyChecks =
-                isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
+            //val legacyChecks =
+                //isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
 
             // getDonorType automatically checks developer status.
-            return legacyChecks
-                    || BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
+            return /*legacyChecks
+                    ||*/ BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
                     || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
         }
 
