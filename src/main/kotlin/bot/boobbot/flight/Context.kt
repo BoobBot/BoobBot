@@ -45,18 +45,17 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         get() = if (triggerIsMention) message.mentionedUsers.minus(message.jda.selfUser) else message.mentionedUsers
 
 
-    fun permissionCheck(user: User, channel: MessageChannel, vararg permissions: Permission): Boolean {
-        return !isFromGuild ||
-                Config.owners.contains(user.idLong) ||
-                guild!!.getMember(user)!!.hasPermission(channel as TextChannel, *permissions)
+    fun permissionCheck(u: User, m: Member?, channel: MessageChannel, vararg permissions: Permission): Boolean {
+        return !isFromGuild || Config.owners.contains(u.idLong) ||
+                (m?.hasPermission(channel as TextChannel, *permissions) ?: false)
     }
 
     fun userCan(check: Permission): Boolean {
-        return permissionCheck(author, channel, check)
+        return permissionCheck(author, member, channel, check)
     }
 
     fun botCan(vararg check: Permission): Boolean {
-        return permissionCheck(selfUser, channel, *check)
+        return permissionCheck(selfUser, selfMember, channel, *check)
     }
 
     fun dm(embed: MessageEmbed) {

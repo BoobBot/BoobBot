@@ -17,6 +17,7 @@ import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
+import io.sentry.connection.ConnectionException
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
@@ -91,6 +92,7 @@ class BoobBot {
                 CustomSentryClient.create(config.sentryDsn)
                     .ignore(
                         ContextException::class.java,
+                        ConnectionException::class.java,
                         SocketException::class.java,
                         SocketTimeoutException::class.java,
                         IOException::class.java,
