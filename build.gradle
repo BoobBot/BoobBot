@@ -39,8 +39,6 @@ dependencies {
     }
     implementation "club.minnced:discord-webhooks:$webhooks_version"
 
-    implementation 'com.github.lbots:lbots-jvm:master-SNAPSHOT'
-
     /* Audio */
     implementation "com.sedmelluq:lavaplayer:$lp_version"
     implementation "com.sedmelluq:jda-nas:$nas_version"

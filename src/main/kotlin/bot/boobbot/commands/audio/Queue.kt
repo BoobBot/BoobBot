@@ -8,8 +8,11 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.models.VoiceCommand
+import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioTrack
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User
 import org.apache.commons.lang3.StringUtils
+import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.time.Instant
 
 @CommandProperties(
@@ -32,50 +35,67 @@ class Queue : VoiceCommand {
         val track = player.player.playingTrack
             ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
 
-        val q = player.queue
-        val qStr = if (q.size >= 1) {
-            q.joinToString(separator = "\n", limit = 5, truncated = "Showing 5 of ${q.size}") {
-                "**Title**: ${StringUtils.abbreviate(
-                    it.info.title.replace("Unknown title", "Moan :tired_face:"),
-                    50
-                )}\n" +
-                        "**Duration**: ${Utils.fTime(it.info.length)}\n" +
-                        "**Source**: ${it.sourceManager.sourceName.replace("local", "moan")}\n" +
-                        "**User**: ${(it.userData as User).name}\n\n"
-            }
+        val queue = player.queue
+        val queueTime = Utils.fTime(queue.sumByLong { it.duration })
+        val queueStr = if (queue.isEmpty()) {
+            "*Queue is empty.*"
         } else {
-            "Nothing Queued"
+            queue.joinToString(separator = "\n", limit = 5, truncated = "Showing 5 of ${queue.size}") {
+                """
+                    **Title**: ${abbreviate(getTrackTitle(it), 50)}
+                    **Duration:** ${Utils.fTime(it.info.length)}
+                    **Source:** ${getTrackSource(it)}
+                    **Requester:** ${it.getUserData(User::class.java).asTag}
+                """.trimIndent()
+            }
         }
-
-        val total = Utils.fTime(q.asSequence().map { it.duration }.sum())
 
         ctx.embed {
             setAuthor(
-                "Current playlist",
+                "Queue | ${ctx.guild!!.name}",
                 BoobBot.inviteUrl,
                 ctx.selfUser.effectiveAvatarUrl
             )
             setColor(Colors.getEffectiveColor(ctx.message))
-            addField(
-                "Now Playing",
-                "**Title**: ${StringUtils.abbreviate(
-                    track.info.title.replace("Unknown title", "Moan :tired_face:"),
-                    50
-                )}\n" +
-                        "**Duration**: ${Utils.fTime(track.info.length)}\n" +
-                        "**Source**: ${track.sourceManager.sourceName.replace("local", "moan")}\n" +
-                        "**User**: ${(track.userData as User).name}", false
-            )
+            addField("Current", """
+                **Title:** ${abbreviate(getTrackTitle(track), 50)}
+                **Duration:** ${Utils.fTime(track.info.length)}
+                **Source:** ${getTrackSource(track)}
+                **Requester:** ${track.getUserData(User::class.java).asTag}
+            """.trimIndent(), false)
             addField(
                 "Queue",
-                qStr,
+                queueStr,
                 false
             )
-            setFooter("Total duration $total", ctx.selfUser.effectiveAvatarUrl)
+            setFooter("Total duration $queueTime", ctx.selfUser.effectiveAvatarUrl)
             setTimestamp(Instant.now())
             build()
         }
+    }
 
+    fun getTrackTitle(track: AudioTrack): String {
+        if (track is LocalAudioTrack) {
+            return "Moan :tired_face:"
+        }
+
+        return track.info.title
+    }
+
+    fun getTrackSource(track: AudioTrack): String {
+        if (track is LocalAudioTrack) {
+            return "Moan"
+        }
+
+        return track.sourceManager.sourceName.capitalize()
+    }
+
+    fun abbreviate(s: String, maxChars: Int): String {
+        if (s.length > maxChars - 3) {
+            return s.substring(0, maxChars - 3) + "..."
+        }
+
+        return s
     }
 
 }
