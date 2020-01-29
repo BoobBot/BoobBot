@@ -1,16 +1,12 @@
 package bot.boobbot.models
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.AsyncCommand
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Headers
 import java.awt.Color
 import java.util.concurrent.TimeUnit

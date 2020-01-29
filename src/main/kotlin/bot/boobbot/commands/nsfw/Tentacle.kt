@@ -8,7 +8,6 @@ import bot.boobbot.models.BbApiCommand
     description = "tentacles.",
     nsfw = true,
     category = Category.KINKS,
-    aliases = ["aly"],
-    boosterOnly = true
+    aliases = ["aly"]
 )
 class Tentacle : BbApiCommand("tentacle")

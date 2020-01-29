@@ -5,7 +5,12 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.ModCommand
 
-@CommandProperties(description = "Boot an asshat from the server. <:p_:475801484282429450>", donorOnly = true, guildOnly = true, category = Category.MOD)
+@CommandProperties(
+    description = "Boot an asshat from the server. <:p_:475801484282429450>",
+    donorOnly = true,
+    guildOnly = true,
+    category = Category.MOD
+)
 class Kick : ModCommand() {
 
     override fun execute(ctx: Context) {

@@ -14,8 +14,6 @@ import java.io.InputStreamReader
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Paths
-import java.text.MessageFormat
-import java.time.Instant.now
 import java.util.*
 import java.util.stream.Collectors
 import javax.imageio.ImageIO
@@ -67,7 +65,7 @@ class Utils {
 
         fun checkDonor(event: Message): Boolean {
             //val legacyChecks =
-                //isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
+            //isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
 
             // getDonorType automatically checks developer status.
             return /*legacyChecks

@@ -117,19 +117,20 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (command.properties.boosterOnly && !Utils.isBooster(event.message.author)) {
-            event.channel.sendMessage(
-                Formats.error(
-                    " Sorry this command is only available to our Nitro boosters.\n"
-                            + "Stop being a fuck and boost today!\nhttps://invite.boob.bot"
-                )
-            ).queue()
-            return
-        }
+//        if (command.properties.boosterOnly && !Utils.isBooster(event.message.author)) {
+//            event.channel.sendMessage(
+//                Formats.error(
+//                    " Sorry this command is only available to our Nitro boosters.\n"
+//                            + "Stop being a fuck and boost today!\nhttps://invite.boob.bot"
+//                )
+//            ).queue()
+//            return
+//        }
 
         if (event.channelType.isGuild
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
-            && BoobBot.database.getUserAnonymity(event.author.id)) {
+            && BoobBot.database.getUserAnonymity(event.author.id)
+        ) {
             event.message.delete().queue(null, {})
         }
 

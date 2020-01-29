@@ -108,7 +108,8 @@ class Settings : Command {
     @SubCommand(aliases = ["vdh"], description = "Lists commands disabled in the current channel.")
     fun viewDisabledHere(ctx: Context) {
         val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
-        val disabledFmt = if (disabled.isEmpty()) "*No commands disabled in this channel.*" else disabled.sorted().joinToString(", ")
+        val disabledFmt =
+            if (disabled.isEmpty()) "*No commands disabled in this channel.*" else disabled.sorted().joinToString(", ")
 
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
@@ -173,8 +174,10 @@ class Settings : Command {
     fun setPrefix(ctx: Context) {
         if (!Utils.checkDonor(ctx.message)) {
             return ctx.send(
-                Formats.error(" Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
-                        + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot")
+                Formats.error(
+                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                )
             )
         }
 

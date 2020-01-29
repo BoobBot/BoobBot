@@ -14,7 +14,8 @@ import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.util.regex.Pattern
 
-class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: PornHubAudioSourceManager) : DelegatedAudioTrack(trackInfo) {
+class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: PornHubAudioSourceManager) :
+    DelegatedAudioTrack(trackInfo) {
 
     override fun makeClone() = PornHubAudioTrack(trackInfo, sourceManager)
 

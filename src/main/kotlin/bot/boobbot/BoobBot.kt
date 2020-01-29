@@ -27,11 +27,8 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 class BoobBot {
     companion object {
@@ -78,8 +75,10 @@ class BoobBot {
             val token = if (isDebug) config.debugToken else config.token
 
             log.info("--- BoobBot (Revision ${Utils.version}) ---")
-            log.info("JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION} | $shardCount shards | " +
-                    "${CustomShardManager.retrieveRemainingSessionCount(token)} logins")
+            log.info(
+                "JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION} | $shardCount shards | " +
+                        "${CustomShardManager.retrieveRemainingSessionCount(token)} logins"
+            )
 
             shardManager = CustomShardManager.create(token, shardCount, noCaching)
             application = shardManager.retrieveApplicationInfo().complete()

@@ -75,12 +75,12 @@ data class Item(
 
 fun calculateLewdLevel(user: bot.boobbot.models.User): Int {
     val calculateLewdPoints =
-                (user.experience / 100) * .1 +
+        (user.experience / 100) * .1 +
                 (user.nsfwCommandsUsed / 100) * .3 -
                 (user.commandsUsed / 100) * .3 +
                 (user.lewdPoints / 100) * 20
     // lewd level up
-   return floor(0.1 * sqrt(calculateLewdPoints.toDouble())).toInt()
+    return floor(0.1 * sqrt(calculateLewdPoints.toDouble())).toInt()
 }
 
 
@@ -90,7 +90,7 @@ fun handleMessage(ctx: Context, user: bot.boobbot.models.User) {
     }
     if (user.inJail) {
         user.jailRemaining = min(user.jailRemaining - 1, 0)
-        if (user.jailRemaining == 0){
+        if (user.jailRemaining == 0) {
             user.inJail = false
         }
         //TODO save user
@@ -105,7 +105,7 @@ fun handleMessage(ctx: Context, user: bot.boobbot.models.User) {
             val tags = Formats.tag
             val tagSize = tags.filter { ctx.message.contentDisplay.contains(it.toString()) }.size
             user.lewdPoints = user.lewdPoints + min(tagSize, 5) * (user.balance / 100) * .01.toInt()
-            user.nsfwMessagesSent = user.nsfwMessagesSent+1
+            user.nsfwMessagesSent = user.nsfwMessagesSent + 1
         }
         user.experience = if (user.bonusXp != null && user.bonusXp!! > 0) user.experience + 2 else user.experience + 1
         if (user.bonusXp != null && user.bonusXp!! > 0) {

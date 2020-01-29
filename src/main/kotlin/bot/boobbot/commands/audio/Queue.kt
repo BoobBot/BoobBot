@@ -11,7 +11,6 @@ import bot.boobbot.models.VoiceCommand
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User
-import org.apache.commons.lang3.StringUtils
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.time.Instant
 
@@ -57,12 +56,14 @@ class Queue : VoiceCommand {
                 ctx.selfUser.effectiveAvatarUrl
             )
             setColor(Colors.getEffectiveColor(ctx.message))
-            addField("Current", """
+            addField(
+                "Current", """
                 **Title:** ${abbreviate(getTrackTitle(track), 50)}
                 **Duration:** ${Utils.fTime(track.info.length)}
                 **Source:** ${getTrackSource(track)}
                 **Requester:** ${track.getUserData(User::class.java).asTag}
-            """.trimIndent(), false)
+            """.trimIndent(), false
+            )
             addField(
                 "Queue",
                 queueStr,

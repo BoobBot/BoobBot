@@ -8,7 +8,6 @@ import bot.boobbot.models.SendCommand
     description = "Sends Tentacles to you or another user",
     guildOnly = true,
     aliases = ["sendaly"],
-    category = Category.SEND,
-    boosterOnly = true
+    category = Category.SEND
 )
 class SendTentacle : SendCommand("Tentacles", "tentacle")
