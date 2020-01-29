@@ -127,8 +127,8 @@ class EventHandler : ListenerAdapter() {
                 "${Formats.info("info")}\n" +
                         "On Shard: ${event.jda.shardInfo.shardId}\n" +
                         "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
-                        "Owner: ${guild.owner!!.user.asTag} (${guild.owner!!.user.id})\n" +
-                        "Members: ${guild.members.size}"
+                        "OwnerID: ${guild.ownerId})\n" +
+                        "Members: ${guild.memberCount}"
             )
             setThumbnail(guild.iconUrl)
         }
