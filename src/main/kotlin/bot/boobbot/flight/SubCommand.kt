@@ -5,5 +5,6 @@ package bot.boobbot.flight
 annotation class SubCommand(
     val async: Boolean = false,
     val aliases: Array<String> = [],
-    val description: String = "too lazy to fill this in"
+    val description: String = "*No description available.*",
+    val donorOnly: Boolean = false
 )

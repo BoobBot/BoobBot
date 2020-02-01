@@ -11,6 +11,7 @@ class SubCommandWrapper(
     val aliases: Array<String>,
     val async: Boolean,
     val description: String,
+    val donorOnly: Boolean,
     val method: Method,
     private val kls: Command
 ) {

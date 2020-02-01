@@ -118,7 +118,7 @@ class Settings : Command {
         }
     }
 
-    @SubCommand(aliases = ["dh"], description = "Disables commands for the current channel.")
+    @SubCommand(aliases = ["dh"], description = "Disables commands for the current channel.", donorOnly = true)
     fun disableHere(ctx: Context) {
         if (ctx.args.isEmpty()) {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable for this channel, whore.")

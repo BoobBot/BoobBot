@@ -1,5 +1,7 @@
 package bot.boobbot.flight
 
+import bot.boobbot.misc.Formats
+import bot.boobbot.misc.Utils
 import net.dv8tion.jda.api.entities.Message
 
 class ExecutableCommand(
@@ -34,6 +36,15 @@ class ExecutableCommand(
         }
 
         if (subcommand != null) {
+            if (subcommand.donorOnly && !Utils.checkDonor(ctx.message)) {
+                ctx.send(
+                    Formats.error(
+                        " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                                + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                    )
+                )
+                return
+            }
             subcommand.execute(ctx)
         } else {
             cmd.execute(ctx)
