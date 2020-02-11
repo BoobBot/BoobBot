@@ -25,8 +25,8 @@ abstract class ModCommand : Command {
         if (ctx.guild == null) {
             throw IllegalStateException("Cannot resolve target when guild is null!")
         }
-
-        return if (arg.length > 5 && arg[arg.length - 5] == '#') {
+        return ctx.message.mentionedMembers.firstOrNull()
+       /* return if (arg.length > 5 && arg[arg.length - 5] == '#') {
             ctx.guild.getMemberByTag(arg)
         } else if (arg.length > 17 && arg.toLongOrNull() != null) {
             ctx.guild.getMemberById(arg)
@@ -36,7 +36,7 @@ abstract class ModCommand : Command {
             return ctx.guild.getMemberById(snowflake)
         } else {
             ctx.guild.getMembersByName(arg, false).firstOrNull()
-        }
+        }*/
     }
 
 }
