@@ -80,8 +80,8 @@ class Stats : AsyncCommand {
             "Avg_GC_Cycle        = ".."${dpFormatter.format(averageCollectionTime)}ms"
             +""
             +"[ BoobBot ]"
-            "Guilds              = "..BoobBot.shardManager.guildCount
-            "Users               = "..BoobBot.shardManager.userCount
+            "Guilds              = "..BoobBot.shardManager.guilds.size
+            "Users               = "..BoobBot.shardManager.guilds.sumBy { it.memberCount }
             "Audio_Players       = "..players
             "Shards_Online       = ".."$shardsOnline/$shards"
             "Average_Latency     = ".."${averageShardLatency}ms"
