@@ -26,17 +26,17 @@ abstract class ModCommand : Command {
             throw IllegalStateException("Cannot resolve target when guild is null!")
         }
         return ctx.message.mentionedMembers.firstOrNull()
-       /* return if (arg.length > 5 && arg[arg.length - 5] == '#') {
-            ctx.guild.getMemberByTag(arg)
-        } else if (arg.length > 17 && arg.toLongOrNull() != null) {
-            ctx.guild.getMemberById(arg)
-        } else if (arg.startsWith("<@") && arg.endsWith(">")) {
-            val delimiter = if (arg.contains('!')) '!' else '@'
-            val snowflake = arg.substringAfter(delimiter).substringBefore('>')
-            return ctx.guild.getMemberById(snowflake)
-        } else {
-            ctx.guild.getMembersByName(arg, false).firstOrNull()
-        }*/
+        /* return if (arg.length > 5 && arg[arg.length - 5] == '#') {
+             ctx.guild.getMemberByTag(arg)
+         } else if (arg.length > 17 && arg.toLongOrNull() != null) {
+             ctx.guild.getMemberById(arg)
+         } else if (arg.startsWith("<@") && arg.endsWith(">")) {
+             val delimiter = if (arg.contains('!')) '!' else '@'
+             val snowflake = arg.substringAfter(delimiter).substringBefore('>')
+             return ctx.guild.getMemberById(snowflake)
+         } else {
+             ctx.guild.getMembersByName(arg, false).firstOrNull()
+         }*/
     }
 
 }

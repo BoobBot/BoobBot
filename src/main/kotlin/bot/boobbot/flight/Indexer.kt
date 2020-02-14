@@ -35,7 +35,8 @@ class Indexer(pkg: String) {
             val props = meth.getDeclaredAnnotation(SubCommand::class.java)
 
             val name = meth.name.toLowerCase()
-            val wrapper = SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, meth, kls)
+            val wrapper =
+                SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, meth, kls)
             subcommands.add(wrapper)
         }
 
