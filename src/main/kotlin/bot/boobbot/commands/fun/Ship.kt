@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.URL
-import java.nio.file.Paths
 import javax.imageio.ImageIO
 import kotlin.math.max
 

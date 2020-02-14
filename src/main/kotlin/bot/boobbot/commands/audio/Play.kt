@@ -32,7 +32,7 @@ class Play : VoiceCommand {
         val player = ctx.audioPlayer
         val query = ctx.args[0].replace("<", "").replace(">", "")
 
-        if (!Utils.isDonor(ctx.author) && isYouTubeTrack(query)) {
+        if (!Utils.checkDonor(ctx.message) && isYouTubeTrack(query)) {
             return ctx.send(
                 Formats.error(
                     " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
@@ -44,7 +44,7 @@ class Play : VoiceCommand {
         playerManager.loadItem(query, AudioLoader(player, ctx))
     }
 
-    fun isYouTubeTrack(query: String): Boolean {
+    private fun isYouTubeTrack(query: String): Boolean {
         val uri = query.toUriOrNull()
         val domain = if (uri?.host?.startsWith("www.") == true) {
             uri.host?.substring(4)
