@@ -44,7 +44,10 @@ class RequestUtil {
             return fut
         }
 
-        fun queue(success: (Response) -> Unit) = submit().thenAccept(success)
+        fun queue(success: (Response?) -> Unit) {
+            submit().thenAccept(success)
+                .thenException { success(null) }
+        }
 
         suspend fun await(): Response? {
             return submit().await()
