@@ -56,7 +56,7 @@ class Ship : Command {
             ctx.channel.sendMessage(content)
                 .addFile(result.toByteArray(), "shipped.png")
                 .submit()
-                .whenComplete { m, e -> result.close() }
+                .whenComplete { _, _ -> result.close() }
         }
     }
 
