@@ -107,7 +107,10 @@ class EconomyHandler : EventListener {
                     }
 
                     // add tiddies
-                    grabber.channel.sendMessage("${grabber.author.asMention} claimed 100 <:Tiddies:636967567591997481>").queue()
+                    grabber.channel.sendMessage("${grabber.author.asMention} claimed 100 <:Tiddies:636967567591997481>")
+                        .delay(10, TimeUnit.SECONDS)
+                        .flatMap { it.delete() }
+                        .queue()
                 }
             }
     }
