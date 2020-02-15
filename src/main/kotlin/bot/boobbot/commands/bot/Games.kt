@@ -7,7 +7,7 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import java.time.Instant
 
-@CommandProperties(description = "Gaming ", aliases = ["Sigma"])
+@CommandProperties(description = "Gaming ", aliases = ["sigma"])
 class Games : Command {
 
     override fun execute(ctx: Context) {
