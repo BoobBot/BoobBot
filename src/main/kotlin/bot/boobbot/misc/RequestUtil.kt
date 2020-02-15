@@ -26,26 +26,28 @@ class RequestUtil {
         get() = httpClient.newBuilder().proxy(Utils.getProxy()).build()
 
     inner class PendingRequest(private val request: Request, private val useProxy: Boolean = false) {
-        fun queue(success: (Response?) -> Unit) {
+        fun submit(): CompletableFuture<Response> {
+            val fut = CompletableFuture<Response>()
             val client = if (useProxy) proxiedHttpClient else httpClient
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     BoobBot.log.error("An error occurred during a HTTP request to ${call.request().url()}", e)
-                    success(null) // This could/should be `failure` but this method allows us to do
-                    // `.queue { it?.json() ?: return }` which looks cleaner overall. Exception handling is also done above.
+                    fut.completeExceptionally(e)
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    success(response)
+                    fut.complete(response)
                 }
             })
+
+            return fut
         }
 
+        fun queue(success: (Response) -> Unit) = submit().thenAccept(success)
+
         suspend fun await(): Response? {
-            val future = CompletableFuture<Response?>()
-            queue { future.complete(it) }
-            return future.await()
+            return submit().await()
         }
 
         fun block(): Response? {
