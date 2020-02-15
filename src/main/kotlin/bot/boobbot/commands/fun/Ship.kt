@@ -78,34 +78,30 @@ class Ship : Command {
         }
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
-            try {
-                val rng = (0..100).random()
-                val template = ImageIO.read(this::class.java.getResource("/boobLove.png"))
-                val bg = BufferedImage(template.width, template.height, template.type)
-                val image = bg.createGraphics().apply {
-                    color = Color(51, 232, 211)
-                    font = Font("Whitney", Font.BOLD, 36)
-                }
-
-                image.drawImage(av1, 0, 0, 160, 160, null)
-                image.drawImage(av2, 320, 0, 160, 160, null)
-                image.drawImage(template, 0, 0, null)
-
-                when (rng) {
-                    100 -> image.drawString(String.format("%s", rng), 207, 157)
-                    in 0..9 -> image.drawString(String.format("%s", rng), 250, 157)
-                    else -> image.drawString(String.format("%s", rng), 222, 157)
-                }
-
-                image.dispose()
-
-                val stream = ByteArrayOutputStream()
-                ImageIO.setUseCache(false)
-                ImageIO.write(bg, "png", stream)
-                return stream
-            } catch (e: IOException) {
-                e.printStackTrace()
+            val rng = (0..100).random()
+            val template = ImageIO.read(this::class.java.getResource("/boobLove.png"))
+            val bg = BufferedImage(template.width, template.height, template.type)
+            val image = bg.createGraphics().apply {
+                color = Color(51, 232, 211)
+                font = Font("Whitney", Font.BOLD, 36)
             }
+
+            image.drawImage(av1, 0, 0, 160, 160, null)
+            image.drawImage(av2, 320, 0, 160, 160, null)
+            image.drawImage(template, 0, 0, null)
+
+            when (rng) {
+                100 -> image.drawString(String.format("%s", rng), 207, 157)
+                in 0..9 -> image.drawString(String.format("%s", rng), 250, 157)
+                else -> image.drawString(String.format("%s", rng), 222, 157)
+            }
+
+            image.dispose()
+
+            val stream = ByteArrayOutputStream()
+            ImageIO.setUseCache(false)
+            ImageIO.write(bg, "png", stream)
+            return stream
         }
     }
 }
