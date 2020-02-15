@@ -7,14 +7,10 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.User
 import java.awt.Color
 import java.awt.Font
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.net.URL
 import java.util.concurrent.CompletableFuture
 import javax.imageio.ImageIO
 import kotlin.math.max
@@ -54,7 +50,7 @@ class Ship : Command {
         av1Fut.thenCombine(av2Fut) { av1, av2 ->
             val result = processImages(av1, av2)
             val content = MessageBuilder()
-                .setContent(mixString(user1.name, user2.name))
+                .setContent(newMixString(user1.name, user2.name))
                 .append(" <:icon:676613489548197915>")
                 .build()
 
@@ -72,15 +68,18 @@ class Ship : Command {
                 .thenApply { ImageIO.read(it) }
         }
 
-        private fun mixString(a: String, b: String): String? {
-            val max = max(a.length, b.length)
+
+        private fun newMixString(a: String, b: String): String? {
             val mixed = StringBuilder()
-            for (i in 0 until max) {
-                if (i <= a.length - 1) mixed.append(a, i, i + 1)
-                if (i <= b.length - 1) mixed.append(b, i, i + 1)
+            var i = 0
+            while (i < a.length || i < b.length) {
+                if (i < a.length) mixed.append(a[i])
+                if (i < b.length) mixed.append(b[i])
+                i++
             }
             return mixed.toString()
         }
+
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
             val rng = (0..100).random()
