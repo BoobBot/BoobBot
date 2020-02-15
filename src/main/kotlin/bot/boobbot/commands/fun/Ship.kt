@@ -6,6 +6,7 @@ import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import net.dv8tion.jda.api.MessageBuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import java.awt.Color
@@ -22,6 +23,10 @@ import kotlin.math.max
 @CommandProperties(description = "Shipped", category = Category.FUN)
 class Ship : Command {
     override fun execute(ctx: Context) {
+        if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
+            return ctx.send("I can't send attachments. Fix it, whore.")
+        }
+
         if (ctx.mentions.isEmpty()) {
             return ctx.send("How in the fuck would i know who you want to ship if you don't give me a valid target?")
         }

@@ -2,6 +2,7 @@ package bot.boobbot.internals
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Context
+import bot.boobbot.handlers.EconomyHandler
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.misc.Utils
@@ -75,7 +76,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler())
+                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), EconomyHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
