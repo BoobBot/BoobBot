@@ -1,6 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
@@ -8,7 +9,6 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
-import org.jetbrains.kotlin.com.intellij.util.containers.EmptyListIterator
 import java.time.Instant
 
 class Database {
@@ -84,35 +84,48 @@ class Database {
         val _id: String,
         var dropEnabled: Boolean,
         var blacklisted: Boolean,
-        var ignoredChannels: List<String>
+        var ignoredChannels: List<String>,
+        var modMute: MutableList<String>
     )
 
     fun getGuild(guildId: String): Guild? {
         val doc = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
         return if (doc.isNullOrEmpty()) {
-            val guild = Guild(guildId, false, false, ArrayList())
+            val guild = Guild(
+                _id = guildId,
+                dropEnabled = false,
+                blacklisted = false,
+                ignoredChannels = ArrayList(),
+                modMute = ArrayList()
+            )
             newGuild(guild)
             guild
         } else {
-            val guild = Guild(doc["_id"].toString(), doc["enabled"] as Boolean, doc.get("blacklisted", false) as Boolean, doc.get("ignoredChannels", ArrayList()))
+            val guild = Guild(
+                doc["_id"].toString(),
+                doc["dropEnabled"] as Boolean,
+                doc.get("blacklisted", false) as Boolean,
+                doc.get("ignoredChannels", ArrayList()),
+                doc.get("modMute", ArrayList())
+            )
             guild
         }
     }
 
 
     private fun newGuild(guild: Guild) {
-        val d = Document("_id", guild._id)
-        d.putIfAbsent("enabled", guild.dropEnabled)
-        guilds.insertOne(d)
+        guilds.insertOne(Document.parse(Gson().toJson(guild)))
+    }
+
+    fun deleteGuild(guild: Guild){
+        guilds.deleteOne( eq("_id", guild._id))
     }
 
     fun saveGuild(guild: Guild) {
-        val d = Document("_id", guild._id)
-        d.putIfAbsent("enabled", guild.dropEnabled)
         guilds.updateOne(
             eq("_id", guild._id),
-            Document("\$set", d),
+            Document("\$set",  Document.parse(Gson().toJson(guild))),
             UpdateOptions().upsert(true)
         )
     }
