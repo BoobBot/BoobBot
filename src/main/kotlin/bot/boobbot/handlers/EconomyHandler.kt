@@ -2,6 +2,7 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.json
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -100,7 +101,7 @@ class EconomyHandler : EventListener {
 
         generateDrop(dropKey)
             .thenCompose {
-                event.channel.sendMessage("100 <:Tiddies:636967567591997481> have appeared! Use `>grab` to claim them!")
+                event.channel.sendMessage("Look an Ass, Grab it! Use `>grab <key>` to Grab it!")
                     .addFile(it.toByteArray(), "drop.png")
                     .submit()
             }
@@ -111,17 +112,34 @@ class EconomyHandler : EventListener {
                     GRAB_TIMEOUT
                 ).thenAccept waiter@{ grabber ->
                     it.delete().queue()
+                    event.channel.history.retrievePast(100).queue { ms ->
+                        val spam = ms.filter { isSpam(it) }
+                        if (spam.isEmpty()) {
+                            return@queue
+                        }
+                        if (spam.size <= 2) {
+                            spam[0].delete().queue()
+                            return@queue
+                        }
+                        event.channel.purgeMessages(*spam.toTypedArray())
+                    }
                     if (grabber == null) {
                         return@waiter
                     }
 
                     // add tiddies
-                    grabber.channel.sendMessage("${grabber.author.asMention} claimed 100 <:Tiddies:636967567591997481>")
+                    grabber.channel.sendMessage("${grabber.author.asMention} Grabbed it!")
                         .delay(10, TimeUnit.SECONDS)
                         .flatMap { it.delete() }
                         .queue()
                 }
             }
+
+
+    }
+
+    private fun isSpam(message: Message): Boolean {
+        return message.contentRaw.toLowerCase().startsWith(">g")
     }
 
     companion object {
