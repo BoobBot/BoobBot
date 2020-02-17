@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
+import org.jetbrains.kotlin.com.intellij.util.containers.EmptyListIterator
 import java.time.Instant
 
 class Database {
@@ -81,18 +82,20 @@ class Database {
     data class Guild(
 
         val _id: String,
-        var enabled: Boolean
+        var dropEnabled: Boolean,
+        var blacklisted: Boolean,
+        var ignoredChannels: List<String>
     )
 
     fun getGuild(guildId: String): Guild? {
         val doc = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
         return if (doc.isNullOrEmpty()) {
-            val guild = Guild(guildId, false)
+            val guild = Guild(guildId, false, false, ArrayList())
             newGuild(guild)
             guild
         } else {
-            val guild = Guild(doc["_id"].toString(), doc["enabled"] as Boolean)
+            val guild = Guild(doc["_id"].toString(), doc["enabled"] as Boolean, doc.get("blacklisted", false) as Boolean, doc.get("ignoredChannels", ArrayList()))
             guild
         }
     }
@@ -100,13 +103,13 @@ class Database {
 
     private fun newGuild(guild: Guild) {
         val d = Document("_id", guild._id)
-        d.putIfAbsent("enabled", guild.enabled)
+        d.putIfAbsent("enabled", guild.dropEnabled)
         guilds.insertOne(d)
     }
 
     fun saveGuild(guild: Guild) {
         val d = Document("_id", guild._id)
-        d.putIfAbsent("enabled", guild.enabled)
+        d.putIfAbsent("enabled", guild.dropEnabled)
         guilds.updateOne(
             eq("_id", guild._id),
             Document("\$set", d),

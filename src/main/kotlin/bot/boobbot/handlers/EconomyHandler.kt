@@ -35,7 +35,7 @@ class EconomyHandler : EventListener {
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
         val g = BoobBot.database.getGuild(event.guild.id)!!
-        if (!g.enabled) {
+        if (!g.dropEnabled) {
             return
         }
         if (!event.channel.isNSFW) {
@@ -46,7 +46,6 @@ class EconomyHandler : EventListener {
 
         if (number % 59 == 0) {
             doDrop(event)
-            event.message.delete().queue()
         }
 
         if (event.message.contentRaw == ">grab") {
