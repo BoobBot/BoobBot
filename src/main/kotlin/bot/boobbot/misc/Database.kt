@@ -8,6 +8,7 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
+import java.time.Instant
 
 class Database {
 
@@ -51,9 +52,34 @@ class Database {
         webhooks.deleteOne(eq("_id", guildId))
     }
 
+
+    //user
+
+
+    data class User(
+        val userId: String,
+        var blacklisted: Boolean,
+        var experience: Int,
+        var level: Int,
+        var lewdPoints: Int,
+        var lewdLevel: Int,
+        var messagesSent: Int,
+        var nsfwMessagesSent: Int,
+        var commandsUsed: Int,
+        var nsfwCommandsUsed: Int,
+        var bankBalance: Int,
+        var balance: Int,
+        var bonusXp: Int?,
+        var protected: Boolean?,
+        var inJail: Boolean,
+        var jailRemaining: Int,
+        var coolDownCount: Int,
+        var lastSeen: Instant
+    )
     //guild
 
     data class Guild(
+
         val _id: String,
         var enabled: Boolean
     )
@@ -62,7 +88,7 @@ class Database {
         val doc = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
         return if (doc.isNullOrEmpty()) {
-            val guild = Guild(guildId,  false)
+            val guild = Guild(guildId, false)
             newGuild(guild)
             guild
         } else {
@@ -214,7 +240,8 @@ class Database {
     fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(userSettings, userId, "nudes", canReceive)
 
     fun getUserCockBlocked(userId: String) = get(userSettings, userId, "cockblocked", false)
-    fun setUserCockBlocked(userId: String, cockblocked: Boolean) = set(userSettings, userId, "cockblocked", cockblocked)
+    fun setUserCockBlocked(userId: String, cockblocked: Boolean) =
+        set(userSettings, userId, "cockblocked", cockblocked)
 
     fun getUserAnonymity(userId: String) = get(userSettings, userId, "anonymity", false)
     fun setUserAnonymity(userId: String, anonymity: Boolean) = set(userSettings, userId, "anonymity", anonymity)
