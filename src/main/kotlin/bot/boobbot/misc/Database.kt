@@ -84,7 +84,7 @@ class Database {
         val _id: String,
         var dropEnabled: Boolean,
         var blacklisted: Boolean,
-        var ignoredChannels: List<String>,
+        var ignoredChannels: MutableList<String>,
         var modMute: MutableList<String>
     )
 

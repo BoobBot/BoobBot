@@ -200,4 +200,14 @@ class Settings : Command {
         ctx.send("Done.")
     }
 
+
+    @SubCommand(aliases = ["ignorechannel", "ic"], description = "ignores channel for any member without Manage_Messages.")
+    fun ignoreChannel(ctx: Context) {
+        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
+        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+        g.ignoredChannels.add(c!!.id)
+        BoobBot.database.saveGuild(g)
+        ctx.send("Done.")
+    }
+
 }

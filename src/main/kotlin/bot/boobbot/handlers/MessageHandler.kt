@@ -21,8 +21,8 @@ class MessageHandler : ListenerAdapter() {
 
         if (event.channelType.isGuild) {
             val g = BoobBot.database.getGuild(event.guild.id)!!
+            if(g.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) return
             if (g.modMute.contains(event.author.id)) return event.message.delete().reason("mod mute").queue()
-            if(g.ignoredChannels.contains(event.channel.id)) return
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
