@@ -24,6 +24,7 @@ class Database {
     private val userSettings = bb.getCollection("usersettings")
     private val customCommands = bb.getCollection("customcoms")
     private val donor = bb.getCollection("donor")
+    private val guilds = bb.getCollection("guilds")
 
 
     /**
@@ -48,6 +49,43 @@ class Database {
 
     fun deleteWebhook(guildId: String) {
         webhooks.deleteOne(eq("_id", guildId))
+    }
+
+    //guild
+
+    data class Guild(
+        val _id: String,
+        var enabled: Boolean
+    )
+
+    fun getGuild(guildId: String): Guild? {
+        val doc = guilds.find(BasicDBObject("_id", guildId))
+            .firstOrNull()
+        return if (doc.isNullOrEmpty()) {
+            val guild = Guild(guildId,  false)
+            newGuild(guild)
+            guild
+        } else {
+            val guild = Guild(doc["_id"].toString(), doc["enabled"] as Boolean)
+            guild
+        }
+    }
+
+
+    private fun newGuild(guild: Guild) {
+        val d = Document("_id", guild._id)
+        d.putIfAbsent("enabled", guild.enabled)
+        guilds.insertOne(d)
+    }
+
+    fun saveGuild(guild: Guild) {
+        val d = Document("_id", guild._id)
+        d.putIfAbsent("enabled", guild.enabled)
+        guilds.updateOne(
+            eq("_id", guild._id),
+            Document("\$set", d),
+            UpdateOptions().upsert(true)
+        )
     }
 
 

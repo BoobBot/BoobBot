@@ -2,7 +2,6 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.json
-import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -34,19 +33,30 @@ class EconomyHandler : EventListener {
     }
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
+        val g = BoobBot.database.getGuild(event.guild.id)!!
+        if (!g.enabled) {
+            return
+        }
         if (!event.channel.isNSFW) {
             return
         }
 
         val number = (0..10000).random()
 
-        //if (number % 59 == 0) {
-        if (event.message.contentRaw == "->dodrop") {
+        if (number % 59 == 0) {
             doDrop(event)
+            event.message.delete().queue()
         }
 
         if (event.message.contentRaw == ">grab") {
             event.channel.sendMessage(event.author.asMention + " grab em by the pussy").queue()
+
+        }
+        if (event.message.contentRaw == ">coin" && event.message.author.idLong == 248294452307689473L) {
+            event.message.delete().reason("yes").queue()
+            doDrop(event)
+
+
         }
     }
 
@@ -70,7 +80,6 @@ class EconomyHandler : EventListener {
 
                 graphics.color = backgroundColor
                 graphics.fillRect(0, 0, bounds.width.toInt() + 20, bounds.height.toInt() + 5)
-
                 graphics.color = fontColor
                 graphics.drawString(key, 10, metrics.ascent)
 
@@ -91,16 +100,16 @@ class EconomyHandler : EventListener {
 
         generateDrop(dropKey)
             .thenCompose {
-                event.channel.sendMessage("100 <:Tiddies:636967567591997481> have appeared! Use `->grab` to claim them!")
+                event.channel.sendMessage("100 <:Tiddies:636967567591997481> have appeared! Use `>grab` to claim them!")
                     .addFile(it.toByteArray(), "drop.png")
                     .submit()
             }
-            .thenAccept prompt@ {
+            .thenAccept prompt@{
                 println("here")
                 BoobBot.waiter.waitForMessage(
-                    { m -> m.channel.idLong == it.channel.idLong && m.contentRaw == "->grab $dropKey" },
+                    { m -> m.channel.idLong == it.channel.idLong && m.contentRaw == ">grab $dropKey" },
                     GRAB_TIMEOUT
-                ).thenAccept waiter@ { grabber ->
+                ).thenAccept waiter@{ grabber ->
                     it.delete().queue()
                     if (grabber == null) {
                         return@waiter
