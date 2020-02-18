@@ -71,9 +71,9 @@ class EconomyHandler : EventListener {
         }
 
         val g = BoobBot.database.getGuild(event.guild.id)!!
-        //if (!g.dropEnabled) {
-          //  return
-       // }
+        if (!g.dropEnabled) {
+            return
+        }
         if (!event.channel.isNSFW) {
             return
         }
