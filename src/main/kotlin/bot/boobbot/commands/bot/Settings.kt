@@ -218,12 +218,12 @@ class Settings : Command {
         BoobBot.database.setGuild(g)
         ctx.send("Done.")
     }
-
-    @SubCommand(aliases = ["listignoredchannels", "lic"], description = "lists ignored channels.")
-    fun listIgnoredChannels(ctx: Context) {
-        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
-        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
-        ctx.send(g.ignoredChannels.joinToString(transform = {s: String ->  "<#$s> "}))
+    @SubCommand(aliases = ["economytoggle"], description = "Toggles economy drops.")
+    fun economyEnable(ctx: Context) {
+        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        g!!.dropEnabled = !g.dropEnabled
+        BoobBot.database.setGuild(g)
+        ctx.channel.sendMessage("drop has been set to ${g.dropEnabled}").queue()
     }
 
 }

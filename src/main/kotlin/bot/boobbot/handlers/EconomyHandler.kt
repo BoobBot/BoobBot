@@ -184,7 +184,7 @@ class EconomyHandler : EventListener {
                     (user.commandsUsed / 100) * .3 +
                     (user.lewdPoints / 100) * 20
         // lewd level up
-        return floor(0.1 * sqrt(calculateLewdPoints.toDouble())).toInt()
+        return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
     }
 
 
