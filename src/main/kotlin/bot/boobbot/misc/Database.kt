@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
+import io.sentry.Sentry.setUser
 import org.bson.Document
 import java.time.Instant
 
@@ -27,6 +28,7 @@ class Database {
     private val customCommands = bb.getCollection("customcoms")
     private val donor = bb.getCollection("donor")
     private val guilds = bb.getCollection("guilds")
+    private val users = bb.getCollection("users")
 
 
     /**
@@ -58,7 +60,7 @@ class Database {
 
 
     data class User(
-        val userId: String,
+        val _id: String,
         var blacklisted: Boolean,
         var experience: Int,
         var level: Int,
@@ -77,6 +79,74 @@ class Database {
         var coolDownCount: Int,
         var lastSeen: Instant
     )
+
+
+    fun getUser(userId: String): User {
+        val doc = users.find(BasicDBObject("_id", userId))
+            .firstOrNull()
+        return if (doc.isNullOrEmpty()) {
+            val user = User(
+                _id = userId,
+                blacklisted = false,
+                experience = 0,
+                level = 0,
+                lewdPoints = 0,
+                lewdLevel = 0,
+                messagesSent = 0,
+                nsfwMessagesSent = 0,
+                commandsUsed = 0,
+                nsfwCommandsUsed = 0,
+                bankBalance = 0,
+                balance = 0,
+                bonusXp = 0,
+                protected = false,
+                inJail = false,
+                jailRemaining = 0,
+                coolDownCount = 0,
+                lastSeen = Instant.now()
+            )
+            setUser(user)
+            user
+        } else {
+            val user = User(
+                doc["_id"].toString(),
+                doc["blacklisted"] as Boolean,
+                doc["experience"] as Int,
+                doc["level"] as Int,
+                doc["lewdPoints"] as Int,
+                doc["lewdLevel"] as Int,
+                doc["messagesSent"] as Int,
+                doc["nsfwMessagesSent"] as Int,
+                doc["commandsUsed"] as Int,
+                doc["nsfwCommandsUsed"] as Int,
+                doc["bankBalance"] as Int,
+                doc["balance"] as Int,
+                doc["bonusXp"] as Int,
+                doc["protected"] as Boolean,
+                doc["inJail"] as Boolean,
+                doc["jailRemaining"] as Int,
+                doc["coolDownCount"] as Int,
+                doc["lastSeen"] as Instant
+
+            )
+            user
+        }
+    }
+
+
+    fun delUser(userId: String) {
+        users.deleteOne(eq("_id", userId))
+    }
+
+    fun setUser(user: User) {
+        users.updateOne(
+            eq("_id", user._id),
+            Document("\$set", Document.parse(Gson().toJson(user))),
+            UpdateOptions().upsert(true)
+        )
+    }
+
+
     //guild
 
     data class Guild(
