@@ -76,8 +76,7 @@ class Database {
         var protected: Boolean?,
         var inJail: Boolean,
         var jailRemaining: Int,
-        var coolDownCount: Int,
-        var lastSeen: Instant
+        var coolDownCount: Int
     )
 
 
@@ -102,8 +101,7 @@ class Database {
                 protected = false,
                 inJail = false,
                 jailRemaining = 0,
-                coolDownCount = 0,
-                lastSeen = Instant.now()
+                coolDownCount = 0
             )
             setUser(user)
             user
@@ -125,8 +123,7 @@ class Database {
                 doc["protected"] as Boolean,
                 doc["inJail"] as Boolean,
                 doc["jailRemaining"] as Int,
-                doc["coolDownCount"] as Int,
-                doc["lastSeen"] as Instant
+                doc["coolDownCount"] as Int
 
             )
             user
