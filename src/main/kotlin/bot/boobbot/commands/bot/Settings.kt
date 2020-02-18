@@ -206,8 +206,24 @@ class Settings : Command {
         var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
         val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
         g.ignoredChannels.add(c!!.id)
-        BoobBot.database.saveGuild(g)
+        BoobBot.database.setGuild(g)
         ctx.send("Done.")
+    }
+
+    @SubCommand(aliases = ["unignorechannel", "uic"], description = "unignores channel for any member without Manage_Messages.")
+    fun unIgnoreChannel(ctx: Context) {
+        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
+        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+        g.ignoredChannels.remove(c!!.id)
+        BoobBot.database.setGuild(g)
+        ctx.send("Done.")
+    }
+
+    @SubCommand(aliases = ["listignoredchannels", "lic"], description = "lists ignored channels.")
+    fun listIgnoredChannels(ctx: Context) {
+        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
+        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+        ctx.send(g.ignoredChannels.joinToString(transform = {s: String ->  "<#$s> "}))
     }
 
 }

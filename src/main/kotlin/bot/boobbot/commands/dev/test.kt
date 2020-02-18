@@ -13,7 +13,7 @@ class test : Command {
     override fun execute(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
         g!!.dropEnabled = !g.dropEnabled
-        BoobBot.database.saveGuild(g)
+        BoobBot.database.setGuild(g)
         ctx.channel.sendMessage("drop has been set to ${g.dropEnabled}").queue()
     }
 }

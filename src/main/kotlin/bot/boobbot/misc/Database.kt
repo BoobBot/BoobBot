@@ -99,13 +99,13 @@ class Database {
                 ignoredChannels = ArrayList(),
                 modMute = ArrayList()
             )
-            newGuild(guild)
+            setGuild(guild)
             guild
         } else {
             val guild = Guild(
                 doc["_id"].toString(),
-                doc["dropEnabled"] as Boolean,
-                doc.get("blacklisted", false) as Boolean,
+                doc.get("dropEnabled", false),
+                doc.get("blacklisted", false),
                 doc.get("ignoredChannels", ArrayList()),
                 doc.get("modMute", ArrayList())
             )
@@ -114,18 +114,14 @@ class Database {
     }
 
 
-    private fun newGuild(guild: Guild) {
-        guilds.insertOne(Document.parse(Gson().toJson(guild)))
+    fun delGuild(guildId: String) {
+        guilds.deleteOne(eq("_id", guildId))
     }
 
-    fun deleteGuild(guild: Guild){
-        guilds.deleteOne( eq("_id", guild._id))
-    }
-
-    fun saveGuild(guild: Guild) {
+    fun setGuild(guild: Guild) {
         guilds.updateOne(
             eq("_id", guild._id),
-            Document("\$set",  Document.parse(Gson().toJson(guild))),
+            Document("\$set", Document.parse(Gson().toJson(guild))),
             UpdateOptions().upsert(true)
         )
     }
