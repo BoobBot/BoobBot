@@ -40,34 +40,33 @@ class EconomyHandler : EventListener {
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
         val user = BoobBot.database.getUser(event.author.id)
-        user.messagesSent = user.messagesSent + 1
-        if (!user.blacklisted) {
-            if (user.inJail) {
-                user.jailRemaining = min(user.jailRemaining - 1, 0)
-                if (user.jailRemaining == 0) {
-                    user.inJail = false
+            user.messagesSent = user.messagesSent + 1
+            if (!user.blacklisted) {
+                if (user.inJail) {
+                    user.jailRemaining = min(user.jailRemaining - 1, 0)
+                    if (user.jailRemaining == 0) {
+                        user.inJail = false
+                    }
+                    BoobBot.database.setUser(user)
                 }
-                BoobBot.database.setUser(user)
-            }
-            if (event.message.textChannel.isNSFW) {
-                val tags = Formats.tag
-                val tagSize = tags.filter { event.message.contentDisplay.contains(it.toString()) }.size
-                user.lewdPoints = user.lewdPoints + min(tagSize, 5) * (user.balance / 100) * .01.toInt()
-                user.nsfwMessagesSent = user.nsfwMessagesSent + 1
-            }
-            if (user.coolDownCount >= (0..10).random()) {
-                user.coolDownCount = (0..10).random()
-                user.experience =
-                    if (user.bonusXp != null && user.bonusXp!! > 0) user.experience + 2 else user.experience + 1
-                if (user.bonusXp != null && user.bonusXp!! > 0) {
-                    user.bonusXp = user.bonusXp!! - 1
+                if (event.message.textChannel.isNSFW) {
+                    val tags = Formats.tag
+                    val tagSize = tags.filter { event.message.contentDisplay.contains(it.toString()) }.size
+                    user.lewdPoints = user.lewdPoints + min(tagSize, 5) * (user.balance / 100) * .01.toInt()
+                    user.nsfwMessagesSent = user.nsfwMessagesSent + 1
                 }
-            }
+                if (user.coolDownCount >= (0..10).random()) {
+                    user.coolDownCount = (0..10).random()
+                    user.experience =
+                        if (user.bonusXp != null && user.bonusXp!! > 0) user.experience + 2 else user.experience + 1
+                    if (user.bonusXp != null && user.bonusXp!! > 0) {
+                        user.bonusXp = user.bonusXp!! - 1
+                    }
+                }
 
             user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
             user.lewdLevel = calculateLewdLevel(user)
             BoobBot.database.setUser(user)
-            // }
         }
 
         val g = BoobBot.database.getGuild(event.guild.id)!!
