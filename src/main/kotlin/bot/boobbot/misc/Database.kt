@@ -75,7 +75,19 @@ class Database {
         var inJail: Boolean,
         var jailRemaining: Int,
         var coolDownCount: Int
-    )
+    ){
+        fun save(){
+            BoobBot.database.setUser(this)
+        }
+
+        fun toJson(): String {
+            return Gson().toJson(this)
+        }
+
+        fun toDoc(): Document {
+            return Document.parse(toJson())
+        }
+    }
 
 
     fun getUser(userId: String): User {
@@ -101,7 +113,7 @@ class Database {
                 jailRemaining = 0,
                 coolDownCount = 0
             )
-            setUser(user)
+            user.save()
             user
         } else {
             val user = User(
@@ -136,7 +148,7 @@ class Database {
     fun setUser(user: User) {
         users.updateOne(
             eq("_id", user._id),
-            Document("\$set", Document.parse(Gson().toJson(user))),
+            Document("\$set", user.toDoc()),
             UpdateOptions().upsert(true)
         )
     }

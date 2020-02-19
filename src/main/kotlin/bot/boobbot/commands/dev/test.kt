@@ -69,6 +69,14 @@ class test : Command {
 //
 //
 //        }
+        var u = BoobBot.database.getUser(ctx.author.id)
+        ctx.send(u.toString())
+        u.lewdPoints +=20
+        ctx.send(u.toString())
+        u.save()
+        ctx.send(u.toString())
+        val u2 =BoobBot.database.getUser(ctx.author.id)
+        ctx.send(u2.toString())
 
     }
 
