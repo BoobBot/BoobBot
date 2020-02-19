@@ -2,6 +2,7 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
+import com.google.gson.Gson
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.application.ApplicationCallPipeline
@@ -149,6 +150,13 @@ class ApiServer {
 
                 get("/pings") {
                     call.respondText("{\"status\": ${getPings()}}", ContentType.Application.Json)
+                }
+
+                get("/user/{userId}"){
+                    val userId = call.parameters["userId"]
+                    if(userId.isNullOrBlank())  call.respondText("{\"msg\": 404}", ContentType.Application.Json)
+                    val user = BoobBot.database.getUser(userId!!)
+                    call.respondText("{\"user\": ${Gson().toJson(user)}}", ContentType.Application.Json)
                 }
 
                 get("/commands") {

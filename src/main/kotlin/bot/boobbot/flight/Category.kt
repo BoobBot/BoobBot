@@ -12,5 +12,6 @@ enum class Category(val title: String, val description: String, val nsfw: Boolea
     DEV("\u2699\ufe0f Dev shit", "Debug commands for developers only.", false),
     MOD("\uD83D\uDD28 Moderator Commands", "Commands to remove shit users from your server", false),
     MISC("<:info:486945488080338944> Misc Commands", "Anything not covered by the other categories.", false),
-    MEME("<:meme:539601224966864897> Meme", "Image generation with a memey twist.", false)
+    MEME("<:meme:539601224966864897> Meme", "Image generation with a memey twist.", false),
+    ECONOMY(":moneybag: Economy", " Economy and game", false)
 }

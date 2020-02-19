@@ -143,6 +143,9 @@ class MessageHandler : ListenerAdapter() {
             Utils.logCommand(event.message)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
+            val user = BoobBot.database.getUser(event.author.id)
+            if (command.properties.nsfw) user.nsfwCommandsUsed+=1 else user.commandsUsed+=1
+            BoobBot.database.setUser(user)
             command.execute(trigger, event.message, args)
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)

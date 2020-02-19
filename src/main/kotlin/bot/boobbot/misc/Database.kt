@@ -8,9 +8,7 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
-import io.sentry.Sentry.setUser
 import org.bson.Document
-import java.time.Instant
 
 class Database {
 
@@ -141,6 +139,36 @@ class Database {
             Document("\$set", Document.parse(Gson().toJson(user))),
             UpdateOptions().upsert(true)
         )
+    }
+
+    fun getAllUsers(): ArrayList<User> {
+        val ul = ArrayList<User>()
+        val u = users.find().associateBy { it.getString("_id") }
+        u.forEach { (t, doc) ->
+            ul.add(
+                User(
+                    doc["_id"].toString(),
+                    doc["blacklisted"] as Boolean,
+                    doc["experience"] as Int,
+                    doc["level"] as Int,
+                    doc["lewdPoints"] as Int,
+                    doc["lewdLevel"] as Int,
+                    doc["messagesSent"] as Int,
+                    doc["nsfwMessagesSent"] as Int,
+                    doc["commandsUsed"] as Int,
+                    doc["nsfwCommandsUsed"] as Int,
+                    doc["bankBalance"] as Int,
+                    doc["balance"] as Int,
+                    doc["bonusXp"] as Int,
+                    doc["protected"] as Boolean,
+                    doc["inJail"] as Boolean,
+                    doc["jailRemaining"] as Int,
+                    doc["coolDownCount"] as Int
+                ))
+        }
+
+        return ul
+
     }
 
 
