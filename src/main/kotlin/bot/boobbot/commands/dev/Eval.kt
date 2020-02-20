@@ -27,7 +27,8 @@ class Eval : Command {
             "jda" to ctx.jda,
             "sm" to BoobBot.shardManager,
             "colors" to Colors,
-            "utils" to Utils
+            "utils" to Utils,
+            "self" to BoobBot.database.getUser(ctx.author.id)
         )
 
         val bindString =
