@@ -77,7 +77,10 @@ class Database {
         var inJail: Boolean,
         var jailRemaining: Int,
         var coolDownCount: Int,
-        var lastdaily: Instant?
+        var lastdaily: Instant?,
+        var rep: Int,
+        var lastRep: Instant?,
+        var lastSaved: Instant?
     ) {
         fun save() = BoobBot.database.setUser(this)
         fun del() = BoobBot.database.delUser(this._id)
@@ -118,7 +121,10 @@ class Database {
                 inJail = false,
                 jailRemaining = 0,
                 coolDownCount = 0,
-                lastdaily = null
+                lastdaily = null,
+                rep = 0,
+                lastRep = null,
+                lastSaved = null
             )
             user.save()
             user
@@ -132,6 +138,7 @@ class Database {
     }
 
     fun setUser(user: User) {
+        user.lastSaved = Instant.now()
         users.updateOne(
             eq("_id", user._id),
             Document("\$set", user.toDoc()),
@@ -142,7 +149,7 @@ class Database {
     fun getAllUsers(): ArrayList<User> {
         val ul = ArrayList<User>()
         val u = users.find().associateBy { it.getString("_id") }
-        u.forEach { (t, doc) ->
+        u.forEach { (_, doc) ->
             ul.add(Gson().fromJson(doc.toJson(), User::class.java))
         }
 

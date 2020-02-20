@@ -15,7 +15,7 @@ class Payday : Command {
     override fun execute(ctx: Context) {
         val user = BoobBot.database.getUser(ctx.author.id)
         if (user.lastdaily != null) {
-            val t = user.lastdaily!!.plus(6, ChronoUnit.HOURS)
+            val t = user.lastdaily!!.plus(1, ChronoUnit.MINUTES )
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {
@@ -27,7 +27,7 @@ class Payday : Command {
         var rng = (0..50).random()
         var msg = "You got $rng$"
         if (bot.boobbot.misc.Utils.checkDonor(ctx.message)) {
-            msg += " Plus $rng$ for being a <:p_:475801484282429450>"
+            msg += ", Plus $rng$ for being a <:p_:475801484282429450>"
             rng += rng
         }
 
@@ -49,6 +49,5 @@ class Payday : Command {
         return r
 
     }
-
 
 }
