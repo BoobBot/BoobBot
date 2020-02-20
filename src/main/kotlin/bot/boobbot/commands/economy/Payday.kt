@@ -9,7 +9,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 
-@CommandProperties(aliases = ["daily"],description = "Basic income", category = Category.ECONOMY)
+@CommandProperties(aliases = ["daily", "pd"],description = "Basic income", category = Category.ECONOMY)
 class Payday : Command {
 
     override fun execute(ctx: Context) {
