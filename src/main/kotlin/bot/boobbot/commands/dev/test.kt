@@ -74,23 +74,23 @@ class test : Command {
         //ctx.send(u.toString())
         //val u2 = BoobBot.database.getUser(ctx.author.id)
         //ctx.send(u2.toString())
-        var u = BoobBot.database.getUser(ctx.author.id)
-        val t = u.lastdaily!!.plus(1, ChronoUnit.MINUTES)
-        val now = Instant.now()
-        val x = t.toEpochMilli() - now.toEpochMilli()
-        val y = 60 * 60 * 1000
-        val h = x / y
-        val m = (x - (h * y)) / (y / 60)
-        val s = (x - (h * y) - (m * (y / 60))) / 1000
-        if (!t.isBefore((now))) {
-            return ctx.send("Try again in $h:$m:$s")
-        }
-        u.lastdaily = Instant.now()
-        u.save()
-        val rng = (0..50).random()
-        u.balance+=rng
-        u.save()
-        ctx.send("you got $rng$")
+//        var u = BoobBot.database.getUser(ctx.author.id)
+//        val t = u.lastdaily!!.plus(1, ChronoUnit.MINUTES)
+//        val now = Instant.now()
+//        val x = t.toEpochMilli() - now.toEpochMilli()
+//        val y = 60 * 60 * 1000
+//        val h = x / y
+//        val m = (x - (h * y)) / (y / 60)
+//        val s = (x - (h * y) - (m * (y / 60))) / 1000
+//        if (!t.isBefore((now))) {
+//            return ctx.send("Try again in $h:$m:$s")
+//        }
+//        u.lastdaily = Instant.now()
+//        u.save()
+//        val rng = (0..50).random()
+//        u.balance+=rng
+//        u.save()
+//        ctx.send("you got $rng$")
     }
 
 
