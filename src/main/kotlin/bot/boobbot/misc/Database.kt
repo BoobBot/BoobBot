@@ -9,6 +9,8 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
+import org.jetbrains.kotlin.serialization.js.ast.JsAstProtoBuf
+import java.time.Instant
 
 class Database {
 
@@ -74,18 +76,22 @@ class Database {
         var protected: Boolean?,
         var inJail: Boolean,
         var jailRemaining: Int,
-        var coolDownCount: Int
-    ){
-        fun save(){
-            BoobBot.database.setUser(this)
-        }
-
+        var coolDownCount: Int,
+        var lastdaily: Instant?
+    ) {
+        fun save() = BoobBot.database.setUser(this)
+        fun del() = BoobBot.database.delUser(this._id)
         fun toJson(): String {
             return Gson().toJson(this)
         }
-
         fun toDoc(): Document {
             return Document.parse(toJson())
+        }
+        fun getName(): String? {
+            return BoobBot.shardManager.getUserById(this._id)?.asTag
+        }
+        fun getAvatar(): String?{
+            return BoobBot.shardManager.getUserById(this._id)?.effectiveAvatarUrl
         }
     }
 
@@ -111,35 +117,15 @@ class Database {
                 protected = false,
                 inJail = false,
                 jailRemaining = 0,
-                coolDownCount = 0
+                coolDownCount = 0,
+                lastdaily = null
             )
             user.save()
             user
         } else {
-            val user = User(
-                doc["_id"].toString(),
-                doc["blacklisted"] as Boolean,
-                doc["experience"] as Int,
-                doc["level"] as Int,
-                doc["lewdPoints"] as Int,
-                doc["lewdLevel"] as Int,
-                doc["messagesSent"] as Int,
-                doc["nsfwMessagesSent"] as Int,
-                doc["commandsUsed"] as Int,
-                doc["nsfwCommandsUsed"] as Int,
-                doc["bankBalance"] as Int,
-                doc["balance"] as Int,
-                doc["bonusXp"] as Int,
-                doc["protected"] as Boolean,
-                doc["inJail"] as Boolean,
-                doc["jailRemaining"] as Int,
-                doc["coolDownCount"] as Int
-
-            )
-            user
+            Gson().fromJson(doc.toJson(), User::class.java)
         }
     }
-
 
     fun delUser(userId: String) {
         users.deleteOne(eq("_id", userId))
@@ -157,26 +143,7 @@ class Database {
         val ul = ArrayList<User>()
         val u = users.find().associateBy { it.getString("_id") }
         u.forEach { (t, doc) ->
-            ul.add(
-                User(
-                    doc["_id"].toString(),
-                    doc["blacklisted"] as Boolean,
-                    doc["experience"] as Int,
-                    doc["level"] as Int,
-                    doc["lewdPoints"] as Int,
-                    doc["lewdLevel"] as Int,
-                    doc["messagesSent"] as Int,
-                    doc["nsfwMessagesSent"] as Int,
-                    doc["commandsUsed"] as Int,
-                    doc["nsfwCommandsUsed"] as Int,
-                    doc["bankBalance"] as Int,
-                    doc["balance"] as Int,
-                    doc["bonusXp"] as Int,
-                    doc["protected"] as Boolean,
-                    doc["inJail"] as Boolean,
-                    doc["jailRemaining"] as Int,
-                    doc["coolDownCount"] as Int
-                ))
+            ul.add(Gson().fromJson(doc.toJson(), User::class.java))
         }
 
         return ul

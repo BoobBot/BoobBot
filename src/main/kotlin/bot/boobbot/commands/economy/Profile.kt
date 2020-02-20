@@ -11,7 +11,7 @@ import bot.boobbot.misc.Formats.progressPercentage
 import kotlin.math.pow
 
 
-@CommandProperties(description = "get a Profile", category = Category.ECONOMY, developerOnly = true)
+@CommandProperties(description = "get a Profile", category = Category.ECONOMY)
 class Profile : Command {
 
     override fun execute(ctx: Context) {
