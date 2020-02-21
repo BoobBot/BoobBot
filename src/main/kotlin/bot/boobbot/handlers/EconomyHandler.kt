@@ -147,6 +147,7 @@ class EconomyHandler : EventListener {
                     .submit()
             }
             .thenCombine(await(event.channel.idLong, dropKey)) { prompt, grabber ->
+                activeDrops.remove(event.guild.idLong)
                 prompt.delete().queue()
 
                 if (grabber == null) {
