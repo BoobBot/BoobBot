@@ -201,19 +201,21 @@ class Settings : Command {
     }
 
 
-    @SubCommand(aliases = ["ignorechannel", "ic"], description = "ignores channel for any member without Manage_Messages.")
+    @SubCommand(aliases = ["ignorechannel", "ic"], description = "Ignores messages in a channel for any member without \"manage messages\".")
     fun ignoreChannel(ctx: Context) {
-        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
+        val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+
         g.ignoredChannels.add(c!!.id)
         BoobBot.database.setGuild(g)
         ctx.send("Done.")
     }
 
-    @SubCommand(aliases = ["unignorechannel", "uic"], description = "unignores channel for any member without Manage_Messages.")
+    @SubCommand(aliases = ["unignorechannel", "uic"], description = "Removes a channel from the ignored list.")
     fun unIgnoreChannel(ctx: Context) {
-        var g = BoobBot.database.getGuild(ctx.guild!!.id)!!
+        val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+
         g.ignoredChannels.remove(c!!.id)
         BoobBot.database.setGuild(g)
         ctx.send("Done.")
@@ -221,9 +223,12 @@ class Settings : Command {
     @SubCommand(aliases = ["economytoggle"], description = "Toggles economy drops.")
     fun economyEnable(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
-        g!!.dropEnabled = !g.dropEnabled
+
+        g.dropEnabled = !g.dropEnabled
         BoobBot.database.setGuild(g)
-        ctx.channel.sendMessage("drop has been set to ${g.dropEnabled}").queue()
+
+        val dropStatus = if (g.dropEnabled) "enabled" else "disabled"
+        ctx.send("Drops are now $dropStatus for this server.")
     }
 
 }

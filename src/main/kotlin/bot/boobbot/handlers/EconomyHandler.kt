@@ -7,11 +7,14 @@ import bot.boobbot.models.economy.User
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.hooks.EventListener
+import net.dv8tion.jda.api.requests.ErrorResponse
 import okhttp3.Headers
 import java.awt.Color
 import java.awt.Font
 import java.io.ByteArrayOutputStream
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
@@ -21,6 +24,13 @@ import kotlin.math.sqrt
 
 class EconomyHandler : EventListener {
     private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
+    private val random = Random()
+    private val activeDrops = hashSetOf<Long>()
+
+    private fun random(lower: Int, upper: Int): Int {
+        return random.nextInt(upper - lower) + lower
+    }
+
 
     /**
      * @returns the URL to the image.
@@ -53,8 +63,8 @@ class EconomyHandler : EventListener {
                 user.nsfwMessagesSent++
             }
 
-            if (user.coolDownCount >= (0..10).random()) {
-                user.coolDownCount = (0..10).random()
+            if (user.coolDownCount >= random(0, 10)) {
+                user.coolDownCount = random(0, 10)
                 user.experience++
 
                 if (user.bonusXp != null && user.bonusXp!! > 0) {
@@ -74,18 +84,20 @@ class EconomyHandler : EventListener {
             return
         }
 
-        val number = (0..10000).random()
+        val number = random(0, 10000)
 
-        if (number % 59 == 0) {
+        if (!activeDrops.contains(event.guild.idLong) && number % 59 == 0) {
             doDrop(event)
         }
 
-        if (event.message.contentRaw == ">grab") {
-            event.channel.sendMessage(event.author.asMention + " grab em by the pussy").queue()
+        if (activeDrops.contains(event.guild.idLong)) {
+            if (event.message.contentRaw.startsWith(">grab")) {
+                event.message.delete().queue(null, DEFAULT_IGNORE)
+            }
         }
 
         if (event.message.contentRaw == ">coin" && event.message.author.idLong == 248294452307689473L) {
-            event.message.delete().reason("yes").queue()
+            event.message.delete().reason("User initiated drop").queue(null, DEFAULT_IGNORE)
             doDrop(event)
         }
     }
@@ -130,45 +142,27 @@ class EconomyHandler : EventListener {
 
         generateDrop(dropKey)
             .thenCompose {
-                event.channel.sendMessage("Look an Ass, Grab it! Use `>grab <key>` to Grab it!")
+                event.channel.sendMessage("Look an ass, grab it! Use `>grab <key>` to grab it!")
                     .addFile(it.toByteArray(), "drop.png")
                     .submit()
             }
-            .thenAccept prompt@{
-                BoobBot.waiter.waitForMessage(
-                    { m -> m.channel.idLong == it.channel.idLong && m.contentRaw == ">grab $dropKey" },
-                    GRAB_TIMEOUT
-                ).thenAccept waiter@{ grabber ->
-                    it.delete().queue()
-                    event.channel.history.retrievePast(100).queue { ms ->
-                        val spam = ms.filter { isSpam(it) }
-                        if (spam.isEmpty()) {
-                            return@queue
-                        }
-                        if (spam.size <= 2) {
-                            spam[0].delete().queue()
-                            return@queue
-                        }
-                        event.channel.purgeMessages(*spam.toTypedArray())
-                    }
-                    if (grabber == null) {
-                        return@waiter
-                    }
+            .thenCombine(await(event.channel.idLong, dropKey)) { prompt, grabber ->
+                prompt.delete().queue()
 
-                    // add tiddies
-                    val user = BoobBot.database.getUser(event.author.id)
-                    user.balance+=(0..5).random()
-                    BoobBot.database.setUser(user)
-                    grabber.channel.sendMessage("${grabber.author.asMention} Grabbed it!")
-                        .delay(10, TimeUnit.SECONDS)
-                        .flatMap { it.delete() }
-                        .queue()
+                if (grabber == null) {
+                    return@thenCombine
                 }
+
+                // add tiddies
+                val user = BoobBot.database.getUser(event.author.id)
+                user.balance += random(0, 5)
+                user.save()
+                grabber.channel.sendMessage("${grabber.author.asMention} grabbed it!")
+                    .delay(10, TimeUnit.SECONDS)
+                    .flatMap { it.delete() }
+                    .queue()
             }
-
-
     }
-
 
     private fun calculateLewdLevel(user: User): Int {
         val calculateLewdPoints =
@@ -180,10 +174,10 @@ class EconomyHandler : EventListener {
         return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
     }
 
-
-    private fun isSpam(message: Message): Boolean {
-        return message.contentRaw.toLowerCase().startsWith(">g")
-    }
+    private fun await(channelId: Long, dropKey: String) = BoobBot.waiter.waitForMessage(
+        { m -> m.channel.idLong == channelId && m.contentRaw == ">grab $dropKey" },
+        GRAB_TIMEOUT
+    )
 
     companion object {
         private val CHARS = listOf(
@@ -193,5 +187,10 @@ class EconomyHandler : EventListener {
         )
 
         private val GRAB_TIMEOUT = TimeUnit.SECONDS.toMillis(30)
+        private val DEFAULT_IGNORE = ErrorResponseException.ignore(
+            ErrorResponse.MISSING_ACCESS,
+            ErrorResponse.MISSING_PERMISSIONS,
+            ErrorResponse.UNKNOWN_MESSAGE
+        )
     }
 }

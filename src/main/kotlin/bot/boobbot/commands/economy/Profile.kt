@@ -18,8 +18,8 @@ class Profile : Command {
         val user = ctx.mentions.firstOrNull() ?: ctx.author
         val u = BoobBot.database.getUser(user.id)
         val e = ((u.level + 1).toDouble() * 10).pow(2.toDouble()).toInt()
-        val s = StringBuilder()
-        val em = ctx.embed {
+
+        ctx.embed {
             setAuthor("Profile for : ${user.asTag}", user.avatarUrl, user.avatarUrl)
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
@@ -47,9 +47,6 @@ class Profile : Command {
                         "**Messages Seen**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent + u.nsfwMessagesSent)}\n",
                 false
             )
-
-
         }
-
     }
 }
