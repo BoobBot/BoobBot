@@ -151,7 +151,7 @@ class MessageHandler : ListenerAdapter() {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
             val user = BoobBot.database.getUser(event.author.id)
-            if (command.properties.nsfw) user.nsfwCommandsUsed+=1 else user.commandsUsed+=1
+            if (command.properties.nsfw) user.nsfwCommandsUsed += 1 else user.commandsUsed += 1
             BoobBot.database.setUser(user)
             command.execute(trigger, event.message, args)
         } catch (e: Exception) {

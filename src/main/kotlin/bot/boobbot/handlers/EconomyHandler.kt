@@ -4,7 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
 import bot.boobbot.models.economy.User
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.ErrorResponseException

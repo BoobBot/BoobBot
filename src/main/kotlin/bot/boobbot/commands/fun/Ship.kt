@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.CompletableFuture
 import javax.imageio.ImageIO
-import kotlin.math.max
 
 
 @CommandProperties(description = "Shipped", category = Category.FUN)

@@ -35,7 +35,8 @@ data class User(
 
     companion object {
         fun new(userId: String): User {
-            return User(userId, false,
+            return User(
+                userId, false,
                 0,
                 0,
                 0,

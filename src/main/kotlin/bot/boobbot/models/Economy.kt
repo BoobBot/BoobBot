@@ -1,4 +1,5 @@
 package bot.boobbot.models
+
 //
 //import bot.boobbot.flight.Context
 //import bot.boobbot.misc.Formats

@@ -9,7 +9,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 
-@CommandProperties(aliases = ["daily", "pd"],description = "Basic daily income.", category = Category.ECONOMY)
+@CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY)
 class Payday : Command {
 
     override fun execute(ctx: Context) {
@@ -42,7 +42,7 @@ class Payday : Command {
         ctx.send(msg.toString())
     }
 
-    fun getRemaining(x: Long) :String{
+    fun getRemaining(x: Long): String {
         val y = 60 * 60 * 1000
         val h = x / y
         val m = (x - (h * y)) / (y / 60)

@@ -7,8 +7,6 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Formats.progressPercentage
-import kotlin.math.pow
 
 
 @CommandProperties(description = "See your current balance.", category = Category.ECONOMY)

@@ -1,12 +1,9 @@
 package bot.boobbot.commands.dev
 
-import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 
 @CommandProperties(description = "test", category = Category.DEV, developerOnly = true)

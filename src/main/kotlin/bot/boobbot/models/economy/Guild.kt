@@ -10,7 +10,8 @@ data class Guild(
 ) {
     companion object {
         fun new(guildId: String): Guild {
-            return Guild(guildId,
+            return Guild(
+                guildId,
                 false,
                 false,
                 mutableListOf(),
