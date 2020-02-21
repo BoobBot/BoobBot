@@ -42,8 +42,10 @@ interface Command {
             .setFooter("Help requested by ${requester.name}", requester.effectiveAvatarUrl)
             .setTimestamp(Instant.now())
 
+        val maxLen = this.subcommands.values.map { it.name.length }.max() ?: 15
+
         for (sc in this.subcommands.values.sortedBy { it.name }) {
-            embed.appendDescription("`${padEnd(sc.name, 16)}:` ${sc.description}\n")
+            embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}\n")
         }
 
         ctx.embed(embed.build())
