@@ -5,13 +5,15 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class EventWaiter : ListenerAdapter() {
 
     private var totalWaiters = 0
-    private val pendingEvents = hashSetOf<WaitingEvent>()
+//    private val pendingEvents = hashSetOf<WaitingEvent>()
+    private val pendingEvents = ConcurrentHashMap.newKeySet<WaitingEvent>()
 
     private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
