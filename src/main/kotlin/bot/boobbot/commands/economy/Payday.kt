@@ -14,15 +14,15 @@ class Payday : Command {
 
     override fun execute(ctx: Context) {
         val user = BoobBot.database.getUser(ctx.author.id)
-        if (user.lastdaily != null) {
-            val t = user.lastdaily!!.plus(1, ChronoUnit.MINUTES )
+        if (user.lastDaily != null) {
+            val t = user.lastDaily!!.plus(1, ChronoUnit.MINUTES )
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {
                 return ctx.send("You already did it whore\nFuck off and try again in ${getRemaining(x)}")
             }
         }
-        user.lastdaily = Instant.now()
+        user.lastDaily = Instant.now()
         user.save()
         var rng = (0..50).random()
         var msg = "You got $rng$"
