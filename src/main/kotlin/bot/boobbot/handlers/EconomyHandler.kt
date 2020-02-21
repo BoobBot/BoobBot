@@ -193,9 +193,9 @@ class EconomyHandler : EventListener {
 
     companion object {
         private val CHARS = listOf(
-            *('a'.toInt()..'z'.toInt()).map { it.toChar() }.toTypedArray(), // a-z
-            *('A'.toInt()..'Z'.toInt()).map { it.toChar() }.toTypedArray(), // A-Z
-            *(0..9).map { it.toString() }.toTypedArray() // 0-9
+            *('a'..'z').toList().toTypedArray(),
+            *('A'..'Z').toList().toTypedArray(),
+            *('0'..'9').toList().toTypedArray()
         )
 
         private val GRAB_TIMEOUT = TimeUnit.SECONDS.toMillis(30)
