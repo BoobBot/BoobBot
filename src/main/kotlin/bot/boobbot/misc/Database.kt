@@ -1,6 +1,9 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
+import bot.boobbot.models.economy.Guild
+import bot.boobbot.models.economy.Serializable
+import bot.boobbot.models.economy.User
 import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClients
@@ -14,6 +17,7 @@ import java.time.Instant
 
 class Database {
 
+    private val gson = Gson()
     private val mongo = MongoClients.create(BoobBot.config.mongoDbUrl)
 
     /** Databases **/
@@ -56,84 +60,17 @@ class Database {
     }
 
 
-    //user
-
-
-    data class User(
-        val _id: String,
-        var blacklisted: Boolean,
-        var experience: Int,
-        var level: Int,
-        var lewdPoints: Int,
-        var lewdLevel: Int,
-        var messagesSent: Int,
-        var nsfwMessagesSent: Int,
-        var commandsUsed: Int,
-        var nsfwCommandsUsed: Int,
-        var bankBalance: Int,
-        var balance: Int,
-        var bonusXp: Int?,
-        var protected: Boolean?,
-        var inJail: Boolean,
-        var jailRemaining: Int,
-        var coolDownCount: Int,
-        var lastdaily: Instant?,
-        var rep: Int,
-        var lastRep: Instant?,
-        var lastSaved: Instant?
-    ) {
-        fun save() = BoobBot.database.setUser(this)
-        fun del() = BoobBot.database.delUser(this._id)
-        fun toJson(): String {
-            return Gson().toJson(this)
-        }
-        fun toDoc(): Document {
-            return Document.parse(toJson())
-        }
-        fun getName(): String? {
-            return BoobBot.shardManager.getUserById(this._id)?.asTag
-        }
-        fun getAvatar(): String?{
-            return BoobBot.shardManager.getUserById(this._id)?.effectiveAvatarUrl
-        }
-    }
-
-
+    /**
+     * User
+     */
     fun getUser(userId: String): User {
-        val doc = users.find(BasicDBObject("_id", userId))
+        return users.find(BasicDBObject("_id", userId))
             .firstOrNull()
-        return if (doc.isNullOrEmpty()) {
-            val user = User(
-                _id = userId,
-                blacklisted = false,
-                experience = 0,
-                level = 0,
-                lewdPoints = 0,
-                lewdLevel = 0,
-                messagesSent = 0,
-                nsfwMessagesSent = 0,
-                commandsUsed = 0,
-                nsfwCommandsUsed = 0,
-                bankBalance = 0,
-                balance = 0,
-                bonusXp = 0,
-                protected = false,
-                inJail = false,
-                jailRemaining = 0,
-                coolDownCount = 0,
-                lastdaily = null,
-                rep = 0,
-                lastRep = null,
-                lastSaved = null
-            )
-            user.save()
-            user
-        } else {
-            Gson().fromJson(doc.toJson(), User::class.java)
-        }
+            ?.let { deserialize<User>(it.toJson()) }
+            ?: User.new(userId)
     }
 
-    fun delUser(userId: String) {
+    fun deleteUser(userId: String) {
         users.deleteOne(eq("_id", userId))
     }
 
@@ -141,68 +78,36 @@ class Database {
         user.lastSaved = Instant.now()
         users.updateOne(
             eq("_id", user._id),
-            Document("\$set", user.toDoc()),
+            Document("\$set", serialize(user)),
             UpdateOptions().upsert(true)
         )
     }
 
-    fun getAllUsers(): ArrayList<User> {
-        val ul = ArrayList<User>()
-        val u = users.find().associateBy { it.getString("_id") }
-        u.forEach { (_, doc) ->
-            ul.add(Gson().fromJson(doc.toJson(), User::class.java))
-        }
-
-        return ul
-
+    fun getAllUsers(): List<User> {
+        return users.find()
+            .map { deserialize<User>(it.toJson()) }
+            .toList()
     }
 
 
-    //guild
-
-    data class Guild(
-
-        val _id: String,
-        var dropEnabled: Boolean,
-        var blacklisted: Boolean,
-        var ignoredChannels: MutableList<String>,
-        var modMute: MutableList<String>
-    )
-
-    fun getGuild(guildId: String): Guild? {
-        val doc = guilds.find(BasicDBObject("_id", guildId))
+    /**
+     * Guild
+     */
+    fun getGuild(guildId: String): Guild {
+        return guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
-        return if (doc.isNullOrEmpty()) {
-            val guild = Guild(
-                _id = guildId,
-                dropEnabled = false,
-                blacklisted = false,
-                ignoredChannels = ArrayList(),
-                modMute = ArrayList()
-            )
-            setGuild(guild)
-            guild
-        } else {
-            val guild = Guild(
-                doc["_id"].toString(),
-                doc.get("dropEnabled", false),
-                doc.get("blacklisted", false),
-                doc.get("ignoredChannels", ArrayList()),
-                doc.get("modMute", ArrayList())
-            )
-            guild
-        }
+            ?.let { deserialize<Guild>(it.toJson()) }
+            ?: Guild.new(guildId)
     }
 
-
-    fun delGuild(guildId: String) {
+    fun deleteGuild(guildId: String) {
         guilds.deleteOne(eq("_id", guildId))
     }
 
     fun setGuild(guild: Guild) {
         guilds.updateOne(
             eq("_id", guild._id),
-            Document("\$set", Document.parse(Gson().toJson(guild))),
+            Document("\$set", serialize(guild)),
             UpdateOptions().upsert(true)
         )
     }
@@ -367,4 +272,11 @@ class Database {
         c.deleteOne(eq("_id", id))
     }
 
+    private inline fun <reified T> deserialize(json: String): T {
+        return gson.fromJson(json, T::class.java)
+    }
+
+    private fun serialize(entity: Any): Document {
+        return Document.parse(gson.toJson(entity))
+    }
 }

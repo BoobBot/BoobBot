@@ -1,0 +1,61 @@
+package bot.boobbot.models.economy
+
+import bot.boobbot.BoobBot
+import java.time.Instant
+
+data class User(
+    val _id: String,
+    var blacklisted: Boolean,
+    var experience: Int,
+    var level: Int,
+    var lewdPoints: Int,
+    var lewdLevel: Int,
+    var messagesSent: Int,
+    var nsfwMessagesSent: Int,
+    var commandsUsed: Int,
+    var nsfwCommandsUsed: Int,
+    var bankBalance: Int,
+    var balance: Int,
+    var bonusXp: Int?,
+    var protected: Boolean?,
+    var inJail: Boolean,
+    var jailRemaining: Int,
+    var coolDownCount: Int,
+    var lastDaily: Instant?,
+    var rep: Int,
+    var lastRep: Instant?,
+    var lastSaved: Instant?
+) {
+    val name by lazy { BoobBot.shardManager.getUserById(this._id)?.asTag }
+    val avatar by lazy { BoobBot.shardManager.getUserById(this._id)?.effectiveAvatarUrl }
+
+    fun save() = BoobBot.database.setUser(this)
+
+    fun delete() = BoobBot.database.deleteUser(this._id)
+
+    companion object {
+        fun new(userId: String): User {
+            return User(userId, false,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                false,
+                false,
+                0,
+                0,
+                null,
+                0,
+                null,
+                null
+            )
+        }
+    }
+}

@@ -40,29 +40,29 @@ class EconomyHandler : EventListener {
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
         val user = BoobBot.database.getUser(event.author.id)
-            user.messagesSent = user.messagesSent + 1
-            if (!user.blacklisted) {
-                if (user.inJail) {
-                    user.jailRemaining = min(user.jailRemaining - 1, 0)
-                    if (user.jailRemaining == 0) {
-                        user.inJail = false
-                    }
-                    BoobBot.database.setUser(user)
+        user.messagesSent++
+        if (!user.blacklisted) {
+            if (user.inJail) {
+                user.jailRemaining = min(user.jailRemaining - 1, 0)
+                user.inJail = user.jailRemaining > 0
+                BoobBot.database.setUser(user)
+            }
+
+            if (event.message.textChannel.isNSFW) {
+                val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
+                user.lewdPoints += min(tagSize, 5) * (user.balance / 100) * .01.toInt()
+                user.nsfwMessagesSent++
+            }
+
+            if (user.coolDownCount >= (0..10).random()) {
+                user.coolDownCount = (0..10).random()
+                user.experience++
+
+                if (user.bonusXp != null && user.bonusXp!! > 0) {
+                    user.experience++ // extra XP
+                    user.bonusXp = user.bonusXp!! - 1
                 }
-                if (event.message.textChannel.isNSFW) {
-                    val tags = Formats.tag
-                    val tagSize = tags.filter { event.message.contentDisplay.contains(it.toString()) }.size
-                    user.lewdPoints = user.lewdPoints + min(tagSize, 5) * (user.balance / 100) * .01.toInt()
-                    user.nsfwMessagesSent = user.nsfwMessagesSent + 1
-                }
-                if (user.coolDownCount >= (0..10).random()) {
-                    user.coolDownCount = (0..10).random()
-                    user.experience =
-                        if (user.bonusXp != null && user.bonusXp!! > 0) user.experience + 2 else user.experience + 1
-                    if (user.bonusXp != null && user.bonusXp!! > 0) {
-                        user.bonusXp = user.bonusXp!! - 1
-                    }
-                }
+            }
 
             user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
             user.lewdLevel = calculateLewdLevel(user)
@@ -85,13 +85,11 @@ class EconomyHandler : EventListener {
 
         if (event.message.contentRaw == ">grab") {
             event.channel.sendMessage(event.author.asMention + " grab em by the pussy").queue()
-
         }
+
         if (event.message.contentRaw == ">coin" && event.message.author.idLong == 248294452307689473L) {
             event.message.delete().reason("yes").queue()
             doDrop(event)
-
-
         }
     }
 
@@ -140,7 +138,6 @@ class EconomyHandler : EventListener {
                     .submit()
             }
             .thenAccept prompt@{
-                println("here")
                 BoobBot.waiter.waitForMessage(
                     { m -> m.channel.idLong == it.channel.idLong && m.contentRaw == ">grab $dropKey" },
                     GRAB_TIMEOUT
