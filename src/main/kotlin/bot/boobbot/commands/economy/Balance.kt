@@ -11,7 +11,7 @@ import bot.boobbot.misc.Formats.progressPercentage
 import kotlin.math.pow
 
 
-@CommandProperties(description = "get a balance", category = Category.ECONOMY)
+@CommandProperties(description = "See your current balance.", category = Category.ECONOMY)
 class Balance : Command {
 
     override fun execute(ctx: Context) {

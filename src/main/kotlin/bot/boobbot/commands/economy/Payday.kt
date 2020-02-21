@@ -9,7 +9,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 
-@CommandProperties(aliases = ["daily", "pd"],description = "Basic income", category = Category.ECONOMY)
+@CommandProperties(aliases = ["daily", "pd"],description = "Basic daily income.", category = Category.ECONOMY)
 class Payday : Command {
 
     override fun execute(ctx: Context) {
@@ -20,7 +20,7 @@ class Payday : Command {
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {
-                return ctx.send("You already did it whore\nFuck off and try again in ${getRemaining(x)}")
+                return ctx.send("You have to work for it, whore.\nFuck off and try again in ${getRemaining(x)}")
             }
         }
 
