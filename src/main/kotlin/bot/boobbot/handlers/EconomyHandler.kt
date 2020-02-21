@@ -1,9 +1,9 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Database
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
+import bot.boobbot.models.economy.User
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -45,7 +45,6 @@ class EconomyHandler : EventListener {
             if (user.inJail) {
                 user.jailRemaining = min(user.jailRemaining - 1, 0)
                 user.inJail = user.jailRemaining > 0
-                BoobBot.database.setUser(user)
             }
 
             if (event.message.textChannel.isNSFW) {
@@ -66,14 +65,12 @@ class EconomyHandler : EventListener {
 
             user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
             user.lewdLevel = calculateLewdLevel(user)
-            BoobBot.database.setUser(user)
+            user.save()
         }
 
-        val g = BoobBot.database.getGuild(event.guild.id)!!
-        if (!g.dropEnabled) {
-            return
-        }
-        if (!event.channel.isNSFW) {
+        val g = BoobBot.database.getGuild(event.guild.id)
+
+        if (!g.dropEnabled || !event.channel.isNSFW) {
             return
         }
 
@@ -173,7 +170,7 @@ class EconomyHandler : EventListener {
     }
 
 
-    private fun calculateLewdLevel(user: Database.User): Int {
+    private fun calculateLewdLevel(user: User): Int {
         val calculateLewdPoints =
             (user.experience / 100) * .1 +
                     (user.nsfwCommandsUsed / 100) * .3 -

@@ -2,7 +2,6 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.models.economy.Guild
-import bot.boobbot.models.economy.Serializable
 import bot.boobbot.models.economy.User
 import com.google.gson.Gson
 import com.mongodb.BasicDBObject
@@ -12,7 +11,6 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
-import org.jetbrains.kotlin.serialization.js.ast.JsAstProtoBuf
 import java.time.Instant
 
 class Database {
