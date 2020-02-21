@@ -14,27 +14,32 @@ class Payday : Command {
 
     override fun execute(ctx: Context) {
         val user = BoobBot.database.getUser(ctx.author.id)
+
         if (user.lastDaily != null) {
-            val t = user.lastDaily!!.plus(1, ChronoUnit.MINUTES )
+            val t = user.lastDaily!!.plus(1, ChronoUnit.MINUTES)
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {
                 return ctx.send("You already did it whore\nFuck off and try again in ${getRemaining(x)}")
             }
         }
+
         user.lastDaily = Instant.now()
         user.save()
+
         var rng = (0..50).random()
-        var msg = "You got $rng$"
+        val msg = StringBuilder("You got $$rng")
+
         if (bot.boobbot.misc.Utils.checkDonor(ctx.message)) {
-            msg += ", Plus $rng$ for being a <:p_:475801484282429450>"
+            msg.append(" and an extra $$rng for being a <:p_:475801484282429450>\n")
             rng += rng
         }
 
+        msg.append("Take it and fuck off.")
+
         user.balance += rng
         user.save()
-        msg += "\nTake it and fuck off."
-        ctx.send(msg)
+        ctx.send(msg.toString())
     }
 
     fun getRemaining(x: Long) :String{
@@ -42,12 +47,8 @@ class Payday : Command {
         val h = x / y
         val m = (x - (h * y)) / (y / 60)
         val s = (x - (h * y) - (m * (y / 60))) / 1000
-        var r = ""
-        if (h >0 ) r +="$h Hours "
-        if (m > 0) r +="$m Minutes "
-        if (s > 0) r += "$s Seconds "
-        return r
 
+        return String.format("%02d hours, %02d minutes and %02d seconds", h, m, s)
     }
 
 }
