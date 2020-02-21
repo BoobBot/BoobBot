@@ -11,9 +11,19 @@ import bot.boobbot.flight.Context
 class ModMute : Command {
 
     override fun execute(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild!!.id)!!
-        if(g.modMute.contains(ctx.mentions.first().id)) g.modMute.remove(ctx.mentions.first().id) else g.modMute.add(ctx.mentions.first().id)
+        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val target = ctx.mentions.firstOrNull()
+            ?: return ctx.send("Mention someone, whore.")
+        val unmuted = g.modMute.contains(target.id)
+        val status = if (unmuted) "Unmuted" else "Muted"
+
+        if (g.modMute.contains(target.id)) {
+            g.modMute.remove(target.id)
+        } else {
+            g.modMute.add(target.id)
+        }
+
         BoobBot.database.setGuild(g)
-        ctx.channel.sendMessage("Muted/unmuted ${ctx.mentions.first().asMention}").queue()
+        ctx.send("$status ${target.asMention}.")
     }
 }

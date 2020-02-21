@@ -74,3 +74,11 @@ fun <T, O> RestAction<T>.intersect(other: List<O>, apply: (T, Int, O) -> RestAct
     }
     return last
 }
+
+fun <T> Collection<T>.ifEmpty(do_: String, else_: Collection<T>.() -> String): String {
+    if (this.isEmpty()) {
+        return do_
+    }
+
+    return else_(this)
+}

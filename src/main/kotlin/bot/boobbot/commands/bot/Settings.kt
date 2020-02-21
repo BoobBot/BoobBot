@@ -8,6 +8,7 @@ import bot.boobbot.flight.SubCommand
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.misc.ifEmpty
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
@@ -200,8 +201,7 @@ class Settings : Command {
         ctx.send("Done.")
     }
 
-
-    @SubCommand(aliases = ["ignorechannel", "ic"], description = "Ignores messages in a channel for any member without \"manage messages\".")
+    @SubCommand(aliases = ["ic"], description = "Ignores messages in a channel for any member without \"manage messages\".")
     fun ignoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
@@ -211,7 +211,7 @@ class Settings : Command {
         ctx.send("Done.")
     }
 
-    @SubCommand(aliases = ["unignorechannel", "uic"], description = "Removes a channel from the ignored list.")
+    @SubCommand(aliases = ["uic"], description = "Removes a channel from the ignored list.")
     fun unIgnoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
@@ -220,6 +220,14 @@ class Settings : Command {
         BoobBot.database.setGuild(g)
         ctx.send("Done.")
     }
+
+    @SubCommand(aliases = ["lic"], description = "Lists all ignored channels.")
+    fun listIgnoredChannels(ctx: Context) {
+        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val ignored = g.ignoredChannels.ifEmpty("*None*") { joinToString("\n", transform = { "<#$it>" }) }
+        ctx.send("__**Ignored Channels**__\n$ignored")
+    }
+
     @SubCommand(aliases = ["economytoggle"], description = "Toggles economy drops.")
     fun economyEnable(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
