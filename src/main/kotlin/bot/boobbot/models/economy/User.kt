@@ -26,11 +26,7 @@ data class User(
     var lastRep: Instant?,
     var lastSaved: Instant?
 ) {
-    val name by lazy { BoobBot.shardManager.getUserById(this._id)?.asTag }
-    val avatar by lazy { BoobBot.shardManager.getUserById(this._id)?.effectiveAvatarUrl }
-
     fun save() = BoobBot.database.setUser(this)
-
     fun delete() = BoobBot.database.deleteUser(this._id)
 
     companion object {
