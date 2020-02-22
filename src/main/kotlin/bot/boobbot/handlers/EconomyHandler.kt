@@ -106,11 +106,10 @@ class EconomyHandler : EventListener {
         return fetchNsfwImage("ass")
             .thenCompose { BoobBot.requestUtil.get(it).submit() }
             .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
-            .thenApply {
-                val bufferedImage = ImageIO.read(it)
-                it.close()
-
-                bufferedImage
+            .thenApply { stream ->
+                stream.use {
+                    return@thenApply ImageIO.read(it)
+                }
             }
             .thenApply {
                 val fontSize = it.width * 0.1 // 10% of width
