@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
+import bot.boobbot.models.GraphicsUtil
 import bot.boobbot.models.economy.User
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
