@@ -116,7 +116,6 @@ class EventHandler : ListenerAdapter() {
 
     override fun onGuildJoin(event: GuildJoinEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
-        // Don't set presence on guildJoin and leave, this is probably an easy way to hit ratelimit if someone spams.
 
         val guild = event.guild
 
