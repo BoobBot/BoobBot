@@ -9,10 +9,27 @@ import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class MessageHandler : ListenerAdapter() {
 
+    private val threadGroup = ThreadGroup("Command pool Executor")
+    private val msgExecutor: Executor = Executors.newCachedThreadPool { r: Runnable? ->
+        Thread(
+            threadGroup,
+            r,
+            "msg Pool"
+        )
+    }
+
     override fun onMessageReceived(event: MessageReceivedEvent) {
+        val msgWorker = Runnable { handleMessage(event) }
+        msgExecutor.execute(msgWorker)
+    }
+
+    private fun handleMessage(event: MessageReceivedEvent) {
+
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
         if (event.author.isBot) {
@@ -129,16 +146,6 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-//        if (command.properties.boosterOnly && !Utils.isBooster(event.message.author)) {
-//            event.channel.sendMessage(
-//                Formats.error(
-//                    " Sorry this command is only available to our Nitro boosters.\n"
-//                            + "Stop being a fuck and boost today!\nhttps://invite.boob.bot"
-//                )
-//            ).queue()
-//            return
-//        }
-
         if (event.channelType.isGuild
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
             && BoobBot.database.getUserAnonymity(event.author.id)
@@ -158,5 +165,7 @@ class MessageHandler : ListenerAdapter() {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
+
     }
+
 }
