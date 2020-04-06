@@ -3,7 +3,6 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
-import bot.boobbot.models.GraphicsUtil
 import bot.boobbot.models.economy.User
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -16,16 +15,27 @@ import java.awt.Font
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sqrt
 
+
 class EconomyHandler : EventListener {
     private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
+    private val threadGroup = ThreadGroup("Eco Event Executor")
+    private val ecoExecutor: Executor = Executors.newCachedThreadPool { r: Runnable? ->
+        Thread(
+            threadGroup,
+            r,
+            "Eco Pool"
+        )
+    }
 
     private fun random(lower: Int, upper: Int): Int {
         return random.nextInt(upper - lower) + lower
@@ -44,7 +54,8 @@ class EconomyHandler : EventListener {
 
     override fun onEvent(event: GenericEvent) {
         if (event is GuildMessageReceivedEvent) {
-            onGuildMessageReceivedEvent(event)
+            val ecoWorker = Runnable { onGuildMessageReceivedEvent(event) }
+            ecoExecutor.execute(ecoWorker)
         }
     }
 
