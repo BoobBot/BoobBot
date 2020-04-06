@@ -16,7 +16,6 @@ import java.time.Instant
 class Help : Command {
 
     override fun execute(ctx: Context) {
-        val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
         val isDm = ctx.args.lastOrNull()?.equals("--dm", true) ?: false
 
         val command = if (ctx.args.isEmpty()) null else BoobBot.commands.findCommand(ctx.args.first())

@@ -82,7 +82,8 @@ class SessionController : SessionController {
         }
 
         private fun handleFailure(thread: Thread, exception: Throwable) {
-            log.error("Worker has failed with throwable!", exception)
+
+            log.error("${thread.name} Worker has failed with throwable!", exception)
         }
 
         override fun run() {

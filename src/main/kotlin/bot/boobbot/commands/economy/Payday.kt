@@ -16,7 +16,7 @@ class Payday : Command {
         val user = BoobBot.database.getUser(ctx.author.id)
 
         if (user.lastDaily != null) {
-            val t = user.lastDaily!!.plus(1, ChronoUnit.MINUTES)
+            val t = user.lastDaily!!.plus(6, ChronoUnit.HOURS)
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {

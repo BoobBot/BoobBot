@@ -223,4 +223,21 @@ object Formats {
         val bareRemain = bare.substring(remainPercent, bare.length)
         return "\r" + bareDone + bareRemain + " " + remainPercent * 10 + "%"
     }
+
+
+    fun countryCodeToEmote(countrycode: String): String {
+        var code = countrycode
+        val offset = 127397
+        if (code.equals("uk", ignoreCase = true)) {
+            code = "gb"
+        }
+        code = code.toUpperCase()
+        val emoteStr = StringBuilder()
+        for (element in code) {
+            emoteStr.appendCodePoint(element.toInt() + offset)
+        }
+        return emoteStr.toString()
+    }
+
+
 }
