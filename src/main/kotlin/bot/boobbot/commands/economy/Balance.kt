@@ -9,7 +9,7 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 
 
-@CommandProperties(description = "See your current balance.", category = Category.ECONOMY)
+@CommandProperties(description = "See your current balance.", aliases = ["bal", "$"], category = Category.ECONOMY)
 class Balance : Command {
 
     override fun execute(ctx: Context) {

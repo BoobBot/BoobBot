@@ -9,7 +9,7 @@ import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
 
 
-@CommandProperties(description = "See your current rank info.", category = Category.ECONOMY)
+@CommandProperties(description = "See your current rank info.", aliases = ["level", "lvl"], category = Category.ECONOMY)
 class Rank : Command {
 
     override fun execute(ctx: Context) {
