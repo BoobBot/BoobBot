@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
 import bot.boobbot.models.economy.User
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
@@ -165,7 +166,6 @@ class EconomyHandler : EventListener {
                     return@thenCombine
                 }
 
-                // add tiddies
                 val user = BoobBot.database.getUser(event.author.id)
                 user.balance += random(1, 4)
                 user.save()
@@ -173,6 +173,19 @@ class EconomyHandler : EventListener {
                     .delay(10, TimeUnit.SECONDS)
                     .flatMap { it.delete() }
                     .queue()
+
+                event.channel.history.retrievePast(100).queue { ms ->
+                    val spam = ms.filter { isSpam(it) }
+                    if (spam.isEmpty()) {
+                        return@queue
+                    }
+                    if (spam.size < 2) {
+                        spam[0].delete().queue()
+                        return@queue
+                    }
+                    event.channel.purgeMessages(*spam.toTypedArray())
+                }
+
             }
     }
 
@@ -190,6 +203,11 @@ class EconomyHandler : EventListener {
         { m -> m.channel.idLong == channelId && m.contentRaw == ">grab $dropKey" },
         GRAB_TIMEOUT
     )
+
+    private fun isSpam(message: Message): Boolean {
+        return message.contentRaw.toLowerCase().startsWith(">g")
+    }
+
 
     companion object {
         private val CHARS = listOf(
