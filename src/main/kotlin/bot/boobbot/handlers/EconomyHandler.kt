@@ -167,7 +167,7 @@ class EconomyHandler : EventListener {
 
                 // add tiddies
                 val user = BoobBot.database.getUser(event.author.id)
-                user.balance += random(0, 5)
+                user.balance += random(1, 4)
                 user.save()
                 grabber.channel.sendMessage("${grabber.author.asMention} grabbed it!")
                     .delay(10, TimeUnit.SECONDS)
