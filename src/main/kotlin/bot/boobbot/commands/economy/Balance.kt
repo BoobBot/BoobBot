@@ -21,7 +21,7 @@ class Balance : Command {
                 Formats.info("**Balance Information**"), "" +
                         "**Current Balance**: $${u.balance}\n" +
                         "**Bank Balance**: $${u.bankBalance}\n" +
-                        "$${(u.balance + u.bankBalance)}", false
+                        "**Total Assets**: $${(u.balance + u.bankBalance)}", false
             )
 
         }
