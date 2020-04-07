@@ -19,9 +19,9 @@ class Balance : Command {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
                 Formats.info("**Balance Information**"), "" +
-                        "**Current Balance**: ${u.balance}$\n" +
-                        "**Bank Balance**: ${u.bankBalance}$\n" +
-                        "**Total Assets**: ${(u.balance + u.bankBalance)}$", false
+                        "**Current Balance**: $${u.balance}\n" +
+                        "**Bank Balance**: $${u.bankBalance}\n" +
+                        "$${(u.balance + u.bankBalance)}", false
             )
 
         }

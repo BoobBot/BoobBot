@@ -19,9 +19,9 @@ class Rank : Command {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
                 Formats.info("**Rank Information**"), "" +
-                        "**Current Rep**: ${u.rep}$\n" +
-                        "**Current Level**: ${u.level}$\n" +
-                        "**Current Lewd Level**: ${(u.lewdLevel)}$", false
+                        "**Current Rep**: ${u.rep}\n" +
+                        "**Current Level**: ${u.level}\n" +
+                        "**Current Lewd Level**: ${(u.lewdLevel)}", false
             )
 
         }
