@@ -14,22 +14,7 @@ import java.util.concurrent.Executors
 
 class MessageHandler : ListenerAdapter() {
 
-    private val threadGroup = ThreadGroup("Command pool Executor")
-    private val msgExecutor: Executor = Executors.newCachedThreadPool { r: Runnable? ->
-        Thread(
-            threadGroup,
-            r,
-            "msg Pool"
-        )
-    }
-
     override fun onMessageReceived(event: MessageReceivedEvent) {
-        val msgWorker = Runnable { handleMessage(event) }
-        msgExecutor.execute(msgWorker)
-    }
-
-    private fun handleMessage(event: MessageReceivedEvent) {
-
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
         if (event.author.isBot) {
@@ -165,7 +150,5 @@ class MessageHandler : ListenerAdapter() {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
-
     }
-
 }
