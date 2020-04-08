@@ -18,13 +18,13 @@ class Rank : Command {
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
-                Formats.info("**Rank Information**"), "" +
-                        "**Current Rep**: ${u.rep}\n" +
+                Formats.info("**Rank Information**"),
+                "**Current Rep**: ${u.rep}\n" +
                         "**Current Level**: ${u.level}\n" +
-                        "**Current Lewd Level**: ${(u.lewdLevel)}", false
+                        "**Current Lewd Level**: ${(u.lewdLevel)}",
+                false
             )
-
         }
-
     }
+
 }
