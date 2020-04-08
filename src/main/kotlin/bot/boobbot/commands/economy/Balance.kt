@@ -15,16 +15,17 @@ class Balance : Command {
     override fun execute(ctx: Context) {
         val user = ctx.mentions.firstOrNull() ?: ctx.author
         val u = BoobBot.database.getUser(user.id)
+
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
-                Formats.info("**Balance Information**"), "" +
-                        "**Current Balance**: $${u.balance}\n" +
+                Formats.info("**Balance Information**"),
+                "**Current Balance**: $${u.balance}\n" +
                         "**Bank Balance**: $${u.bankBalance}\n" +
-                        "**Total Assets**: $${(u.balance + u.bankBalance)}", false
+                        "**Total Assets**: $${(u.balance + u.bankBalance)}",
+                false
             )
-
         }
-
     }
+
 }

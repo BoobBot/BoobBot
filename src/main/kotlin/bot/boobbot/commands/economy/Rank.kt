@@ -15,6 +15,7 @@ class Rank : Command {
     override fun execute(ctx: Context) {
         val user = ctx.mentions.firstOrNull() ?: ctx.author
         val u = BoobBot.database.getUser(user.id)
+
         ctx.embed {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
