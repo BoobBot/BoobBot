@@ -242,8 +242,8 @@ object Formats {
         val m = (x - (h * y)) / (y / 60)
         val s = (x - (h * y) - (m * (y / 60))) / 1000
         var r = ""
-        if (h > 0 ) r +="$h Hours "
-        if (m > 0) r +="$m Minutes "
+        if (h > 0) r += "$h Hours "
+        if (m > 0) r += "$m Minutes "
         if (s > 0) r += "$s Seconds "
         return r
 
