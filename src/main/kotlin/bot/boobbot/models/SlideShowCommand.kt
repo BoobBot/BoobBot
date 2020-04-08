@@ -18,7 +18,8 @@ abstract class SlideShowCommand : Command {
 
     private val aliases = mapOf(
         "dick" to "penis",
-        "gif" to "Gifs"
+        "gif" to "Gifs",
+        "aly" to "tentacle"
     )
     private val allowedEndpoints =
         arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "aly")
