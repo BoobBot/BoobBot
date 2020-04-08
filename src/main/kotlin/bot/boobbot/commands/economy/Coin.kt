@@ -40,7 +40,7 @@ class Coin : Command {
         val coinTails = Pair("Tails", "<:tails:681651438664810502>")
         val coinHeads = Pair("Heads", "<:heads:681651442171510812>")
         val rng = (0..9).random()
-        var msg = ""
+        val msg: String
         val res = if (rng > 4) coinHeads else coinTails
         if (ctx.args[0].toLowerCase() == res.first.toLowerCase()) {
             u.balance += ctx.args[1].toInt()
