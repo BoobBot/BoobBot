@@ -70,13 +70,16 @@ class BoobBot {
         @JvmStatic
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
-            val shardCount = if (isDebug) 2 else config.shardCount
+            val shardCount = if (isDebug) 1 else config.shardCount
             val token = if (isDebug) config.debugToken else config.token
 
-            log.info("--- BoobBot (Revision ${Utils.version}) ---")
+            log.info("--- BoobBot (Revision {}) ---", Utils.version)
             log.info(
-                "JDA: ${JDAInfo.VERSION} | LP: ${PlayerLibrary.VERSION} | $shardCount shards | " +
-                        "${CustomShardManager.retrieveRemainingSessionCount(token)} logins"
+                "JDA: {} | LP: {} | {} shards | {} logins",
+                JDAInfo.VERSION,
+                PlayerLibrary.VERSION,
+                shardCount,
+                CustomShardManager.retrieveRemainingSessionCount(token)
             )
 
             shardManager = CustomShardManager.create(token, shardCount)

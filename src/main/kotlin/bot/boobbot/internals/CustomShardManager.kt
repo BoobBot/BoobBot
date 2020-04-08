@@ -25,6 +25,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm {
     var guildCount = 0L
@@ -73,8 +74,28 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .protocols(listOf(Protocol.HTTP_1_1))
                 .build()
 
-            val sm = DefaultShardManagerBuilder()
-                .setToken(token)
+            val disabledIntents = EnumSet.of(
+                // Disable typing
+                GatewayIntent.GUILD_MESSAGE_TYPING,
+                GatewayIntent.DIRECT_MESSAGE_TYPING,
+                // Disable member and presence caching
+                GatewayIntent.GUILD_MEMBERS,
+                GatewayIntent.GUILD_PRESENCES,
+                // Disable reactions
+                GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                // Disable events for the following:
+                GatewayIntent.GUILD_EMOJIS,
+                GatewayIntent.GUILD_BANS,
+                GatewayIntent.GUILD_INVITES
+            )
+
+            val allIntents = GatewayIntent.ALL_INTENTS
+            val disabledIntentsInt = GatewayIntent.getRaw(disabledIntents)
+            val enabledIntentsInt = allIntents and disabledIntentsInt.inv()
+            val enabledIntents = GatewayIntent.getIntents(enabledIntentsInt)
+
+            val sm = DefaultShardManagerBuilder.create(token, enabledIntents)
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
@@ -83,16 +104,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
-                .setDisabledIntents(
-                    GatewayIntent.GUILD_MESSAGE_TYPING,
-                    GatewayIntent.DIRECT_MESSAGE_TYPING,
-                    GatewayIntent.GUILD_MEMBERS,
-                    GatewayIntent.GUILD_PRESENCES,
-                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.DIRECT_MESSAGE_REACTIONS,
-                    GatewayIntent.GUILD_EMOJIS
-                )
-                .setSessionController(SessionController())
+                .setSessionController(ExtendedSessionController())
 
             return CustomShardManager(token, sm.build())
         }
