@@ -225,16 +225,15 @@ object Formats {
     }
 
 
-    fun countryCodeToEmote(countrycode: String): String {
-        var code = countrycode
+    fun countryCodeToEmote(countryCode: String): String {
+        val code = if (countryCode.equals("uk", true)) "GB" else countryCode.toUpperCase()
         val offset = 127397
-        if (code.toLowerCase() == "uk") {code = "gb"}
-        code = code.toUpperCase()
-        val emoteStr = StringBuilder()
-        for (element in code) {
-            emoteStr.appendCodePoint(element.toInt() + offset)
+
+        return buildString {
+            for (e in code) {
+                appendCodePoint(e.toInt() + offset)
+            }
         }
-        return emoteStr.toString()
     }
 
     fun getRemainingCoolDown(x: Long) :String{

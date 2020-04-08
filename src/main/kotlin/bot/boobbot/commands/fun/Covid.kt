@@ -8,64 +8,78 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats.countryCodeToEmote
 import bot.boobbot.misc.json
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 @CommandProperties(description = "info", category = Category.FUN)
 class Covid : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
-        val msg = StringBuilder()
         val res = BoobBot.requestUtil
             .get("https://api.covid19api.com/summary")
             .await()
+            ?.json()
             ?: return ctx.send("rip some error, press f")
-        val body = res.json() ?: return ctx.send("rip some error, press f")
-        val g = body.getJSONObject("Global")
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
-            msg.append("\nNew Confirmed: " + g.get("NewConfirmed"))
-            msg.append("\nTotal Confirmed: " + g.get("TotalConfirmed"))
-            msg.append("\nNew Deaths: " + g.get("NewDeaths"))
-            msg.append("\nTotal Deaths: " + g.get("TotalDeaths"))
-            msg.append("\nNew Recovered: " + g.get("NewRecovered"))
-            msg.append("\nTotal Recovered: " + g.get("TotalRecovered"))
-            return ctx.embed {
-                setTitle("\uD83C\uDF0E Global Metrics")
-                setDescription(msg)
-                setFooter("Try it with a Country Code ie: bbcovid us")
-            }
-        }
-        val l = body.getJSONArray("Countries")
-        print(ctx.args[0])
-        l.forEach { t ->
-            val j = t as JSONObject
-            val c = j.getString("CountryCode")
-            if (c.toLowerCase() == ctx.args[0].toLowerCase()) {
-                val cMsg = StringBuilder()
-                cMsg.append("\nNew Confirmed: " + j.get("NewConfirmed"))
-                cMsg.append("\nTotal Confirmed: " + j.get("TotalConfirmed"))
-                cMsg.append("\nNew Deaths: " + j.get("NewDeaths"))
-                cMsg.append("\nTotal Deaths: " + j.get("TotalDeaths"))
-                cMsg.append("\nNew Recovered: " + j.get("NewRecovered"))
-                cMsg.append("\nTotal Recovered: " + j.get("TotalRecovered"))
-                cMsg.append("\nLast Update: " + j.get("Date"))
-                return ctx.embed {
-                    setTitle("${countryCodeToEmote(c)} $c Metrics")
-                    setDescription(cMsg)
-                }
 
-            }
+        val g = res.getJSONObject("Global")
+
+        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+            return sendGlobalStats(ctx, g)
         }
-        ctx.send("Wrong Country Code or missing data, Here are the global stats")
-        msg.append("\nNew Confirmed: " + g.get("NewConfirmed"))
-        msg.append("\nTotal Confirmed: " + g.get("TotalConfirmed"))
-        msg.append("\nNew Deaths: " + g.get("NewDeaths"))
-        msg.append("\nTotal Deaths: " + g.get("TotalDeaths"))
-        msg.append("\nNew Recovered: " + g.get("NewRecovered"))
-        msg.append("\nTotal Recovered: " + g.get("TotalRecovered"))
+
+        val countryCode = ctx.args[0].toLowerCase()
+        val j = res.getJSONArray("Countries")
+            .firstOrNull { (it as JSONObject).getString("CountryCode").toLowerCase() == countryCode }
+            ?: return sendGlobalStats(ctx, g, true)
+
+        j as JSONObject
+
+        val out = buildString {
+            appendln("New Confirmed: ${j["NewConfirmed"]}")
+            appendln("Total Confirmed: ${j["TotalConfirmed"]}")
+            appendln("New Deaths: ${j["NewDeaths"]}")
+            appendln("Total Deaths: ${j["TotalDeaths"]}")
+            appendln("New Recovered: ${j["NewRecovered"]}")
+            appendln("Total Recovered: ${j["TotalRecovered"]}")
+
+            val date = j.getString("Date")
+            val parse = OffsetDateTime.parse(date, utcParser)
+            val formatted = parse.format(dateFormatter)
+
+            appendln("Last Update: $formatted")
+        }
+
+        ctx.embed {
+            setTitle("${countryCodeToEmote(countryCode)} ${countryCode.toUpperCase()} Metrics")
+            setDescription(out)
+        }
+    }
+
+    fun sendGlobalStats(ctx: Context, data: JSONObject, wasInvalid: Boolean = false) {
+        val out = buildString {
+            if (wasInvalid) {
+                appendln("You provided an invalid country code, so here's global stats.\n")
+            }
+
+            appendln("New Confirmed: ${data["NewConfirmed"]}")
+            appendln("New Deaths: ${data["NewDeaths"]}")
+            appendln("Total Deaths: ${data["TotalDeaths"]}")
+            appendln("New Recovered: ${data["NewRecovered"]}")
+            appendln("Total Recovered: ${data["TotalRecovered"]}")
+        }
+
         return ctx.embed {
             setTitle("\uD83C\uDF0E Global Metrics")
-            setDescription(msg)
-            setFooter("Try it with a Country Code ie: bbcovid us")
+            setDescription(out)
+            setFooter("Try it with a country code, example: bbcovid us")
         }
+    }
+
+    companion object {
+        private val utcParser = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")
+        private val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MMM-yyyy")
     }
 
 }
