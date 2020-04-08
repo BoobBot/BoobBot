@@ -68,6 +68,21 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
         }
     }
 
+    fun retrieveSessionInfo(): SessionInfo? {
+        return try {
+            val url = URL("https://discordapp.com/api/gateway/bot")
+            val connection = url.openConnection()
+            connection.setRequestProperty("Authorization", "Bot $token")
+
+            val res = Utils.readAll(connection.getInputStream())
+            val json = JSONObject(res)
+
+            SessionInfo.from(json)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     companion object {
         fun create(token: String, shardCount: Int = -1): CustomShardManager {
             val jdaHttp = OkHttpClient.Builder()
