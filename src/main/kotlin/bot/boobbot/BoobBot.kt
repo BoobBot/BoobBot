@@ -70,7 +70,6 @@ class BoobBot {
         @JvmStatic
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
-            val noCaching = args.any { it == "--no-cache" }
             val shardCount = if (isDebug) 2 else config.shardCount
             val token = if (isDebug) config.debugToken else config.token
 
@@ -80,7 +79,7 @@ class BoobBot {
                         "${CustomShardManager.retrieveRemainingSessionCount(token)} logins"
             )
 
-            shardManager = CustomShardManager.create(token, shardCount, noCaching)
+            shardManager = CustomShardManager.create(token, shardCount)
             application = shardManager.retrieveApplicationInfo().complete()
             inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
 

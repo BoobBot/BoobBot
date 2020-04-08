@@ -68,7 +68,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     }
 
     companion object {
-        fun create(token: String, shardCount: Int = -1, noCache: Boolean = false): CustomShardManager {
+        fun create(token: String, shardCount: Int = -1): CustomShardManager {
             val jdaHttp = OkHttpClient.Builder()
                 .protocols(listOf(Protocol.HTTP_1_1))
                 .build()
@@ -82,6 +82,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
+                .setMemberCachePolicy(MemberCachePolicy.VOICE)
                 .setDisabledIntents(
                     GatewayIntent.GUILD_MESSAGE_TYPING,
                     GatewayIntent.DIRECT_MESSAGE_TYPING,
@@ -92,10 +93,6 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                     GatewayIntent.GUILD_EMOJIS
                 )
                 .setSessionController(SessionController())
-
-            if (noCache) {
-                sm.setMemberCachePolicy(MemberCachePolicy.VOICE)
-            }
 
             return CustomShardManager(token, sm.build())
         }
