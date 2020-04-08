@@ -9,7 +9,7 @@ import bot.boobbot.models.ModCommand
     description = "Boot an asshat from the server. <:p_:475801484282429450>",
     donorOnly = true,
     guildOnly = true,
-    aliases = ["gtfo", "fuckoff", "bye"],
+    aliases = ["gtfo", "fuckoff", "bye", "an"],
     category = Category.MOD
 )
 class Ban : ModCommand() {

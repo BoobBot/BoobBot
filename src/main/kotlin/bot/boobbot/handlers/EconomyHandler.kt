@@ -46,7 +46,7 @@ class EconomyHandler : EventListener {
     /**
      * @returns the URL to the image.
      */
-    fun fetchNsfwImage(category: String): CompletableFuture<String> {
+    private fun fetchNsfwImage(category: String): CompletableFuture<String> {
         return BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers)
             .submit()
             .thenApply { it.json() ?: throw IllegalStateException("Response is not JSON") }
