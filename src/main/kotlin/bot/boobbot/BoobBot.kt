@@ -35,7 +35,7 @@ class BoobBot {
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 
-        lateinit var application: ApplicationInfo
+        private lateinit var application: ApplicationInfo
         val selfId: Long
             get() = application.idLong
         lateinit var inviteUrl: String
@@ -103,7 +103,7 @@ class BoobBot {
             ApiServer().startServer()
         }
 
-        fun setupAudioSystem() {
+        private fun setupAudioSystem() {
             playerManager.registerSourceManager(PornHubAudioSourceManager())
             playerManager.registerSourceManager(RedTubeAudioSourceManager())
             playerManager.registerSourceManager(YoutubeAudioSourceManager())

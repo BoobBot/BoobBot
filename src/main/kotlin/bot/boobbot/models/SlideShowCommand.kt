@@ -20,7 +20,8 @@ abstract class SlideShowCommand : Command {
         "dick" to "penis",
         "gif" to "Gifs"
     )
-    private val allowedEndpoints = arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared")
+    private val allowedEndpoints =
+        arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "aly")
     private val endpointStr = allowedEndpoints.joinToString(", ")
 
     override fun execute(ctx: Context) {
@@ -41,7 +42,7 @@ abstract class SlideShowCommand : Command {
 
         BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint?count=20", headers).queue { res ->
             val json = res?.json()
-                ?: return@queue ctx.send("\uD83D\uDEAB oh? something broken af")
+                ?: return@queue ctx.send(Formats.error(" oh? something broken af"))
 
             val (first, images) = json.getJSONArray("urls").map { it.toString() }.separate()
 
@@ -56,7 +57,7 @@ abstract class SlideShowCommand : Command {
         }
     }
 
-    fun embedWith(num: Int, url: String, color: Color) = EmbedBuilder()
+    private fun embedWith(num: Int, url: String, color: Color) = EmbedBuilder()
         .apply {
             setColor(color)
             setDescription("$num of 20")

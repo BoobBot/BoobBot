@@ -2,6 +2,7 @@ package bot.boobbot.models
 
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
+import bot.boobbot.misc.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
@@ -29,7 +30,7 @@ interface VoiceCommand : Command {
         }
 
         if (ctx.voiceState!!.channel == null) {
-            ctx.send("Join a voicechannel, whore")
+            ctx.send(Formats.error("Join a voice-channel, whore"))
             return false
         }
 
@@ -40,13 +41,13 @@ interface VoiceCommand : Command {
                 ctx.audioManager.openAudioConnection(ctx.voiceState.channel)
                 true
             } else {
-                ctx.send(error)
+                ctx.send(Formats.error(error))
                 false
             }
         }
 
         if (ctx.voiceState.channel!!.idLong != ctx.audioManager.connectedChannel!!.idLong) {
-            ctx.send("You gotta be in my voicechannel, whore.")
+            ctx.send(Formats.error("You gotta be in my voice-channel, whore."))
             return false
         }
 
@@ -59,7 +60,7 @@ interface VoiceCommand : Command {
         if (channel.userLimit != 0 && channel.members.size >= channel.userLimit &&
             !self.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
         ) {
-            return "There's no room in your voicechannel, raise the user limit"
+            return "There's no room in your voice-channel, raise the user limit"
         }
 
         if (!self.hasPermission(channel, Permission.VOICE_CONNECT)) {
@@ -67,7 +68,7 @@ interface VoiceCommand : Command {
         }
 
         if (!self.hasPermission(channel, Permission.VOICE_SPEAK)) {
-            return "No slut, I can't play music if I can't speak in your voicechannel"
+            return "No slut, I can't play music if I can't speak in your voice-channel"
         }
 
         return null

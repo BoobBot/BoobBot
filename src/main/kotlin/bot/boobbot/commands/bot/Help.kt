@@ -62,10 +62,9 @@ class Help : Command {
         val categoryCommands = BoobBot.commands.values
             .filter { it.properties.category == category }
             .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
-
         val embed = builder(ctx)
-            .addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
-
+            .setDescription("Commands in **${category.name.toLowerCase()}**\n$categoryCommands")
+            //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
         send(ctx, embed, dm)
     }
 

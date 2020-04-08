@@ -15,35 +15,35 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val user = ctx.mentions.firstOrNull() ?: ctx.author
 
         if (user.idLong == BoobBot.selfId) {
-            return ctx.send("Don't you fucking touch me whore, i will end you.")
+            return ctx.send(Formats.error("Don't you fucking touch me whore, i will end you."))
         }
 
         if (user.isBot) {
-            return ctx.send("Bots can't appreciate $category, whore.")
+            return ctx.send(Formats.error("Bots can't appreciate $category, whore."))
         }
 
         val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
 
         if (!isUserReceivingNudes) {
-            return ctx.send("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `bbopt in`")
+            return ctx.send(Formats.error("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `bbopt in`"))
         }
 
         if (category == "dicks") {
             val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.id)
 
             if (isUserCockBlocked) {
-                return ctx.send("wtf, **${user.asTag}** is cockblocked. Whore.")
+                return ctx.send(Formats.error( "wtf, **${user.asTag}** is cockblocked. Whore."))
             }
         }
 
         val url = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint", headers)
             .await()?.json()?.getString("url")
-            ?: return ctx.send("wtf, api down?")
+            ?: return ctx.send(Formats.error("wtf, api down?"))
 
         ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
-            ?: return ctx.send("wtf, I can't DM **${user.asTag}**?")
+            ?: return ctx.send(Formats.error("wtf, I can't DM **${user.asTag}**?"))
 
-        ctx.send("Good job ${ctx.author.asMention}")
+        ctx.send(Formats.info("Good job ${ctx.author.asMention}"))
     }
 
 }
