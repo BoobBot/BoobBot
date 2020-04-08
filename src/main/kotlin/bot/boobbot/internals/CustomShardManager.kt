@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
-import net.dv8tion.jda.api.utils.ChunkingFilter
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.JDAImpl
@@ -83,12 +82,19 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
-                .setMemberCachePolicy(MemberCachePolicy.ONLINE)
-                .setChunkingFilter(ChunkingFilter.ALL)
+                .setDisabledIntents(
+                    GatewayIntent.GUILD_MESSAGE_TYPING,
+                    GatewayIntent.DIRECT_MESSAGE_TYPING,
+                    GatewayIntent.GUILD_MEMBERS,
+                    GatewayIntent.GUILD_PRESENCES,
+                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                    GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                    GatewayIntent.GUILD_EMOJIS
+                )
                 .setSessionController(SessionController())
 
             if (noCache) {
-                sm.setEnabledIntents(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES)
+                sm.setMemberCachePolicy(MemberCachePolicy.VOICE)
             }
 
             return CustomShardManager(token, sm.build())
