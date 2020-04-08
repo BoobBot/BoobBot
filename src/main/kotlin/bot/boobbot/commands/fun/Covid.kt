@@ -29,7 +29,7 @@ class Covid : AsyncCommand {
             return sendGlobalStats(ctx, g)
         }
 
-        val countryCode = ctx.args[0].toLowerCase()
+        val countryCode = ctx.args[0].toLowerCase().replace("uk", "gb")
         val j = res.getJSONArray("Countries")
             .firstOrNull { (it as JSONObject).getString("CountryCode").toLowerCase() == countryCode }
             ?: return sendGlobalStats(ctx, g, true)
