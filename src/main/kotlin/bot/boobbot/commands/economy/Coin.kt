@@ -12,7 +12,6 @@ import bot.boobbot.misc.Formats
 class Coin : Command {
 
     override fun execute(ctx: Context) {
-
         if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
             return ctx.send(Formats.error("Specify heads | Tails"))
         }
@@ -32,6 +31,7 @@ class Coin : Command {
         if (ctx.args[1].toInt() < 1 || ctx.args[1].toInt() > 500) {
             return ctx.send(Formats.error("Hey whore, Only bets of 1 - 500 are allowed"))
         }
+
         val u = BoobBot.database.getUser(ctx.author.id)
         if (ctx.args[1].toInt() > u.balance) {
             return ctx.send(Formats.error("Hey Whore, You don't have enough money to do this lul, you balance is $${u.balance}"))
@@ -53,4 +53,5 @@ class Coin : Command {
         ctx.send(res.second)
         ctx.send(Formats.info(res.first + msg))
     }
+
 }
