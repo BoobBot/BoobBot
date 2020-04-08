@@ -29,14 +29,10 @@ class EconomyHandler : EventListener {
     private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
+
+    private var threadCount = 0
     private val threadGroup = ThreadGroup("Eco Event Executor")
-    private val ecoExecutor: Executor = Executors.newCachedThreadPool { r: Runnable? ->
-        Thread(
-            threadGroup,
-            r,
-            "Eco Pool"
-        )
-    }
+    private val dropThreads = Executors.newCachedThreadPool { Thread(threadGroup, it, "Drop-Thread-${threadCount++}") }
 
     private fun random(lower: Int, upper: Int): Int {
         return random.nextInt(upper - lower) + lower
@@ -55,8 +51,7 @@ class EconomyHandler : EventListener {
 
     override fun onEvent(event: GenericEvent) {
         if (event is GuildMessageReceivedEvent) {
-            val ecoWorker = Runnable { onGuildMessageReceivedEvent(event) }
-            ecoExecutor.execute(ecoWorker)
+            onGuildMessageReceivedEvent(event)
         }
     }
 
@@ -115,41 +110,11 @@ class EconomyHandler : EventListener {
     }
 
     /** DROPS **/
-    private fun generateDrop(key: String): CompletableFuture<ByteArrayOutputStream> {
-        return fetchNsfwImage("ass")
-            .thenCompose { BoobBot.requestUtil.get(it).submit() }
-            .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
-            .thenApply { it.use(ImageIO::read) }
-            .thenApply {
-                val fontSize = it.width * 0.1 // 10% of width
-
-                val graphics = it.createGraphics().apply {
-                    font = Font("Whitney", Font.BOLD, fontSize.toInt())
-                }
-
-                val metrics = graphics.fontMetrics
-                val bounds = metrics.getStringBounds(key, graphics)
-                val backgroundColor = Color(0, 0, 0)
-                val fontColor = Color(255, 255, 255)
-
-                graphics.color = backgroundColor
-                graphics.fillRect(0, 0, bounds.width.toInt() + 20, bounds.height.toInt() + 5)
-                graphics.color = fontColor
-                graphics.drawString(key, 10, metrics.ascent)
-
-                graphics.dispose()
-                it
-            }
-            .thenApply {
-                val stream = ByteArrayOutputStream()
-                ImageIO.setUseCache(false)
-                ImageIO.write(it, "png", stream)
-
-                stream
-            }
+    private fun doDrop(event: GuildMessageReceivedEvent) {
+        dropThreads.execute { spawnDrop(event) }
     }
 
-    private fun doDrop(event: GuildMessageReceivedEvent) {
+    private fun spawnDrop(event: GuildMessageReceivedEvent) {
         val dropKey = (0..3).map { CHARS.random() }.joinToString("")
 
         generateDrop(dropKey)
@@ -185,7 +150,40 @@ class EconomyHandler : EventListener {
                     }
                     event.channel.purgeMessages(*spam.toTypedArray())
                 }
+            }
+    }
 
+    private fun generateDrop(key: String): CompletableFuture<ByteArrayOutputStream> {
+        return fetchNsfwImage("ass")
+            .thenCompose { BoobBot.requestUtil.get(it).submit() }
+            .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
+            .thenApply { it.use(ImageIO::read) }
+            .thenApply {
+                val fontSize = it.width * 0.1 // 10% of width
+
+                val graphics = it.createGraphics().apply {
+                    font = Font("Whitney", Font.BOLD, fontSize.toInt())
+                }
+
+                val metrics = graphics.fontMetrics
+                val bounds = metrics.getStringBounds(key, graphics)
+                val backgroundColor = Color(0, 0, 0)
+                val fontColor = Color(255, 255, 255)
+
+                graphics.color = backgroundColor
+                graphics.fillRect(0, 0, bounds.width.toInt() + 20, bounds.height.toInt() + 5)
+                graphics.color = fontColor
+                graphics.drawString(key, 10, metrics.ascent)
+
+                graphics.dispose()
+                it
+            }
+            .thenApply {
+                val stream = ByteArrayOutputStream()
+                ImageIO.setUseCache(false)
+                ImageIO.write(it, "png", stream)
+
+                stream
             }
     }
 
@@ -207,7 +205,6 @@ class EconomyHandler : EventListener {
     private fun isSpam(message: Message): Boolean {
         return message.contentRaw.toLowerCase().startsWith(">g")
     }
-
 
     companion object {
         private val CHARS = listOf(
