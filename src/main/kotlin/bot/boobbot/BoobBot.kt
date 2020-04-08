@@ -71,7 +71,7 @@ class BoobBot {
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
             val noCaching = args.any { it == "--no-cache" }
-            val shardCount = if (isDebug) 1 else config.shardCount
+            val shardCount = if (isDebug) 2 else config.shardCount
             val token = if (isDebug) config.debugToken else config.token
 
             log.info("--- BoobBot (Revision ${Utils.version}) ---")

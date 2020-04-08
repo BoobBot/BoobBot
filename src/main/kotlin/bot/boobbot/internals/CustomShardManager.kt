@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.utils.ChunkingFilter
+import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.JDAImpl
 import net.dv8tion.jda.internal.entities.UserImpl
@@ -81,6 +83,8 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
+                .setMemberCachePolicy(MemberCachePolicy.ONLINE)
+                .setChunkingFilter(ChunkingFilter.ALL)
                 .setSessionController(SessionController())
 
             if (noCache) {
