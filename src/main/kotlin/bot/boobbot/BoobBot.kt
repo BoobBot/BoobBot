@@ -29,6 +29,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 
 class BoobBot {
     companion object {
@@ -61,7 +62,7 @@ class BoobBot {
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
-        val scheduler = Executors.newSingleThreadScheduledExecutor()!!
+        val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         val metrics = Metrics.create()!!
         val pApi = PatreonAPI(config.patreonApiKey)
 

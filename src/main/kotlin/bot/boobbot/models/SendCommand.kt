@@ -32,7 +32,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.id)
 
             if (isUserCockBlocked) {
-                return ctx.send(Formats.error( "wtf, **${user.asTag}** is cockblocked. Whore."))
+                return ctx.send(Formats.error("wtf, **${user.asTag}** is cockblocked. Whore."))
             }
         }
 

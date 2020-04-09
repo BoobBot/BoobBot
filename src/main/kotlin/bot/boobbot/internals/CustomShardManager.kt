@@ -25,7 +25,6 @@ import org.json.JSONObject
 import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
 
 class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm {
     var guildCount = 0L

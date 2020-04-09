@@ -64,7 +64,7 @@ class Help : Command {
             .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
         val embed = builder(ctx)
             .setDescription("Commands in **${category.name.toLowerCase()}**\n$categoryCommands")
-            //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
+        //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
         send(ctx, embed, dm)
     }
 

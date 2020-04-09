@@ -16,7 +16,6 @@ import java.awt.Font
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO

@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
     description = "Disconnects bot",
+    aliases = ["stop", "leave"],
     category = Category.AUDIO,
     guildOnly = true
 )

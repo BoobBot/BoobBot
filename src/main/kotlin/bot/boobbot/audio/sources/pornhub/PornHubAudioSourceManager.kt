@@ -32,7 +32,9 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
     override fun getSourceName() = "pornhub"
 
     override fun loadItem(manager: DefaultAudioPlayerManager, reference: AudioReference): AudioItem? {
-        if (!VIDEO_REGEX.matcher(reference.identifier).matches() && !reference.identifier.startsWith(VIDEO_SEARCH_PREFIX))
+        if (!VIDEO_REGEX.matcher(reference.identifier)
+                .matches() && !reference.identifier.startsWith(VIDEO_SEARCH_PREFIX)
+        )
             return null
 
         if (reference.identifier.startsWith(VIDEO_SEARCH_PREFIX)) {

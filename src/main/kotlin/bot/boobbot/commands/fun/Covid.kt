@@ -8,8 +8,6 @@ import bot.boobbot.flight.Context
 import bot.boobbot.misc.Formats.countryCodeToEmote
 import bot.boobbot.misc.json
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

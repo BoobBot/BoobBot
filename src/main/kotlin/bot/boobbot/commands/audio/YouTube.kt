@@ -29,7 +29,7 @@ class YouTube : VoiceCommand {
             return ctx.send(Formats.error("Gotta specify a search query, whore"))
         }
 
-        val player = ctx.audioPlayer!!
+        val player = ctx.audioPlayer
         val query = "ytsearch:${ctx.args.joinToString(" ")}"
 
         playerManager.loadItem(query, AudioLoader(player, ctx))

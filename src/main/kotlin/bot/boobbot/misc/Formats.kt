@@ -18,6 +18,7 @@ object Formats {
     const val MAGIC_EMOTE = "✨"
     const val INFO_EMOTE = "<:info:486945488080338944>"
     const val PATREON_EMOTE = "<:p_:475801484282429450>"
+
     //const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
     val LING_MSG = String.format(
         "\n%s **Join the Server**: [https://invite.boob.bot](https://invite.boob.bot)"
@@ -236,7 +237,7 @@ object Formats {
         }
     }
 
-    fun getRemainingCoolDown(x: Long) :String{
+    fun getRemainingCoolDown(x: Long): String {
         val y = 60 * 60 * 1000
         val h = x / y
         val m = (x - (h * y)) / (y / 60)

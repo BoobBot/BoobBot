@@ -16,7 +16,7 @@ class Coin : Command {
             return ctx.send(Formats.error("Specify heads | Tails"))
         }
 
-        if (!listOf("heads", "tails").contains(ctx.args[0].toLowerCase())){
+        if (!listOf("heads", "tails").contains(ctx.args[0].toLowerCase())) {
             return ctx.send(Formats.error("Hey whore, ${ctx.args[0]} is not heads or tails, are you stoned?"))
         }
 

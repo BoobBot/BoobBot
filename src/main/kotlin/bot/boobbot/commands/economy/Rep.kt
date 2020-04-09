@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 
-@CommandProperties(aliases = ["+"],description = "Give rep.", category = Category.ECONOMY)
+@CommandProperties(aliases = ["+"], description = "Give rep.", category = Category.ECONOMY)
 class Rep : Command {
 
     override fun execute(ctx: Context) {

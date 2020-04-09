@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 class EventWaiter : ListenerAdapter() {
 
     private var totalWaiters = 0
+
     //    private val pendingEvents = hashSetOf<WaitingEvent>()
     private val pendingEvents = ConcurrentHashMap.newKeySet<WaitingEvent>()
 

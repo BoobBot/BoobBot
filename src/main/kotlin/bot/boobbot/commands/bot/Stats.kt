@@ -36,7 +36,8 @@ class Stats : AsyncCommand {
         val comsUsed =
             if (metrics.has("command")) metrics.getJSONObject("command").getInt("Total Events") else 0
         val comsPerSec =
-            if (metrics.has("command")) metrics.getJSONObject("command").getDouble("Events per Second (last Minute)") else 0.0
+            if (metrics.has("command")) metrics.getJSONObject("command")
+                .getDouble("Events per Second (last Minute)") else 0.0
 
         val guildJoin =
             if (metrics.has("GuildJoin")) metrics.getJSONObject("GuildJoin").getInt("Total Events") else 0
