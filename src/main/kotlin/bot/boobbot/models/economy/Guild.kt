@@ -1,5 +1,7 @@
 package bot.boobbot.models.economy
 
+import bot.boobbot.BoobBot
+
 
 data class Guild(
     val _id: String,
@@ -8,6 +10,9 @@ data class Guild(
     var ignoredChannels: MutableList<String>,
     var modMute: MutableList<String>
 ) {
+
+    fun save() = BoobBot.database.setGuild(this)
+
     companion object {
         fun new(guildId: String): Guild {
             return Guild(

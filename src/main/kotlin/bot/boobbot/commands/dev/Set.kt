@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon
 
 
-@CommandProperties(description = "Settings", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = " bot Settings", category = Category.DEV, developerOnly = true)
 class Set : Command {
 
     var isCustomGameSet = false
@@ -112,7 +112,7 @@ class Set : Command {
         }
     }
 
-    fun gameTypeByString(s: String): Activity.ActivityType {
+    private fun gameTypeByString(s: String): Activity.ActivityType {
         val t = s.toUpperCase()
 
         if (t == "PLAYING") { // TABLEFLIP
