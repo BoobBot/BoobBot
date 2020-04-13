@@ -137,7 +137,9 @@ class MessageHandler : ListenerAdapter() {
         }
 
         try {
-            Utils.logCommand(event.message)
+            if (BoobBot.logCom) {
+                Utils.logCommand(event.message)
+            }
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
             val user = BoobBot.database.getUser(event.author.id)

@@ -33,6 +33,7 @@ import java.util.concurrent.ScheduledExecutorService
 
 class BoobBot {
     companion object {
+
         val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
         val startTime = System.currentTimeMillis()
 
@@ -42,6 +43,9 @@ class BoobBot {
         lateinit var inviteUrl: String
 
         var isDebug = false
+            private set
+
+        var logCom = false
             private set
 
         lateinit var shardManager: CustomShardManager
@@ -71,6 +75,7 @@ class BoobBot {
         @JvmStatic
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
+            logCom = args.any { it == "--comlog" }
             val shardCount = if (isDebug) 1 else config.shardCount
             val token = if (isDebug) config.debugToken else config.token
 
