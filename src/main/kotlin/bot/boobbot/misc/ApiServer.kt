@@ -88,9 +88,11 @@ class ApiServer {
     fun startServer() {
         embeddedServer(Netty, host = "127.0.0.1", port = 8769) {
             install(AutoHeadResponse)
-            install(CallLogging) {
-                level = Level.INFO
-                filter { it.request.path().startsWith("/") }
+            if (BoobBot.logCom) {
+                install(CallLogging) {
+                    level = Level.INFO
+                    filter { it.request.path().startsWith("/") }
+                }
             }
             // install cors broke? lets do this
             install(DefaultHeaders) {
@@ -119,9 +121,10 @@ class ApiServer {
                 intercept(ApplicationCallPipeline.Call) {
                     BoobBot.metrics.record(Metrics.happened("request ${call.request.path()}"))
                     BoobBot.metrics.record(Metrics.happened("requests"))
-
-                    TimerUtil.inlineSuspended("request:${call.request.path()}") {
-                        proceed()
+                    if (BoobBot.logCom) {
+                        TimerUtil.inlineSuspended("request:${call.request.path()}") {
+                            proceed()
+                        }
                     }
                 }
 
@@ -130,9 +133,9 @@ class ApiServer {
                 }
 
                 get("/stats") {
-                    val stats = TimerUtil.inline("getStats") { getStats() }
+                    //val stats = TimerUtil.inline("getStats") { getStats() }
                     call.respondText(
-                        "{\"stats\": $stats}",
+                        "{\"stats\": ${getStats()}}",
                         ContentType.Application.Json
                     )
                 }
