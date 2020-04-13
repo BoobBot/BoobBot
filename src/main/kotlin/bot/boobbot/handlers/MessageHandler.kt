@@ -20,6 +20,15 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.channelType.isGuild) {
+
+            if (event.message.mentionsEveryone()) {
+                BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
+            }
+
+            if (!event.textChannel.canTalk()) {
+                return
+            }
+
             val g = BoobBot.database.getGuild(event.guild.id)
 
             if (g.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
@@ -30,13 +39,6 @@ class MessageHandler : ListenerAdapter() {
                 return event.message.delete().reason("mod mute").queue()
             }
 
-            if (event.message.mentionsEveryone()) {
-                BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
-            }
-
-            if (!event.textChannel.canTalk()) {
-                return
-            }
         }
 
         val messageContent = event.message.contentRaw
