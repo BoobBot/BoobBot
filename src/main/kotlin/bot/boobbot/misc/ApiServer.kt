@@ -2,6 +2,7 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
+import bot.boobbot.models.Config
 import com.google.gson.Gson
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
@@ -18,17 +19,13 @@ import io.ktor.gson.gson
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.request.path
-import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
-import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
-import io.ktor.sessions.sessions
+import io.ktor.sessions.*
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.hex
 import net.dv8tion.jda.api.JDA
@@ -43,7 +40,7 @@ import kotlin.math.max
 
 class ApiServer {
 
-    val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
+    private val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
         name = "discord",
         authorizeUrl = BoobBot.config.discordAuthUrl, // OAuth authorization endpoint
         accessTokenUrl = BoobBot.config.discordTokenUrl, // OAuth token endpoint
@@ -180,18 +177,23 @@ class ApiServer {
                 authenticate("discord") {
                     get("/oauth") {
                         val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
-
                         val data = HttpClient(Apache).get<String>("https://discordapp.com/api/users/@me") {
                             header("Authorization", "Bearer ${principal!!.accessToken}")
                         }
-
                         val s = Gson().fromJson(data, UserSession::class.java)
-                        call.respond(s)
+                        call.sessions.set(s)
+                        call.respondRedirect("/admin")
                     }
+                }
 
-                    get("/test"){
-                        call.respond(call.sessions)
+                get("/admin") {
+                    val s = call.sessions.get<UserSession>() ?: return@get call.respondRedirect("/oauth")
+
+                    if (!Config.owners.contains(s.id.toLong())) {
+                        error("401")
                     }
+                    call.respondText("{\"user\": ${Gson().toJson(s)}}", ContentType.Application.Json)
+
                 }
 
                 get("/stats") {
@@ -202,7 +204,10 @@ class ApiServer {
                 }
 
                 get("/metrics") {
-                    call.respondText("{\"metrics\": ${BoobBot.metrics.render().get()}}", ContentType.Application.Json)
+                    call.respondText(
+                        "{\"metrics\": ${BoobBot.metrics.render().get()}}",
+                        ContentType.Application.Json
+                    )
                 }
 
                 get("/health") {
