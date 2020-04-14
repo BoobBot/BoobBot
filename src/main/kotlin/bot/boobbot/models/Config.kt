@@ -21,7 +21,13 @@ class Config(
     val sentryDsn: String,
     val patreonApiKey: String,
     val mongoDbUrl: String,
-    val shardIdentifyDelay: Long
+    val shardIdentifyDelay: Long,
+    val discordTokenUrl: String,
+    val discordAuthUrl: String,
+    val discordRevocationUrl: String,
+    val discordClientSecret: String,
+    val RedirectUrl: String,
+    val SessionKey: String
 ) {
 
     companion object {
@@ -54,7 +60,13 @@ class Config(
                 dotenv.get("SENTRY_DSN", ""),
                 dotenv.get("PATREON_KEY", ""),
                 dotenv.get("MONGO_DB_URL", ""),
-                dotenv.get("SHARD_IDENTIFY_DELAY", "5000").toLong()
+                dotenv.get("SHARD_IDENTIFY_DELAY", "5000").toLong(),
+                dotenv.get("DISCORD_TOKEN_URL","https://discordapp.com/api/oauth2/token"),
+                dotenv.get("DISCORD_AUTH_URL","https://discordapp.com/api/oauth2/authorize"),
+                dotenv.get("DISCORD_REVOKE_URL", "https://discordapp.com/api/oauth2/token/revoke"),
+                dotenv.get("DISCORD_CLIENT_SECRET",""),
+                dotenv.get("OAUTH_REDIRECT_URL","http://localhost:8769/oauth"),
+                dotenv.get("SESSION_KEY", "")
             )
         }
     }

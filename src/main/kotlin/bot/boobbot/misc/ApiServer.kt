@@ -8,16 +8,29 @@ import de.mxro.metrics.jre.Metrics
 import io.ktor.application.ApplicationCallPipeline
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.features.*
 import io.ktor.gson.gson
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.request.path
+import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.sessions.SessionTransportTransformerMessageAuthentication
+import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.sessions.sessions
+import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.hex
 import net.dv8tion.jda.api.JDA
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONArray
@@ -29,6 +42,19 @@ import kotlin.math.max
 
 
 class ApiServer {
+
+    val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
+        name = "discord",
+        authorizeUrl = BoobBot.config.discordAuthUrl, // OAuth authorization endpoint
+        accessTokenUrl = BoobBot.config.discordTokenUrl, // OAuth token endpoint
+        clientId = if (BoobBot.isDebug) "285480424904327179" else BoobBot.selfId.toString(),
+        clientSecret = BoobBot.config.discordClientSecret,
+        // basic auth implementation is not "OAuth style" so falling back to post body
+        accessTokenRequiresBasicAuth = false,
+        requestMethod = HttpMethod.Post, // must POST to token endpoint
+        defaultScopes = listOf("email", "identify") // what scopes to explicitly request
+    )
+
 
     private fun getStats(): JSONObject {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
@@ -85,8 +111,27 @@ class ApiServer {
         }
     }
 
+    class UserSession(val id: String, val avatar: String, val username: String, val discriminator: String)
+
+    @KtorExperimentalAPI
     fun startServer() {
         embeddedServer(Netty, host = "127.0.0.1", port = 8769) {
+
+            install(Sessions) {
+                cookie<UserSession>("SessionId") {
+                    val secretSignKey = hex(BoobBot.config.SessionKey)
+                    transform(SessionTransportTransformerMessageAuthentication(secretSignKey))
+                }
+            }
+
+            install(Authentication) {
+                oauth("discord") {
+                    client = HttpClient(Apache)
+                    providerLookup = { clientSettings }
+                    urlProvider = { BoobBot.config.RedirectUrl }
+                }
+            }
+
             install(AutoHeadResponse)
             if (BoobBot.logCom) {
                 install(CallLogging) {
@@ -119,9 +164,9 @@ class ApiServer {
             }
             routing {
                 intercept(ApplicationCallPipeline.Call) {
-                    BoobBot.metrics.record(Metrics.happened("request ${call.request.path()}"))
-                    BoobBot.metrics.record(Metrics.happened("requests"))
+                    BoobBot.metrics.record(Metrics.happened("api requests"))
                     if (BoobBot.logCom) {
+                        BoobBot.metrics.record(Metrics.happened("request ${call.request.path()}"))
                         TimerUtil.inlineSuspended("request:${call.request.path()}") {
                             proceed()
                         }
@@ -132,8 +177,24 @@ class ApiServer {
                     call.respondRedirect("https://boob.bot", true)
                 }
 
+                authenticate("discord") {
+                    get("/oauth") {
+                        val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
+
+                        val data = HttpClient(Apache).get<String>("https://discordapp.com/api/users/@me") {
+                            header("Authorization", "Bearer ${principal!!.accessToken}")
+                        }
+
+                        val s = Gson().fromJson(data, UserSession::class.java)
+                        call.respond(s)
+                    }
+
+                    get("/test"){
+                        call.respond(call.sessions)
+                    }
+                }
+
                 get("/stats") {
-                    //val stats = TimerUtil.inline("getStats") { getStats() }
                     call.respondText(
                         "{\"stats\": ${getStats()}}",
                         ContentType.Application.Json
@@ -145,8 +206,9 @@ class ApiServer {
                 }
 
                 get("/health") {
+                    val health = if (BoobBot.shardManager.allShardsConnected) "ok" else "warn"
                     call.respondText(
-                        "{\"health\": \"ok\", \"ping\": ${BoobBot.shardManager.averageGatewayPing}}",
+                        "{\"health\": $health, \"ping\": ${BoobBot.shardManager.averageGatewayPing}}",
                         ContentType.Application.Json
                     )
                 }
