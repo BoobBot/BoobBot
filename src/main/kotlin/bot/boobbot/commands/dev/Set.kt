@@ -96,22 +96,6 @@ class Set : Command {
         }
     }
 
-    @SubCommand
-    fun icons(ctx: Context) {
-        BoobBot.requestUtil.get(ctx.args[0]).queue {
-            val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch image")
-            val icon = Icon.from(image)
-
-            BoobBot.shardManager.home?.manager?.setIcon(icon)?.queue()
-            ctx.jda.selfUser.manager.setAvatar(icon).queue(
-                { ctx.send(Formats.info("Yes daddy, icons set")) },
-                { ctx.send(Formats.error(" Failed to set avatar")) }
-            )
-            BoobBot.log.info("Setting New icons")
-
-        }
-    }
-
     private fun gameTypeByString(s: String): Activity.ActivityType {
         val t = s.toUpperCase()
 

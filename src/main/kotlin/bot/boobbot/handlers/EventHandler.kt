@@ -66,10 +66,9 @@ class EventHandler : ListenerAdapter() {
 
         safeSend(shardHook) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
-            setDescription("Ping: ${event.jda.gatewayPing}ms") // Don't need status as it's included in title
+            setDescription("Ping: ${event.jda.gatewayPing}ms")
         }
 
-        // ReadyCount is a bad way of tracking, because Shards can emit ready multiple times.
         if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
             BoobBot.isReady = true
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))

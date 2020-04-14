@@ -2,7 +2,6 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.User
 import okhttp3.Headers
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -47,30 +46,16 @@ class Utils {
                     .bufferedReader()
                     .use { it.readText() }
             } else {
-                (BoobBot::class.java.classLoader.getResourceAsStream("arrays.json"))
+                (BoobBot::class.java.classLoader.getResourceAsStream("arrays.json"))!!
                     .bufferedReader()
                     .use { it.readText() }
             }
         )
 
-        /** LEGACY */
-        fun hasRole(user: User, roleId: Long): Boolean {
-            return BoobBot.shardManager.home?.getMember(user)?.roles?.any { it.idLong == roleId } ?: false
-        }
-
-        fun isStreamer(user: User) = hasRole(user, 618266918754713610L)
-        fun isBooster(user: User) = hasRole(user, 585533009797578759L)
-        fun isDonor(user: User) = hasRole(user, 528615837305929748L)
-        fun isDonorPlus(user: User) = hasRole(user, 528615882709008430L)
 
         fun checkDonor(event: Message): Boolean {
-            //val legacyChecks =
-            //isDonor(event.author) || (event.channelType.isGuild && isDonorPlus(event.guild.owner!!.user))
-
-            // getDonorType automatically checks developer status.
-            return /*legacyChecks
-                    ||*/ BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
-                    || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
+            return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
+            || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
         }
 
         fun getRandomFunString(key: String): String {

@@ -10,7 +10,6 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
-import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
@@ -38,9 +37,6 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
 
     val onlineShards: List<JDA>
         get() = this.shards.filter { it.status == JDA.Status.CONNECTED }
-
-    val home: Guild?
-        get() = this.getGuildById(BoobBot.config.homeGuild)
 
     val anonymousUser = UserImpl(0L, sm.shards.first() as JDAImpl)
         .setAvatarId(null)

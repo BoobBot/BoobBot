@@ -17,6 +17,7 @@ import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.mxro.metrics.jre.Metrics
+import io.ktor.util.KtorExperimentalAPI
 import io.sentry.connection.ConnectionException
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
@@ -71,6 +72,7 @@ class BoobBot {
         val pApi = PatreonAPI(config.patreonApiKey)
 
 
+        @KtorExperimentalAPI
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {

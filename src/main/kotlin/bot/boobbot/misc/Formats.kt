@@ -162,7 +162,6 @@ object Formats {
 
     val readyFormat by lazy {
         val shardManager = BoobBot.shardManager
-        val home = shardManager.home
         val jda = shardManager.shards[0]
 
         String.format(
@@ -171,29 +170,13 @@ object Formats {
                     + "JDA Version: %s\n"
                     + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
                     + "Logged in as: %s (%s)\n"
-                    + "Guilds: %d\n"
-                    + "Shards: %d\n"
-                    + "Users: %d\n"
-                    + "Bots: %d\n"
-                    + "Total Users: %d\n"
-                    + "Home Guild: %s\n"
-                    + "Users: %d\n"
-                    + "Bots: %d\n"
-                    + "Total Users: %d",
+                    + "Shards: %d\n",
             BOOT_BANNER,
             BoobBot.inviteUrl,
             JDAInfo.VERSION,
             jda.selfUser.name,
             jda.selfUser.id,
-            shardManager.guildCache.size(),
-            shardManager.shardsTotal,
-            shardManager.users.filter { !it.isBot }.size,
-            shardManager.users.filter { it.isBot }.size,
-            shardManager.userCache.size(),
-            home?.name,
-            home?.members?.filter { !it.user.isBot }?.size,
-            home?.members?.filter { it.user.isBot }?.size,
-            home?.memberCache?.size()
+            shardManager.shardsTotal
         )
     }
 

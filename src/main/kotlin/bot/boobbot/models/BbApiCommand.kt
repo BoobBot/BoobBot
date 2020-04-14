@@ -21,7 +21,7 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         ctx.embed {
-            setTitle("${Formats.LEWD_EMOTE} Click me!", "https://discord.gg/boobbot")
+            setTitle("${Formats.LEWD_EMOTE} Click me!", link)
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(link)
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
