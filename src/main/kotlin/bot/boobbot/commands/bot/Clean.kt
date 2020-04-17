@@ -22,13 +22,11 @@ class Clean : Command {
     private val DISCORD_EPOCH = 1420070400000L
     private val TIMESTAMP_OFFSET = 22
 
-    fun parseSnowflake(input: String): Long {
+    private fun parseSnowflake(input: String): Long {
         try {
             return if (!input.startsWith("-"))
-            // if not negative -> parse unsigned
                 java.lang.Long.parseUnsignedLong(input)
             else
-            // if negative -> parse normal
                 java.lang.Long.parseLong(input)
         } catch (ex: NumberFormatException) {
             throw NumberFormatException(
@@ -72,20 +70,15 @@ class Clean : Command {
             return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_MESSAGES` permission needed to do this")
         }
 
-        ctx.message.delete()
         ctx.channel.history.retrievePast(100).queue { ms ->
             val spam = ms.filter { !twoWeeks(it) && isSpam(it, ctx.guild!!.id) }
 
-            if (spam.isEmpty()) {
-                return@queue
+            if (spam.isNotEmpty() && spam.size <= 2) {
+                spam.forEach { msg -> msg.delete().queue() }
+            } else if (spam.isNotEmpty()) {
+                ctx.channel.purgeMessages(*spam.toTypedArray())
             }
 
-            if (spam.size <= 2) {
-                spam[0].delete()
-                return@queue
-            }
-
-            ctx.channel.purgeMessages(*spam.toTypedArray())
             ctx.channel.sendMessage(Formats.info("I deleted ${spam.size} messages"))
                 .queue { m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }
         }
