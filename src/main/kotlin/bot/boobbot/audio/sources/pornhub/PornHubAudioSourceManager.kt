@@ -186,7 +186,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     companion object {
         private val VIDEO_REGEX =
-            Pattern.compile("^https?://www\\.pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
+            Pattern.compile("^https?://(?:\\w+\\.)?pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
         private val VIDEO_INFO_REGEX = Pattern.compile("var flashvars_\\d{7,9} = (\\{.+})")
         private const val VIDEO_SEARCH_PREFIX = "phsearch:"
     }
