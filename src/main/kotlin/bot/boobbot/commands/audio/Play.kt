@@ -19,14 +19,14 @@ import bot.boobbot.models.VoiceCommand
 class Play : VoiceCommand {
 
     override fun execute(ctx: Context) {
+        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+            return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
+        }
+
         val shouldPlay = performVoiceChecks(ctx)
 
         if (!shouldPlay) {
             return
-        }
-
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
-            return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
         }
 
         val player = ctx.audioPlayer
