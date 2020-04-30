@@ -4,9 +4,11 @@ import bot.boobbot.BoobBot
 
 object Utils {
 
-    //private val assignmentPattern = "(var.+?mediastring[^<]+)".toPattern()
     //private val assignmentPattern = "(var.+?media_0[^<]+)".toPattern()
-    private val assignmentPattern = "(var.+?media_0.+)".toPattern()
+    //private val assignmentPattern = "(var.+?media_0.+)".toPattern()
+
+    private val formatPattern = "(var\\s+(?:media|quality)_.+)".toPattern()
+    private val mediaStringPattern = "(var.+?mediastring[^<]+)".toPattern()
     private val cleanRegex = "/\\*(?:(?!\\*/).)*?\\*/".toRegex()
     private val cleanVarRegex = "var\\s+".toRegex()
 
@@ -27,20 +29,28 @@ object Utils {
             vars[name] = parseSegment(value, vars)
         }
 
-        /// media_0, media_1, media_2, media_3, media_4
-        return vars["media_0"] ?: throw IllegalStateException("Missing media_0 var")
-        // mediastring
+        val formats = vars.filter { it.key.startsWith("media") || it.key.startsWith("quality_") }
+
+        return formats["quality_720p"]
+            ?: formats["quality_480p"]
+            ?: formats["quality_240p"]
+            ?: throw IllegalStateException("No formats detected")
     }
 
     fun extractAssignments(script: String): List<String> {
-        val matcher = assignmentPattern.matcher(script)
+        val formats = formatPattern.matcher(script)
 
-        if (!matcher.find()) {
-            BoobBot.log.error("No assignments found within script\n{}", script)
-            throw IllegalStateException("No assignments found within the script!")
+        if (formats.find()) {
+            return formats.group(1).split(';')
         }
 
-        return matcher.group(1).split(';')
+        val assignments = mediaStringPattern.matcher(script)
+
+        if (!assignments.find()) {
+            throw IllegalStateException("No assignments or formats found within the script!")
+        }
+
+        return assignments.group(1).split(';')
     }
 
     fun parseSegment(segment: String, v: HashMap<String, String>): String {
