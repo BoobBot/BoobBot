@@ -1,6 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.misc.BoundedThreadPool
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.json
 import bot.boobbot.models.economy.User
@@ -29,9 +30,7 @@ class EconomyHandler : EventListener {
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
 
-    private var threadCount = 0
-    private val threadGroup = ThreadGroup("Eco Event Executor")
-    private val dropThreads = Executors.newCachedThreadPool { Thread(threadGroup, it, "Drop-Thread-${threadCount++}") }
+    private val dropThreads = BoundedThreadPool("DropGen", 20, TimeUnit.MILLISECONDS.toMillis(1), 500)
 
     private fun random(lower: Int, upper: Int): Int {
         return random.nextInt(upper - lower) + lower
