@@ -118,7 +118,7 @@ class EconomyHandler : EventListener {
         generateDrop(dropKey)
             .thenCompose {
                 event.channel.sendMessage("Look an ass, grab it! Use `>grab <key>` to grab it!")
-                    .addFile(it.toByteArray(), "drop.png")
+                    .addFile(it, "drop.png")
                     .submit()
             }
             .thenCombine(await(event.channel.idLong, dropKey)) { prompt, grabber ->
@@ -151,7 +151,7 @@ class EconomyHandler : EventListener {
             }
     }
 
-    private fun generateDrop(key: String): CompletableFuture<ByteArrayOutputStream> {
+    private fun generateDrop(key: String): CompletableFuture<ByteArray> {
         return fetchNsfwImage("ass")
             .thenCompose { BoobBot.requestUtil.get(it).submit() }
             .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
@@ -177,11 +177,12 @@ class EconomyHandler : EventListener {
                 it
             }
             .thenApply {
-                val stream = ByteArrayOutputStream()
-                ImageIO.setUseCache(false)
-                ImageIO.write(it, "png", stream)
+                ByteArrayOutputStream().use { s ->
+                    ImageIO.setUseCache(false)
+                    ImageIO.write(it, "png", s)
 
-                stream
+                    s.toByteArray()
+                }
             }
     }
 
