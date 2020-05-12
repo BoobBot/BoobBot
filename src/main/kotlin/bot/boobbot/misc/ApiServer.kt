@@ -39,7 +39,6 @@ import kotlin.math.max
 
 
 class ApiServer {
-
     private val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
         name = "discord",
         authorizeUrl = BoobBot.config.discordAuthUrl, // OAuth authorization endpoint
@@ -51,7 +50,6 @@ class ApiServer {
         requestMethod = HttpMethod.Post, // must POST to token endpoint
         defaultScopes = listOf("email", "identify") // what scopes to explicitly request
     )
-
 
     private fun getStats(): JSONObject {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
@@ -213,7 +211,7 @@ class ApiServer {
                 get("/health") {
                     val health = if (BoobBot.shardManager.allShardsConnected) "ok" else "warn"
                     call.respondText(
-                        "{\"health\": $health, \"ping\": ${BoobBot.shardManager.averageGatewayPing}}",
+                        "{\"health\": \"$health\", \"ping\": ${BoobBot.shardManager.averageGatewayPing.toInt()}}",
                         ContentType.Application.Json
                     )
                 }
