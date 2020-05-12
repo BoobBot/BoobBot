@@ -26,10 +26,12 @@ import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.requests.RestAction
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.ScheduledExecutorService
 
 class BoobBot {
@@ -105,7 +107,9 @@ class BoobBot {
                         SocketException::class.java,
                         SocketTimeoutException::class.java,
                         IOException::class.java,
-                        JsonParseException::class.java
+                        JsonParseException::class.java,
+                        RejectedExecutionException::class.java,
+                        ConnectException::class.java
                     )
             }
 
