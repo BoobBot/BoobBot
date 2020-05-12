@@ -23,7 +23,7 @@ class Disconnect : VoiceCommand {
             ctx.userCan(Permission.MESSAGE_MANAGE)
             || Config.owners.contains(ctx.author.idLong)
             || isDJ(ctx.member!!)
-            || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
+            || isAlone(ctx.member)
         ) {
             player.shutdown()
             return ctx.send(Formats.info("Done, Whore"))

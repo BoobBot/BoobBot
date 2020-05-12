@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 
 interface VoiceCommand : Command {
 
+    fun isAlone(member: Member): Boolean {
+        return member.voiceState?.channel?.members?.count { !it.user.isBot } == 1
+    }
+
     fun isDJ(member: Member): Boolean {
         return member.roles.stream().anyMatch { x -> x.name.equals("dj", true) }
     }
