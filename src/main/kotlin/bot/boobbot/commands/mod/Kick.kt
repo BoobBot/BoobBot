@@ -4,12 +4,15 @@ import bot.boobbot.flight.Category
 import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.models.ModCommand
+import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
     description = "Boot an asshat from the server. <:p_:475801484282429450>",
     donorOnly = true,
     guildOnly = true,
-    category = Category.MOD
+    category = Category.MOD,
+    userPermissions = [Permission.KICK_MEMBERS],
+    botPermissions = [Permission.KICK_MEMBERS]
 )
 class Kick : ModCommand() {
 

@@ -73,7 +73,6 @@ class BoobBot {
         val metrics = Metrics.create()!!
         val pApi = PatreonAPI(config.patreonApiKey)
 
-
         @KtorExperimentalAPI
         @Throws(Exception::class)
         @JvmStatic
