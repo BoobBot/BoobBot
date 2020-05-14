@@ -129,7 +129,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing = command.properties.userPermissions.filter { event.member!!.hasPermission(event.textChannel, it) }
+            val missing = command.properties.userPermissions.filter { !event.member!!.hasPermission(event.textChannel, it) }
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -138,7 +138,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = command.properties.botPermissions.filter { event.guild.selfMember.hasPermission(event.textChannel, it) }
+            val missing = command.properties.botPermissions.filter { !event.guild.selfMember.hasPermission(event.textChannel, it) }
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
