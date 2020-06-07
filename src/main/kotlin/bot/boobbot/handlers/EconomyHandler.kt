@@ -26,7 +26,7 @@ import kotlin.math.sqrt
 
 
 class EconomyHandler : EventListener {
-    private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
+    private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
 

@@ -8,19 +8,16 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.jvmErasure
 
 object Klash {
-    /**
-     * Constructs the JSON string into an object of the given type.
-     */
-    inline fun <reified T : Any> construct(json: String): T {
-        val obj = JSONObject(json)
+    inline fun <reified T : Any> construct(getter: (String) -> Any?, default: (KParameter) -> Any?): T {
         val constructor = T::class.primaryConstructor!!
         val params = constructor.parameters
         val args = hashMapOf<KParameter, Any?>()
 
         for (param in params) {
-            val name = param.name
+            val name = param.name ?: continue
+            val value = getter(name)
 
-            if (!obj.has(name)) {
+            if (value == null) {
                 if (param.isOptional) {
                     continue
                 }
@@ -29,26 +26,59 @@ object Klash {
                     args[param] = null
                 }
 
-                throw IllegalStateException("Could not specify a value for parameter $name")
+                val defaultValue = default(param)
+                    ?: throw IllegalStateException("Could not specify a value for parameter $name")
+
+                args[param] = defaultValue
             } else {
-                if (param.type.jvmErasure.javaObjectType.isAssignableFrom(List::class.java)) {
-                    val listType = param.type.arguments.first()
-                    val jvmType = listType.type?.jvmErasure?.javaObjectType
-
-                    val list = obj.getJSONArray(name)
-                        .filter { jvmType?.let(it::class.java::isAssignableFrom) ?: true }
-
-                    args[param] = list
-                } else {
-                    args[param] = obj.get(name)
-                }
-
-                // Consider HashMap support (JSONObject -> <*, *>)
+                args[param] = value
             }
         }
 
         return constructor.callBy(args)
     }
+
+    /**
+     * Constructs the JSON string into an object of the given type.
+     */
+//    inline fun <reified T : Any> construct(json: String): T {
+//        val obj = JSONObject(json)
+//        val constructor = T::class.primaryConstructor!!
+//        val params = constructor.parameters
+//        val args = hashMapOf<KParameter, Any?>()
+//
+//        for (param in params) {
+//            val name = param.name
+//
+//            if (!obj.has(name)) {
+//                if (param.isOptional) {
+//                    continue
+//                }
+//
+//                if (param.type.isMarkedNullable) {
+//                    args[param] = null
+//                }
+//
+//                throw IllegalStateException("Could not specify a value for parameter $name")
+//            } else {
+//                if (param.type.jvmErasure.javaObjectType.isAssignableFrom(List::class.java)) {
+//                    val listType = param.type.arguments.first()
+//                    val jvmType = listType.type?.jvmErasure?.javaObjectType
+//
+//                    val list = obj.getJSONArray(name)
+//                        .filter { jvmType?.let(it::class.java::isAssignableFrom) ?: true }
+//
+//                    args[param] = list
+//                } else {
+//                    args[param] = value
+//                }
+//
+//                // Consider HashMap support (JSONObject -> <*, *>)
+//            }
+//        }
+//
+//        return constructor.callBy(args)
+//    }
 
     /**
      * Deconstructs the given object into a JSON string.

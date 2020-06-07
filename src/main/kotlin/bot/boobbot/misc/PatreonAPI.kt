@@ -1,7 +1,7 @@
 package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
 import org.json.JSONObject
@@ -25,7 +25,7 @@ class PatreonAPI(private val accessToken: String) {
 
     fun getDonorType(userId: String): DonorType {
         return when {
-            Config.owners.contains(userId.toLong()) -> DonorType.DEVELOPER
+            Config.OWNERS.contains(userId.toLong()) -> DonorType.DEVELOPER
             else -> DonorType.which(BoobBot.database.getDonor(userId))
         }
     }

@@ -40,7 +40,7 @@ class Magik : AsyncCommand {
         val image = BoobBot.requestUtil
             .get(
                 baseUrl.newBuilder().addQueryParameter("avatar1", imageUrl).build().toString(),
-                Headers.of("Authorization", BoobBot.config.memerImgenKey)
+                Headers.of("Authorization", BoobBot.config.MEMER_IMGEN_KEY)
             )
             .await()
             ?.body()
@@ -53,7 +53,7 @@ class Magik : AsyncCommand {
         return BoobBot.requestUtil
             .get(
                 "https://boob.bot/api/v2/img/$category",
-                Headers.of("Key", BoobBot.config.bbApiKey)
+                Headers.of("Key", BoobBot.config.BB_API_KEY)
             )
             .await()
             ?.json()

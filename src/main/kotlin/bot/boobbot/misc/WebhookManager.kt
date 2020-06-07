@@ -10,9 +10,9 @@ import java.awt.Color
 import java.time.Instant
 
 object WebhookManager {
-    private val shardHook = WebhookClientBuilder(BoobBot.config.readyWebhook).build()
-    private val leaveHook = WebhookClientBuilder(BoobBot.config.glWebhook).build()
-    private val joinHook = WebhookClientBuilder(BoobBot.config.gjWebhook).build()
+    private val shardHook = WebhookClientBuilder(BoobBot.config.RDY_WEBHOOK).build()
+    private val leaveHook = WebhookClientBuilder(BoobBot.config.GLLOG_WEBHOOK).build()
+    private val joinHook = WebhookClientBuilder(BoobBot.config.GJLOG_WEBHOOK).build()
 
     private fun safeSend(whClient: WebhookClient, avatar: String?, builder: EmbedBuilder.() -> Unit) {
         val message = WebhookMessageBuilder()

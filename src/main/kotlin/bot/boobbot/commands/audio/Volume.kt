@@ -5,7 +5,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import bot.boobbot.models.VoiceCommand
 
 @CommandProperties(
@@ -38,7 +38,7 @@ class Volume : VoiceCommand {
         val oldVol = player.player.volume
         try {
             var newVol = Integer.parseInt(ctx.args[0])
-            if (newVol > 100 && !Config.owners.contains(ctx.author.idLong)) {
+            if (newVol > 100 && !Config.OWNERS.contains(ctx.author.idLong)) {
                 newVol = 100
             }
             if (newVol < 0) {

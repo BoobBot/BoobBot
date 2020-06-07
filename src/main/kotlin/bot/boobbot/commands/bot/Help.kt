@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.flight.*
 import bot.boobbot.misc.Colors
 import bot.boobbot.misc.Formats
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import net.dv8tion.jda.api.EmbedBuilder
 import java.time.Instant
 
@@ -38,7 +38,7 @@ class Help : Command {
         val content = StringBuilder()
 
         for (category in Category.values().sortedWith(compareBy({ it.nsfw }, { it.name }))) {
-            if (category === Category.DEV && !Config.owners.contains(ctx.author.idLong)) {
+            if (category === Category.DEV && !Config.OWNERS.contains(ctx.author.idLong)) {
                 continue
             }
 

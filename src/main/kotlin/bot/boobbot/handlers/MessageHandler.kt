@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
 import bot.boobbot.misc.json
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -86,7 +86,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (command.properties.developerOnly && !Config.owners.contains(event.author.idLong)) {
+        if (command.properties.developerOnly && !Config.OWNERS.contains(event.author.idLong)) {
             return
         }
 

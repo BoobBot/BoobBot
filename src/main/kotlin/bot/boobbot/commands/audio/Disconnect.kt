@@ -5,7 +5,7 @@ import bot.boobbot.flight.CommandProperties
 import bot.boobbot.flight.Context
 
 import bot.boobbot.misc.Formats
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import bot.boobbot.models.VoiceCommand
 import net.dv8tion.jda.api.Permission
 
@@ -21,7 +21,7 @@ class Disconnect : VoiceCommand {
         val player = ctx.audioPlayer
         if (
             ctx.userCan(Permission.MESSAGE_MANAGE)
-            || Config.owners.contains(ctx.author.idLong)
+            || Config.OWNERS.contains(ctx.author.idLong)
             || isDJ(ctx.member!!)
             || isAlone(ctx.member)
         ) {

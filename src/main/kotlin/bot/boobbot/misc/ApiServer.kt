@@ -2,7 +2,7 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.flight.Category
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import com.google.gson.Gson
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
@@ -41,10 +41,10 @@ import kotlin.math.max
 class ApiServer {
     private val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
         name = "discord",
-        authorizeUrl = BoobBot.config.discordAuthUrl, // OAuth authorization endpoint
-        accessTokenUrl = BoobBot.config.discordTokenUrl, // OAuth token endpoint
+        authorizeUrl = BoobBot.config.DISCORD_AUTH_URL, // OAuth authorization endpoint
+        accessTokenUrl = BoobBot.config.DISCORD_TOKEN_URL, // OAuth token endpoint
         clientId = if (BoobBot.isDebug) "285480424904327179" else BoobBot.selfId.toString(),
-        clientSecret = BoobBot.config.discordClientSecret,
+        clientSecret = BoobBot.config.DISCORD_CLIENT_SECRET,
         // basic auth implementation is not "OAuth style" so falling back to post body
         accessTokenRequiresBasicAuth = false,
         requestMethod = HttpMethod.Post, // must POST to token endpoint
@@ -111,10 +111,9 @@ class ApiServer {
     @KtorExperimentalAPI
     fun startServer() {
         embeddedServer(Netty, host = "127.0.0.1", port = 8769) {
-
             install(Sessions) {
                 cookie<UserSession>("SessionId") {
-                    val secretSignKey = hex(BoobBot.config.SessionKey)
+                    val secretSignKey = hex(BoobBot.config.SESSION_KEY)
                     transform(SessionTransportTransformerMessageAuthentication(secretSignKey))
                 }
             }
@@ -123,7 +122,7 @@ class ApiServer {
                 oauth("discord") {
                     client = HttpClient(Apache)
                     providerLookup = { clientSettings }
-                    urlProvider = { BoobBot.config.RedirectUrl }
+                    urlProvider = { BoobBot.config.OAUTH_REDIRECT_URL }
                 }
             }
 
@@ -187,7 +186,7 @@ class ApiServer {
                 get("/admin") {
                     val s = call.sessions.get<UserSession>() ?: return@get call.respondRedirect("/oauth")
 
-                    if (!Config.owners.contains(s.id.toLong())) {
+                    if (!Config.OWNERS.contains(s.id.toLong())) {
                         error("401")
                     }
                     call.respondText("{\"user\": ${Gson().toJson(s)}}", ContentType.Application.Json)

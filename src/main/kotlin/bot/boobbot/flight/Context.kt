@@ -2,7 +2,7 @@ package bot.boobbot.flight
 
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
@@ -46,7 +46,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
 
     fun permissionCheck(u: User, m: Member?, channel: MessageChannel, vararg permissions: Permission): Boolean {
-        return !isFromGuild || Config.owners.contains(u.idLong) ||
+        return !isFromGuild || Config.OWNERS.contains(u.idLong) ||
                 (m?.hasPermission(channel as TextChannel, *permissions) ?: false)
     }
 

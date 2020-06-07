@@ -14,7 +14,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
     private val urlBuilder
         get() = HttpUrl.parse(endpointUrl)!!.newBuilder()
 
-    private val headers = Headers.of("Authorization", BoobBot.config.memerImgenKey)
+    private val headers = Headers.of("Authorization", BoobBot.config.MEMER_IMGEN_KEY)
 
     override suspend fun executeAsync(ctx: Context) {
         if (!ctx.botCan(Permission.MESSAGE_WRITE)) {

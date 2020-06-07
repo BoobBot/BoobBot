@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class SlideShowCommand : Command {
 
-    private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
+    private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
 
     private val aliases = mapOf(
         "dick" to "penis",

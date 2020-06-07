@@ -2,6 +2,7 @@ package bot.boobbot.models
 
 import bot.boobbot.flight.Command
 import bot.boobbot.flight.Context
+import bot.boobbot.internals.config.Config
 import bot.boobbot.misc.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
@@ -23,7 +24,7 @@ interface VoiceCommand : Command {
 
         return ctx.userCan(Permission.MESSAGE_MANAGE)
                 || ctx.author.idLong == user.idLong
-                || Config.owners.contains(ctx.author.idLong)
+                || Config.OWNERS.contains(ctx.author.idLong)
                 || isDJ(ctx.member!!)
                 || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
     }

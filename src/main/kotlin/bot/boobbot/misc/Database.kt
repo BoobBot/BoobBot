@@ -16,7 +16,7 @@ import java.time.Instant
 class Database {
 
     private val gson = Gson()
-    private val mongo = MongoClients.create(BoobBot.config.mongoDbUrl)
+    private val mongo = MongoClients.create(BoobBot.config.MONGO_DB_URL)
 
     /** Databases **/
     private val bb = mongo.getDatabase("boobbot")

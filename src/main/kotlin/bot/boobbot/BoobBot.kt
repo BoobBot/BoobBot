@@ -8,7 +8,7 @@ import bot.boobbot.internals.CommandRegistry
 import bot.boobbot.internals.CustomSentryClient
 import bot.boobbot.internals.CustomShardManager
 import bot.boobbot.misc.*
-import bot.boobbot.models.Config
+import bot.boobbot.internals.config.Config
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.fasterxml.jackson.core.JsonParseException
@@ -71,7 +71,7 @@ class BoobBot {
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         val metrics = Metrics.create()!!
-        val pApi = PatreonAPI(config.patreonApiKey)
+        val pApi = PatreonAPI(config.PATREON_KEY)
 
         @KtorExperimentalAPI
         @Throws(Exception::class)
@@ -79,8 +79,8 @@ class BoobBot {
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
             logCom = args.any { it == "--comlog" }
-            val shardCount = if (isDebug) 1 else config.shardCount
-            val token = if (isDebug) config.debugToken else config.token
+            val shardCount = if (isDebug) 1 else config.SHARD_COUNT
+            val token = if (isDebug) config.DEBUG_TOKEN else config.TOKEN
 
             log.info("--- BoobBot (Revision {}) ---", Utils.version)
             log.info(
@@ -99,7 +99,7 @@ class BoobBot {
                 log.level = Level.DEBUG
                 log.warn("Running in debug mode")
             } else {
-                CustomSentryClient.create(config.sentryDsn)
+                CustomSentryClient.create(config.SENTRY_DSN)
                     .ignore(
                         ContextException::class.java,
                         ConnectionException::class.java,

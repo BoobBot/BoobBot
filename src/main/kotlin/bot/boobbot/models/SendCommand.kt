@@ -9,7 +9,7 @@ import okhttp3.Headers
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
-    private val headers = Headers.of("Key", BoobBot.config.bbApiKey)
+    private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
 
     override suspend fun executeAsync(ctx: Context) {
         val user = ctx.mentions.firstOrNull() ?: ctx.author
