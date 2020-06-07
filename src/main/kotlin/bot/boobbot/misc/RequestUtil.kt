@@ -7,7 +7,6 @@ import java.io.IOException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
-
 class RequestUtil {
     private val userAgent =
         "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
@@ -45,23 +44,10 @@ class RequestUtil {
         }
 
         fun queue(success: (Response?) -> Unit) {
-            submit().thenAccept(success)
-                .thenException { success(null) }
+            submit().thenAccept(success).thenException { success(null) }
         }
 
-        suspend fun await(): Response? {
-            return submit().await()
-        }
-
-        fun block(): Response? {
-            return try {
-                httpClient.newCall(request).execute()
-            } catch (e: IOException) {
-                BoobBot.log.error("An error occurred during a HTTP request to ${request.url()}", e)
-                null
-            }
-        }
-
+        suspend fun await(): Response? = submit().await()
     }
 
     fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {

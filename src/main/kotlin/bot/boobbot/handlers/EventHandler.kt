@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.BoobBot.Companion.config
 import bot.boobbot.misc.Formats
+import bot.boobbot.misc.WebhookManager
 import bot.boobbot.misc.toWebhookEmbed
 import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
@@ -24,62 +25,16 @@ import java.time.Instant
 
 
 class EventHandler : ListenerAdapter() {
-    private val shardHook = WebhookClientBuilder(config.readyWebhook).build()
-    private val leaveHook = WebhookClientBuilder(config.glWebhook).build()
-    private val joinHook = WebhookClientBuilder(config.gjWebhook).build()
-
     private var avatar: String? = null
-
-    private fun safeSend(whClient: WebhookClient, builder: EmbedBuilder.() -> Unit) {
-        val message = WebhookMessageBuilder()
-            .setUsername("BoobBot")
-            .setAvatarUrl(avatar)
-            .addEmbeds(
-                EmbedBuilder()
-                    .apply {
-                        setColor(Color.magenta)
-                        setAuthor("BoobBot", avatar, avatar)
-                        setTimestamp(Instant.now())
-                    }
-                    .apply(builder)
-                    .build()
-                    .toWebhookEmbed()
-            )
-            .build()
-
-        try {
-            if (!BoobBot.isDebug) {
-                whClient.send(message)
-            }
-        } catch (e: HttpException) {
-            if (!e.localizedMessage.contains("Unknown Webhook")) {
-                BoobBot.log.error("Failed to send message to webhook", e)
-            }
-        }
-    }
 
     override fun onReady(event: ReadyEvent) {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
 
         avatar = event.jda.selfUser.effectiveAvatarUrl
-
-        safeSend(shardHook) {
+        WebhookManager.sendShard(avatar) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
             setDescription("Ping: ${event.jda.gatewayPing}ms")
-        }
-
-        if (BoobBot.shardManager.allShardsConnected && !BoobBot.isReady) {
-            BoobBot.isReady = true
-            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
-            BoobBot.log.info(Formats.readyFormat)
-            safeSend(shardHook) {
-                setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
-                setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
-                setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
-                addField("Ready Info", "```\n${Formats.readyFormat}```", false)
-            }
-
         }
     }
 
@@ -87,7 +42,7 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook) {
+        WebhookManager.sendShard(avatar) {
             setTitle("SHARD RECONNECTED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms")
         }
@@ -97,7 +52,7 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook) {
+        WebhookManager.sendShard(avatar) {
             setTitle("SHARD RESUMED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms")
         }
@@ -107,7 +62,7 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        safeSend(shardHook) {
+        WebhookManager.sendShard(avatar) {
             setTitle("SHARD DISCONNECTED [${event.jda.shardInfo.shardId}]")
             setDescription("Ping: ${event.jda.gatewayPing}ms") // will probably be -1 or something lol
         }
@@ -115,10 +70,9 @@ class EventHandler : ListenerAdapter() {
 
     override fun onGuildJoin(event: GuildJoinEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
-
         val guild = event.guild
 
-        safeSend(joinHook) {
+        WebhookManager.sendJoin {
             setColor(Color.green)
             setTitle("Guild Joined: ${guild.name}")
             setDescription(
@@ -136,7 +90,7 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         val guild = event.guild
 
-        safeSend(leaveHook) {
+        WebhookManager.sendLeave {
             setColor(Color.red)
             setTitle("Guild Left: ${guild.name}")
             setDescription(

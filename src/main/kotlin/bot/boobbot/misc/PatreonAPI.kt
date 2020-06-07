@@ -24,17 +24,13 @@ class PatreonAPI(private val accessToken: String) {
     }
 
     fun getDonorType(userId: String): DonorType {
-        if (Config.owners.contains(userId.toLong())) {
-            return DonorType.DEVELOPER
+        return when {
+            Config.owners.contains(userId.toLong()) -> DonorType.DEVELOPER
+            else -> DonorType.which(BoobBot.database.getDonor(userId))
         }
-
-        val pledge = BoobBot.database.getDonor(userId)
-        return DonorType.which(pledge)
     }
 
-    fun getDonorType(amount: Double): DonorType {
-        return DonorType.which(amount)
-    }
+    fun getDonorType(amount: Double): DonorType = DonorType.which(amount)
 
     private fun monitorPledges() {
         log.info("Checking pledges...")

@@ -81,12 +81,6 @@ class Database {
         )
     }
 
-    fun getAllUsers(): List<User> {
-        return users.find()
-            .map { deserialize<User>(it.toJson()) }
-            .toList()
-    }
-
 
     /**
      * Guild

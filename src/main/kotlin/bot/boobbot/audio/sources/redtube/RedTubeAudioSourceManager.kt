@@ -60,7 +60,7 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
         return RedTubeAudioTrack(trackInfo, this)
     }
 
-    override fun shutdown() = Utils.suppressExceptions {
+    override fun shutdown() {
         httpInterface.close()
     }
 

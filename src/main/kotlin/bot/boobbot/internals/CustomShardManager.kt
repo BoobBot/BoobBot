@@ -5,15 +5,21 @@ import bot.boobbot.flight.Context
 import bot.boobbot.handlers.EconomyHandler
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
+import bot.boobbot.misc.Formats
 import bot.boobbot.misc.Utils
+import bot.boobbot.misc.WebhookManager
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.events.GenericEvent
+import net.dv8tion.jda.api.events.ReadyEvent
+import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.utils.ConcurrentSessionController
 import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.dv8tion.jda.api.utils.cache.CacheFlag
 import net.dv8tion.jda.internal.JDAImpl
@@ -25,10 +31,9 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm {
+class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm, EventListener {
     var guildCount = 0L
         private set
-
     var userCount = 0L
         private set
 
@@ -38,21 +43,36 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     val onlineShards: List<JDA>
         get() = this.shards.filter { it.status == JDA.Status.CONNECTED }
 
-    val anonymousUser = UserImpl(0L, sm.shards.first() as JDAImpl)
-        .setAvatarId(null)
+    var readyFired = false
+        private set
+
+    private val anonymousUser: User = UserImpl(0L, sm.shards.first() as JDAImpl)
         .setBot(false)
-        .setFake(false)
         .setName("Hidden User")
         .setDiscriminator("0000")
 
     init {
-        BoobBot.scheduler.scheduleAtFixedRate(::updateStats, 0, 5, TimeUnit.MINUTES)
+        sm.addEventListener(this)
+
+        BoobBot.scheduler.scheduleAtFixedRate({
+            BoobBot.log.debug("Updating stats count.")
+            guildCount = guildCache.size()
+            userCount = userCache.size()
+        }, 0, 5, TimeUnit.MINUTES)
     }
 
-    fun updateStats() {
-        BoobBot.log.debug("Updating stats count!")
-        guildCount = guildCache.size()
-        userCount = userCache.size()
+    override fun onEvent(event: GenericEvent) {
+        if (event is ReadyEvent && allShardsConnected && !readyFired) {
+            readyFired = true
+            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("bbhelp || bbinvite"))
+            BoobBot.log.info(Formats.readyFormat)
+            WebhookManager.sendShard(null) {
+                setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
+                setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
+                setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
+                addField("Ready Info", "```\n${Formats.readyFormat}```", false)
+            }
+        }
     }
 
     fun authorOrAnonymous(ctx: Context): User {
@@ -63,20 +83,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
         }
     }
 
-    fun retrieveSessionInfo(): SessionInfo? {
-        return try {
-            val url = URL("https://discordapp.com/api/gateway/bot")
-            val connection = url.openConnection()
-            connection.setRequestProperty("Authorization", "Bot $token")
-
-            val res = Utils.readAll(connection.getInputStream())
-            val json = JSONObject(res)
-
-            SessionInfo.from(json)
-        } catch (e: Exception) {
-            null
-        }
-    }
+    fun retrieveSessionInfo() = SessionInfo.from(token)
 
     companion object {
         fun create(token: String, shardCount: Int = -1): CustomShardManager {
@@ -114,25 +121,12 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
-                .setSessionController(ExtendedSessionController())
+                .setSessionController(ConcurrentSessionController().apply { setConcurrency(16) })
+                .setBulkDeleteSplittingEnabled(false)
 
             return CustomShardManager(token, sm.build())
         }
 
-        fun retrieveRemainingSessionCount(token: String): Int {
-            return try {
-                val url = URL("https://discordapp.com/api/gateway/bot")
-                val connection = url.openConnection()
-                connection.setRequestProperty("Authorization", "Bot $token")
-
-                val res = Utils.readAll(connection.getInputStream())
-                val json = JSONObject(res)
-
-                json.getJSONObject("session_start_limit").getInt("remaining")
-            } catch (e: Exception) {
-                -1
-            }
-        }
+        fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0
     }
-
 }

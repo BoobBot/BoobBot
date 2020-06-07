@@ -11,9 +11,8 @@ import org.json.JSONObject
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-@CommandProperties(description = "info", category = Category.FUN)
+@CommandProperties(description = "info", category = Category.FUN, developerOnly = true)
 class Covid : AsyncCommand {
-
     override suspend fun executeAsync(ctx: Context) {
         val res = BoobBot.requestUtil
             .get("https://api.covid19api.com/summary")
@@ -79,5 +78,4 @@ class Covid : AsyncCommand {
         private val utcParser = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX")
         private val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MMM-yyyy")
     }
-
 }

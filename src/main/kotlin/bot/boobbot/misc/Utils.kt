@@ -3,6 +3,7 @@ package bot.boobbot.misc
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.api.entities.Message
 import okhttp3.Headers
+import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.awt.image.BufferedImage
@@ -89,7 +90,6 @@ class Utils {
             }
         }
 
-
         fun logCommand(m: Message) {
             val msg = if (m.isFromGuild) {
                 "[${m.guild.name} (${m.guild.id})/${m.channel.name} (${m.channel.id})] ${m.author.asTag} (${m.author.id}): ${m.contentDisplay}"
@@ -98,19 +98,6 @@ class Utils {
             }
 
             BoobBot.log.info(msg)
-        }
-
-        fun downloadAvatar(url: String): BufferedImage? {
-            val body = BoobBot.requestUtil.get(url, Headers.of()).block()?.body()
-                ?: return null
-
-            var image: BufferedImage? = null
-
-            body.byteStream().use {
-                image = ImageIO.read(it)
-            }
-
-            return image
         }
 
         fun fTime(milliseconds: Long): String {
@@ -126,17 +113,7 @@ class Utils {
             }
         }
 
-        fun readAll(inputStream: InputStream): String {
-            return BufferedReader(
-                InputStreamReader(inputStream)
-            ).lines().collect(Collectors.joining("\n"))
-        }
-
-
-        inline fun suppressExceptions(block: () -> Unit) = try {
-            block()
-        } catch (e: Exception) {
-        }
+        fun readAll(inputStream: InputStream): String = IOUtils.toString(inputStream, Charsets.UTF_8)
     }
 }
 

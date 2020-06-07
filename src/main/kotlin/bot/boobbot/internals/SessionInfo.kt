@@ -2,6 +2,7 @@ package bot.boobbot.internals
 
 import bot.boobbot.misc.Utils
 import org.json.JSONObject
+import java.net.URL
 
 class SessionInfo(
     val recommendedShards: Int,
@@ -10,6 +11,21 @@ class SessionInfo(
     val sessionResetAfter: String
 ) {
     companion object {
+        fun from(token: String): SessionInfo? {
+            return try {
+                val url = URL("https://discordapp.com/api/gateway/bot")
+                val connection = url.openConnection()
+                connection.setRequestProperty("Authorization", "Bot $token")
+
+                val res = Utils.readAll(connection.getInputStream())
+                val json = JSONObject(res)
+
+                from(json)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
         fun from(json: JSONObject): SessionInfo {
             val recommendedShards = json.getInt("shards")
             val session = json.getJSONObject("session_start_limit")

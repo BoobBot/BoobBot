@@ -7,17 +7,17 @@ import java.awt.Color
 import java.util.*
 
 object Colors {
-    private val BLACK = -0x1000000
-    private val DKGRAY = -0xbbbbbc
-    private val GRAY = -0x777778
-    private val LTGRAY = -0x333334
-    private val WHITE = -0x1
-    private val RED = -0x10000
-    private val GREEN = -0xff0100
-    private val BLUE = -0xffff01
-    private val YELLOW = -0x100
-    private val CYAN = -0xff0001
-    private val MAGENTA = -0xff01
+    private const val BLACK = -0x1000000
+    private const val DKGRAY = -0xbbbbbc
+    private const val GRAY = -0x777778
+    private const val LTGRAY = -0x333334
+    private const val WHITE = -0x1
+    private const val RED = -0x10000
+    private const val GREEN = -0xff0100
+    private const val BLUE = -0xffff01
+    private const val YELLOW = -0x100
+    private const val CYAN = -0xff0001
+    private const val MAGENTA = -0xff01
 
     private val colorGen = Random()
     private val sColorNameMap = HashMap<String, Int>()
@@ -56,32 +56,7 @@ object Colors {
         sColorNameMap["teal"] = -0xff7f80
     }
 
-    /**
-     * Returns the effective avatar of a user as a 256x256 PNG.
-     */
-    fun getStaticAvatar(user: User): String {
-        return if (user.avatarId == null) {
-            "https://cdn.discordapp.com/embed/avatars/${user.discriminator.toInt() % 5}.png"
-        } else {
-            "https://cdn.discordapp.com/avatars/${user.id}/${user.avatarId}.png?size=256"
-        }
-    }
-
-    fun getDominantColor(user: User): Color {
-        val img = Utils.downloadAvatar(getStaticAvatar(user)) ?: return rndColor
-        val rgb = ColorThief.getColor(img)
-
-        return if (rgb != null) {
-            Color(rgb[0], rgb[1], rgb[2])
-        } else {
-            rndColor
-        }
-    }
-
-    fun getEffectiveColor(msg: Message): Color {
-        return msg.member?.color ?: Color(255, 0, 128)
-        //return msg.member?.color ?: getDominantColor(msg.author)
-    }
+    fun getEffectiveColor(msg: Message): Color = msg.member?.color ?: Color(255, 0, 128)
 
     fun parseColor(colorString: String): Int {
         if (colorString[0] == '#') {

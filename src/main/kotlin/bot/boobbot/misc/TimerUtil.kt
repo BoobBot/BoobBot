@@ -2,7 +2,7 @@ package bot.boobbot.misc
 
 import bot.boobbot.BoobBot
 
-class TimerUtil(val identifier: String) {
+class TimerUtil(private val identifier: String) {
     private val timeStart = System.currentTimeMillis()
 
     fun stop() {

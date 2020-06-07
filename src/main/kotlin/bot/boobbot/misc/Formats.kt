@@ -232,6 +232,4 @@ object Formats {
         return r
 
     }
-
-
 }
