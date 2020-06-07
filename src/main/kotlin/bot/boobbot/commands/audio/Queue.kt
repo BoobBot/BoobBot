@@ -1,13 +1,13 @@
 package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
+import bot.boobbot.entities.framework.VoiceCommand
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User

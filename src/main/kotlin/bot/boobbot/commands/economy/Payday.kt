@@ -1,11 +1,12 @@
 package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Formats.getRemainingCoolDown
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Formats.getRemainingCoolDown
+import bot.boobbot.utils.Utils
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -28,7 +29,7 @@ class Payday : Command {
         user.lastDaily = Instant.now()
         var rng = (0..50).random()
         val msg = StringBuilder("You got $$rng")
-        if (bot.boobbot.misc.Utils.checkDonor(ctx.message)) {
+        if (Utils.checkDonor(ctx.message)) {
             msg.append(" and an extra $$rng for being a <:p_:475801484282429450>")
             rng += rng
         }

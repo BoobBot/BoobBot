@@ -1,12 +1,12 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.flight.SubCommand
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(aliases = ["cc"], description = "Custom commands", guildOnly = true)

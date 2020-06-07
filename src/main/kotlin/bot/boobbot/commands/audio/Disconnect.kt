@@ -1,12 +1,12 @@
 package bot.boobbot.commands.audio
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
 
-import bot.boobbot.misc.Formats
-import bot.boobbot.internals.config.Config
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.utils.Formats
+import bot.boobbot.entities.internals.Config
+import bot.boobbot.entities.framework.VoiceCommand
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(

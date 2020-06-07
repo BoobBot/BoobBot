@@ -1,10 +1,10 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.flight.SubCommand
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.SubCommand
 
 @CommandProperties(
     description = "Change whether you're shown on embeds",

@@ -1,7 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.*
+import bot.boobbot.entities.framework.*
 
 @CommandProperties(description = "Pong!", category = Category.MISC)
 class Ping : Command {

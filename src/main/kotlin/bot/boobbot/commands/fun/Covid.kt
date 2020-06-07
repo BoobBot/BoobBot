@@ -1,12 +1,12 @@
 package bot.boobbot.commands.`fun`
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.AsyncCommand
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Formats.countryCodeToEmote
-import bot.boobbot.misc.json
+import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Formats.countryCodeToEmote
+import bot.boobbot.utils.json
 import org.json.JSONObject
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter

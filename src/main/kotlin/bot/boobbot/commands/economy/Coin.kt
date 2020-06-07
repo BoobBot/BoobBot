@@ -1,11 +1,11 @@
 package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Formats
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Formats
 
 
 @CommandProperties(description = "Flip a coin.", aliases = ["flip"], category = Category.ECONOMY)

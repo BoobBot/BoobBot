@@ -1,10 +1,10 @@
 package bot.boobbot.commands.mod
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.models.ModCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.ModCommand
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
@@ -19,12 +19,8 @@ import net.dv8tion.jda.api.Permission
 class ModMute : ModCommand() {
 
     override fun execute(ctx: Context) {
-        val (target, reason) = resolveTargetAndReason(ctx)
-        val auditReason = reason ?: "No reason was given"
-
-        if (target == null) {
-            return ctx.send("How in the fuck would i know who you want to mute if you don't give me a valid target?")
-        }
+        val target = resolveTargetAndReason(ctx).first
+            ?: return ctx.send("How in the fuck would i know who you want to mute if you don't give me a valid target?")
 
         if (target.idLong == ctx.author.idLong) {
             return ctx.send("You must be special if you're really trying to mute yourself.")

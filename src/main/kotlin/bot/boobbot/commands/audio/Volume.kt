@@ -1,12 +1,12 @@
 package bot.boobbot.commands.audio
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.internals.config.Config
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Formats
+import bot.boobbot.entities.internals.Config
+import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Sets the Volume <:p_:475801484282429450> ",

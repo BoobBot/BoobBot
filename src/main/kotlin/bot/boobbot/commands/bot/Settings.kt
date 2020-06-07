@@ -1,14 +1,14 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.flight.SubCommand
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
-import bot.boobbot.misc.ifEmpty
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
+import bot.boobbot.utils.ifEmpty
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)

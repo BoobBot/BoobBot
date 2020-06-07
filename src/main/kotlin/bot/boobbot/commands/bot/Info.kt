@@ -1,12 +1,12 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Utils
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Utils
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import net.dv8tion.jda.api.JDAInfo
 

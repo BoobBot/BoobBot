@@ -1,10 +1,10 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
-import bot.boobbot.misc.json
-import bot.boobbot.internals.config.Config
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
+import bot.boobbot.utils.json
+import bot.boobbot.entities.internals.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent

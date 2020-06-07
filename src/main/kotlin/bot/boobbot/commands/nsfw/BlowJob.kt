@@ -1,8 +1,8 @@
 package bot.boobbot.commands.nsfw
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.models.BbApiCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.BbApiCommand
 
 @CommandProperties(description = "BlowJobs!", nsfw = true, aliases = ["bj"], category = Category.GENERAL)
 class BlowJob : BbApiCommand("blowjob")

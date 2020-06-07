@@ -1,12 +1,12 @@
 package bot.boobbot.commands.mod
 
-import bot.boobbot.flight.AsyncCommand
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.awaitSuppressed
-import bot.boobbot.misc.thenException
-import bot.boobbot.models.ModCommand
+import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.awaitSuppressed
+import bot.boobbot.utils.thenException
+import bot.boobbot.entities.framework.ModCommand
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.exceptions.ErrorResponseException

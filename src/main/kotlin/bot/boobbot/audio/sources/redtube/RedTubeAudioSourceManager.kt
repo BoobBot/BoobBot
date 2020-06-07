@@ -1,6 +1,5 @@
 package bot.boobbot.audio.sources.redtube
 
-import bot.boobbot.misc.Utils
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException

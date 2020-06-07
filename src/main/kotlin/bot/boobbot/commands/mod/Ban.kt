@@ -1,9 +1,9 @@
 package bot.boobbot.commands.mod
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.models.ModCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.ModCommand
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(

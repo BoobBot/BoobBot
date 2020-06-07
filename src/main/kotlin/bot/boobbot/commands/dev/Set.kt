@@ -1,9 +1,9 @@
 package bot.boobbot.commands.dev
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.*
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.separate
+import bot.boobbot.entities.framework.*
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.separate
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon

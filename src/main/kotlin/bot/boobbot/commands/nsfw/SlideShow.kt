@@ -1,8 +1,8 @@
 package bot.boobbot.commands.nsfw
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.models.SlideShowCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlideShowCommand
 
 @CommandProperties(
     description = "Cycles though 20 images at 5 seconds each. <:p_:475801484282429450>",

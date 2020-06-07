@@ -1,11 +1,11 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.AsyncCommand
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.CodeblockBuilder
-import bot.boobbot.misc.Utils
+import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.internals.CodeblockBuilder
+import bot.boobbot.utils.Utils
 import com.sun.management.OperatingSystemMXBean
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONObject

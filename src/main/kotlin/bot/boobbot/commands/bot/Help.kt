@@ -1,10 +1,10 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.*
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Formats
-import bot.boobbot.internals.config.Config
+import bot.boobbot.entities.framework.*
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Formats
+import bot.boobbot.entities.internals.Config
 import net.dv8tion.jda.api.EmbedBuilder
 import java.time.Instant
 

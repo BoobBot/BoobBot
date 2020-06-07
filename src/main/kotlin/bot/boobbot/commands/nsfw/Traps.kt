@@ -1,8 +1,8 @@
 package bot.boobbot.commands.nsfw
 
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.models.BbApiCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.BbApiCommand
 
 @CommandProperties(description = "Traps are hot!", nsfw = true, category = Category.KINKS)
 class Traps : BbApiCommand("traps")

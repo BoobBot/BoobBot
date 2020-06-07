@@ -2,13 +2,13 @@ package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot.Companion.playerManager
 import bot.boobbot.audio.AudioLoader
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.Utils
-import bot.boobbot.misc.toUriOrNull
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
+import bot.boobbot.utils.toUriOrNull
+import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",

@@ -1,10 +1,10 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.misc.BoundedThreadPool
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.json
-import bot.boobbot.models.economy.User
+import bot.boobbot.entities.internals.BoundedThreadPool
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.json
+import bot.boobbot.entities.db.economy.User
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -17,7 +17,6 @@ import java.awt.Font
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 import kotlin.math.floor
@@ -30,7 +29,12 @@ class EconomyHandler : EventListener {
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
 
-    private val dropThreads = BoundedThreadPool("DropGen", 20, TimeUnit.MILLISECONDS.toMillis(1), 500)
+    private val dropThreads = BoundedThreadPool(
+        "DropGen",
+        20,
+        TimeUnit.MILLISECONDS.toMillis(1),
+        500
+    )
 
     private fun random(lower: Int, upper: Int): Int {
         return random.nextInt(upper - lower) + lower

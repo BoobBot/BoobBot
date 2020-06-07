@@ -1,9 +1,9 @@
 package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Colors
-import bot.boobbot.misc.Utils
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Utils
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist

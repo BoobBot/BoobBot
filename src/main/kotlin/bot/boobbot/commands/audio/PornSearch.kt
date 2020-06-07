@@ -2,10 +2,10 @@ package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot.Companion.playerManager
 import bot.boobbot.audio.AudioLoader
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Searches PornHub for videos to play",

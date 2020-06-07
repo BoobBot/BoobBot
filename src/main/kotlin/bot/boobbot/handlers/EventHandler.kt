@@ -1,18 +1,9 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.BoobBot.Companion.config
-import bot.boobbot.misc.Formats
-import bot.boobbot.misc.WebhookManager
-import bot.boobbot.misc.toWebhookEmbed
-import club.minnced.discord.webhook.WebhookClient
-import club.minnced.discord.webhook.WebhookClientBuilder
-import club.minnced.discord.webhook.exception.HttpException
-import club.minnced.discord.webhook.send.WebhookMessageBuilder
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.WebhookManager
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.OnlineStatus
-import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.DisconnectEvent
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.ReconnectedEvent
@@ -21,7 +12,6 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
-import java.time.Instant
 
 
 class EventHandler : ListenerAdapter() {

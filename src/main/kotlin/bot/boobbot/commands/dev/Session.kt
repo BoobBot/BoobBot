@@ -1,9 +1,9 @@
 package bot.boobbot.commands.dev
 
 import bot.boobbot.BoobBot
-import bot.boobbot.flight.Command
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
+import bot.boobbot.entities.framework.Command
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
 
 @CommandProperties(description = "Check how fucked the bot session is", developerOnly = true)
 class Session : Command {

@@ -2,11 +2,11 @@ package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot.Companion.playerManager
 import bot.boobbot.audio.AudioLoader
-import bot.boobbot.flight.Category
-import bot.boobbot.flight.CommandProperties
-import bot.boobbot.flight.Context
-import bot.boobbot.misc.Formats
-import bot.boobbot.models.VoiceCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.utils.Formats
+import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Searches YouTube for videos to play <:p_:475801484282429450> ",
