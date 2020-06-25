@@ -24,8 +24,7 @@ class Database {
             applicationName("BoobBot")
             applyConnectionString(ConnectionString(BoobBot.config.MONGO_DB_URL))
             applyToConnectionPoolSettings {
-                it.maxSize(25)
-                it.maxWaitTime(10, TimeUnit.SECONDS)
+                it.maxSize(250)
             }
             this.applyToSocketSettings {
                 it.connectTimeout(10, TimeUnit.SECONDS)
