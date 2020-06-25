@@ -14,7 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class MessageHandler : ListenerAdapter() {
     private val threadCounter = AtomicInteger()
-    private val commandExecutorPool = Executors.newCachedThreadPool { Thread("Command-Executor-${threadCounter.getAndIncrement()}") }
+    private val commandExecutorPool = Executors.newCachedThreadPool {
+        Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
+    }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
