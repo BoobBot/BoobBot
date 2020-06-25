@@ -82,7 +82,7 @@ class BoobBot {
         fun main(args: Array<String>) {
             isDebug = args.any { it == "--debug" }
             logCom = args.any { it == "--comlog" }
-            val shardCount = if (isDebug) 1 else config.SHARD_COUNT
+            val shardCount = if (isDebug) 1 else config.SHARD_TOTAL
             val token = if (isDebug) config.DEBUG_TOKEN else config.TOKEN
 
             log.info("--- BoobBot (Revision {}) ---", Utils.version)

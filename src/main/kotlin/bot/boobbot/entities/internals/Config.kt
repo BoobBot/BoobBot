@@ -7,7 +7,7 @@ import java.nio.file.Paths
 class Config(
     val TOKEN: String,
     val DEBUG_TOKEN: String,
-    val SHARD_COUNT: Int = 1,
+    val SHARD_COUNT: String = "1",
     val RDY_WEBHOOK: String,
     val GJLOG_WEBHOOK: String,
     val GLLOG_WEBHOOK: String,
@@ -25,6 +25,8 @@ class Config(
     val OAUTH_REDIRECT_URL: String = "http://localhost:8769/oauth",
     val SESSION_KEY: String
 ) {
+    val SHARD_TOTAL: Int = this.SHARD_COUNT.toIntOrNull() ?: 1
+
     companion object {
         val OWNERS = listOf(
             248294452307689473L, 180093157554388993L
