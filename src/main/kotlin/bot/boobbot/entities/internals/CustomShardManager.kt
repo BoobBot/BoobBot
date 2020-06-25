@@ -118,7 +118,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
-                .setSessionController(ConcurrentSessionController().apply { setConcurrency(16) })
+                .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)
 
             return CustomShardManager(token, sm.build())
