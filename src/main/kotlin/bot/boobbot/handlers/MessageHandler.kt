@@ -9,16 +9,26 @@ import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 
 class MessageHandler : ListenerAdapter() {
+    private val threadCounter = AtomicInteger()
+    private val commandExecutorPool = Executors.newCachedThreadPool { Thread("Command-Executor-${threadCounter.getAndIncrement()}") }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-        if (event.author.isBot) {
+        if (event.author.isBot) { // Basic check to reduce thread usage
             return
         }
 
+        commandExecutorPool.execute {
+            processMessageEvent(event)
+        }
+    }
+
+    private fun processMessageEvent(event: MessageReceivedEvent) {
         if (event.channelType.isGuild) {
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
