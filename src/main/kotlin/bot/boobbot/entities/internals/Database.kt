@@ -5,6 +5,8 @@ import bot.boobbot.entities.db.economy.Guild
 import bot.boobbot.entities.db.economy.User
 import com.google.gson.Gson
 import com.mongodb.BasicDBObject
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
@@ -12,11 +14,25 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
 import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 class Database {
 
     private val gson = Gson()
-    private val mongo = MongoClients.create(BoobBot.config.MONGO_DB_URL)
+    private val mongo = MongoClients.create(
+        MongoClientSettings.builder().apply {
+            applicationName("BoobBot")
+            applyConnectionString(ConnectionString(BoobBot.config.MONGO_DB_URL))
+            applyToConnectionPoolSettings {
+                it.maxSize(25)
+                it.maxWaitTime(10, TimeUnit.SECONDS)
+            }
+            this.applyToSocketSettings {
+                it.connectTimeout(10, TimeUnit.SECONDS)
+                it.readTimeout(10, TimeUnit.SECONDS)
+            }
+        }.build()
+    )
 
     /** Databases **/
     private val bb = mongo.getDatabase("boobbot")
