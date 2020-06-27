@@ -89,6 +89,10 @@ class Utils {
         }
 
         fun logCommand(m: Message) {
+            if (!BoobBot.logCom) {
+                return
+            }
+
             val msg = if (m.isFromGuild) {
                 "[${m.guild.name} (${m.guild.id})/${m.channel.name} (${m.channel.id})] ${m.author.asTag} (${m.author.id}): ${m.contentDisplay}"
             } else {

@@ -16,4 +16,5 @@ data class Guild(
     var disabled: MutableList<String> = mutableListOf()
 ) {
     fun save() = BoobBot.database.setGuild(this)
+    fun delete() = BoobBot.database.deleteGuild(this._id)
 }

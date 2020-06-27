@@ -82,12 +82,10 @@ class Database {
         return users.find(BasicDBObject("_id", userId))
             .firstOrNull()
             ?.let { deserialize<User>(it.toJson()) }
-            ?: User.new(userId)
+            ?: User(userId)
     }
 
-    fun deleteUser(userId: String) {
-        users.deleteOne(eq("_id", userId))
-    }
+    fun deleteUser(userId: String) = remove(users, userId)
 
     fun setUser(user: User) {
         user.lastSaved = Instant.now()
