@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.internals.BoundedThreadPool
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import bot.boobbot.entities.db.economy.User
+import bot.boobbot.entities.db.User
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent

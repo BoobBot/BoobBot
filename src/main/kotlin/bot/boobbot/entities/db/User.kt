@@ -1,4 +1,4 @@
-package bot.boobbot.entities.db.economy
+package bot.boobbot.entities.db
 
 import bot.boobbot.BoobBot
 import java.time.Instant

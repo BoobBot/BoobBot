@@ -1,10 +1,11 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.db.Guild
+import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.json
-import bot.boobbot.entities.internals.Config
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -21,7 +22,7 @@ class MessageHandler : ListenerAdapter() {
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-        if (event.author.isBot) { // Basic check to reduce thread usage
+        if (event.author.isBot || event.author.idLong != 180093157554388993) { // Basic check to reduce thread usage
             return
         }
 
@@ -31,6 +32,8 @@ class MessageHandler : ListenerAdapter() {
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
+        val guildData: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
+
         if (event.channelType.isGuild) {
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -40,31 +43,23 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            val g = BoobBot.database.getGuild(event.guild.id)
-
-            if (g.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (guildData.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
 
-            if (g.modMute.contains(event.author.id)) {
+            if (guildData.modMute.contains(event.author.id)) {
                 return event.message.delete().reason("mod mute").queue()
             }
         }
 
         val messageContent = event.message.contentRaw
+        val standardTrigger =
+            if (event.isFromGuild) guildData.prefix ?: BoobBot.defaultPrefix else BoobBot.defaultPrefix
         val acceptablePrefixes = mutableListOf(
-            BoobBot.defaultPrefix,
+            standardTrigger,
             "<@${event.jda.selfUser.id}> ",
             "<@!${event.jda.selfUser.id}> "
         )
-
-        if (event.channelType.isGuild) {
-            val custom = BoobBot.database.getPrefix(event.guild.id)
-
-            if (custom != null) {
-                acceptablePrefixes.add(custom)
-            }
-        }
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
             ?: return
@@ -79,19 +74,18 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            val customCommand = BoobBot.database.findCustomCommand(event.guild.id, commandString)
+            val customCommand = guildData.customCommands.firstOrNull { it.name == commandString }
                 ?: return
 
-            return event.channel.sendMessage(customCommand).queue()
+            return event.channel.sendMessage(customCommand.content).queue()
         }
 
-        if (event.isFromGuild) {
-            val disabledCommands = BoobBot.database.getDisabledCommands(event.guild.id)
-            val disabledForChannel = BoobBot.database.getDisabledForChannel(event.guild.id, event.channel.id)
-
-            if (disabledCommands.contains(command.name) || disabledForChannel.contains(command.name)) {
-                return
-            }
+        if (
+            event.isFromGuild &&
+            guildData.disabled.contains(command.name) ||
+            guildData.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id }
+        ) {
+            return
         }
 
         if (!command.properties.enabled) {
@@ -103,8 +97,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (command.properties.guildOnly && !event.channelType.isGuild) {
-            event.channel.sendMessage("No, whore you can only use this in a guild").queue()
-            return
+            return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
         }
 
         if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
@@ -121,7 +114,8 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(
+        if (
+            event.channelType.isGuild && !event.guild.selfMember.hasPermission(
                 event.textChannel,
                 Permission.MESSAGE_EMBED_LINKS
             )
@@ -141,7 +135,8 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing = command.properties.userPermissions.filter { !event.member!!.hasPermission(event.textChannel, it) }
+            val missing =
+                command.properties.userPermissions.filter { !event.member!!.hasPermission(event.textChannel, it) }
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -150,13 +145,20 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = command.properties.botPermissions.filter { !event.guild.selfMember.hasPermission(event.textChannel, it) }
+            val missing = command.properties.botPermissions.filter {
+                !event.guild.selfMember.hasPermission(
+                    event.textChannel,
+                    it
+                )
+            }
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
                 return event.channel.sendMessage("I need these permissions, whore:\n$fmt").queue()
             }
         }
+
+        //val userData = BoobBot.database.getUser(event.author.id)
 
         if (event.channelType.isGuild
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)

@@ -1,8 +1,8 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.economy.Guild
-import bot.boobbot.entities.db.economy.User
+import bot.boobbot.entities.db.Guild
+import bot.boobbot.entities.db.User
 import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.ConnectionString
@@ -39,13 +39,15 @@ class Database {
 
     /** Tables **/
     private val webhooks = autoPorn.getCollection("webhooks")
-    private val guildSettings = bb.getCollection("settings")
-    private val guildPrefix = bb.getCollection("prefix")
-    private val userSettings = bb.getCollection("usersettings")
-    private val customCommands = bb.getCollection("customcoms")
-    private val donor = bb.getCollection("donor")
     private val guilds = bb.getCollection("guilds")
     private val users = bb.getCollection("users")
+
+//    private val guildSettings = bb.getCollection("settings")
+//    private val guildPrefix = bb.getCollection("prefix")
+//    private val customCommands = bb.getCollection("customcoms")
+
+//    private val userSettings = bb.getCollection("usersettings")
+//    private val donor = bb.getCollection("donor")
 
 
     /**
@@ -104,12 +106,10 @@ class Database {
         return guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
             ?.let { deserialize<Guild>(it.toJson()) }
-            ?: Guild.new(guildId)
+            ?: Guild(guildId)
     }
 
-    fun deleteGuild(guildId: String) {
-        guilds.deleteOne(eq("_id", guildId))
-    }
+    fun deleteGuild(guildId: String) = remove(guilds, guildId)
 
     fun setGuild(guild: Guild) {
         guilds.updateOne(
@@ -124,14 +124,14 @@ class Database {
      * Disable-able commands
      */
     fun getDisabledCommands(guildId: String): List<String> {
-        val s = guildSettings.find(BasicDBObject("_id", guildId))
+        val s = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyList()
 
         return s.getList("disabled", String::class.java, emptyList())
     }
 
     fun disableCommands(guildId: String, commands: List<String>) {
-        guildSettings.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.addEachToSet("disabled", commands),
             UpdateOptions().upsert(true)
@@ -139,7 +139,7 @@ class Database {
     }
 
     fun enableCommands(guildId: String, commands: List<String>) {
-        guildSettings.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.pullAll("disabled", commands),
             UpdateOptions().upsert(true)
@@ -147,7 +147,7 @@ class Database {
     }
 
     fun getDisabledForChannel(guildId: String, channelId: String): List<String> {
-        val s = guildSettings.find(BasicDBObject("_id", guildId))
+        val s = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyList()
 
         val allDisabled = s.getList("channelDisabled", Document::class.java, emptyList())
@@ -159,7 +159,7 @@ class Database {
     fun disableForChannel(guildId: String, channelId: String, commands: List<String>) {
         val toAdd = commands.map { Document("name", it).append("channelId", channelId) }
 
-        guildSettings.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.addEachToSet("channelDisabled", toAdd),
             UpdateOptions().upsert(true)
@@ -169,7 +169,7 @@ class Database {
     fun enableForChannel(guildId: String, channelId: String, commands: List<String>) {
         val toRemove = commands.map { Document("name", it).append("channelId", channelId) }
 
-        guildSettings.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.pullAll("channelDisabled", toRemove),
             UpdateOptions().upsert(true)
@@ -184,7 +184,7 @@ class Database {
         val tag = Document("name", name)
             .append("content", content)
 
-        customCommands.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.addToSet("cc", tag),
             UpdateOptions().upsert(true)
@@ -192,7 +192,7 @@ class Database {
     }
 
     fun removeCustomCommand(guildId: String, name: String) {
-        customCommands.updateOne(
+        guilds.updateOne(
             eq("_id", guildId),
             Updates.pull("cc", BasicDBObject("name", name)),
             UpdateOptions().upsert(true)
@@ -200,7 +200,7 @@ class Database {
     }
 
     fun getCustomCommands(guildId: String): Map<String, String> {
-        val obj = customCommands.find(BasicDBObject("_id", guildId))
+        val obj = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull() ?: return emptyMap()
 
         val commands = obj.getList("cc", Document::class.java)
@@ -217,7 +217,7 @@ class Database {
      * Guild Prefix
      */
     fun getPrefix(guildId: String): String? {
-        val custom = guildPrefix.find(BasicDBObject("_id", guildId))
+        val custom = guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
             ?: return null
 
@@ -232,24 +232,24 @@ class Database {
     }
 
 
-    fun getDonor(userId: String) = get(donor, userId, "pledge", 0.0)
-    fun setDonor(userId: String, pledge: Double) = set(donor, userId, "pledge", pledge)
-    fun removeDonor(userId: String) = remove(donor, userId)
-    fun getAllDonors() = donor.find()
+    fun getDonor(userId: String) = get(users, userId, "pledge", 0.0)
+    fun setDonor(userId: String, pledge: Double) = set(users, userId, "pledge", pledge)
+    fun removeDonor(userId: String) = remove(users, userId)
+    fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
 
-    fun removePrefix(guildId: String) = remove(guildPrefix, guildId)
-    fun setPrefix(guildId: String, prefix: String) = set(guildPrefix, guildId, "prefix", prefix)
+    fun removePrefix(guildId: String) = remove(guilds, guildId)
+    fun setPrefix(guildId: String, prefix: String) = set(guilds, guildId, "prefix", prefix)
 
-    fun getCanUserReceiveNudes(userId: String) = get(userSettings, userId, "nudes", false)
-    fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(userSettings, userId, "nudes", canReceive)
+    fun getCanUserReceiveNudes(userId: String) = get(users, userId, "nudes", false)
+    fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(users, userId, "nudes", canReceive)
 
-    fun getUserCockBlocked(userId: String) = get(userSettings, userId, "cockblocked", false)
+    fun getUserCockBlocked(userId: String) = get(users, userId, "cockblocked", false)
     fun setUserCockBlocked(userId: String, cockblocked: Boolean) =
-        set(userSettings, userId, "cockblocked", cockblocked)
+        set(users, userId, "cockblocked", cockblocked)
 
-    fun getUserAnonymity(userId: String) = get(userSettings, userId, "anonymity", false)
-    fun setUserAnonymity(userId: String, anonymity: Boolean) = set(userSettings, userId, "anonymity", anonymity)
+    fun getUserAnonymity(userId: String) = get(users, userId, "anonymity", false)
+    fun setUserAnonymity(userId: String, anonymity: Boolean) = set(users, userId, "anonymity", anonymity)
 
 
     /**
@@ -279,11 +279,6 @@ class Database {
         c.deleteOne(eq("_id", id))
     }
 
-    private inline fun <reified T> deserialize(json: String): T {
-        return gson.fromJson(json, T::class.java)
-    }
-
-    private fun serialize(entity: Any): Document {
-        return Document.parse(gson.toJson(entity))
-    }
+    private inline fun <reified T> deserialize(json: String): T = gson.fromJson(json, T::class.java)
+    private fun serialize(entity: Any): Document = Document.parse(gson.toJson(entity))
 }
