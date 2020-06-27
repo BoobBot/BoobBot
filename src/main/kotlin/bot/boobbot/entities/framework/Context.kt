@@ -33,7 +33,8 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     val textChannel: TextChannel? = if (isFromGuild) message.textChannel else null
     val guildChannel: GuildChannel? = if (isFromGuild) guild!!.getGuildChannelById(channel.idLong) else null
 
-    val customPrefix = if (isFromGuild) BoobBot.database.getPrefix(guild!!.id) else null
+    val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild!!.id) }
+    val customPrefix: String? by lazy { if (isFromGuild) guildData.prefix else null }
 
     val audioPlayer: GuildMusicManager
         get() {

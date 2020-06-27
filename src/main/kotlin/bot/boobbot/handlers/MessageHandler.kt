@@ -8,6 +8,8 @@ import bot.boobbot.utils.Utils
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
@@ -22,7 +24,7 @@ class MessageHandler : ListenerAdapter() {
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
 
-        if (event.author.isBot || event.author.idLong != 180093157554388993) { // Basic check to reduce thread usage
+        if (event.author.isBot) { // Basic check to reduce thread usage
             return
         }
 
@@ -120,23 +122,20 @@ class MessageHandler : ListenerAdapter() {
                 Permission.MESSAGE_EMBED_LINKS
             )
         ) {
-            event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
-            return
+            return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
         if (command.properties.donorOnly && !Utils.checkDonor(event.message)) {
-            event.channel.sendMessage(
+            return event.channel.sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
                 )
             ).queue()
-            return
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing =
-                command.properties.userPermissions.filter { !event.member!!.hasPermission(event.textChannel, it) }
+            val missing = checkMissingPermissions(event.member!!, event.textChannel, command.properties.userPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -145,12 +144,8 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = command.properties.botPermissions.filter {
-                !event.guild.selfMember.hasPermission(
-                    event.textChannel,
-                    it
-                )
-            }
+            val missing =
+                checkMissingPermissions(event.guild.selfMember, event.textChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -183,5 +178,13 @@ class MessageHandler : ListenerAdapter() {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
+    }
+
+    private fun checkMissingPermissions(
+        target: Member,
+        channel: TextChannel,
+        permissions: Array<Permission>
+    ): List<Permission> {
+        return permissions.filter { !target.hasPermission(channel, it) }
     }
 }

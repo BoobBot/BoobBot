@@ -68,7 +68,7 @@ class EconomyHandler : EventListener {
 
             if (event.message.textChannel.isNSFW) {
                 val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-                user.lewdPoints += min(tagSize, 5) * (user.balance / 100) * .01.toInt()
+                user.lewdPoints += 0 //min(tagSize, 5) * (user.balance / 100) * .01.toInt()
                 user.nsfwMessagesSent++
             }
 

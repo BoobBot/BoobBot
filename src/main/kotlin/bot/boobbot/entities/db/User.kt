@@ -16,7 +16,7 @@ data class User(
     var jailRemaining: Int = 0,
     var lastDaily: Instant? = null,
     var lastRep: Instant? = null,
-    //var lastSaved: Instant? = null { seconds: long, nanos: long }
+    var lastSaved: Instant? = null, // { seconds: long, nanos: long }
     var level: Int = 0,
     var lewdLevel: Int = 0,
     var lewdPoints: Int = 0,

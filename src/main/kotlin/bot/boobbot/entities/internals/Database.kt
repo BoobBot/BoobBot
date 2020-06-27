@@ -17,6 +17,8 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class Database {
+    var allReads = 0L
+    var guildReads = 0L
 
     private val gson = Gson()
     private val mongo = MongoClients.create(
@@ -54,6 +56,7 @@ class Database {
      * Webhooks/Autoporn
      */
     fun getWebhook(guildId: String): Document? {
+        allReads++
         return webhooks.find(BasicDBObject("_id", guildId))
             .firstOrNull()
     }
@@ -79,6 +82,7 @@ class Database {
      * User
      */
     fun getUser(userId: String): User {
+        allReads++
         return users.find(BasicDBObject("_id", userId))
             .firstOrNull()
             ?.let { deserialize<User>(it.toJson()) }
@@ -101,6 +105,8 @@ class Database {
      * Guild
      */
     fun getGuild(guildId: String): Guild {
+        allReads++
+        guildReads++
         return guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
             ?.let { deserialize<Guild>(it.toJson()) }
@@ -122,10 +128,7 @@ class Database {
      * Disable-able commands
      */
     fun getDisabledCommands(guildId: String): List<String> {
-        val s = guilds.find(BasicDBObject("_id", guildId))
-            .firstOrNull() ?: return emptyList()
-
-        return s.getList("disabled", String::class.java, emptyList())
+        return getGuild(guildId).disabled.toList()
     }
 
     fun disableCommands(guildId: String, commands: List<String>) {
@@ -145,13 +148,7 @@ class Database {
     }
 
     fun getDisabledForChannel(guildId: String, channelId: String): List<String> {
-        val s = guilds.find(BasicDBObject("_id", guildId))
-            .firstOrNull() ?: return emptyList()
-
-        val allDisabled = s.getList("channelDisabled", Document::class.java, emptyList())
-
-        return allDisabled.filter { it.getString("channelId") == channelId }
-            .map { it.getString("name") }
+        return getGuild(guildId).channelDisabled.filter { it.channelId == channelId }.map { it.name }
     }
 
     fun disableForChannel(guildId: String, channelId: String, commands: List<String>) {
@@ -198,16 +195,11 @@ class Database {
     }
 
     fun getCustomCommands(guildId: String): Map<String, String> {
-        val obj = guilds.find(BasicDBObject("_id", guildId))
-            .firstOrNull() ?: return emptyMap()
-
-        val commands = obj.getList("cc", Document::class.java)
-        return commands.associateBy({ it.getString("name") }, { it.getString("content") })
+        return getGuild(guildId).customCommands.associateBy({ it.name }, { it.content })
     }
 
     fun findCustomCommand(guildId: String, name: String): String? {
-        val custom = getCustomCommands(guildId)
-        return custom.filter { it.key == name }.values.firstOrNull()
+        return getCustomCommands(guildId)[name]
     }
 
 
@@ -215,18 +207,7 @@ class Database {
      * Guild Prefix
      */
     fun getPrefix(guildId: String): String? {
-        val custom = guilds.find(BasicDBObject("_id", guildId))
-            .firstOrNull()
-            ?: return null
-
-        val prefix = custom["prefix"]!!
-
-        if (String::class.java.isAssignableFrom(prefix::class.java)) {
-            return custom.getString("prefix")
-        }
-
-        val prefixes = custom.getList("prefix", String::class.java)
-        return prefixes.firstOrNull()
+        return getGuild(guildId).prefix
     }
 
 
@@ -236,8 +217,8 @@ class Database {
     fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
 
-    fun removePrefix(guildId: String) = remove(guilds, guildId)
     fun setPrefix(guildId: String, prefix: String) = set(guilds, guildId, "prefix", prefix)
+    fun removePrefix(guildId: String) = remove(guilds, guildId)
 
     fun getCanUserReceiveNudes(userId: String) = get(users, userId, "nudes", false)
     fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(users, userId, "nudes", canReceive)
