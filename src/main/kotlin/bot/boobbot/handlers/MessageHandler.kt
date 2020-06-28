@@ -45,7 +45,9 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            if (guildData.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (guildData.ignoredChannels.contains(event.channel.id)
+                && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)
+            ) {
                 return
             }
 
@@ -83,9 +85,8 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (
-            event.isFromGuild &&
-            guildData.disabled.contains(command.name) ||
-            guildData.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id }
+            event.isFromGuild && (guildData.disabled.contains(command.name) ||
+                    guildData.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })
         ) {
             return
         }

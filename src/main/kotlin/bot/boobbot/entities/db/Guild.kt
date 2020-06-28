@@ -15,6 +15,38 @@ data class Guild(
     var channelDisabled: MutableList<DisabledCommand> = mutableListOf(),
     var disabled: MutableList<String> = mutableListOf()
 ) {
+    init {
+        var update = false
+
+        if (ignoredChannels == null) {
+            ignoredChannels = mutableListOf()
+            update = true
+        }
+
+        if (modMute == null) {
+            modMute = mutableListOf()
+            update = true
+        }
+
+        if (channelDisabled == null) {
+            channelDisabled = mutableListOf()
+            update = true
+        }
+
+        if (disabled == null) {
+            disabled = mutableListOf()
+            update = true
+        }
+
+        if (customCommands == null) {
+            customCommands = mutableListOf()
+            update = true
+        }
+
+        if (update) {
+            save()
+        }
+    }
     fun save() = BoobBot.database.setGuild(this)
     fun delete() = BoobBot.database.deleteGuild(this._id)
 }
