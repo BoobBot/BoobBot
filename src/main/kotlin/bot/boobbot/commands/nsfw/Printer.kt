@@ -23,14 +23,20 @@ class Printer : AsyncCommand {
     private val categories = mapOf(
         "dick" to "penis",
         "boobs" to "boobs",
-        "ass" to "ass"
+        "ass" to "ass",
+        "black" to "black",
+        "tentacle" to "tentacle",
+        "pawg" to "pawg",
+        "hentai" to "hentai",
+        "easter" to "easter"
     )
+    val typeString = categories.keys.joinToString("`, `", prefix = "`", postfix = "`")
 
     override suspend fun executeAsync(ctx: Context) {
         val category = categories[ctx.args.firstOrNull()]
             ?: return ctx.embed {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: boobs, ass, dick"))
+                setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: $typeString"))
             }
 
         val imageUrl = getImage(category)
