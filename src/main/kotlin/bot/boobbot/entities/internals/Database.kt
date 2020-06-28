@@ -212,7 +212,7 @@ class Database {
     }
 
 
-    fun getDonor(userId: String) = get(users, userId, "pledge", 0.0)
+    fun getDonor(userId: String) = genericGet(users, userId, "pledge", "0.0")?.toString()?.toDoubleOrNull() ?: 0.0
     fun setDonor(userId: String, pledge: Double) = set(users, userId, "pledge", pledge)
     fun removeDonor(userId: String) = remove(users, userId)
     fun getAllDonors() = users.find()
@@ -242,6 +242,16 @@ class Database {
         return c.find(BasicDBObject("_id", id))
             .firstOrNull()
             ?.get(key, T::class.java)
+            ?: default
+    }
+
+    private fun genericGet(
+        c: MongoCollection<Document>, id: String,
+        key: String, default: Any?
+    ): Any? {
+        return c.find(BasicDBObject("_id", id))
+            .firstOrNull()
+            ?.get(key)
             ?: default
     }
 
