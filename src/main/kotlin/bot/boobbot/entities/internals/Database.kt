@@ -13,6 +13,7 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import org.bson.Document
+import org.json.JSONObject
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
@@ -109,7 +110,7 @@ class Database {
         guildReads++
         return guilds.find(BasicDBObject("_id", guildId))
             .firstOrNull()
-            ?.let { deserialize<Guild>(it.toJson()) }
+            ?.let { Guild.fromJson(JSONObject(it.toJson())) } //deserialize<Guild>(it.toJson()) }
             ?: Guild(guildId)
     }
 

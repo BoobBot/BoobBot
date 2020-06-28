@@ -27,7 +27,8 @@ data class User(
     var rep: Int = 0,
     var anonymity: Boolean = false,
     var cockblocked: Boolean = false,
-    var nudes: Boolean = false
+    var nudes: Boolean = false,
+    var pledge: Double = 0.0
 ) {
     fun save() = BoobBot.database.setUser(this)
     fun delete() = BoobBot.database.deleteUser(this._id)
