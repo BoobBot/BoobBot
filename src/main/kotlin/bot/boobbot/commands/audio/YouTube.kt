@@ -17,22 +17,15 @@ import bot.boobbot.entities.framework.VoiceCommand
     donorOnly = true
 )
 class YouTube : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+        if (ctx.args.firstOrNull()?.isEmpty() != false) {
             return ctx.send(Formats.error("Gotta specify a search query, whore"))
         }
 
-        val player = ctx.audioPlayer
-        val query = "ytsearch:${ctx.args.joinToString(" ")}"
-
-        playerManager.loadItem(query, AudioLoader(player, ctx))
-
+        playerManager.loadItem("ytsearch:${ctx.args.joinToString(" ")}", AudioLoader(ctx))
     }
 }

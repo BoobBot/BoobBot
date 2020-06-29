@@ -13,11 +13,8 @@ import bot.boobbot.entities.framework.VoiceCommand
     guildOnly = true
 )
 class Skip : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
@@ -47,5 +44,4 @@ class Skip : VoiceCommand {
             addField(Formats.info(" Track Skipped"), "Skipped: ${track.info.title}", false)
         }
     }
-
 }

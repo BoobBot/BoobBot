@@ -16,43 +16,37 @@ import bot.boobbot.entities.framework.VoiceCommand
     aliases = ["v", "vol"]
 )
 class Volume : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+        if (ctx.args.firstOrNull()?.isEmpty() != false) {
             return ctx.send("Gotta specify a search query, whore")
         }
 
         val player = ctx.audioPlayer
-        player.player.playingTrack
-            ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
+
+        if (player.player.playingTrack == null) {
+            return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
+        }
+
         if (!canSkip(ctx)) {
             return ctx.send(Formats.error("No whore, i can't let you do that"))
         }
 
+        val isBotOwner = Config.OWNERS.contains(ctx.author.idLong)
+        val volumeLimit = if (isBotOwner) 1000 else 100
+
         val oldVol = player.player.volume
-        try {
-            var newVol = Integer.parseInt(ctx.args[0])
-            if (newVol > 100 && !Config.OWNERS.contains(ctx.author.idLong)) {
-                newVol = 100
-            }
-            if (newVol < 0) {
-                newVol = 0
-            }
+        val newVol = ctx.args[0].toIntOrNull()?.coerceIn(0, volumeLimit)
+            ?: return ctx.send("wtf whore, that's not a valid number")
 
-            player.player.volume = newVol
-            return ctx.embed {
-                setColor(Colors.getEffectiveColor(ctx.message))
-                addField(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
-            }
+        player.player.volume = newVol
 
-        } catch (ex: NumberFormatException) {
-            ctx.send(Formats.error("wtf whore, ${ctx.args[0]} isn't a valid number"))
+        ctx.embed {
+            setColor(Colors.getEffectiveColor(ctx.message))
+            addField(Formats.info(""), "Changed volume from $oldVol to $newVol", false)
         }
     }
 }

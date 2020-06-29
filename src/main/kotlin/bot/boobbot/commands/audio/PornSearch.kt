@@ -14,11 +14,8 @@ import bot.boobbot.entities.framework.VoiceCommand
     guildOnly = true
 )
 class PornSearch : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
@@ -26,10 +23,6 @@ class PornSearch : VoiceCommand {
             return ctx.send("Gotta specify a search query, whore")
         }
 
-        val player = ctx.audioPlayer
-        val query = "phsearch:${ctx.args.joinToString(" ")}"
-
-        playerManager.loadItem(query, AudioLoader(player, ctx))
-
+        playerManager.loadItem("phsearch:${ctx.args.joinToString(" ")}", AudioLoader(ctx))
     }
 }

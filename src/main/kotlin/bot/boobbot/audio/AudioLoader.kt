@@ -11,7 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import java.time.Instant
 
 
-class AudioLoader(private val musicManager: GuildMusicManager, private val ctx: Context) : AudioLoadResultHandler {
+class AudioLoader(private val ctx: Context, private val musicManager: GuildMusicManager = ctx.audioPlayer) : AudioLoadResultHandler {
 
     private val youtubeIcon =
         "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300"

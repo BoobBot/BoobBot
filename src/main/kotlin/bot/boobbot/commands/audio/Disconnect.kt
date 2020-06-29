@@ -16,19 +16,12 @@ import net.dv8tion.jda.api.Permission
     guildOnly = true
 )
 class Disconnect : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val player = ctx.audioPlayer
-        if (
-            ctx.userCan(Permission.MESSAGE_MANAGE)
-            || Config.OWNERS.contains(ctx.author.idLong)
-            || isDJ(ctx.member!!)
-            || isAlone(ctx.member)
-        ) {
-            player.shutdown()
+        if (ctx.userCan(Permission.MESSAGE_MANAGE) || Config.OWNERS.contains(ctx.author.idLong) ||
+            isDJ(ctx.member!!) || isAlone(ctx.member)) {
+            ctx.audioPlayer.shutdown()
             return ctx.send(Formats.info("Done, Whore"))
         }
         return ctx.send(Formats.error("No whore, i can't let you do that"))
     }
-
 }

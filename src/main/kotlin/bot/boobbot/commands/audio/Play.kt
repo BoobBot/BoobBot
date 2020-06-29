@@ -17,20 +17,16 @@ import bot.boobbot.entities.framework.VoiceCommand
     nsfw = true
 )
 class Play : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        if (ctx.args.isEmpty() || ctx.args[0].isEmpty()) {
+        if (ctx.args.firstOrNull()?.isEmpty() != false) {
             return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
         }
 
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
-        val player = ctx.audioPlayer
-        val query = ctx.args[0].replace("<", "").replace(">", "")
+        val query = ctx.args[0].removeSurrounding("<", ">")
 
         if (!Utils.checkDonor(ctx.message) && isYouTubeTrack(query)) {
             return ctx.send(
@@ -41,7 +37,7 @@ class Play : VoiceCommand {
             )
         }
 
-        playerManager.loadItem(query, AudioLoader(player, ctx))
+        playerManager.loadItem(query, AudioLoader(ctx))
     }
 
     private fun isYouTubeTrack(query: String): Boolean {
@@ -55,5 +51,4 @@ class Play : VoiceCommand {
         return query.startsWith("ytsearch:") ||
                 domain?.let { it == "youtube.com" || domain == "youtu.be" } ?: false
     }
-
 }

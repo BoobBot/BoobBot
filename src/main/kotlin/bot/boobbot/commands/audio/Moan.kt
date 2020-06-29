@@ -12,17 +12,12 @@ import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(description = "moans :tired_face:", nsfw = true, category = Category.AUDIO, guildOnly = true)
 class Moan : VoiceCommand {
-
     override fun execute(ctx: Context) {
-        val shouldPlay = performVoiceChecks(ctx)
-
-        if (!shouldPlay) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
-        val musicManager = getMusicManager(ctx.message.guild)
         connectToVoiceChannel(ctx.message)
-        playerManager.loadItemOrdered(musicManager, getRandomMoan().toString(), AudioLoader(musicManager, ctx))
+        playerManager.loadItem(getRandomMoan().toString(), AudioLoader(ctx))
     }
-
 }
