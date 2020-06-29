@@ -18,43 +18,19 @@ import java.util.concurrent.TimeUnit
     category = Category.MISC
 )
 class Clean : Command {
-
-    private val DISCORD_EPOCH = 1420070400000L
-    private val TIMESTAMP_OFFSET = 22
-
-    private fun parseSnowflake(input: String): Long {
-        try {
-            return if (!input.startsWith("-"))
-                java.lang.Long.parseUnsignedLong(input)
-            else
-                java.lang.Long.parseLong(input)
-        } catch (ex: NumberFormatException) {
-            throw NumberFormatException(
-                String.format("The specified ID is not a valid snowflake (%s). Expecting a valid long value!", input)
-            )
-        }
-    }
-
-    private fun twoWeeks(message: Message): Boolean {
-        val twoWeeksAgo = System.currentTimeMillis() - 14 * 24 * 60 * 60 * 1000 - DISCORD_EPOCH shl TIMESTAMP_OFFSET
-        return parseSnowflake(message.id) < twoWeeksAgo
-    }
-
-    private fun isSpam(message: Message, guildId: String): Boolean {
+    private fun filterDeletable(ctx: Context, messages: List<Message>): List<Message> {
+        val selfId = ctx.jda.selfUser.id
         val prefixes = mutableListOf(
             BoobBot.defaultPrefix,
-            "<@${message.jda.selfUser.id}> ",
-            "<@!${message.jda.selfUser.id}> "
+            "<@$selfId> ",
+            "<@!$selfId> "
         )
 
-        val custom = BoobBot.database.getPrefix(guildId)
+        ctx.customPrefix?.let(prefixes::add)
 
-        if (custom != null) {
-            prefixes.add(custom)
+        return messages.filter {
+            it.author.idLong == it.jda.selfUser.idLong || prefixes.any { p -> it.contentRaw.toLowerCase().startsWith(p) }
         }
-
-        return message.author.idLong == message.jda.selfUser.idLong ||
-                prefixes.any { message.contentRaw.toLowerCase().startsWith(it) }
     }
 
     override fun execute(ctx: Context) {
@@ -70,18 +46,14 @@ class Clean : Command {
             return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_MESSAGES` permission needed to do this")
         }
 
-        ctx.channel.history.retrievePast(100).queue { ms ->
-            val spam = ms.filter { !twoWeeks(it) && isSpam(it, ctx.guild!!.id) }
-
-            if (spam.isNotEmpty() && spam.size <= 2) {
-                spam.forEach { msg -> msg.delete().queue() }
-            } else if (spam.isNotEmpty()) {
-                ctx.channel.purgeMessages(*spam.toTypedArray())
+        ctx.channel.iterableHistory
+            .takeAsync(100)
+            .thenApply { filterDeletable(ctx, it) }
+            .thenApply { ctx.channel.purgeMessages(it) }
+            .thenAccept {
+                ctx.send("I deleted ${it.size} messages", { m ->
+                    m.delete().queueAfter(5, TimeUnit.SECONDS)
+                })
             }
-
-            ctx.channel.sendMessage(Formats.info("I deleted ${spam.size} messages"))
-                .queue { m -> m.delete().queueAfter(5, TimeUnit.SECONDS) }
-        }
     }
-
 }

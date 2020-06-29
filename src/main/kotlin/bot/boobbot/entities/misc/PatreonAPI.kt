@@ -21,7 +21,13 @@ class PatreonAPI(private val accessToken: String) {
     private val monitor = Executors.newSingleThreadScheduledExecutor { Thread(it, "Pledge-Monitor") }
 
     init {
-        monitor.scheduleAtFixedRate({ monitorPledges() }, 0, 1, TimeUnit.DAYS)
+        monitor.scheduleAtFixedRate({
+            try {
+                monitorPledges()
+            } catch (e: Throwable) {
+                log.error("Error in Patreon monitor", e)
+            }
+        }, 0, 1, TimeUnit.DAYS)
     }
 
     fun getDonorType(userId: String): DonorType {
@@ -39,7 +45,7 @@ class PatreonAPI(private val accessToken: String) {
 
         fetchPledgesOfCampaign("1928035").thenAccept { users ->
             val e = System.currentTimeMillis()
-            println("Found ${users.size} in ${e - s}ms")
+            log.debug("Found ${users.size} in ${e - s}ms")
 
             if (users.isEmpty()) {
                 return@thenAccept log.warn("[SUSPICIOUS] Scheduled pledge clean failed: No users to check")

@@ -67,7 +67,7 @@ class BoobBot {
         val config = Config.load()
         val database = Database()
 
-        val commands = CommandRegistry.load()
+        val commands = CommandRegistry()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()
