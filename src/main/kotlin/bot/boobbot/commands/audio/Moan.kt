@@ -9,7 +9,7 @@ import bot.boobbot.entities.framework.VoiceCommand
 import bot.boobbot.utils.Utils.Companion.connectToVoiceChannel
 import bot.boobbot.utils.Utils.Companion.getRandomMoan
 
-@CommandProperties(description = "moans :tired_face:", nsfw = true, category = Category.AUDIO, guildOnly = true, enabled = false)
+@CommandProperties(description = "moans :tired_face:", nsfw = true, category = Category.AUDIO, guildOnly = true)
 class Moan : VoiceCommand {
     override fun execute(ctx: Context) {
         if (!performVoiceChecks(ctx)) {

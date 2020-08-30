@@ -12,35 +12,7 @@
   "moan": [
     {
       "name": "moan1",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan2",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan3",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan4",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan5",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan6",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan7",
-      "ext": "m4a"
-    },
-    {
-      "name": "moan8",
-      "ext": "m4a"
+      "ext": "mp3"
     }
   ],
   "interaction": [
