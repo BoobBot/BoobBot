@@ -104,7 +104,7 @@ class EconomyHandler : EventListener {
                 var found = random(1, 4)
                 user.balance += found
                 user.save()
-                grabber.channel.sendMessage("${grabber.author.asMention} grabbed it and found $$random(1, 4)!")
+                grabber.channel.sendMessage("${grabber.author.asMention} grabbed it and found $$found!")
                     .delay(10, TimeUnit.SECONDS)
                     .flatMap { it.delete() }
                     .queue()
