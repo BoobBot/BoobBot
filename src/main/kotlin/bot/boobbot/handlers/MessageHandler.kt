@@ -2,6 +2,7 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
+import bot.boobbot.entities.db.User
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -12,8 +13,27 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.floor
+import kotlin.math.min
+import kotlin.math.sqrt
+
+private fun calculateLewdLevel(user: User): Int {
+    val calculateLewdPoints =
+        (user.experience / 100) * .1 +
+                (user.nsfwCommandsUsed / 100) * .3 -
+                (user.commandsUsed / 100) * .3 +
+                (user.lewdPoints / 100) * 20
+    // lewd level up
+    return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
+}
+
+private val random = Random()
+private fun random(lower: Int, upper: Int): Int {
+    return random.nextInt(upper - lower) + lower
+}
 
 class MessageHandler : ListenerAdapter() {
     private val threadCounter = AtomicInteger()
@@ -35,7 +55,6 @@ class MessageHandler : ListenerAdapter() {
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
         val guildData: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
-
         if (event.channelType.isGuild) {
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -54,6 +73,37 @@ class MessageHandler : ListenerAdapter() {
             if (guildData.modMute.contains(event.author.id)) {
                 return event.message.delete().reason("mod mute").queue()
             }
+
+            val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+
+            user.messagesSent++
+            if (!user.blacklisted) {
+                if (user.inJail) {
+                    user.jailRemaining = min(user.jailRemaining - 1, 0)
+                    user.inJail = user.jailRemaining > 0
+                }
+
+                if (event.message.textChannel.isNSFW) {
+                    val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
+                    user.lewdPoints += min(tagSize, 5)
+                    user.nsfwMessagesSent++
+                }
+
+                if (user.coolDownCount >= random(0, 10)) {
+                    user.coolDownCount = random(0, 10)
+                    user.experience++
+                    if (user.bonusXp > 0) {
+                        user.experience++ // extra XP
+                        user.bonusXp = user.bonusXp - 1
+                    }
+                }
+
+                user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
+                user.lewdLevel = calculateLewdLevel(user)
+                user.save()
+            }
+
+
         }
 
         val messageContent = event.message.contentRaw
