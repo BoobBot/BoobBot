@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
+import com.mongodb.client.FindIterable
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
@@ -217,7 +218,7 @@ class Database {
     fun removeDonor(userId: String) = remove(users, userId)
     fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
-
+    fun getAllUsers(): FindIterable<Document> = users.find().sort(BasicDBObject("balance",-1)).limit(15)
     fun setPrefix(guildId: String, prefix: String) = set(guilds, guildId, "prefix", prefix)
     fun removePrefix(guildId: String) = remove(guilds, guildId)
 
