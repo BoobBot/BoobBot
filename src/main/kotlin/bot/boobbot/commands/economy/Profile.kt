@@ -44,7 +44,7 @@ class Profile : Command {
                 "**Protected**: ${u.protected}\n" +
                         "**Jailed**: ${u.inJail}\n" +
                         "**Commands Used**:\nsfw: ${u.commandsUsed}\nnsfw: ${u.nsfwCommandsUsed}\ntotal: ${(u.commandsUsed + u.nsfwCommandsUsed)}\n" +
-                        "**Messages Seen**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent + u.nsfwMessagesSent)}\n",
+                        "**Messages Sent**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent + u.nsfwMessagesSent)}\n",
                 false
             )
         }
