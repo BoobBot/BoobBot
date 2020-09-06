@@ -1,10 +1,9 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.internals.BoundedThreadPool
-import bot.boobbot.utils.Formats
-import bot.boobbot.utils.json
 import bot.boobbot.entities.db.User
+import bot.boobbot.entities.internals.BoundedThreadPool
+import bot.boobbot.utils.json
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
@@ -19,9 +18,6 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
-import kotlin.math.floor
-import kotlin.math.min
-import kotlin.math.sqrt
 
 
 class EconomyHandler : EventListener {
@@ -58,35 +54,6 @@ class EconomyHandler : EventListener {
     }
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
-        val user = BoobBot.database.getUser(event.author.id)
-        user.messagesSent++
-        if (!user.blacklisted) {
-            if (user.inJail) {
-                user.jailRemaining = min(user.jailRemaining - 1, 0)
-                user.inJail = user.jailRemaining > 0
-            }
-
-            if (event.message.textChannel.isNSFW) {
-                val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-                user.lewdPoints += 0 //min(tagSize, 5) * (user.balance / 100) * .01.toInt()
-                user.nsfwMessagesSent++
-            }
-
-            if (user.coolDownCount >= random(0, 10)) {
-                user.coolDownCount = random(0, 10)
-                user.experience++
-
-                if (user.bonusXp != null && user.bonusXp!! > 0) {
-                    user.experience++ // extra XP
-                    user.bonusXp = user.bonusXp!! - 1
-                }
-            }
-
-            user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-            user.lewdLevel = calculateLewdLevel(user)
-            user.save()
-        }
-
         val g = BoobBot.database.getGuild(event.guild.id)
 
         if (!g.dropEnabled || !event.channel.isNSFW) {
@@ -133,10 +100,11 @@ class EconomyHandler : EventListener {
                     return@thenCombine
                 }
 
-                val user = BoobBot.database.getUser(event.author.id)
-                user.balance += random(1, 4)
+                val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+                var found = random(1, 4)
+                user.balance += found
                 user.save()
-                grabber.channel.sendMessage("${grabber.author.asMention} grabbed it!")
+                grabber.channel.sendMessage("${grabber.author.asMention} grabbed it and found $$random(1, 4)!")
                     .delay(10, TimeUnit.SECONDS)
                     .flatMap { it.delete() }
                     .queue()
@@ -188,16 +156,6 @@ class EconomyHandler : EventListener {
                     s.toByteArray()
                 }
             }
-    }
-
-    private fun calculateLewdLevel(user: User): Int {
-        val calculateLewdPoints =
-            (user.experience / 100) * .1 +
-                    (user.nsfwCommandsUsed / 100) * .3 -
-                    (user.commandsUsed / 100) * .3 +
-                    (user.lewdPoints / 100) * 20
-        // lewd level up
-        return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
     }
 
     private fun await(channelId: Long, dropKey: String) = BoobBot.waiter.waitForMessage(

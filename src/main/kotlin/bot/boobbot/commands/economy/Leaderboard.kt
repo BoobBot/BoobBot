@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 
-@CommandProperties(description = "Global economy leaderboard \uD83C\uDFC6", guildOnly = true)
+@CommandProperties(description = "Global economy leaderboard \uD83C\uDFC6", aliases = ["lb", "richest"] , guildOnly = true)
 class Leaderboard : Command {
 
     override fun execute(ctx: Context) {

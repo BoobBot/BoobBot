@@ -75,7 +75,6 @@ class MessageHandler : ListenerAdapter() {
             }
 
             val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-
             user.messagesSent++
             if (!user.blacklisted) {
                 if (user.inJail) {
