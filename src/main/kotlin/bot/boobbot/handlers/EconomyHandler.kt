@@ -102,7 +102,7 @@ class EconomyHandler : EventListener {
                 }
 
                 val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-                var found = random(1, 4)
+                val found = random(1, 4)
                 user.balance += found
                 user.save()
                 grabber.channel.sendMessage("${grabber.author.asMention} grabbed it and found $$found!")
