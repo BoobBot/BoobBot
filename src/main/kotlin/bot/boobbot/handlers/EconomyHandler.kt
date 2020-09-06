@@ -1,6 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.internals.BoundedThreadPool
 import bot.boobbot.utils.json
@@ -54,7 +55,7 @@ class EconomyHandler : EventListener {
     }
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
-        val g by lazy { BoobBot.database.getGuild(event.guild.id) }
+        val g: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (!g.dropEnabled || !event.channel.isNSFW) {
             return
