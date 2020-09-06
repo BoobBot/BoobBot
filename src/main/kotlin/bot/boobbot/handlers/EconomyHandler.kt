@@ -54,7 +54,7 @@ class EconomyHandler : EventListener {
     }
 
     private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
-        val g = BoobBot.database.getGuild(event.guild.id)
+        val g by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (!g.dropEnabled || !event.channel.isNSFW) {
             return
