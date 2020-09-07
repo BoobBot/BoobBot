@@ -13,6 +13,10 @@
     {
       "name": "moan1",
       "ext": "mp3"
+    },
+    {
+      "name": "moan2",
+      "ext": "mp3"
     }
   ],
   "interaction": [
