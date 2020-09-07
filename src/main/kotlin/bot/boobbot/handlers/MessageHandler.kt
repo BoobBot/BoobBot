@@ -8,6 +8,10 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
@@ -74,34 +78,9 @@ class MessageHandler : ListenerAdapter() {
                 return event.message.delete().reason("mod mute").queue()
             }
 
-            val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-            user.messagesSent++
-            if (!user.blacklisted) {
-                if (user.inJail) {
-                    user.jailRemaining = min(user.jailRemaining - 1, 0)
-                    user.inJail = user.jailRemaining > 0
-                }
-
-                if (event.message.textChannel.isNSFW) {
-                    val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-                    user.lewdPoints += min(tagSize, 5)
-                    user.nsfwMessagesSent++
-                }
-
-                if (user.coolDownCount >= random(0, 10)) {
-                    user.coolDownCount = random(0, 10)
-                    user.experience++
-                    if (user.bonusXp > 0) {
-                        user.experience++ // extra XP
-                        user.bonusXp = user.bonusXp - 1
-                    }
-                }
-
-                user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-                user.lewdLevel = calculateLewdLevel(user)
-                user.save()
+            GlobalScope.launch {
+                processUser(event)
             }
-
 
         }
 
@@ -237,4 +216,40 @@ class MessageHandler : ListenerAdapter() {
     ): List<Permission> {
         return permissions.filter { !target.hasPermission(channel, it) }
     }
+
+    private suspend fun processUser(event: MessageReceivedEvent) {
+        withContext(Dispatchers.Default) {
+            val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+            user.messagesSent++
+            if (!user.blacklisted) {
+                if (user.inJail) {
+                    user.jailRemaining = min(user.jailRemaining - 1, 0)
+                    user.inJail = user.jailRemaining > 0
+                }
+
+                if (event.message.textChannel.isNSFW) {
+                    val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
+                    user.lewdPoints += min(tagSize, 5)
+                    user.nsfwMessagesSent++
+                }
+                print(user.experience)
+                if (user.coolDownCount >= random(0, 10)) {
+                    user.coolDownCount = random(0, 10)
+                    print(user.experience)
+                    user.experience++
+                    if (user.bonusXp > 0) {
+                        user.experience++ // extra XP
+                        user.bonusXp = user.bonusXp - 1
+                    }
+                }
+
+                user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
+                user.lewdLevel = calculateLewdLevel(user)
+                user.save()
+            }
+
+        }
+    }
+
+
 }
