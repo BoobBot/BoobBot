@@ -17,11 +17,11 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
-        val link = "https://discord.gg/boobbot"//res.getString("url")
+        val link = res.getString("url")
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         ctx.embed {
-            setTitle("${Formats.LEWD_EMOTE} Click me, you know you want too!!!", link)
+            setTitle("${Formats.LEWD_EMOTE} Click me, you know you want too!!!", "https://discord.gg/boobbot")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(link)
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
