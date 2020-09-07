@@ -218,7 +218,7 @@ class Database {
     fun removeDonor(userId: String) = remove(users, userId)
     fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
-    fun getAllUsers(): FindIterable<Document> = users.find().sort(BasicDBObject("balance",-1)).limit(15)
+    fun getAllUsers(): MongoCollection<Document> = users
     fun setPrefix(guildId: String, prefix: String) = set(guilds, guildId, "prefix", prefix)
     fun removePrefix(guildId: String) = remove(guilds, guildId)
 
