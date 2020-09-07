@@ -73,13 +73,19 @@ class bank : Command {
         }
 
         if (ctx.args[0].toIntOrNull() == null) {
-            return ctx.send("wtf whore, thats not a number")
+            return ctx.send("wtf whore, that's not a number. `try: bbbank transfer 500 @user#0000`")
         }
 
         val user: User by lazy { BoobBot.database.getUser(ctx.author.id) }
 
+        if (ctx.mentions[0].id == ctx.author.id) {
+            user.bankBalance -= 10
+            user.save()
+            return ctx.send("Don't be a whore, you cant transfer to yourself. I took $10 from you for trying.")
+        }
+
         if (ctx.args[0].toInt() > user.bankBalance) {
-            return ctx.send("wtf whore, you only have ${user.bankBalance}")
+            return ctx.send("wtf whore, you only have $${user.bankBalance} in your bank account")
         }
 
         val user2: User by lazy { BoobBot.database.getUser(ctx.mentions[0].id) }
