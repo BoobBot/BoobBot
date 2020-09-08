@@ -21,21 +21,6 @@ import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sqrt
 
-private fun calculateLewdLevel(user: User): Int {
-    val calculateLewdPoints =
-        (user.experience / 100) * .1 +
-                (user.nsfwCommandsUsed / 100) * .3 -
-                (user.commandsUsed / 100) * .3 +
-                (user.lewdPoints / 100) * 20
-    // lewd level up
-    return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
-}
-
-private val random = Random()
-private fun random(lower: Int, upper: Int): Int {
-    return random.nextInt(upper - lower) + lower
-}
-
 class MessageHandler : ListenerAdapter() {
     private val threadCounter = AtomicInteger()
     private val commandExecutorPool = Executors.newCachedThreadPool {
@@ -249,6 +234,21 @@ class MessageHandler : ListenerAdapter() {
         }
 
 
+    }
+
+    private fun calculateLewdLevel(user: User): Int {
+        val calculateLewdPoints =
+            (user.experience / 100) * .1 +
+                    (user.nsfwCommandsUsed / 100) * .3 -
+                    (user.commandsUsed / 100) * .3 +
+                    (user.lewdPoints / 100) * 20
+        // lewd level up
+        return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
+    }
+
+    private val random = Random()
+    private fun random(lower: Int, upper: Int): Int {
+        return random.nextInt(upper - lower) + lower
     }
 
 

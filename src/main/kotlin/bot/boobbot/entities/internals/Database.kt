@@ -7,7 +7,6 @@ import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
-import com.mongodb.client.FindIterable
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
@@ -28,7 +27,7 @@ class Database {
             applicationName("BoobBot")
             applyConnectionString(ConnectionString(BoobBot.config.MONGO_DB_URL))
             applyToConnectionPoolSettings {
-                it.maxSize(250)
+                it.maxSize(BoobBot.config.SHARD_TOTAL)
             }
             this.applyToSocketSettings {
                 it.connectTimeout(10, TimeUnit.SECONDS)
