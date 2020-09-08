@@ -190,7 +190,7 @@ class MessageHandler : ListenerAdapter() {
             }
         }
 
-        val userData by lazy { BoobBot.database.getUser(event.author.id) }
+        val userData = BoobBot.database.getUser(event.author.id)
 
         if (event.channelType.isGuild && userData.anonymity
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
@@ -200,17 +200,15 @@ class MessageHandler : ListenerAdapter() {
 
         try {
             Utils.logCommand(event.message)
+            command.execute(trigger, event.message, args)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
-
             if (command.properties.nsfw) {
                 userData.nsfwCommandsUsed++
             } else {
                 userData.commandsUsed++
             }
-
             userData.save()
-            command.execute(trigger, event.message, args)
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction("\uD83D\uDEAB").queue()
