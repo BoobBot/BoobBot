@@ -227,6 +227,7 @@ class MessageHandler : ListenerAdapter() {
     private suspend fun processUser(event: MessageReceivedEvent) {
         withContext(Dispatchers.Default) {
             val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+            user.save()
             user.messagesSent++
             if (!user.blacklisted) {
                 if (user.inJail) {
