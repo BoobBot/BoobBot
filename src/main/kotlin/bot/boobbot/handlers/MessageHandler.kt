@@ -45,6 +45,9 @@ class MessageHandler : ListenerAdapter() {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
+    private val dropperExecutorPool = Executors.newCachedThreadPool {
+        Thread(it, "Dropper-Executor-${threadCounter.getAndIncrement()}")
+    }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
@@ -80,7 +83,7 @@ class MessageHandler : ListenerAdapter() {
             }
 
             if (guildData.dropEnabled && event.textChannel.isNSFW) {
-                BootyDropper().processDrop(event)
+                dropperExecutorPool.execute { BootyDropper().processDrop(event) }
             }
 
             GlobalScope.launch {
