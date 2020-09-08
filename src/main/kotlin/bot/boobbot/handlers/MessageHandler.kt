@@ -187,7 +187,7 @@ class MessageHandler : ListenerAdapter() {
             }
         }
 
-        val userData = BoobBot.database.getUser(event.author.id)
+        val userData by lazy { BoobBot.database.getUser(event.author.id) }
 
         if (event.channelType.isGuild && userData.anonymity
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)

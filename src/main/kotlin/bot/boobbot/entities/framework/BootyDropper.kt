@@ -71,6 +71,7 @@ class BootyDropper {
     }
 
     private fun spawnDrop(event: MessageReceivedEvent) {
+        BoobBot.log.info("Dropped on ${event.guild.name}/${event.guild.id}")
         val dropKey = (0..3).map { CHARS.random() }.joinToString("")
 
         generateDrop(dropKey)
