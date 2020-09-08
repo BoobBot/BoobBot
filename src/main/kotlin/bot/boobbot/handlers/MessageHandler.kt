@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
+import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -76,6 +77,10 @@ class MessageHandler : ListenerAdapter() {
 
             if (guildData.modMute.contains(event.author.id)) {
                 return event.message.delete().reason("mod mute").queue()
+            }
+
+            if (guildData.dropEnabled && event.textChannel.isNSFW) {
+                BootyDropper().processDrop(event)
             }
 
             GlobalScope.launch {

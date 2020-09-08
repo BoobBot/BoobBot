@@ -1,15 +1,12 @@
-package bot.boobbot.handlers
+package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.internals.BoundedThreadPool
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.GenericEvent
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
-import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.requests.ErrorResponse
 import okhttp3.Headers
 import java.awt.Color
@@ -21,7 +18,7 @@ import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
 
-class EconomyHandler : EventListener {
+class BootyDropper {
     private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
@@ -48,19 +45,8 @@ class EconomyHandler : EventListener {
             .thenApply { it.getString("url") }
     }
 
-    override fun onEvent(event: GenericEvent) {
-        if (event is GuildMessageReceivedEvent) {
-            onGuildMessageReceivedEvent(event)
-        }
-    }
 
-    private fun onGuildMessageReceivedEvent(event: GuildMessageReceivedEvent) {
-        val g: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
-
-        if (!g.dropEnabled || !event.channel.isNSFW) {
-            return
-        }
-
+    fun processDrop(event: MessageReceivedEvent) {
         val number = random(0, 10000)
 
         if (!activeDrops.contains(event.guild.idLong) && number % 59 == 0) {
@@ -80,11 +66,11 @@ class EconomyHandler : EventListener {
     }
 
     /** DROPS **/
-    private fun doDrop(event: GuildMessageReceivedEvent) {
+    private fun doDrop(event: MessageReceivedEvent) {
         dropThreads.execute { spawnDrop(event) }
     }
 
-    private fun spawnDrop(event: GuildMessageReceivedEvent) {
+    private fun spawnDrop(event: MessageReceivedEvent) {
         val dropKey = (0..3).map { CHARS.random() }.joinToString("")
 
         generateDrop(dropKey)
