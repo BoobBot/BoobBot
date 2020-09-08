@@ -21,11 +21,11 @@ class EventHandler : ListenerAdapter() {
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
 
-        avatar = event.jda.selfUser.effectiveAvatarUrl
-        WebhookManager.sendShard(avatar) {
+        //avatar = event.jda.selfUser.effectiveAvatarUrl
+        /*WebhookManager.sendShard(avatar) {
             setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
             setDescription("Ping: ${event.jda.gatewayPing}ms")
-        }
+        }*/
     }
 
     override fun onReconnect(event: ReconnectedEvent) {

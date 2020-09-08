@@ -13,7 +13,7 @@ class Perks : Command {
 
         BoobBot.pApi.fetchPledgesOfCampaign("1928035").thenAccept {
             if (it.isEmpty()) {
-                return@thenAccept ctx.send("Suspicious response from Patreon API. Report this to the devs.")
+                return@thenAccept ctx.send("Suspicious response from Patreon API. Report this to https://discord.gg/boobbot.")
             }
 
             val pledge = it.firstOrNull { u -> u.discordId != null && u.discordId == ctx.author.idLong }
