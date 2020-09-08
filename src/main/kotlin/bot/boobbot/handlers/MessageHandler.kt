@@ -211,6 +211,7 @@ class MessageHandler : ListenerAdapter() {
             userData.save()
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
+            BoobBot.log.info(userData.toString())
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
     }
