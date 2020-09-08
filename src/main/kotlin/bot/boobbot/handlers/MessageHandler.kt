@@ -59,6 +59,7 @@ class MessageHandler : ListenerAdapter() {
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
         val guildData: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
+        val user: User by lazy { BoobBot.database.getUser(event.author.id) }
         if (event.channelType.isGuild) {
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -79,10 +80,10 @@ class MessageHandler : ListenerAdapter() {
             }
 
             if (guildData.dropEnabled && event.textChannel.isNSFW) {
-                BootyDropper().processDrop(event)
+                dropperExecutorPool.execute { BootyDropper().processDrop(event) }
             }
 
-            processUser(event)
+            processUser(event, user)
 
 
         }
@@ -185,9 +186,8 @@ class MessageHandler : ListenerAdapter() {
             }
         }
 
-        val userData = BoobBot.database.getUser(event.author.id)
 
-        if (event.channelType.isGuild && userData.anonymity
+        if (event.channelType.isGuild && user.anonymity
             && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
         ) {
             event.message.delete().queue(null, {})
@@ -199,14 +199,14 @@ class MessageHandler : ListenerAdapter() {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
             if (command.properties.nsfw) {
-                userData.nsfwCommandsUsed++
+                user.nsfwCommandsUsed++
             } else {
-                userData.commandsUsed++
+                user.commandsUsed++
             }
-            userData.save()
+            user.save()
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            BoobBot.log.info(userData.toString())
+            BoobBot.log.info(user.toString())
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
     }
@@ -219,9 +219,7 @@ class MessageHandler : ListenerAdapter() {
         return permissions.filter { !target.hasPermission(channel, it) }
     }
 
-    private fun processUser(event: MessageReceivedEvent) {
-
-        val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+    private fun processUser(event: MessageReceivedEvent, user: User) {
         user.messagesSent++
         if (!user.blacklisted) {
             if (user.inJail) {
