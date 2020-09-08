@@ -95,10 +95,6 @@ class Database {
 
     fun setUser(user: User) {
         user.lastSaved = Instant.now()
-        //index checks
-        if (user.rep == null){user.rep = 0}
-        if (user.level == null){user.level = 0}
-        if (user.bankBalance == null){user.balance = 0}
         users.updateOne(
             eq("_id", user._id),
             Document("\$set", serialize(user)),
