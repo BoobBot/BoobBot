@@ -9,6 +9,8 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
@@ -26,9 +28,6 @@ class MessageHandler : ListenerAdapter() {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
-    private val dropperExecutorPool = Executors.newCachedThreadPool {
-        Thread(it, "Dropper-Executor-${threadCounter.getAndIncrement()}")
-    }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
@@ -40,6 +39,7 @@ class MessageHandler : ListenerAdapter() {
         commandExecutorPool.execute {
             processMessageEvent(event)
         }
+
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
@@ -48,6 +48,11 @@ class MessageHandler : ListenerAdapter() {
         val user: User by lazy { BoobBot.database.getUser(event.author.id) }
 
         if (event.channelType.isGuild) {
+
+            if (guildData.dropEnabled && event.textChannel.isNSFW) {
+                GlobalScope.launch { BootyDropper().processDrop(event) }
+            }
+
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
@@ -65,19 +70,17 @@ class MessageHandler : ListenerAdapter() {
             if (guildData.modMute.contains(event.author.id)) {
                 return event.message.delete().reason("mod mute").queue()
             }
-            //do Drop
-            if (guildData.dropEnabled && event.textChannel.isNSFW) {
-                dropperExecutorPool.execute { BootyDropper().processDrop(event) }
-            }
-            //do levels
-            processUser(event, user)
-
-
         }
 
+        processCommand(event, user, guildData)
+        processUser(event, user)
+    }
+
+
+    private fun processCommand(event: MessageReceivedEvent, user: User, guild: Guild) {
         val messageContent = event.message.contentRaw
         val standardTrigger =
-            if (event.isFromGuild) guildData.prefix ?: BoobBot.defaultPrefix else BoobBot.defaultPrefix
+            if (event.isFromGuild) guild.prefix ?: BoobBot.defaultPrefix else BoobBot.defaultPrefix
         val acceptablePrefixes = mutableListOf(
             standardTrigger,
             "<@${event.jda.selfUser.id}> ",
@@ -97,15 +100,15 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            val customCommand = guildData.customCommands.firstOrNull { it.name == commandString }
+            val customCommand = guild.customCommands.firstOrNull { it.name == commandString }
                 ?: return
 
             return event.channel.sendMessage(customCommand.content).queue()
         }
 
         if (
-            event.isFromGuild && (guildData.disabled.contains(command.name) ||
-                    guildData.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })
+            event.isFromGuild && (guild.disabled.contains(command.name) ||
+                    guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })
         ) {
             return
         }
@@ -207,6 +210,9 @@ class MessageHandler : ListenerAdapter() {
     }
 
     private fun processUser(event: MessageReceivedEvent, user: User) {
+        if (!event.isFromGuild) {
+            return
+        }
         user.messagesSent++
         if (!user.blacklisted) {
             if (user.inJail) {

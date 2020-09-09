@@ -46,7 +46,7 @@ class BootyDropper {
     }
 
 
-    fun processDrop(event: MessageReceivedEvent) {
+    suspend fun processDrop(event: MessageReceivedEvent) {
         val number = random(0, 10000)
 
         if (!activeDrops.contains(event.guild.idLong) && number % 59 == 0) {

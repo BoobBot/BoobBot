@@ -44,14 +44,7 @@ class Database {
     private val webhooks = autoPorn.getCollection("webhooks")
     private val guilds = bb.getCollection("guilds")
     private val users = bb.getCollection("users")
-
-//    private val guildSettings = bb.getCollection("settings")
-//    private val guildPrefix = bb.getCollection("prefix")
-//    private val customCommands = bb.getCollection("customcoms")
-
-//    private val userSettings = bb.getCollection("usersettings")
-//    private val donor = bb.getCollection("donor")
-
+    
 
     /**
      * Webhooks/Autoporn
