@@ -20,8 +20,7 @@ class EventHandler : ListenerAdapter() {
     var shardWebhookMessage = ""
     override fun onReady(event: ReadyEvent) {
         readyCount++
-        shardWebhookMessage += "Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}\n"
-        print(shardWebhookMessage)
+        shardWebhookMessage += "`Ready on shard: ${event.jda.shardInfo.shardId} Ping: ${event.jda.gatewayPing}ms Status: ${event.jda.status}`\n"
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
         if (readyCount == 16) {
