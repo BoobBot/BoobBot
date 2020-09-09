@@ -15,17 +15,21 @@ import java.awt.Color
 
 
 class EventHandler : ListenerAdapter() {
-    private var avatar: String? = null
-
+    private var avatar: String? = "https://boob.bot/android-chrome-192x192.png"
+    var readyCount = 0
+    var shardWebhookMessage = ""
     override fun onReady(event: ReadyEvent) {
+        readyCount++
+        shardWebhookMessage.plus("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}\n")
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
-
-        //avatar = event.jda.selfUser.effectiveAvatarUrl
-        /*WebhookManager.sendShard(avatar) {
-            setTitle("SHARD READY [${event.jda.shardInfo.shardId}]", BoobBot.inviteUrl)
-            setDescription("Ping: ${event.jda.gatewayPing}ms")
-        }*/
+        if (readyCount == 16){
+        WebhookManager.sendShard(avatar) {
+            setTitle("Ready info", BoobBot.inviteUrl)
+            setDescription(shardWebhookMessage)
+        }
+            shardWebhookMessage = ""
+        }
     }
 
     override fun onReconnect(event: ReconnectedEvent) {

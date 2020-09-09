@@ -43,8 +43,10 @@ class MessageHandler : ListenerAdapter() {
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
+
         val guildData: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
         val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+
         if (event.channelType.isGuild) {
             if (event.message.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -63,11 +65,11 @@ class MessageHandler : ListenerAdapter() {
             if (guildData.modMute.contains(event.author.id)) {
                 return event.message.delete().reason("mod mute").queue()
             }
-
+            //do Drop
             if (guildData.dropEnabled && event.textChannel.isNSFW) {
                 dropperExecutorPool.execute { BootyDropper().processDrop(event) }
             }
-
+            //do levels
             processUser(event, user)
 
 
