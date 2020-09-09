@@ -66,7 +66,7 @@ class MessageHandler : ListenerAdapter() {
             }
         }
 
-        processCommand(event, guildData)
+        processCommand(event)
         GlobalScope.launch {
             processUser(event)
         }
@@ -76,7 +76,8 @@ class MessageHandler : ListenerAdapter() {
 }
 
 
-private fun processCommand(event: MessageReceivedEvent, guild: Guild) {
+private fun processCommand(event: MessageReceivedEvent) {
+    val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
     val messageContent = event.message.contentRaw
     val standardTrigger =
         if (event.isFromGuild) guild.prefix ?: BoobBot.defaultPrefix else BoobBot.defaultPrefix
