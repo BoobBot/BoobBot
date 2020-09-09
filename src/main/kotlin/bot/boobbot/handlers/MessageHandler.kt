@@ -17,11 +17,17 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sqrt
 
 class MessageHandler : ListenerAdapter() {
+    private val threadCounter = AtomicInteger()
+    private val commandExecutorPool = Executors.newCachedThreadPool {
+        Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
+    }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
@@ -30,7 +36,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        GlobalScope.launch {
+        commandExecutorPool.execute {
             processMessageEvent(event)
         }
 
@@ -43,7 +49,6 @@ class MessageHandler : ListenerAdapter() {
         if (event.channelType.isGuild) {
 
             if (guildData.dropEnabled && event.textChannel.isNSFW) {
-                print("?")
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
 
