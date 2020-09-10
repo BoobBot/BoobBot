@@ -192,41 +192,40 @@ class MessageHandler : ListenerAdapter() {
         }
     }
 
-}
-
-
-private fun processUser(event: MessageReceivedEvent) {
-    if (!event.isFromGuild) {
-        return
-    }
-    val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-    user.messagesSent++
-    if (user.blacklisted) {
-        return
-    }
-
-    if (user.inJail) {
-        user.jailRemaining = min(user.jailRemaining - 1, 0)
-        user.inJail = user.jailRemaining > 0
-        user.save()
-        return
-    }
-
-    if (event.message.textChannel.isNSFW) {
-        val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-        user.lewdPoints += min(tagSize, 5)
-        user.nsfwMessagesSent++
-    }
-
-    if (user.coolDownCount >= random(0, 10)) {
-        user.coolDownCount = random(0, 10)
-        user.experience++
-        if (user.bonusXp > 0) {
-            user.experience++ // extra XP
-            user.bonusXp = user.bonusXp - 1
+    private fun processUser(event: MessageReceivedEvent) {
+        if (!event.isFromGuild) {
+            return
         }
+        val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+        user.messagesSent++
+        if (user.blacklisted) {
+            return
+        }
+
+        if (user.inJail) {
+            user.jailRemaining = min(user.jailRemaining - 1, 0)
+            user.inJail = user.jailRemaining > 0
+            user.save()
+            return
+        }
+
+        if (event.message.textChannel.isNSFW) {
+            val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
+            user.lewdPoints += min(tagSize, 5)
+            user.nsfwMessagesSent++
+        }
+
+        if (user.coolDownCount >= random(0, 10)) {
+            user.coolDownCount = random(0, 10)
+            user.experience++
+            if (user.bonusXp > 0) {
+                user.experience++ // extra XP
+                user.bonusXp = user.bonusXp - 1
+            }
+        }
+        user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
+        user.lewdLevel = calculateLewdLevel(user)
+        user.save()
     }
-    user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-    user.lewdLevel = calculateLewdLevel(user)
-    user.save()
+
 }
