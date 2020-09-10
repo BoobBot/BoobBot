@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.ReconnectedEvent
 import net.dv8tion.jda.api.events.ResumedEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
+import net.dv8tion.jda.api.events.http.HttpRequestEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.awt.Color
 
@@ -18,6 +19,7 @@ class EventHandler : ListenerAdapter() {
     private var avatar: String? = "https://boob.bot/android-chrome-192x192.png"
     var readyCount = 0
     var shardWebhookMessage = ""
+
     override fun onReady(event: ReadyEvent) {
         readyCount++
         shardWebhookMessage += "`Ready on shard: ${event.jda.shardInfo.shardId} Ping: ${event.jda.gatewayPing}ms Status: ${event.jda.status}`\n"
@@ -62,6 +64,11 @@ class EventHandler : ListenerAdapter() {
             setDescription("Ping: ${event.jda.gatewayPing}ms") // will probably be -1 or something lol
         }
     }
+
+    override fun onHttpRequest(event: HttpRequestEvent) {
+        BoobBot.metrics.record(Metrics.happened("HttpRequest"))
+    }
+
 
     override fun onGuildJoin(event: GuildJoinEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
