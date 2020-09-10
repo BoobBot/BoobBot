@@ -1,8 +1,12 @@
 package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.db.User
 import bot.boobbot.entities.misc.DonorType
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.TextChannel
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -13,6 +17,8 @@ import java.net.InetSocketAddress
 import java.net.Proxy
 import java.nio.file.Paths
 import java.util.*
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 
 class Utils {
@@ -116,6 +122,29 @@ class Utils {
         }
 
         fun readAll(inputStream: InputStream): String = IOUtils.toString(inputStream, Charsets.UTF_8)
+
+        fun calculateLewdLevel(user: User): Int {
+            val calculateLewdPoints =
+                (user.experience / 100) * .1 +
+                        (user.nsfwCommandsUsed / 100) * .3 -
+                        (user.commandsUsed / 100) * .3 +
+                        (user.lewdPoints / 100) * 20
+            // lewd level up
+            return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
+        }
+
+        fun random(lower: Int, upper: Int): Int {
+            return rand.nextInt(upper - lower) + lower
+        }
+
+        fun checkMissingPermissions(
+            target: Member,
+            channel: TextChannel,
+            permissions: Array<Permission>
+        ): List<Permission> {
+            return permissions.filter { !target.hasPermission(channel, it) }
+        }
+
     }
 }
 
