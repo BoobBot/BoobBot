@@ -3,6 +3,7 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.*
+import java.security.Permission
 
 
 @CommandProperties(aliases = ["bank"], description = "banking operations \uD83C\uDFE6", guildOnly = true, category = Category.ECONOMY)
@@ -22,6 +23,10 @@ class bank : Command {
             return ctx.send("wtf whore, thats not a number")
         }
         val user: User by lazy { BoobBot.database.getUser(ctx.author.id) }
+
+        if (ctx.args[0].toInt() < 0){
+            return ctx.send("wtf are you doing?")
+        }
 
         if (ctx.args[0].toInt() > user.balance) {
             return ctx.send("wtf whore, you only have ${user.balance}")
@@ -44,6 +49,10 @@ class bank : Command {
             return ctx.send("wtf whore, thats not a number")
         }
         val user: User by lazy { BoobBot.database.getUser(ctx.author.id) }
+
+        if (ctx.args[0].toInt() < 0){
+            return ctx.send("wtf are you doing?")
+        }
 
         if (ctx.args[0].toInt() > user.bankBalance) {
             return ctx.send("wtf whore, you only have ${user.bankBalance}")
@@ -70,6 +79,10 @@ class bank : Command {
 
         if (ctx.args[0].isEmpty()) {
             return ctx.send("wtf, i don't mind read. Specify how much to deposit, whore.")
+        }
+
+        if (ctx.args[0].toInt() < 0){
+            return ctx.send("wtf are you doing?")
         }
 
         if (ctx.args[0].toIntOrNull() == null) {
