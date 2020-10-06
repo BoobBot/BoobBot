@@ -124,7 +124,7 @@ class MessageHandler : ListenerAdapter() {
 
                 event.channel.sendMessage(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                            "Confused? Try `bbhuh`\n" +
+                            "Confused? Try `bbhuh` or join the support server https://discord.gg/6K4dKev\n" +
                             j.getString("url")
                 ).queue()
             }
