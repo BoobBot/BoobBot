@@ -206,8 +206,8 @@ enum class DonorType(val tier: Int) {
     companion object {
         fun which(pledgeAmount: Double): DonorType {
             return when {
-                pledgeAmount >= 30 -> SERVER_OWNER
-                pledgeAmount >= 5 -> SUPPORTER
+                pledgeAmount >= 23 -> SERVER_OWNER
+                pledgeAmount >= 4 -> SUPPORTER
                 else -> NONE
             }
         }
