@@ -28,6 +28,7 @@ object Formats {
                 //+ "\n%s **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
                 + "\n%s **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
         DISCORD_EMOTE,
+        "\uD83C\uDD98",
         BOT_EMOTE,
         LINK_EMOTE,
         PATREON_EMOTE
