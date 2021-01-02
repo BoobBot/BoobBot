@@ -214,9 +214,9 @@ class MessageHandler : ListenerAdapter() {
             user.lewdPoints += min(tagSize, 5)
             user.nsfwMessagesSent++
         }
-
         if (user.coolDownCount >= random(0, 10)) {
             user.coolDownCount = random(0, 10)
+
             user.experience++
             if (user.bonusXp > 0) {
                 user.experience++ // extra XP

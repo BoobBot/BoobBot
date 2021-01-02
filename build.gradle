@@ -14,7 +14,7 @@ buildscript {
 plugins {
     id "idea"
     id "application"
-    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id "com.github.johnrengelman.shadow" version "$shadow_version"
     id "org.jetbrains.kotlin.jvm" version "1.2.70"
 }
 
@@ -66,7 +66,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-script-util:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-scripting-jsr223-embeddable:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-scripting-jsr223-embeddable:$kotlin_script_version"
 
     /* Misc */
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
@@ -75,8 +75,6 @@ dependencies {
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
-    implementation "com.influxdb:influxdb-client-java:1.8.0"
-
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
