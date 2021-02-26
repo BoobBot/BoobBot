@@ -66,7 +66,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-script-util:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-scripting-jsr223-embeddable:$kotlin_script_version"
+    implementation "org.jetbrains.kotlin:kotlin-scripting-jsr223:$kotlin_version"
 
     /* Misc */
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
