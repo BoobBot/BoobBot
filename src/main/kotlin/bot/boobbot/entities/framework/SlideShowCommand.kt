@@ -20,7 +20,7 @@ abstract class SlideShowCommand : Command {
         "aly" to "tentacle"
     )
     private val allowedEndpoints =
-        arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "aly", "thicc")
+        arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "aly", "thicc", "red")
     private val endpointStr = allowedEndpoints.joinToString(", ")
 
     override fun execute(ctx: Context) {
