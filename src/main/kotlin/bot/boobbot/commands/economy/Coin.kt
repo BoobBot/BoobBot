@@ -17,12 +17,14 @@ class Coin : Command {
         }
 
         if (!listOf("heads", "tails").contains(ctx.args[0].toLowerCase())) {
+
             if (ctx.args[0].toLowerCase().contains("@")){
                 val u = BoobBot.database.getUser(ctx.author.id)
                 u.balance = 0
                 u.bankBalance = 0
                 u.save()
             }
+
             return ctx.send(Formats.error("Hey whore, ${ctx.args[0].replace("@", "")} is not heads or tails, are you stoned?"))
         }
 

@@ -25,7 +25,7 @@ class Help : Command {
             ctx.args.isEmpty() || ctx.args.first().equals("--dm", true) -> sendCategories(ctx, isDm)
             command != null -> sendCommandHelp(ctx, command, isDm)
             category != null -> sendCategoryCommands(ctx, category, isDm)
-            else -> ctx.send("`${ctx.args.first()}` is not a command/category, whore.")
+            else -> ctx.send("`${ctx.args.first().replace("@", "")}` is not a command/category, whore.")
         }
 
         return
