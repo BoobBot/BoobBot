@@ -1,4 +1,4 @@
-package bot.boobbot.commands.`fun`
+package bot.boobbot.commands.interactions
 
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties

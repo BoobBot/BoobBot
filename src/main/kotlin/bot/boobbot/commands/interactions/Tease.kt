@@ -1,4 +1,4 @@
-package bot.boobbot.commands.`fun`
+package bot.boobbot.commands.interactions
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncCommand
@@ -12,8 +12,8 @@ import okhttp3.Headers
 import java.awt.Color
 import java.time.Instant
 
-@CommandProperties(description = "Fuck someone.", category = Category.FUN, aliases = ["bang"], nsfw = true)
-class Fuck : AsyncCommand {
+@CommandProperties(description = "Tease someone.", category = Category.INTERACTIONS, nsfw = true)
+class Tease : AsyncCommand {
 
 
     override suspend fun executeAsync(ctx: Context) {
@@ -33,19 +33,19 @@ class Fuck : AsyncCommand {
         }
 
         if (target.idLong == ctx.author.idLong) {
-            return ctx.send("aww how sad you wanna fuck yourself, well fucking don't, go find a friend whore.")
+            return ctx.send("aww how sad you wanna fuck with yourself, well fucking don't, go find a friend whore.")
         }
 
 
         val res =
-            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/fuck", Headers.of("Key", BoobBot.config.BB_API_KEY))
+            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/tease", Headers.of("Key", BoobBot.config.BB_API_KEY))
                 .await()?.json()
                 ?: return ctx.send(
                     Formats.error(" oh? something broken af")
                 )
 
         ctx.embed {
-            setTitle("<:bunnyfuck:505072924449964053> ${ctx.author.name} fucks ${target.name}")
+            setTitle("<a:tease:866433430744596510> ${ctx.author.name} Teases ${target.name}")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))
             setTimestamp(Instant.now())
