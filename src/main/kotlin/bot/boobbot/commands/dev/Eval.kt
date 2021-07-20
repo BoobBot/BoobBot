@@ -46,7 +46,7 @@ class Eval : Command {
             } catch (e: Exception) {
                 val error = e.localizedMessage.split("\n").first()
                 ctx.channel.sendMessage("Engine Error\n```\n$error```").queue(null) {
-                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue(null, { println("fuc") })
+                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue(null, { println("fuck") })
                 }
             }
         }
