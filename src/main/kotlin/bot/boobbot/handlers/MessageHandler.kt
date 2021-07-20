@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -15,6 +16,7 @@ import de.mxro.metrics.jre.Metrics
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
@@ -191,6 +193,8 @@ class MessageHandler : ListenerAdapter() {
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
     }
+
+
 
     private fun processUser(event: MessageReceivedEvent) {
         if (!event.isFromGuild) {

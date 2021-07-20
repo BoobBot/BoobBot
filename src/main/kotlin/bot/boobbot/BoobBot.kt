@@ -4,12 +4,8 @@ import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.entities.framework.EventWaiter
-import bot.boobbot.entities.internals.CommandRegistry
-import bot.boobbot.entities.internals.CustomSentryClient
-import bot.boobbot.entities.internals.CustomShardManager
+import bot.boobbot.entities.internals.*
 import bot.boobbot.entities.misc.*
-import bot.boobbot.entities.internals.Config
-import bot.boobbot.entities.internals.Database
 import bot.boobbot.utils.RequestUtil
 import bot.boobbot.utils.Utils
 import ch.qos.logback.classic.Level
@@ -68,6 +64,7 @@ class BoobBot {
         val database = Database()
 
         val commands = CommandRegistry()
+        val slashCommands = SlashCommandRegistry()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager()

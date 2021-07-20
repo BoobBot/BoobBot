@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
+import bot.boobbot.handlers.SlashHandler
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.WebhookManager
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -70,6 +71,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
         }
     }
 
+
     fun authorOrAnonymous(ctx: Context): User {
         return if (BoobBot.database.getUserAnonymity(ctx.author.id)) {
             BoobBot.shardManager.anonymousUser
@@ -111,7 +113,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler())
+                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))

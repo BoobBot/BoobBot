@@ -11,8 +11,6 @@ class Test : Command {
     override fun execute(ctx: Context) {
         sendSubcommandHelp(ctx)
     }
-
-
 }
 
 
