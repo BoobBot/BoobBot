@@ -25,14 +25,14 @@ mainClassName = "bot.boobbot.BoobBot"
 
 
 repositories {
-    jcenter()
-    mavenCentral()
-    maven { url "https://jitpack.io" }
-    maven { url "https://dl.bintray.com/kotlin/ktor" }
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
+    jcenter()
+    mavenCentral()
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    maven { url "https://jitpack.io" }
 }
 
 
@@ -80,6 +80,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile "org.jsoup:jsoup:$jsoup_version"
 }
 
 shadowJar {

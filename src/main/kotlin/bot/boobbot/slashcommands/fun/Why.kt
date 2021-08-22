@@ -13,9 +13,10 @@ class Why : AsyncSlashCommand {
         val res = BoobBot.requestUtil
             .get("https://nekos.life/api/v2/why")
             .await()
+            ?.json()
             ?: return event.reply("rip some error, press f").queue()
-        val body = res.json() ?: return event.reply("rip some error, press f").queue()
-        event.reply(body.get("why").toString()).queue()
+
+        event.reply(res.get("why").toString()).queue()
     }
 
 }

@@ -1,9 +1,6 @@
 package bot.boobbot.slashcommands.bot
 
-import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.SlashCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
@@ -14,9 +11,7 @@ import java.time.Instant
 
 @CommandProperties(description = "Bot and support guild links", aliases = ["join", "oauth", "link", "links", "support"])
 class Invite : SlashCommand {
-
     override fun execute(event: SlashCommandEvent) {
-
         event.replyEmbeds(
             EmbedBuilder().apply {
             setColor(Colors.rndColor)
@@ -24,5 +19,4 @@ class Invite : SlashCommand {
             setTimestamp(Instant.now())
         }.build()).addActionRow(Button.link("https://discord.boob.bot", "<:discord:486939267365470210>")).queue()
     }
-
 }

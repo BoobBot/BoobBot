@@ -12,13 +12,13 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 class Facts : AsyncSlashCommand {
 
     override suspend fun executeAsync(event: SlashCommandEvent) {
-
         val res = BoobBot.requestUtil
             .get("https://nekos.life/api/v2/fact")
             .await()
+            ?.json()
             ?: return event.reply("rip some error, press f").queue()
-        val body = res.json() ?: return event.reply("rip some error, press f").queue()
-        event.reply(Formats.info(body.get("fact").toString())).queue()
+
+        event.reply(Formats.info(res.get("fact").toString())).queue()
     }
 
 }

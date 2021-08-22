@@ -20,8 +20,8 @@ class SlashHandler : ListenerAdapter() {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
+
     override fun onSlashCommand(event: SlashCommandEvent) {
-        print(event)
         BoobBot.metrics.record(Metrics.happened("SlashCommandEvent"))
         commandExecutorPool.execute {
             processMessageEvent(event)
@@ -30,8 +30,8 @@ class SlashHandler : ListenerAdapter() {
 
     private fun processMessageEvent(event: SlashCommandEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
-        if (event.isFromGuild) {
 
+        if (event.isFromGuild) {
             if (!event.textChannel.canTalk()) {
                 return
             }
@@ -42,8 +42,7 @@ class SlashHandler : ListenerAdapter() {
             }
         }
 
-        val command = BoobBot.slashCommands.findCommand(event.name)
-        if (command == null) { return }
+        val command = BoobBot.slashCommands.findCommand(event.name) ?: return
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) { return }
         if (!command.properties.enabled) {

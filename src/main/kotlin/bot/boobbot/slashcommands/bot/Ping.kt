@@ -12,6 +12,6 @@ class Ping : SlashCommand {
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
-        event.reply("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms").queue();
+        event.reply("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms").queue()
     }
 }

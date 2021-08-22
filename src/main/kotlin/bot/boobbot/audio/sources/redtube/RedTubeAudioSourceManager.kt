@@ -1,6 +1,6 @@
 package bot.boobbot.audio.sources.redtube
 
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser
@@ -34,7 +34,7 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
         return "redtube"
     }
 
-    override fun loadItem(manager: DefaultAudioPlayerManager, reference: AudioReference): AudioItem? {
+    override fun loadItem(manager: AudioPlayerManager, reference: AudioReference): AudioItem? {
         if (!videoUrlPattern.matcher(reference.identifier).matches()) return null
 
         return try {

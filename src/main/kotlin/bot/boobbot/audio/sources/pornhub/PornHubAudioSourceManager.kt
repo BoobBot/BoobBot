@@ -1,6 +1,6 @@
 package bot.boobbot.audio.sources.pornhub
 
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.ExceptionTools
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
@@ -31,7 +31,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     override fun getSourceName() = "pornhub"
 
-    override fun loadItem(manager: DefaultAudioPlayerManager, reference: AudioReference): AudioItem? {
+    override fun loadItem(manager: AudioPlayerManager, reference: AudioReference): AudioItem? {
         if (!VIDEO_REGEX.matcher(reference.identifier)
                 .matches() && !reference.identifier.startsWith(VIDEO_SEARCH_PREFIX)
         )
