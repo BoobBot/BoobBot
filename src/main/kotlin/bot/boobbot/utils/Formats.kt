@@ -24,7 +24,7 @@ object Formats {
         "\n%s **Join the Community**: [https://discord.boob.bot](https://discord.boob.bot)"
         + "\n%s **Need Support?**: [https://discord.gg/wFfFRb3Qbr](https://discord.gg/wFfFRb3Qbr)"
                 + "\n%s **Add the Bot**: [https://bot.boob.bot](https://bot.boob.bot)"
-                + "\n%s **Visit the Website**: [https:/boob.bot](https://boob.bot)"
+                + "\n%s **Visit the Website**: [https://boob.bot](https://boob.bot)"
                 //+ "\n%s **Paypal**: [https://paypal.boob.bot](https://paypal.boob.bot)"
                 + "\n%s **Unlock cool shit**: [https://www.patreon.com/OfficialBoobBot](https://www.patreon.com/OfficialBoobBot)",
         DISCORD_EMOTE,
