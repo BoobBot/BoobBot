@@ -2,17 +2,18 @@ package bot.boobbot.audio
 
 
 import bot.boobbot.BoobBot
+import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame
+import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
 import net.dv8tion.jda.api.audio.AudioSendHandler
 import java.nio.ByteBuffer
 
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
 
-    private var lastFrame: AudioFrame? = null
     val queue = mutableListOf<AudioTrack>()
     private var lastTrack: AudioTrack? = null
     private var repeat = RepeatMode.NONE
@@ -70,27 +71,17 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     // JDA SEND HANDLER HOOKS
     // ----------------------------------------------
 
-    override fun provide20MsAudio(): ByteBuffer {
-        return ByteBuffer.wrap(lastFrame!!.data)
-        // We know this won't be null here as JDA will only call this if canProvide is true
-        // And we already do null checks in canProvide
-    }
+    private val frameBuffer = ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize())
+    private val lastFrame = MutableAudioFrame().also { it.setBuffer(frameBuffer) }
 
-    override fun canProvide(): Boolean {
-        lastFrame = player.provide()
-        return lastFrame != null
-    }
-
-    override fun isOpus(): Boolean = true
+    override fun provide20MsAudio() = frameBuffer.flip()
+    override fun canProvide() = player.provide(lastFrame)
+    override fun isOpus() = true
 
 
     // ----------------------------------------------
     // MISC
     // ----------------------------------------------
-
-    enum class RepeatMode {
-        SINGLE, ALL, NONE
-    }
 
     fun shutdown() {
         player.stopTrack()
@@ -108,5 +99,11 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
 
     fun disconnect() {
         BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
+    }
+
+    companion object {
+        enum class RepeatMode {
+            SINGLE, ALL, NONE
+        }
     }
 }

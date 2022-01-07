@@ -15,6 +15,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
+import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.mxro.metrics.jre.Metrics
 import io.ktor.util.KtorExperimentalAPI
 import io.sentry.connection.ConnectionException
@@ -67,7 +68,9 @@ class BoobBot {
         val slashCommands = SlashCommandRegistry()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
-        val playerManager = DefaultAudioPlayerManager()
+        val playerManager = DefaultAudioPlayerManager().also {
+            it.configuration.setFrameBufferFactory(::NonAllocatingAudioFrameBuffer)
+        }
         val musicManagers = ConcurrentHashMap<Long, GuildMusicManager>()
         val scheduler: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         val metrics = Metrics.create()!!
