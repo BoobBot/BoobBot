@@ -4,23 +4,34 @@ import bot.boobbot.BoobBot
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.WebhookManager
 import de.mxro.metrics.jre.Metrics
-import net.dv8tion.jda.api.events.DisconnectEvent
-import net.dv8tion.jda.api.events.ReadyEvent
-import net.dv8tion.jda.api.events.ReconnectedEvent
-import net.dv8tion.jda.api.events.ResumedEvent
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.events.*
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.http.HttpRequestEvent
-import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.hooks.EventListener
 import java.awt.Color
 
 
-class EventHandler : ListenerAdapter() {
+class EventHandler : EventListener {
     private var avatar: String? = "https://boob.bot/android-chrome-192x192.png"
     var readyCount = 0
     var shardWebhookMessage = ""
 
-    override fun onReady(event: ReadyEvent) {
+    override fun onEvent(event: GenericEvent) {
+        when (event) {
+            is ReadyEvent -> onReady(event)
+            is ReconnectedEvent -> onReconnect(event)
+            is ResumedEvent -> onResume(event)
+            is DisconnectEvent -> onDisconnect(event)
+            is HttpRequestEvent -> onHttpRequest()
+            is GuildJoinEvent -> onGuildJoin(event)
+            is GuildLeaveEvent -> onGuildLeave(event)
+        }
+    }
+
+    private fun onReady(event: ReadyEvent) {
         readyCount++
         shardWebhookMessage += "`Ready on shard: ${event.jda.shardInfo.shardId} Ping: ${event.jda.gatewayPing}ms Status: ${event.jda.status}`\n"
         BoobBot.metrics.record(Metrics.happened("Ready"))
@@ -35,7 +46,7 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    override fun onReconnect(event: ReconnectedEvent) {
+    private fun onReconnect(event: ReconnectedEvent) {
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -45,7 +56,7 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    override fun onResume(event: ResumedEvent) {
+    private fun onResume(event: ResumedEvent) {
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -55,7 +66,7 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    override fun onDisconnect(event: DisconnectEvent) {
+    private fun onDisconnect(event: DisconnectEvent) {
         BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -65,44 +76,34 @@ class EventHandler : ListenerAdapter() {
         }
     }
 
-    override fun onHttpRequest(event: HttpRequestEvent) {
-        BoobBot.metrics.record(Metrics.happened("HttpRequest"))
-    }
+    private fun onHttpRequest() = BoobBot.metrics.record(Metrics.happened("HttpRequest"))
 
-
-    override fun onGuildJoin(event: GuildJoinEvent) {
+    private fun onGuildJoin(event: GuildJoinEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildJoin"))
-        val guild = event.guild
 
         WebhookManager.sendJoin {
-            setColor(Color.green)
-            setTitle("Guild Joined: ${guild.name}")
-            setDescription(
-                "${Formats.info("info")}\n" +
-                        "On Shard: ${event.jda.shardInfo.shardId}\n" +
-                        "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
-                        "OwnerID: ${guild.ownerId})\n" +
-                        "Members: ${guild.memberCount}"
-            )
-            setThumbnail(guild.iconUrl)
+            buildGuildEmbed(this, event.guild, true)
         }
     }
 
-    override fun onGuildLeave(event: GuildLeaveEvent) {
+    private fun onGuildLeave(event: GuildLeaveEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
-        val guild = event.guild
 
         WebhookManager.sendLeave {
-            setColor(Color.red)
-            setTitle("Guild Left: ${guild.name}")
-            setDescription(
-                "${Formats.info("info")}\n" +
-                        "On Shard: ${event.jda.shardInfo.shardId}\n" +
-                        "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
-                        "OwnerID: ${guild.ownerId})\n" +
-                        "Members: ${guild.memberCount}"
-            )
-            setThumbnail(guild.iconUrl)
+            buildGuildEmbed(this, event.guild, false)
         }
+    }
+
+    private fun buildGuildEmbed(builder: EmbedBuilder, guild: Guild, joined: Boolean) = builder.apply {
+        setColor(if (joined) Color.green else Color.red)
+        setTitle("Guild ${if (joined) "Joined" else "Left"}: ${guild.name}")
+        setDescription(
+            "${Formats.info("info")}\n" +
+                    "On Shard: ${guild.jda.shardInfo.shardId}\n" +
+                    "Total Guilds: ${BoobBot.shardManager.guilds.size}\n\n" +
+                    "OwnerID: ${guild.ownerId})\n" +
+                    "Members: ${guild.memberCount}"
+        )
+        setThumbnail(guild.iconUrl)
     }
 }

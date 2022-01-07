@@ -96,13 +96,5 @@ class Set : Command {
         }
     }
 
-    private fun gameTypeByString(s: String): Activity.ActivityType {
-        val t = s.toUpperCase()
-
-        if (t == "PLAYING") { // TABLEFLIP
-            return Activity.ActivityType.DEFAULT
-        }
-
-        return Activity.ActivityType.valueOf(t)
-    }
+    private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.toUpperCase())
 }

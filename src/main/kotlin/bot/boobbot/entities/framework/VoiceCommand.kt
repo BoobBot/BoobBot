@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.VoiceChannel
@@ -26,13 +27,15 @@ interface VoiceCommand : Command {
             return false
         }
 
-        if (ctx.voiceState!!.channel == null) {
+        val memberVoice = ctx.voiceState!!.channel
+
+        if (memberVoice == null || memberVoice.type != ChannelType.VOICE) {
             ctx.send(Formats.error("Join a voice-channel, whore"))
             return false
         }
 
         if (ctx.audioManager!!.connectedChannel == null) {
-            val error = checkVoiceChannelPermissions(ctx.voiceState.channel!!)
+            val error = checkVoiceChannelPermissions(memberVoice as VoiceChannel)
 
             return if (error == null) {
                 ctx.audioManager.openAudioConnection(ctx.voiceState.channel)

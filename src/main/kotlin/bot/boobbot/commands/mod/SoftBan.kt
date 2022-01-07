@@ -56,7 +56,7 @@ class SoftBan : AsyncCommand, ModCommand() {
 
         target.user.openPrivateChannel()
             .flatMap { it.sendMessage(banMsg) }
-            .flatMap { it.privateChannel.close() }
+            .flatMap { it.privateChannel.delete() }
             .submit()
             .awaitSuppressed()
 
@@ -75,9 +75,9 @@ class SoftBan : AsyncCommand, ModCommand() {
         val fut = CompletableFuture<Invite?>()
 
         if (ctx.selfMember!!.hasPermission(ctx.guildChannel!!, Permission.CREATE_INSTANT_INVITE)) {
-            ctx.guildChannel.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1)
+            ctx.textChannel!!.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1)
                 .submit()
-                .thenAccept { fut.complete(it) }
+                .thenAccept(fut::complete)
                 .thenException { fut.complete(null) }
         } else {
             fut.complete(null)

@@ -3,6 +3,8 @@ package bot.boobbot.utils
 import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.future.await
+import net.dv8tion.jda.api.MessageBuilder
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Response
@@ -39,6 +41,8 @@ fun MessageEmbed.toWebhookEmbed(): WebhookEmbed {
         this.fields.map { WebhookEmbed.EmbedField(it.isInline, it.name ?: "", it.value ?: "") }
     )
 }
+
+fun MessageEmbed.asMessage() = MessageBuilder().setEmbeds(this).build()
 
 fun Response.json(): JSONObject? {
     val body = body()

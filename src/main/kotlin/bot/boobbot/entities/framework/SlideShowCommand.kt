@@ -63,4 +63,5 @@ abstract class SlideShowCommand : Command {
             setImage(url)
         }
         .build()
+        .asMessage()
 }

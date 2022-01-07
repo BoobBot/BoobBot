@@ -61,7 +61,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     fun dm(embed: MessageEmbed) {
         val msg = MessageBuilder()
-            .setEmbed(embed)
+            .setEmbeds(embed)
             .build()
 
         dm(msg)
@@ -83,13 +83,13 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     fun embed(block: EmbedBuilder.() -> Unit) {
         val builder = MessageBuilder()
-            .setEmbed(EmbedBuilder().apply(block).build())
+            .setEmbeds(EmbedBuilder().apply(block).build())
 
         send(builder, null, null)
     }
 
     fun embed(e: MessageEmbed) {
-        send(MessageBuilder().setEmbed(e), null, null)
+        send(MessageBuilder().setEmbeds(e), null, null)
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
@@ -108,7 +108,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        if (!botCan(Permission.MESSAGE_READ, Permission.MESSAGE_WRITE)) {
+        if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
             return
             // Don't you just love it when people deny the bot
             // access to a channel during command execution?

@@ -24,7 +24,7 @@ interface Command {
      * Command-local check that is executed before the command or any subcommands are
      * executed.
      *
-     * @returns Whether or not command execution can proceed.
+     * @returns Whether command execution can proceed.
      */
     fun localCheck(ctx: Context): Boolean = true
 
@@ -42,7 +42,7 @@ interface Command {
             .setFooter("Help requested by ${requester.name}", requester.effectiveAvatarUrl)
             .setTimestamp(Instant.now())
 
-        val maxLen = this.subcommands.values.map { it.name.length }.max() ?: 15
+        val maxLen = this.subcommands.values.maxOfOrNull { it.name.length } ?: 15
 
         for (sc in this.subcommands.values.sortedBy { it.name }) {
             embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}\n")
