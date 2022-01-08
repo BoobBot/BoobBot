@@ -13,6 +13,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.time.Instant
+import java.util.*
 
 @CommandProperties(
     description = "Shows now playing and queue",
@@ -71,7 +72,7 @@ class Queue : VoiceCommand {
 
     private fun getTrackSource(track: AudioTrack) = when (track) {
         is LocalAudioTrack -> "Moan"
-        else -> track.sourceManager.sourceName.capitalize()
+        else -> track.sourceManager.sourceName.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
     }
 
     private fun abbreviate(s: String, maxChars: Int = 50) = when {

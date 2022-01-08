@@ -16,6 +16,7 @@ class SubCommandWrapper(
     private val kls: Command
 ) {
 
+    @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
     fun execute(ctx: Context, vararg additionalArgs: Any?) {
         if (async) {
             GlobalScope.async {

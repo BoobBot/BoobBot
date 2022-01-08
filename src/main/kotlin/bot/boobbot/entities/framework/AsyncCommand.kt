@@ -8,6 +8,7 @@ interface AsyncCommand : Command {
 
     suspend fun executeAsync(ctx: Context)
 
+    @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
     override fun execute(ctx: Context) {
         GlobalScope.async {
             try {

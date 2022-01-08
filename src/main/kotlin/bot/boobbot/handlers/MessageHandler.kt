@@ -45,6 +45,7 @@ class MessageHandler : ListenerAdapter() {
 
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun processMessageEvent(event: MessageReceivedEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
@@ -81,7 +82,7 @@ class MessageHandler : ListenerAdapter() {
             "<@!${event.jda.selfUser.id}> "
         )
 
-        val trigger = acceptablePrefixes.firstOrNull { messageContent.toLowerCase().startsWith(it) }
+        val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
 
         val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()

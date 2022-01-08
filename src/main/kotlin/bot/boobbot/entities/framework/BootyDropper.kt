@@ -152,7 +152,7 @@ class BootyDropper {
     )
 
     private fun isSpam(message: Message): Boolean {
-        return message.contentRaw.toLowerCase().startsWith(">g")
+        return message.contentRaw.lowercase().startsWith(">g")
     }
 
     companion object {

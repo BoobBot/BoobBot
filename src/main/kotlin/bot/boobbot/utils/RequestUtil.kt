@@ -62,7 +62,7 @@ class RequestUtil {
         headers: Headers
     ): PendingRequest {
         val request = Request.Builder()
-            .method(method.toUpperCase(), body)
+            .method(method.uppercase(), body)
             .header("User-Agent", userAgent)
             .headers(headers)
             .url(url)

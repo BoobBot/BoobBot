@@ -60,7 +60,7 @@ class Settings : Command {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable, whore.")
         }
 
-        val toDisable = ctx.args.map(String::toLowerCase)
+        val toDisable = ctx.args.map(String::lowercase)
         val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
         val alreadyDisabled = toDisable.filter(disabled::contains)
 
@@ -88,7 +88,7 @@ class Settings : Command {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna re-enable, whore.")
         }
 
-        val toEnable = ctx.args.map(String::toLowerCase)
+        val toEnable = ctx.args.map(String::lowercase)
         val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
         val invalid = toEnable.filterNot(BoobBot.commands::containsKey)
 
@@ -125,7 +125,7 @@ class Settings : Command {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna disable for this channel, whore.")
         }
 
-        val toDisable = ctx.args.map(String::toLowerCase)
+        val toDisable = ctx.args.map(String::lowercase)
         val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
         val alreadyDisabled = toDisable.filter(disabled::contains)
 
@@ -153,7 +153,7 @@ class Settings : Command {
             return ctx.send("wtf, i don't mind read. Specify what commands you wanna re-enable for this channel, whore.")
         }
 
-        val toEnable = ctx.args.map(String::toLowerCase)
+        val toEnable = ctx.args.map(String::lowercase)
         val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
         val invalid = toEnable.filterNot(BoobBot.commands::containsKey)
 

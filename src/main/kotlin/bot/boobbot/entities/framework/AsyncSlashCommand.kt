@@ -9,6 +9,7 @@ interface AsyncSlashCommand : SlashCommand {
 
     suspend fun executeAsync(event: SlashCommandEvent)
 
+    @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
     override fun execute(event: SlashCommandEvent) {
         GlobalScope.async {
             try {

@@ -6,6 +6,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import java.awt.Color
+import java.util.*
 
 
 @CommandProperties(
@@ -48,7 +49,7 @@ class AutoPorn : Command {
     fun set(ctx: Context) {
         if (ctx.args.size < 2 ||
             ctx.args[0].isEmpty() ||
-            !types.containsKey(ctx.args[0].toLowerCase()) ||
+            !types.containsKey(ctx.args[0].lowercase()) ||
             ctx.message.mentionedChannels.isEmpty()
         ) {
             return ctx.embed {
@@ -72,7 +73,7 @@ class AutoPorn : Command {
 
         channel.createWebhook("BoobBot").reason("Auto-Porn setup").queue({
             val url = formatWebhookUrl(it.id, it.token!!)
-            val imageType = types.getValue(ctx.args[0].toLowerCase())
+            val imageType = types.getValue(ctx.args[0].lowercase())
             BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
 
             ctx.embed {

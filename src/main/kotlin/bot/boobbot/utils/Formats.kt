@@ -215,12 +215,12 @@ object Formats {
 
 
     fun countryCodeToEmote(countryCode: String): String {
-        val code = if (countryCode.equals("uk", true)) "GB" else countryCode.toUpperCase()
+        val code = if (countryCode.equals("uk", true)) "GB" else countryCode.uppercase()
         val offset = 127397
 
         return buildString {
             for (e in code) {
-                appendCodePoint(e.toInt() + offset)
+                appendCodePoint(e.code + offset)
             }
         }
     }

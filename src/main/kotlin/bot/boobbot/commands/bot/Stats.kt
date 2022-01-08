@@ -82,7 +82,7 @@ class Stats : AsyncCommand {
             +""
             +"[ BoobBot ]"
             "Guilds              = "..BoobBot.shardManager.guilds.size
-            "Users               = "..BoobBot.shardManager.guilds.sumBy { it.memberCount }
+            "Users               = "..BoobBot.shardManager.guilds.sumOf { it.memberCount }
             "Audio_Players       = "..players
             "Shards_Online       = ".."$shardsOnline/$shards"
             "Average_Latency     = ".."${averageShardLatency}ms"

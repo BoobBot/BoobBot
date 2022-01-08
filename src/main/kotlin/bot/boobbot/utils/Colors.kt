@@ -80,7 +80,7 @@ object Colors {
             }
             return color.toInt()
         } else {
-            val color = sColorNameMap[colorString.toLowerCase()]
+            val color = sColorNameMap[colorString.lowercase()]
             if (color != null) {
                 return color
             }
@@ -94,7 +94,7 @@ object Colors {
             var code = "" + (Math.random() * 256).toInt()
             code = code + code + code
             val i = Integer.parseInt(code)
-            hexColorMap[a] = Integer.toHexString(0x1000000 or i).substring(1).toUpperCase()
+            hexColorMap[a] = Integer.toHexString(0x1000000 or i).substring(1).uppercase()
         }
         return hexColorMap
     }

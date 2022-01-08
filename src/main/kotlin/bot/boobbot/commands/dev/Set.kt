@@ -39,7 +39,7 @@ class Set : Command {
             return ctx.send("${ctx.trigger}set game <type> <content...>")
         }
 
-        val validTypes = Activity.ActivityType.values().map { it.name.toLowerCase() }
+        val validTypes = Activity.ActivityType.values().map { it.name.lowercase() }
         val (type, content) = ctx.args.separate()
 
         if (type == "clear") {
@@ -96,5 +96,5 @@ class Set : Command {
         }
     }
 
-    private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.toUpperCase())
+    private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.uppercase())
 }

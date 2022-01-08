@@ -89,7 +89,7 @@ class ApiServer {
             .put("Audio_Players", players)
             .put("Shards_Online", "$shardsOnline/$shards")
             .put("Guilds", BoobBot.shardManager.guilds.size)
-            .put("Users", BoobBot.shardManager.guilds.sumBy { it.memberCount })
+            .put("Users", BoobBot.shardManager.guilds.sumOf { it.memberCount })
             .put("Average_Latency", "${averageShardLatency}ms")
 
         return JSONObject().put("bb", bb).put("jvm", jvm)

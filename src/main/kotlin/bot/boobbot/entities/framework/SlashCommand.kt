@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 interface SlashCommand {
 
     val name: String
-        get() = this.javaClass.simpleName.toLowerCase()
+        get() = this.javaClass.simpleName.lowercase()
 
     val properties: CommandProperties
         get() = this.javaClass.getAnnotation(CommandProperties::class.java)

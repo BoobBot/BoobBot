@@ -7,6 +7,7 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.entities.internals.Config
 import net.dv8tion.jda.api.EmbedBuilder
 import java.time.Instant
+import java.util.*
 
 @CommandProperties(
     description = "help, --dm for dm",
@@ -42,7 +43,7 @@ class Help : Command {
                 continue
             }
 
-            content.append("`${padEnd(category.name.toLowerCase(), 14)}:` ")
+            content.append("`${padEnd(category.name.lowercase(), 14)}:` ")
 
             if (category.nsfw && ctx.channelType.isGuild && !ctx.textChannel!!.isNSFW) {
                 content.append("Unavailable. Move to an NSFW channel.\n")
@@ -64,7 +65,7 @@ class Help : Command {
             .filter { it.properties.category == category }
             .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
         val embed = builder(ctx)
-            .setDescription("Commands in **${category.name.toLowerCase()}**\n$categoryCommands")
+            .setDescription("Commands in **${category.name.lowercase()}**\n$categoryCommands")
         //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
         send(ctx, embed, dm)
     }

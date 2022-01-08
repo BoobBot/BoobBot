@@ -16,9 +16,9 @@ class Coin : Command {
             return ctx.send(Formats.error("Specify heads | Tails"))
         }
 
-        if (!listOf("heads", "tails").contains(ctx.args[0].toLowerCase())) {
+        if (!listOf("heads", "tails").contains(ctx.args[0].lowercase())) {
 
-            if (ctx.args[0].toLowerCase().contains("@")){
+            if (ctx.args[0].lowercase().contains("@")){
                 val u = BoobBot.database.getUser(ctx.author.id)
                 u.balance = 0
                 u.bankBalance = 0
@@ -50,7 +50,7 @@ class Coin : Command {
         val rng = (0..9).random()
         val msg: String
         val res = if (rng > 4) coinHeads else coinTails
-        if (ctx.args[0].toLowerCase() == res.first.toLowerCase()) {
+        if (ctx.args[0].lowercase() == res.first.lowercase()) {
             u.balance += ctx.args[1].toInt()
             msg = " You Won $${ctx.args[1].toInt()}"
         } else {

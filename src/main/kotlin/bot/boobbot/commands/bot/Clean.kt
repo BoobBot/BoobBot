@@ -8,6 +8,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -29,7 +30,8 @@ class Clean : Command {
         ctx.customPrefix?.let(prefixes::add)
 
         return messages.filter {
-            it.author.idLong == it.jda.selfUser.idLong || prefixes.any { p -> it.contentRaw.toLowerCase().startsWith(p) }
+            it.author.idLong == it.jda.selfUser.idLong || prefixes.any { p -> it.contentRaw.lowercase()
+                .startsWith(p) }
         }
     }
 

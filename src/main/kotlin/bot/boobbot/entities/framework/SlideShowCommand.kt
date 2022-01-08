@@ -24,7 +24,7 @@ abstract class SlideShowCommand : Command {
     private val endpointStr = allowedEndpoints.joinToString(", ")
 
     override fun execute(ctx: Context) {
-        if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].toLowerCase())) {
+        if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].lowercase())) {
             return ctx.embed {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: $endpointStr"))
@@ -35,7 +35,7 @@ abstract class SlideShowCommand : Command {
             ctx.message.delete().queue(null, {})
         }
 
-        val query = ctx.args[0].toLowerCase()
+        val query = ctx.args[0].lowercase()
         val endpoint = aliases[query] ?: query
         val color = Colors.getEffectiveColor(ctx.message)
 

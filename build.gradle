@@ -29,10 +29,9 @@ repositories {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
-    jcenter()
     mavenCentral()
-    maven { url "https://dl.bintray.com/kotlin/ktor" }
     maven { url "https://jitpack.io" }
+    jcenter()
 }
 
 
