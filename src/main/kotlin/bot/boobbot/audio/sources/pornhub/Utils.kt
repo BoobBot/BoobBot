@@ -1,12 +1,8 @@
 package bot.boobbot.audio.sources.pornhub
 
-import bot.boobbot.utils.joinToString
 import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface
-import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterfaceManager
-import org.apache.commons.io.IOUtils
 import org.apache.http.client.methods.HttpGet
-import java.nio.charset.StandardCharsets
 
 
 object Utils {
