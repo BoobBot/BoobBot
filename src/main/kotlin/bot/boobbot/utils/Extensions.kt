@@ -86,3 +86,5 @@ fun <T> Collection<T>.ifEmpty(do_: String, else_: Collection<T>.() -> String): S
 
     return else_(this)
 }
+
+fun <K, V> Map<K, V>.joinToString(separator: CharSequence) = "{\n" + this.entries.joinToString(separator) { "${it.key}=${it.value}" } + "\n}"

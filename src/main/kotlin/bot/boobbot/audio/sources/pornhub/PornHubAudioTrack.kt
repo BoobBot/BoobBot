@@ -12,7 +12,7 @@ import org.apache.http.client.methods.HttpGet
 import java.io.IOException
 import java.net.URI
 import java.nio.charset.StandardCharsets
-import java.util.regex.Pattern
+
 
 class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: PornHubAudioSourceManager) :
     DelegatedAudioTrack(trackInfo) {
@@ -38,7 +38,11 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
     }
 
     private fun getPlaybackUrl(httpInterface: HttpInterface): String {
-        httpInterface.execute(HttpGet(trackInfo.uri)).use { response ->
+        val req = HttpGet(trackInfo.uri).also {
+            it.addHeader("cookie", "platform=tv;")
+        }
+
+        httpInterface.execute(req).use { response ->
             val statusCode = response.statusLine.statusCode
 
             if (!HttpClientTools.isSuccessWithContent(statusCode)) {
@@ -48,9 +52,4 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
             return Utils.extractMediaString(IOUtils.toString(response.entity.content, StandardCharsets.UTF_8))
         }
     }
-
-    companion object {
-        private val VIDEO_INFO_REGEX = Pattern.compile("var flashvars_\\d{7,9} = (\\{.+})")
-    }
-
 }

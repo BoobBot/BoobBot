@@ -43,7 +43,7 @@ class Play : VoiceCommand {
     private fun isYouTubeTrack(query: String): Boolean {
         val uri = query.toUriOrNull()
         val domain = if (uri?.host?.startsWith("www.") == true) {
-            uri.host?.substring(4)
+            uri.host.substring(4)
         } else {
             uri?.host
         }

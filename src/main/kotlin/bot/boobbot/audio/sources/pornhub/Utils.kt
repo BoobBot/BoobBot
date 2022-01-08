@@ -1,14 +1,13 @@
 package bot.boobbot.audio.sources.pornhub
 
-import bot.boobbot.BoobBot
 
 object Utils {
-
     //private val assignmentPattern = "(var.+?media_0[^<]+)".toPattern()
     //private val assignmentPattern = "(var.+?media_0.+)".toPattern()
 
-    private val formatPattern = "(var\\s+(?:media|quality)_.+)".toPattern()
-    private val mediaStringPattern = "(var.+?mediastring[^<]+)".toPattern()
+    private val jsVarPattern = "(var\\s+(?:media|quality|qualityItems)_.+)".toPattern()
+    private val tvMediaStringPattern = "(var.+?mediastring[^<]+)".toPattern()
+    private val flashVarRegex = "var flashvars_\\d+ = (\\{.+})".toPattern()
     private val cleanRegex = "/\\*(?:(?!\\*/).)*?\\*/".toRegex()
     private val cleanVarRegex = "var\\s+".toRegex()
 
@@ -29,6 +28,7 @@ object Utils {
             vars[name] = parseSegment(value, vars)
         }
 
+
         val formats = vars.filter { it.key.startsWith("media") || it.key.startsWith("quality_") }
 
         return formats["quality_720p"]
@@ -37,14 +37,14 @@ object Utils {
             ?: throw IllegalStateException("No formats detected")
     }
 
-    fun extractAssignments(script: String): List<String> {
-        val formats = formatPattern.matcher(script)
+    private fun extractAssignments(script: String): List<String> {
+        val formats = jsVarPattern.matcher(script)
 
         if (formats.find()) {
             return formats.group(1).split(';')
         }
 
-        val assignments = mediaStringPattern.matcher(script)
+        val assignments = tvMediaStringPattern.matcher(script)
 
         if (!assignments.find()) {
             throw IllegalStateException("No assignments or formats found within the script!")
@@ -53,7 +53,17 @@ object Utils {
         return assignments.group(1).split(';')
     }
 
-    fun parseSegment(segment: String, v: HashMap<String, String>): String {
+    private fun extractFlashvars(script: String): String? {
+        val flashVars = flashVarRegex.matcher(script)
+
+        if (flashVars.find()) {
+            return flashVars.group(1)
+        }
+
+        return null
+    }
+
+    private fun parseSegment(segment: String, v: HashMap<String, String>): String {
         val cleaned = segment.replace(cleanRegex, "").trim()
 
         if (cleaned.contains('+')) {
@@ -64,5 +74,4 @@ object Utils {
         return v[cleaned]
             ?: cleaned.replace("'", "").replace("\"", "")
     }
-
 }
