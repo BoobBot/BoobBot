@@ -38,11 +38,7 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
     }
 
     private fun getPlaybackUrl(httpInterface: HttpInterface): String {
-        val req = HttpGet(trackInfo.uri).also {
-            it.addHeader("cookie", "platform=tv;")
-        }
-
-        httpInterface.execute(req).use { response ->
+        httpInterface.execute(HttpGet(trackInfo.uri)).use { response ->
             val statusCode = response.statusLine.statusCode
 
             if (!HttpClientTools.isSuccessWithContent(statusCode)) {
