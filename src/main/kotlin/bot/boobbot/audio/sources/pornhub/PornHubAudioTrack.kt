@@ -49,7 +49,7 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
                 throw IOException("Invalid status code for response: $statusCode")
             }
 
-            return Utils.extractMediaString(IOUtils.toString(response.entity.content, StandardCharsets.UTF_8))
+            return Utils.extractMediaString(IOUtils.toString(response.entity.content, StandardCharsets.UTF_8), httpInterface)
         }
     }
 }
