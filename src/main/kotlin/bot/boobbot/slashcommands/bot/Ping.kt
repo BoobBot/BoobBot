@@ -4,11 +4,11 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.SlashCommand
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(description = "Pong!", category = Category.MISC)
 class Ping : SlashCommand {
-    override fun execute(event: SlashCommandEvent) {
+    override fun execute(event: SlashCommandInteractionEvent) {
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing

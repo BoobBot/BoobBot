@@ -66,6 +66,7 @@ class BoobBot {
 
         val commands = CommandRegistry()
         val slashCommands = SlashCommandRegistry()
+        val UserContextCommands = UserContextCommandRegistry()
         val waiter = EventWaiter()
         val requestUtil = RequestUtil()
         val playerManager = DefaultAudioPlayerManager().also {
@@ -80,6 +81,7 @@ class BoobBot {
         @Throws(Exception::class)
         @JvmStatic
         fun main(args: Array<String>) {
+            print(UserContextCommands)
             isDebug = args.any { it == "--debug" }
             logCom = args.any { it == "--comlog" }
             val shardCount = if (isDebug) 1 else config.SHARD_TOTAL

@@ -6,7 +6,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import okhttp3.Headers
 import java.awt.Color
@@ -14,7 +14,7 @@ import java.time.Instant
 
 @CommandProperties(description = "Spank someone.", category = Category.INTERACTIONS, nsfw = true)
 class Spank : AsyncSlashCommand {
-    override suspend fun executeAsync(event: SlashCommandEvent) {
+    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
         val target = event.options.firstOrNull()?.asMember
             ?: return event.replyEmbeds(
                 EmbedBuilder().apply {

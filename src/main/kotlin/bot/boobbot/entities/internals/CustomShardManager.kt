@@ -5,6 +5,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.handlers.SlashHandler
+import bot.boobbot.handlers.UserContextHandler
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.WebhookManager
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -113,7 +114,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler())
+                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler(), UserContextHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))

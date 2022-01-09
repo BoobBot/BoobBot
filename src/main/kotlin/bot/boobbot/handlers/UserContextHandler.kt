@@ -10,41 +10,43 @@ import bot.boobbot.utils.Utils.Companion.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
-class SlashHandler : ListenerAdapter() {
+class UserContextHandler : ListenerAdapter() {
     private val threadCounter = AtomicInteger()
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
 
-    override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-        BoobBot.metrics.record(Metrics.happened("SlashCommandInteractionEvent"))
+    override fun onUserContextInteraction(event: UserContextInteractionEvent) {
+        print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+        BoobBot.metrics.record(Metrics.happened("ContextCommandInteractionEvent"))
         commandExecutorPool.execute {
             processMessageEvent(event)
         }
     }
 
-    private fun processMessageEvent(event: SlashCommandInteractionEvent) {
+    private fun processMessageEvent(event: UserContextInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
+
+        if (event.channel == null)
+        {return}
 
         if (event.isFromGuild) {
             if (!event.textChannel.canTalk()) {
                 return
             }
-            if (guild.ignoredChannels.contains(event.channel.id)
+            if (guild.ignoredChannels.contains(event.channel!!.id)
                 && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)
             ) {
                 return
             }
         }
-
-        val command = BoobBot.slashCommands.findCommand(event.name) ?: return
-
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) { return }
+        val command = BoobBot.UserContextCommands.findCommand(event.name.lowercase()) ?: return
+        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel!!.id })) { return }
         if (!command.properties.enabled) {
             return
         }
@@ -100,7 +102,7 @@ class SlashHandler : ListenerAdapter() {
 
         try {
             command.execute(event)
-            BoobBot.metrics.record(Metrics.happened("SlashCommand"))
+            BoobBot.metrics.record(Metrics.happened("ContextCommand"))
             BoobBot.metrics.record(Metrics.happened(command.name))
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)

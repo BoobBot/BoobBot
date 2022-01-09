@@ -4,14 +4,14 @@ import bot.boobbot.BoobBot
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils.Companion.getRandomFunString
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.awt.Color
 import java.text.MessageFormat
 
-abstract class FunSlashCommand(private val category: String) : AsyncSlashCommand {
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val target = event.options.firstOrNull()?.asMember
+abstract class FunUserContextCommand(private val category: String) : AsyncUserContextCommand {
+    override suspend fun executeAsync(event: UserContextInteractionEvent) {
+        val target = event.targetMember
             ?: return event.replyEmbeds(
                 EmbedBuilder().apply {
                 setColor(Color.red)

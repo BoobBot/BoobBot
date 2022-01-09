@@ -37,10 +37,11 @@ repositories {
 
 dependencies {
     /* Discord Stuff */
-    implementation ("net.dv8tion:JDA:$jda_version") {
-        exclude module: 'opus-java'
-    }
+   // implementation ("net.dv8tion:JDA:$jda_version") {
+      //  exclude module: 'opus-java'
+    //}
     implementation "club.minnced:discord-webhooks:$webhooks_version"
+    implementation 'com.github.DV8FromTheWorld:JDA:rework~interactions-SNAPSHOT'
 
     /* Audio */
     implementation "com.sedmelluq:lavaplayer:$lp_version"

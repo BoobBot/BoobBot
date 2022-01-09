@@ -1,7 +1,7 @@
 package bot.boobbot.entities.framework
 
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-interface SlashCommand {
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
+interface UserContextCommand {
 
     val name: String
         get() = this.javaClass.simpleName.lowercase()
@@ -18,8 +18,8 @@ interface SlashCommand {
      *
      * @returns Whether or not command execution can proceed.
      */
-    fun localCheck(event: SlashCommandInteractionEvent): Boolean = true
+    fun localCheck(event: UserContextInteractionEvent): Boolean = true
 
-    fun execute(event: SlashCommandInteractionEvent)
+    fun execute(event: UserContextInteractionEvent)
 
 }

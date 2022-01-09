@@ -7,7 +7,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.interactions.components.Button
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.time.Instant
 
 @CommandProperties(description = "Bot and support guild links", aliases = ["join", "oauth", "link", "links", "support"])
