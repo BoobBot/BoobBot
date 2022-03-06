@@ -105,6 +105,14 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 GatewayIntent.GUILD_INVITES
             )
 
+            val disabledCacheFlags = EnumSet.of(
+                CacheFlag.ACTIVITY,
+                CacheFlag.CLIENT_STATUS,
+                CacheFlag.EMOTE,
+                CacheFlag.ONLINE_STATUS,
+                CacheFlag.ROLE_TAGS
+            )
+
             val allIntents = GatewayIntent.ALL_INTENTS
             val disabledIntentsInt = GatewayIntent.getRaw(disabledIntents)
             val enabledIntentsInt = allIntents and disabledIntentsInt.inv()
@@ -117,7 +125,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler(), UserContextHandler())
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
-                .disableCache(EnumSet.of(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
+                .disableCache(disabledCacheFlags)
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
                 .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)

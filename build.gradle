@@ -41,10 +41,10 @@ dependencies {
       //  exclude module: 'opus-java'
     //}
     implementation "club.minnced:discord-webhooks:$webhooks_version"
-    implementation 'com.github.DV8FromTheWorld:JDA:rework~interactions-SNAPSHOT'
+    implementation 'com.github.DV8FromTheWorld:JDA:5.0.0-alpha.9'
 
     /* Audio */
-    implementation "com.sedmelluq:lavaplayer:$lp_version"
+    implementation "com.github.walkyst:lavaplayer-fork:$lp_version"
     implementation "com.sedmelluq:jda-nas:$nas_version"
 
     /* Kotlin Stuff */
