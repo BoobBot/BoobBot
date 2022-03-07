@@ -4,19 +4,17 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
-import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
-import bot.boobbot.utils.Utils.Companion.calculateLewdLevel
-import bot.boobbot.utils.Utils.Companion.checkMissingPermissions
-import bot.boobbot.utils.Utils.Companion.random
+import bot.boobbot.utils.Utils.calculateLewdLevel
+import bot.boobbot.utils.Utils.checkMissingPermissions
+import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
@@ -41,8 +39,8 @@ class MessageHandler : ListenerAdapter() {
         commandExecutorPool.execute {
             processMessageEvent(event)
         }
-        processUser(event)
 
+        processUser(event)
     }
 
     @Suppress("EXPERIMENTAL_API_USAGE")
@@ -50,7 +48,6 @@ class MessageHandler : ListenerAdapter() {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (event.channelType.isGuild) {
-
             if (guild.dropEnabled && event.textChannel.isNSFW) {
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
@@ -194,8 +191,6 @@ class MessageHandler : ListenerAdapter() {
             event.message.addReaction("\uD83D\uDEAB").queue()
         }
     }
-
-
 
     private fun processUser(event: MessageReceivedEvent) {
         if (!event.isFromGuild) {

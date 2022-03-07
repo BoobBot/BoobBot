@@ -2,11 +2,8 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
-import bot.boobbot.entities.db.User
 import bot.boobbot.entities.internals.Config
-import bot.boobbot.utils.Formats
-import bot.boobbot.utils.Utils
-import bot.boobbot.utils.Utils.Companion.checkMissingPermissions
+import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission

@@ -2,7 +2,7 @@ package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
 import bot.boobbot.utils.Formats
-import bot.boobbot.utils.Utils.Companion.getRandomFunString
+import bot.boobbot.utils.Utils.getRandomFunString
 import java.awt.Color
 import java.text.MessageFormat
 

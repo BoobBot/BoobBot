@@ -2,10 +2,9 @@ package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
 import bot.boobbot.utils.Formats
-import bot.boobbot.utils.Utils.Companion.getRandomFunString
+import bot.boobbot.utils.Utils.getRandomFunString
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
-import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.awt.Color
 import java.text.MessageFormat
 

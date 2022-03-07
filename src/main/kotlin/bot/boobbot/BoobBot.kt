@@ -82,8 +82,8 @@ class BoobBot {
         @JvmStatic
         fun main(args: Array<String>) {
             print(UserContextCommands)
-            isDebug = args.any { it == "--debug" }
-            logCom = args.any { it == "--comlog" }
+            isDebug = "--debug" in args
+            logCom = "--comlog" in args
             val shardCount = if (isDebug) 1 else config.SHARD_TOTAL
             val token = if (isDebug) config.DEBUG_TOKEN else config.TOKEN
 
