@@ -29,36 +29,22 @@ object Colors {
         }
 
     init {
-        sColorNameMap["black"] =
-            BLACK
-        sColorNameMap["darkgray"] =
-            DKGRAY
-        sColorNameMap["gray"] =
-            GRAY
-        sColorNameMap["lightgray"] =
-            LTGRAY
-        sColorNameMap["white"] =
-            WHITE
-        sColorNameMap["red"] =
-            RED
-        sColorNameMap["green"] =
-            GREEN
-        sColorNameMap["blue"] =
-            BLUE
-        sColorNameMap["yellow"] =
-            YELLOW
-        sColorNameMap["cyan"] =
-            CYAN
-        sColorNameMap["magenta"] =
-            MAGENTA
+        sColorNameMap["black"] = BLACK
+        sColorNameMap["darkgray"] = DKGRAY
+        sColorNameMap["darkgrey"] = DKGRAY
+        sColorNameMap["gray"] = GRAY
+        sColorNameMap["grey"] = GRAY
+        sColorNameMap["lightgray"] = LTGRAY
+        sColorNameMap["lightgrey"] = LTGRAY
+        sColorNameMap["white"] = WHITE
+        sColorNameMap["red"] = RED
+        sColorNameMap["green"] = GREEN
+        sColorNameMap["blue"] = BLUE
+        sColorNameMap["yellow"] = YELLOW
+        sColorNameMap["cyan"] = CYAN
+        sColorNameMap["magenta"] = MAGENTA
         sColorNameMap["aqua"] = -0xff0001
         sColorNameMap["fuchsia"] = -0xff01
-        sColorNameMap["darkgrey"] =
-            DKGRAY
-        sColorNameMap["grey"] =
-            GRAY
-        sColorNameMap["lightgrey"] =
-            LTGRAY
         sColorNameMap["lime"] = -0xff0100
         sColorNameMap["maroon"] = -0x800000
         sColorNameMap["navy"] = -0xffff80
@@ -89,12 +75,10 @@ object Colors {
     }
 
     fun randomCodeGenerator(colorCount: Int): Map<Int, String> {
-        val hexColorMap = HashMap<Int, String>()
-        for (a in 0 until colorCount) {
-            var code = "" + (Math.random() * 256).toInt()
-            code = code + code + code
-            val i = Integer.parseInt(code)
-            hexColorMap[a] = Integer.toHexString(0x1000000 or i).substring(1).uppercase()
+        val hexColorMap = hashMapOf<Int, String>()
+        (0 until colorCount).forEach {
+            val colorInt = (Math.random() * 0xFFFFFF).toInt()
+            hexColorMap[it] = Integer.toHexString(colorInt).uppercase()
         }
         return hexColorMap
     }
