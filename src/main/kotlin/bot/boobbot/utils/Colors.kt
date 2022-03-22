@@ -75,11 +75,9 @@ object Colors {
     }
 
     fun randomCodeGenerator(colorCount: Int): Map<Int, String> {
-        val hexColorMap = hashMapOf<Int, String>()
-        (0 until colorCount).forEach {
+        return (0 until colorCount).associateWith {
             val colorInt = (Math.random() * 0xFFFFFF).toInt()
-            hexColorMap[it] = Integer.toHexString(colorInt).uppercase()
+            Integer.toHexString(colorInt).uppercase()
         }
-        return hexColorMap
     }
 }
