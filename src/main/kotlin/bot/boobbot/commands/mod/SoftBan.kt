@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 @CommandProperties(
-    description = "Quickly ban+unban a user to clean their messages. <:p_:475801484282429450>",
+    description = "Quickly ban+unban a user to clean their messages.",
     donorOnly = true,
     guildOnly = true,
     category = Category.MOD,

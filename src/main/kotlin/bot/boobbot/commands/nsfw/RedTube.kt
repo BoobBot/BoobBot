@@ -12,7 +12,7 @@ import java.awt.Color
 import java.time.Instant
 
 @CommandProperties(
-    description = "RedTube video search <:p_:475801484282429450>",
+    description = "RedTube video search.",
     guildOnly = true,
     aliases = ["rt"],
     nsfw = true,

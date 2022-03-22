@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.SlideShowCommand
 
 @CommandProperties(
-    description = "Cycles though 20 images at 5 seconds each. <:p_:475801484282429450>",
+    description = "Cycles though 20 images at 5 seconds each.",
     nsfw = true,
     category = Category.GENERAL,
     aliases = ["ss"],

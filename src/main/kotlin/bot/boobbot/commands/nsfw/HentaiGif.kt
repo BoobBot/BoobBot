@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.NekoLifeApiCommand
 
 @CommandProperties(
-    description = "Lewd hentai gifs! <:p_:475801484282429450>",
+    description = "Lewd hentai gifs!",
     nsfw = true,
     category = Category.FANTASY,
     donorOnly = true,

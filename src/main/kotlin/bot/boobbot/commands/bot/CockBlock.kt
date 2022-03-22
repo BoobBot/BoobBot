@@ -12,7 +12,6 @@ import bot.boobbot.entities.framework.SubCommand
     aliases = ["cb"]
 )
 class CockBlock : Command {
-
     override fun execute(ctx: Context) {
         ctx.send("`bbcockblock <${subcommands.keys.joinToString("|")}>`")
     }

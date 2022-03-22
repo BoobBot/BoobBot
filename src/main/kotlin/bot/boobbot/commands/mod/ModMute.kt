@@ -8,7 +8,7 @@ import bot.boobbot.entities.framework.ModCommand
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
-    description = "Mute a Admin <:p_:475801484282429450>",
+    description = "Mute an Admin.",
     donorOnly = true,
     guildOnly = true,
     aliases = ["mm"],

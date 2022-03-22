@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.SendCommand
 
 @CommandProperties(
-    description = "Sends pegging to you or another user! <:p_:475801484282429450>",
+    description = "Sends pegging to you or another user!",
     guildOnly = true,
     category = Category.SEND,
     donorOnly = true

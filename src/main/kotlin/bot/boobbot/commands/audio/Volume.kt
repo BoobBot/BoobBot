@@ -9,7 +9,7 @@ import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
-    description = "Sets the Volume <:p_:475801484282429450> ",
+    description = "Sets the Volume",
     category = Category.AUDIO,
     guildOnly = true,
     donorOnly = true,

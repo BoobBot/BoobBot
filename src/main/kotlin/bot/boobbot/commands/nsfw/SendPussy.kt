@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.SendCommand
 
 @CommandProperties(
-    description = "Sends some pussy to you or another user. <:p_:475801484282429450>",
+    description = "Sends some pussy to you or another user.",
     guildOnly = true,
     aliases = ["sp"],
     category = Category.SEND,

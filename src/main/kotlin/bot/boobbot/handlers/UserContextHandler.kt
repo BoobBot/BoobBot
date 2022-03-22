@@ -29,8 +29,9 @@ class UserContextHandler : ListenerAdapter() {
     private fun processMessageEvent(event: UserContextInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
 
-        if (event.channel == null)
-        {return}
+        if (event.channel == null) {
+            return
+        }
 
         if (event.isFromGuild) {
             if (!event.textChannel.canTalk()) {

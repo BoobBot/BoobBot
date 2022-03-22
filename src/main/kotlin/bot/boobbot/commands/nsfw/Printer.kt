@@ -12,7 +12,7 @@ import okhttp3.HttpUrl
 import java.awt.Color
 
 @CommandProperties(
-    description = "Super freaky text porn <:p_:475801484282429450>",
+    description = "Super freaky text porn.",
     nsfw = true,
     guildOnly = true,
     category = Category.GENERAL

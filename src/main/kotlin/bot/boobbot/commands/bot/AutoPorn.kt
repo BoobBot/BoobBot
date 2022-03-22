@@ -8,17 +8,15 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import java.awt.Color
 import java.util.*
 
-
 @CommandProperties(
     aliases = ["ap"],
-    description = "AutoPorn, Sub-commands: set, delete, status <:p_:475801484282429450>",
+    description = "AutoPorn, Sub-commands: set, delete, status",
     nsfw = true,
     guildOnly = true,
     category = Category.MISC,
     donorOnly = true
 )
 class AutoPorn : Command {
-
     private val types = mapOf(
         "gif" to "Gifs",
         "boobs" to "boobs",
@@ -26,9 +24,9 @@ class AutoPorn : Command {
         "gay" to "gay",
         "random" to "nsfw"
     )
-    private val typeString = types.keys.joinToString(", ")
+    private val typeString = types.keys.joinToString("`, `", prefix = "`", postfix = "`")
 
-    fun formatWebhookUrl(channelId: String, token: String): String {
+    private fun formatWebhookUrl(channelId: String, token: String): String {
         return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
     }
 
@@ -40,7 +38,7 @@ class AutoPorn : Command {
         if (ctx.args.isEmpty()) {
             return ctx.embed {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: set, delete, status"))
+                setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: `set`, `delete`, `status`"))
             }
         }
     }
@@ -71,26 +69,32 @@ class AutoPorn : Command {
             return ctx.send("\uD83D\uDEAB Hey whore, I need `MANAGE_WEBHOOKS` permission to do this")
         }
 
-        channel.createWebhook("BoobBot").reason("Auto-Porn setup").queue({
-            val url = formatWebhookUrl(it.id, it.token!!)
-            val imageType = types.getValue(ctx.args[0].lowercase())
-            BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
+        channel.createWebhook("BoobBot")
+            .reason("Auto-Porn Setup")
+            .submit()
+            .thenAccept {
+                val url = formatWebhookUrl(it.id, it.token!!)
+                val imageType = types[ctx.args[0].lowercase()]!!
+                BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
 
-            ctx.embed {
-                setColor(Color.red)
-                setDescription("Set Auto-Porn channel to ${channel.asMention}")
-            }
-        }, {
-            val erx = it as ErrorResponseException
-
-            when (erx.errorCode) {
-                30007 -> ctx.send("The provided channel has too many webhooks, wtf? delete some whore")
-                else -> {
-                    BoobBot.log.error("Webhook creation error", it)
-                    ctx.send("Shit, couldn't make a webhook.\n${it.meaning}")
+                ctx.embed {
+                    setColor(Color.red)
+                    setDescription("Set Auto-Porn channel to ${channel.asMention}")
                 }
             }
-        })
+            .exceptionally {
+                val erx = it as ErrorResponseException
+
+                when (erx.errorCode) {
+                    30007 -> ctx.send("The provided channel has too many webhooks, wtf? delete some whore")
+                    else -> {
+                        BoobBot.log.error("Webhook creation error", it)
+                        ctx.send("Shit, couldn't make a webhook.\n${it.meaning}")
+                    }
+                }
+
+                return@exceptionally null
+            }
     }
 
     @SubCommand(aliases = ["disable"])

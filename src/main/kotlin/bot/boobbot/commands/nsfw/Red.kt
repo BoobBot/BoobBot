@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.BbApiCommand
 
 @CommandProperties(
-    description = "Redheads: because redder is better! <:p_:475801484282429450> ",
+    description = "Redheads: because redder is better!",
     aliases = ["redhead", "redheads"],
     nsfw = true,
     category = Category.GENERAL,

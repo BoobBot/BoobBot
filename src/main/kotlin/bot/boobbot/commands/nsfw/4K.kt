@@ -5,7 +5,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.BbApiCommand
 
 @CommandProperties(
-    description = "4K Hotness! <:p_:475801484282429450> ",
+    description = "4K Hotness!",
     nsfw = true,
     category = Category.GENERAL,
     donorOnly = true

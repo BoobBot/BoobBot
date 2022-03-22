@@ -9,7 +9,7 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
-    description = "Searches YouTube for videos to play <:p_:475801484282429450> ",
+    description = "Searches YouTube for videos to play",
     aliases = ["yt"],
     nsfw = false,
     category = Category.AUDIO,

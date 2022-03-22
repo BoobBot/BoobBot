@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -37,11 +37,10 @@ repositories {
 
 dependencies {
     /* Discord Stuff */
-   // implementation ("net.dv8tion:JDA:$jda_version") {
-      //  exclude module: 'opus-java'
-    //}
+    implementation ("com.github.DV8FromTheWorld:JDA:$jda_version") {
+        exclude module: 'opus-java'
+    }
     implementation "club.minnced:discord-webhooks:$webhooks_version"
-    implementation 'com.github.DV8FromTheWorld:JDA:5.0.0-alpha.9'
 
     /* Audio */
     implementation "com.github.walkyst:lavaplayer-fork:$lp_version"
@@ -84,9 +83,7 @@ dependencies {
 }
 
 shadowJar {
-    baseName = "bb"
-    classifier = null
-    version = null
+    archiveFileName = "bb.jar"
 }
 
 compileKotlin {

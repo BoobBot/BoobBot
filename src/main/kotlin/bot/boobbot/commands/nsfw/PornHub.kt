@@ -12,7 +12,7 @@ import java.awt.Color
 import java.time.Instant
 
 @CommandProperties(
-    description = "PornHub video search. <:p_:475801484282429450>",
+    description = "PornHub video search.",
     donorOnly = true,
     guildOnly = true,
     aliases = ["ph"],

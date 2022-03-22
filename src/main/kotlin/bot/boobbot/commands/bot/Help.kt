@@ -15,12 +15,10 @@ import java.util.*
     category = Category.MISC
 )
 class Help : Command {
-
     override fun execute(ctx: Context) {
-        val isDm = ctx.args.lastOrNull()?.equals("--dm", true) ?: false
-
-        val command = if (ctx.args.isEmpty()) null else BoobBot.commands.findCommand(ctx.args.first())
-        val category = if (ctx.args.isEmpty()) null else getCategoryByName(ctx.args.first())
+        val isDm = ctx.args.lastOrNull()?.lowercase() == "--dm"
+        val command = ctx.args.firstOrNull()?.let(BoobBot.commands::findCommand)
+        val category = ctx.args.firstOrNull()?.let(::getCategoryByName)
 
         when {
             ctx.args.isEmpty() || ctx.args.first().equals("--dm", true) -> sendCategories(ctx, isDm)
@@ -28,11 +26,9 @@ class Help : Command {
             category != null -> sendCategoryCommands(ctx, category, isDm)
             else -> ctx.send("`${ctx.args.first().replace("@", "")}` is not a command/category, whore.")
         }
-
-        return
     }
 
-    fun sendCategories(ctx: Context, dm: Boolean) {
+    private fun sendCategories(ctx: Context, dm: Boolean) {
         val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
         val embed = builder(ctx)
 
@@ -58,35 +54,29 @@ class Help : Command {
         send(ctx, embed, dm)
     }
 
-    fun sendCategoryCommands(ctx: Context, category: Category, dm: Boolean) {
+    private fun sendCategoryCommands(ctx: Context, category: Category, dm: Boolean) {
         val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
 
         val categoryCommands = BoobBot.commands.values
             .filter { it.properties.category == category }
-            .joinToString("\n") { "`$prefix${padEnd(it.name)}:` ${it.properties.description}" }
+            .joinToString("\n") {
+                "`$prefix${padEnd(it.name)}:` ${it.properties.description}" + if (it.properties.donorOnly) " <:p_:475801484282429450>" else ""
+            }
         val embed = builder(ctx)
             .setDescription("Commands in **${category.name.lowercase()}**\n$categoryCommands")
         //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
         send(ctx, embed, dm)
     }
 
-    fun sendCommandHelp(ctx: Context, command: ExecutableCommand, dm: Boolean) {
+    private fun sendCommandHelp(ctx: Context, command: ExecutableCommand, dm: Boolean) {
         val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
-
-        val aliases = if (command.properties.aliases.isEmpty()) {
-            "None"
-        } else {
-            command.properties.aliases.joinToString(", ")
-        }
-
+        val aliases = command.properties.aliases.takeUnless { it.isEmpty() }?.joinToString(", ") ?: "None"
         val info = String.format(
-            "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**",
-            prefix, command.name, aliases, command.properties.description
+            "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**%s",
+            prefix, command.name, aliases, command.properties.description,
+            if (command.properties.donorOnly) "\n\n**<:p_:475801484282429450> Patreon only**" else ""
         )
-
-        val embed = builder(ctx)
-            .addField(Formats.info("Info"), info, false)
-
+        val embed = builder(ctx).addField(Formats.info("Info"), info, false)
         send(ctx, embed, dm)
     }
 
@@ -113,12 +103,6 @@ class Help : Command {
             .setTimestamp(Instant.now())
     }
 
-    private fun getCategoryByName(category: String): Category? {
-        return Category.values().firstOrNull { it.name.equals(category, true) }
-    }
-
-    private fun padEnd(str: String, length: Int = 15): String {
-        return str + "\u200B ".repeat(length - str.length)
-    }
-
+    private fun getCategoryByName(category: String) = Category.values().firstOrNull { it.name.equals(category, true) }
+    private fun padEnd(str: String, length: Int = 15) = str + "\u200B ".repeat(length - str.length)
 }

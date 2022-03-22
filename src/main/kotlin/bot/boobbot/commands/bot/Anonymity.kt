@@ -12,7 +12,6 @@ import bot.boobbot.entities.framework.SubCommand
     aliases = ["cb"]
 )
 class Anonymity : Command {
-
     override fun execute(ctx: Context) {
         ctx.send("`bbanonymity <${subcommands.keys.joinToString("|")}>`")
     }
