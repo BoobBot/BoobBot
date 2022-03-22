@@ -1,6 +1,6 @@
 package bot.boobbot.commands.audio
 
-import bot.boobbot.BoobBot.Companion.playerManager
+import bot.boobbot.BoobBot.playerManager
 import bot.boobbot.audio.AudioLoader
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
