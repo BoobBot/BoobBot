@@ -174,6 +174,18 @@ class MessageHandler : ListenerAdapter() {
             event.message.delete().queue()
         }
 
+        if (event.author.idLong == 596330574109474848L) { // Dyna's ID
+            val feetCmd = BoobBot.commands.findCommand("feet")
+
+            try {
+                feetCmd!!.execute(trigger, event.message, args)
+            } catch (e: Exception) {
+                BoobBot.log.error("ah fuck, couldn't run the feet command for Dyna :(", e)
+            }
+
+            return
+        }
+
         try {
             Utils.logCommand(event.message)
             command.execute(trigger, event.message, args)

@@ -15,7 +15,6 @@ class UserContextCommandRegistry : HashMap<String, ExecutableUserContextCommand>
     }
 
     fun findCommand(commandName: String): ExecutableUserContextCommand? {
-        return this[commandName]
-            ?: values.firstOrNull { it.properties.aliases.contains(commandName) }
+        return this[commandName] ?: values.firstOrNull { commandName in it.properties.aliases }
     }
 }
