@@ -21,6 +21,18 @@ class Eval : Command {
     }
 
     override fun execute(ctx: Context) {
+        val code = ctx.args.joinToString("\n")
+
+        val imports = code.lines()
+            .takeWhile { it.startsWith("import ") }
+            .joinToString("\n", postfix = "\n")
+
+        val stripped = code.replace("^```\\w+".toRegex(), "")
+            .removeSuffix("```")
+            .lines()
+            .dropWhile { it.startsWith("import ") }
+            .joinToString("\n")
+
         val bindings = mapOf(
             "bb" to BoobBot,
             "ctx" to ctx,
@@ -31,15 +43,15 @@ class Eval : Command {
             "self" to BoobBot.database.getUser(ctx.author.id)
         )
 
-        val bindString =
-            bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }
+        val bindString = bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }
                 .joinToString("\n")
         val bind = engine.createBindings()
         bind.putAll(bindings)
 
         evalThread.run {
             try {
-                val result = engine.eval("$bindString\n${ctx.args.joinToString(" ")}", bind)
+                val result = engine.eval("$imports$bindString\n$stripped", bind)
+                    ?: return ctx.message.addReaction("👌").queue()
                 ctx.channel.sendMessage("```\n$result```").queue(null) {
                     ctx.channel.sendMessage("Response Error\n```\n$it```").queue()
                 }
