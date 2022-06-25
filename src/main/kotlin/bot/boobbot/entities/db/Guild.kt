@@ -15,7 +15,8 @@ data class Guild(
     var modMute: MutableList<String> = mutableListOf(),
     @SerializedName("cc") var customCommands: MutableList<CustomCommand> = mutableListOf(),
     var channelDisabled: MutableList<DisabledCommand> = mutableListOf(),
-    var disabled: MutableList<String> = mutableListOf()
+    var disabled: MutableList<String> = mutableListOf(),
+    var premiumRedeemer: Long = -1L
 ) {
     fun save() = BoobBot.database.setGuild(this)
     fun delete() = BoobBot.database.deleteGuild(this._id)
@@ -37,8 +38,9 @@ data class Guild(
                 DisabledCommand(com.getString("name"), com.getString("channelId"))
             }.toMutableList()
             val disabled = map(json.optJSONArray("disabled")) { i, a -> a.getString(i) }.toMutableList()
+            val redeemer = json.optLong("redeemer", -1L)
 
-            return Guild(id, prefix, dropEnabled, blacklisted, ignoredChannels, modMute, customCommands, channelDisabled, disabled)
+            return Guild(id, prefix, dropEnabled, blacklisted, ignoredChannels, modMute, customCommands, channelDisabled, disabled, redeemer)
         }
 
         private fun <T> map(array: JSONArray?, transform: (Int, JSONArray) -> T): List<T> {

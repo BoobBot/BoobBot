@@ -7,22 +7,16 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.SubCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
-import bot.boobbot.utils.Utils
 import bot.boobbot.utils.ifEmpty
 import net.dv8tion.jda.api.Permission
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
 class Settings : Command {
 
     private val prohibitDisable = arrayOf("help", "settings")
 
-    fun englishIsHard(a: List<*>): String {
-        if (a.size == 1) {
-            return "is"
-        }
-
-        return "are"
-    }
+    fun englishIsHard(a: List<*>) = (a.size == 1).ifTrue { "is" } ?: "are"
 
     override fun localCheck(ctx: Context): Boolean {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
@@ -171,17 +165,8 @@ class Settings : Command {
         ctx.send("Enabled ${Formats.monospaced(toEnable)} for this channel.")
     }
 
-    @SubCommand(aliases = ["prefix", "sp"], description = "Change the prefix for the entire server.")
+    @SubCommand(aliases = ["prefix", "sp"], description = "Change the prefix for the entire server.", donorOnly = true)
     fun setPrefix(ctx: Context) {
-        if (!Utils.checkDonor(ctx.message)) {
-            return ctx.send(
-                Formats.error(
-                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
-                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
-                )
-            )
-        }
-
         if (ctx.args.isEmpty()) {
             return ctx.send("wtf, i don't mind read. Specify what prefix you wanna set, whore.")
         }

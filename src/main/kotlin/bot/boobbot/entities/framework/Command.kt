@@ -45,7 +45,8 @@ interface Command {
         val maxLen = this.subcommands.values.maxOfOrNull { it.name.length } ?: 15
 
         for (sc in this.subcommands.values.sortedBy { it.name }) {
-            embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}\n")
+            val patreonSymbol = if (sc.donorOnly) " <:p_:475801484282429450>" else ""
+            embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}$patreonSymbol\n")
         }
 
         ctx.embed(embed.build())

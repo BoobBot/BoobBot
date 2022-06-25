@@ -1,11 +1,12 @@
 package bot.boobbot.commands.dev
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 
-@CommandProperties(description = "Check how fucked the bot session is", developerOnly = true)
+@CommandProperties(description = "Check how fucked the bot session is", category = Category.DEV, developerOnly = true)
 class Session : Command {
 
     override fun execute(ctx: Context) {

@@ -54,7 +54,6 @@ object Utils {
         }
     )
 
-
     fun checkDonor(event: Message): Boolean {
         return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
         || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
@@ -82,7 +81,6 @@ object Utils {
         val proxy = ips.random()
         val parts = proxy.split(":".toRegex(), 2).toTypedArray()
         return HttpHost(parts[0], parts[1].toInt(), "http")
-
     }
 
     fun logCommand(m: Message) {
@@ -120,9 +118,7 @@ object Utils {
         return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
     }
 
-    fun random(lower: Int, upper: Int): Int {
-        return rand.nextInt(upper - lower) + lower
-    }
+    fun random(lower: Int, upper: Int) = rand.nextInt(upper - lower) + lower
 
     fun checkMissingPermissions(
         target: Member,
