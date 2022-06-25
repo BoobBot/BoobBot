@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     /* Discord Stuff */
-    implementation ("com.github.DV8FromTheWorld:JDA:$jda_version") {
+    implementation ("net.dv8tion:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
     implementation "club.minnced:discord-webhooks:$webhooks_version"
@@ -54,7 +54,7 @@ dependencies {
     /* Logging */
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.sentry:sentry-logback:$sentry_version"
-    implementation "org.codehaus.janino:janino:3.0.7"
+    implementation "org.codehaus.janino:janino:3.1.7"
 
     /* Webserver */
     implementation "io.ktor:ktor-server-netty:$ktor_version"
@@ -76,7 +76,7 @@ dependencies {
     implementation "org.reflections:reflections:$reflections_version"
     implementation "io.github.cdimascio:java-dotenv:3.1.2"
     implementation "org.javadelight:delight-metrics:0.0.6"
-    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation 'org.apache.commons:commons-lang3:12.0'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jsoup:jsoup:$jsoup_version"
