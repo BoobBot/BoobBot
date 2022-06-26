@@ -48,7 +48,7 @@ class AutoPorn : Command {
         if (ctx.args.size < 2 ||
             ctx.args[0].isEmpty() ||
             !types.containsKey(ctx.args[0].lowercase()) ||
-            ctx.message.mentions.channels.isEmpty()
+            ctx.message.mentions.getChannels(TextChannel::class.java).isEmpty()
         ) {
             return ctx.embed {
                 setColor(Color.red)
