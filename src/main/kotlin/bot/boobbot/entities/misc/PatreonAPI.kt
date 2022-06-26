@@ -110,7 +110,7 @@ class PatreonAPI(private val accessToken: String) {
 
         BoobBot.requestUtil.makeRequest(request).queue {
             if (it == null || !it.isSuccessful) {
-                BoobBot.log.error("Unable to get list of pledges ({}): {}", it?.code(), it?.message())
+                BoobBot.log.error("Unable to get list of pledges ({}): {}", it?.code, it?.message)
                 it?.close()
 
                 return@queue cb(users.toList())

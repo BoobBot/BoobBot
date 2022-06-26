@@ -86,7 +86,7 @@ class Set : Command {
     @SubCommand
     fun avatar(ctx: Context) {
         BoobBot.requestUtil.get(ctx.args[0]).queue {
-            val image = it?.body()?.byteStream() ?: return@queue ctx.send("Unable to fetch avatar")
+            val image = it?.body?.byteStream() ?: return@queue ctx.send("Unable to fetch avatar")
 
             ctx.jda.selfUser.manager.setAvatar(Icon.from(image)).queue(
                 { ctx.send(Formats.info("Yes daddy, avatar set")) },

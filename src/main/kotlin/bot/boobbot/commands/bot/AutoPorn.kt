@@ -4,9 +4,9 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.*
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import java.awt.Color
-import java.util.*
 
 @CommandProperties(
     aliases = ["ap"],
@@ -48,7 +48,7 @@ class AutoPorn : Command {
         if (ctx.args.size < 2 ||
             ctx.args[0].isEmpty() ||
             !types.containsKey(ctx.args[0].lowercase()) ||
-            ctx.message.mentionedChannels.isEmpty()
+            ctx.message.mentions.channels.isEmpty()
         ) {
             return ctx.embed {
                 setColor(Color.red)
@@ -56,7 +56,7 @@ class AutoPorn : Command {
             }
         }
 
-        val channel = ctx.message.mentionedChannels[0]
+        val channel = ctx.message.mentions.getChannels(TextChannel::class.java)[0]
 
         if (!channel.isNSFW) {
             return ctx.embed {

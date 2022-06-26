@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.awt.Font
 import java.io.ByteArrayOutputStream
@@ -19,7 +20,7 @@ import javax.imageio.ImageIO
 
 
 class BootyDropper {
-    private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
+    private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
     private val random = Random()
     private val activeDrops = hashSetOf<Long>()
 
@@ -114,7 +115,7 @@ class BootyDropper {
     private fun generateDrop(key: String): CompletableFuture<ByteArray> {
         return fetchNsfwImage("ass")
             .thenCompose { BoobBot.requestUtil.get(it).submit() }
-            .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
+            .thenApply { it.body?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
             .thenApply { it.use(ImageIO::read) }
             .thenApply {
                 val fontSize = it.width * 0.1 // 10% of width

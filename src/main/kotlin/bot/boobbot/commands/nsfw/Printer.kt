@@ -8,7 +8,9 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.awt.Color
 
 @CommandProperties(
@@ -19,7 +21,7 @@ import java.awt.Color
 )
 class Printer : AsyncCommand {
 
-    private val baseUrl = HttpUrl.parse("http://127.0.0.1:7080/printer")!!
+    private val baseUrl = "http://127.0.0.1:7080/printer".toHttpUrlOrNull()!!
     private val categories = mapOf(
         "dick" to "penis",
         "boobs" to "boobs",
@@ -45,10 +47,10 @@ class Printer : AsyncCommand {
         val image = BoobBot.requestUtil
             .get(
                 baseUrl.newBuilder().addQueryParameter("url", imageUrl).build().toString(),
-                Headers.of()
+                headersOf()
             )
             .await()
-            ?.body()
+            ?.body
             ?.string()
             ?: return ctx.send("API didn't respond, rip")
 
@@ -63,7 +65,7 @@ class Printer : AsyncCommand {
         return BoobBot.requestUtil
             .get(
                 "https://boob.bot/api/v2/img/$category",
-                Headers.of("Key", BoobBot.config.BB_API_KEY)
+                headersOf("Key", BoobBot.config.BB_API_KEY)
             )
             .await()
             ?.json()

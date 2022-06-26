@@ -9,6 +9,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.time.Instant
 
@@ -38,7 +39,7 @@ class `69` : AsyncCommand {
 
 
         val res =
-            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/69", Headers.of("Key", BoobBot.config.BB_API_KEY))
+            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/69", headersOf("Key", BoobBot.config.BB_API_KEY))
                 .await()?.json()
                 ?: return ctx.send(
                     Formats.error(" oh? something broken af")

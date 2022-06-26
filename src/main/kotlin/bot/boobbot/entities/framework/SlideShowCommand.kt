@@ -6,13 +6,14 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
 
 abstract class SlideShowCommand : Command {
 
-    private val headers = Headers.of("Key", BoobBot.config.BB_API_KEY)
+    private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
 
     private val aliases = mapOf(
         "dick" to "penis",

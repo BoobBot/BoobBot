@@ -45,15 +45,7 @@ fun MessageEmbed.toWebhookEmbed(): WebhookEmbed {
 fun MessageEmbed.asMessage() = MessageBuilder().setEmbeds(this).build()
 
 fun Response.json(): JSONObject? {
-    val body = body()
-
-    body().use {
-        return if (isSuccessful && body != null) {
-            JSONObject(body()!!.string())
-        } else {
-            null
-        }
-    }
+    return body?.takeIf { isSuccessful }?.use { JSONObject(it.string()) }
 }
 
 suspend fun <T> CompletableFuture<T>.awaitSuppressed(): T? {

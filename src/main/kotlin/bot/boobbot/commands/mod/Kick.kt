@@ -41,7 +41,7 @@ class Kick : ModCommand() {
             }
         }
 
-        ctx.guild!!.kick(user.id, "Kicked by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
+        ctx.guild!!.kick(user, "Kicked by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
             .queue(
                 { ctx.send("done, good riddance stupid bitch") },
                 { ctx.send("what the fuck i couldn't kick?") }

@@ -63,7 +63,7 @@ class Ship : Command {
     companion object {
         fun downloadAvatar(url: String): CompletableFuture<BufferedImage> {
             return BoobBot.requestUtil.get(url).submit()
-                .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
+                .thenApply { it.body?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
                 .thenApply { ImageIO.read(it) }
         }
 

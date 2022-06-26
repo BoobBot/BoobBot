@@ -15,7 +15,7 @@ abstract class ModCommand : Command {
         }
 
         val reason = if (reasonArgument.isEmpty()) null else reasonArgument.joinToString(" ")
-        val target = ctx.message.mentionedMembers.firstOrNull()
+        val target = ctx.message.mentions.members.firstOrNull()
             ?: userArgument.first().matchGroup(snowflakePattern)?.let(User::fromId)
             ?: return Resolved(null, null, false)
 

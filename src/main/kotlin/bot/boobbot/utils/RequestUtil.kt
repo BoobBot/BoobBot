@@ -3,6 +3,7 @@ package bot.boobbot.utils
 import bot.boobbot.BoobBot
 import kotlinx.coroutines.future.await
 import okhttp3.*
+import okhttp3.Headers.Companion.headersOf
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
@@ -31,7 +32,7 @@ class RequestUtil {
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    BoobBot.log.error("An error occurred during a HTTP request to ${call.request().url()}", e)
+                    BoobBot.log.error("An error occurred during a HTTP request to ${call.request().url}", e)
                     fut.completeExceptionally(e)
                 }
 
@@ -50,7 +51,7 @@ class RequestUtil {
         suspend fun await(): Response? = submit().await()
     }
 
-    fun get(url: String, headers: Headers = Headers.of(), useProxy: Boolean = false): PendingRequest {
+    fun get(url: String, headers: Headers = headersOf(), useProxy: Boolean = false): PendingRequest {
         return makeRequest(useProxy, "GET", url, null, headers)
     }
 

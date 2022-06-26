@@ -43,7 +43,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         }
 
     val mentions: List<User>
-        get() = if (triggerIsMention) message.mentionedUsers.minus(message.jda.selfUser) else message.mentionedUsers
+        get() = message.mentions.users.apply { if (triggerIsMention) remove(message.jda.selfUser) }
 
 
     fun permissionCheck(u: User, m: Member?, channel: MessageChannel, vararg permissions: Permission): Boolean {

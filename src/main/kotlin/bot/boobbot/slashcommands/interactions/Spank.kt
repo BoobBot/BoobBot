@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.time.Instant
 
@@ -30,7 +31,7 @@ class Spank : AsyncSlashCommand {
             return event.reply("aww how sad you wanna play with yourself, well fucking don't go find a friend whore.").queue()
         }
         val res =
-            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/spank", Headers.of("Key", BoobBot.config.BB_API_KEY))
+            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/spank", headersOf("Key", BoobBot.config.BB_API_KEY))
                 .await()?.json()
                 ?: return event.reply(
                     Formats.error(" oh? something broken af")

@@ -111,10 +111,10 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
             val document = Jsoup.parse(it.entity.content, StandardCharsets.UTF_8.name(), "https://pornhub.com")
             val videos = document.getElementsByClass("wrap")
                 .filter { elem ->
-                    !elem.select("div.thumbnail-info-wrapper span.title a")
+                    elem.select("div.thumbnail-info-wrapper span.title a")
                         .first()
-                        .attr("href")
-                        .contains("playlist")
+                        ?.attr("href")
+                        ?.contains("playlist") == false
                 }
 
             if (videos.isEmpty()) {
@@ -124,9 +124,9 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
             val tracks = ArrayList<AudioTrack>()
 
             for (e in videos) {
-                val anchor = e.select("div.thumbnail-info-wrapper span.title a").first()
+                val anchor = e.select("div.thumbnail-info-wrapper span.title a").first()!!
                 val title = anchor.text()
-                val identifier = anchor.parents().select("li.videoBox").first().attr("_vkey")
+                val identifier = anchor.parents().select("li.videoBox").first()!!.attr("_vkey")
                 val url = anchor.absUrl("href")
                 val durationStr =
                     anchor.parents().select("div.videoPreviewBg .marker-overlays var").firstOrNull()?.text()
@@ -186,7 +186,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
 
     companion object {
         private val VIDEO_REGEX =
-            Pattern.compile("^https?://(?:\\w+\\.)?pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z0-9]{9,15})\$")
+            Pattern.compile("^https?://(?:\\w+\\.)?pornhub\\.com/view_video\\.php\\?viewkey=([a-zA-Z\\d]{9,15})\$")
         private val VIDEO_INFO_REGEX = Pattern.compile("var flashvars_\\d{7,9} = (\\{.+})")
         private const val VIDEO_SEARCH_PREFIX = "phsearch:"
     }

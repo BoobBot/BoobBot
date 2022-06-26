@@ -78,7 +78,7 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
             var playbackURL: String? = null
 
             for (format in info.get("mediaDefinitions").values()) {
-                if (!format.get("videoUrl").text().isEmpty()) {
+                if (format.get("videoUrl").text().isNotEmpty()) {
                     playbackURL = format.get("videoUrl").text()
                     break
                 }

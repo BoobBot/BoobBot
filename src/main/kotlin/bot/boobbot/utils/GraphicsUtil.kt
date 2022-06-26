@@ -13,7 +13,7 @@ class GraphicsUtil(imageUrl: String, options: Graphics2D.() -> Unit = {}) {
 
     private val image = BoobBot.requestUtil.get(imageUrl)
         .submit()
-        .thenApply { it.body()?.byteStream() ?: throw IllegalStateException("ResponseBody is null") }
+        .thenApply { it.body?.byteStream() ?: throw IllegalStateException("ResponseBody is null") }
         .thenApply { it.use(ImageIO::read) }
 
     private var graphics = image.thenApply { it.createGraphics() }

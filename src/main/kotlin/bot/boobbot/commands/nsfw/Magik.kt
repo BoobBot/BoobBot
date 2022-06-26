@@ -8,7 +8,9 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.awt.Color
 
 @CommandProperties(
@@ -20,7 +22,7 @@ import java.awt.Color
 )
 class Magik : AsyncCommand {
 
-    private val baseUrl = HttpUrl.parse("https://dankmemer.services/api/magik")!!
+    private val baseUrl = "https://memes.subspace.gg/api/magik".toHttpUrlOrNull()!!
     private val categories = mapOf(
         "dick" to "penis",
         "boobs" to "boobs",
@@ -40,10 +42,10 @@ class Magik : AsyncCommand {
         val image = BoobBot.requestUtil
             .get(
                 baseUrl.newBuilder().addQueryParameter("avatar1", imageUrl).build().toString(),
-                Headers.of("Authorization", BoobBot.config.MEMER_IMGEN_KEY)
+                headersOf("Authorization", BoobBot.config.MEMER_IMGEN_KEY)
             )
             .await()
-            ?.body()
+            ?.body
             ?: return ctx.send("API didn't respond with an image, rip")
 
         ctx.channel.sendFile(image.byteStream(), "magik.png").queue()
@@ -53,7 +55,7 @@ class Magik : AsyncCommand {
         return BoobBot.requestUtil
             .get(
                 "https://boob.bot/api/v2/img/$category",
-                Headers.of("Key", BoobBot.config.BB_API_KEY)
+                headersOf("Key", BoobBot.config.BB_API_KEY)
             )
             .await()
             ?.json()

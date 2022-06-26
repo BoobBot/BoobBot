@@ -52,7 +52,7 @@ class MessageHandler : ListenerAdapter() {
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
 
-            if (event.message.mentionsEveryone()) {
+            if (event.message.mentions.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
 

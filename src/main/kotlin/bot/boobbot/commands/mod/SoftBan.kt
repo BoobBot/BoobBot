@@ -62,7 +62,7 @@ class SoftBan : AsyncCommand, ModCommand() {
             .awaitSuppressed()
 
         ctx.guild.ban(user, 7, "Soft-banned by: ${ctx.author.name} [${ctx.author.idLong}] for: $auditReason")
-            .flatMap { ctx.guild.unban(user.id) }
+            .flatMap { ctx.guild.unban(user) }
             .queue({ ctx.send("done") }, {
                 if (it is ErrorResponseException) {
                     ctx.send("what the fuck an error occurred while trying to soft-ban\n```\n${it.meaning}```")

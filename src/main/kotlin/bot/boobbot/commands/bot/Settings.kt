@@ -9,6 +9,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.ifEmpty
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.TextChannel
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
@@ -192,7 +193,7 @@ class Settings : Command {
     )
     fun ignoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
-        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+        val c = ctx.message.mentions.getChannels(TextChannel::class.java).firstOrNull() ?: ctx.textChannel
 
         g.ignoredChannels.add(c!!.id)
         BoobBot.database.setGuild(g)
@@ -202,7 +203,7 @@ class Settings : Command {
     @SubCommand(aliases = ["uic"], description = "Removes a channel from the ignored list.")
     fun unIgnoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
-        val c = ctx.message.mentionedChannels.firstOrNull() ?: ctx.textChannel
+        val c = ctx.message.mentions.getChannels(TextChannel::class.java).firstOrNull() ?: ctx.textChannel
 
         g.ignoredChannels.remove(c!!.id)
         BoobBot.database.setGuild(g)
