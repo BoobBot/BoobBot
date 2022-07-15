@@ -214,7 +214,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.message.textChannel.isNSFW) {
+        if (event.channelType == ChannelType.TEXT && event.message.textChannel.isNSFW) {
             val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
             user.lewdPoints += min(tagSize, 5)
             user.nsfwMessagesSent++
