@@ -211,10 +211,12 @@ class Database {
     fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
 
+    fun isPremiumServer(guildId: String) = get(guilds, guildId, "redeemer", -1L) != -1L
     fun setPremiumServer(guildId: String, redeemerId: Long) = set(guilds, guildId, "redeemer", redeemerId)
     fun removePremiumServer(guildId: String) = setPremiumServer(guildId, -1L)
     fun getPremiumServers(redeemerId: Long) = guilds.find(BasicDBObject("redeemer", redeemerId))
         .map { Guild.fromJson(JSONObject(it.toJson())) }
+        .toList()
 
     fun getAllUsers(): MongoCollection<Document> = users
     fun countUsers() = getAllUsers().countDocuments()

@@ -10,7 +10,7 @@ import bot.boobbot.utils.Colors
 @CommandProperties(description = "Receive your rewards after subscribing on Patreon.")
 class Perks : Command {
     companion object {
-        private val PREMIUM_SERVERS = 3
+        private const val PREMIUM_SERVERS = 3
     }
 
     override fun execute(ctx: Context) {
@@ -60,17 +60,34 @@ class Perks : Command {
 
     @SubCommand(description = "Link a server to your subscription.")
     fun add(ctx: Context) {
+        if (!ctx.isFromGuild) {
+            return ctx.send("Run this command in a guild, whore.")
+        }
 
+        // check already added
+        // check donor type
+
+        BoobBot.database.setPremiumServer(ctx.guild!!.id, ctx.author.idLong)
+        ctx.send("sheeeeesh")
     }
 
     @SubCommand(description = "Remove a server from your subscription.")
     fun remove(ctx: Context) {
+        val servers = BoobBot.database.getPremiumServers(ctx.author.idLong)
+
+        if (servers.isEmpty()) {
+            return ctx.send("You don't have any premium servers, whore.")
+        }
+
+        val guilds = servers.map { (BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server") to it._id }
+
         ctx.message {
-            content("yes")
+            content("Select the server you want to remove from the list below.\nThis prompt will time out in 30 seconds.")
             row {
                 menu("server-selector-${ctx.author.id}") {
-                    addOption("Some really cool server", "shit server")
-                    addOption("Worse server", "yeah really bad")
+                    for ((name, id) in guilds) {
+                        addOption(name, id)
+                    }
                 }
             }
         }

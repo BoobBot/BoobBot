@@ -56,7 +56,8 @@ object Utils {
 
     fun checkDonor(event: Message): Boolean {
         return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
-        || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
+                || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
+                || (event.channelType.isGuild && BoobBot.database.isPremiumServer(event.guild.id))
     }
 
     fun getRandomFunString(key: String): String {
