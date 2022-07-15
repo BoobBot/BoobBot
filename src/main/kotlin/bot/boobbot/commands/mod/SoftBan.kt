@@ -74,9 +74,12 @@ class SoftBan : AsyncCommand, ModCommand() {
 
     fun generateInvite(ctx: Context): CompletableFuture<Invite?> {
         val fut = CompletableFuture<Invite?>()
+        val targetChannel = ctx.guild!!.textChannelCache.firstOrNull { ctx.selfMember!!.hasPermission(it, Permission.CREATE_INSTANT_INVITE) }
 
-        if (ctx.selfMember!!.hasPermission(ctx.guildChannel!!, Permission.CREATE_INSTANT_INVITE)) {
-            ctx.textChannel!!.createInvite().setMaxAge(1, TimeUnit.DAYS).setMaxUses(1)
+        if (targetChannel != null) {
+            targetChannel.createInvite()
+                .setMaxAge(1, TimeUnit.DAYS)
+                .setMaxUses(1)
                 .submit()
                 .thenAccept(fut::complete)
                 .thenException { fut.complete(null) }

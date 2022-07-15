@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -18,6 +19,7 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.floor
@@ -72,13 +74,8 @@ class MessageHandler : ListenerAdapter() {
             }
         }
         val messageContent = event.message.contentRaw
-        val standardTrigger =
-            if (event.isFromGuild) guild.prefix ?: BoobBot.defaultPrefix else BoobBot.defaultPrefix
-        val acceptablePrefixes = mutableListOf(
-            standardTrigger,
-            "<@${event.jda.selfUser.id}> ",
-            "<@!${event.jda.selfUser.id}> "
-        )
+        val standardTrigger = event.isFromGuild.ifTrue { guild.prefix } ?: BoobBot.defaultPrefix
+        val acceptablePrefixes = Context.BOT_MENTIONS + standardTrigger
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
@@ -118,7 +115,8 @@ class MessageHandler : ListenerAdapter() {
             return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
         }
 
-        if (command.properties.nsfw && event.channelType.isGuild && !event.textChannel.isNSFW) {
+        // TODO test this logic
+        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.textChannel.isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
                     ?: return@queue event.channel.sendMessage("This channel isn't NSFW, whore.").queue()
@@ -132,12 +130,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (
-            event.channelType.isGuild && !event.guild.selfMember.hasPermission(
-                event.textChannel,
-                Permission.MESSAGE_EMBED_LINKS
-            )
-        ) {
+        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
@@ -151,7 +144,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.member!!, event.textChannel, command.properties.userPermissions)
+            val missing = checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -160,8 +153,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing =
-                checkMissingPermissions(event.guild.selfMember, event.textChannel, command.properties.botPermissions)
+            val missing = checkMissingPermissions(event.guild.selfMember, event.guildChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -170,7 +162,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.id)
-            && event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_MANAGE)
+            && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)
         ) {
             event.message.delete().queue()
         }

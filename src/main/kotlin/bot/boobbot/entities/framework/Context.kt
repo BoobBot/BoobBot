@@ -38,8 +38,8 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     val voiceState = member?.voiceState
 
     val channel = message.channel
-    val textChannel: TextChannel? = if (isFromGuild) message.textChannel else null
-    val guildChannel: GuildChannel? = if (isFromGuild) guild!!.getGuildChannelById(channel.idLong) else null
+    val textChannel: TextChannel? = if (isFromGuild) message.textChannel else null // todo reconsider
+    val guildChannel: GuildChannel? = if (isFromGuild) message.guildChannel else null
 
     val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild!!.id) }
     val customPrefix: String? by lazy { if (isFromGuild) guildData.prefix else null }
@@ -54,14 +54,13 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         get() = message.mentions.users.apply { if (triggerIsMention) remove(message.jda.selfUser) }
 
 
-    fun permissionCheck(u: User, m: Member?, channel: MessageChannel, vararg permissions: Permission): Boolean {
-        return !isFromGuild || Config.OWNERS.contains(u.idLong) ||
-                (m?.hasPermission(channel as TextChannel, *permissions) ?: false)
+    fun permissionCheck(u: User, m: Member?, channel: GuildChannel, vararg permissions: Permission): Boolean {
+        return !isFromGuild || Config.OWNERS.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
     }
 
-    fun userCan(check: Permission) = permissionCheck(author, member, channel, check)
+    fun userCan(check: Permission) = permissionCheck(author, member, guildChannel!!, check)
 
-    fun botCan(vararg check: Permission) = permissionCheck(selfUser, selfMember, channel, *check)
+    fun botCan(vararg check: Permission) = permissionCheck(selfUser, selfMember, guildChannel!!, *check)
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
 

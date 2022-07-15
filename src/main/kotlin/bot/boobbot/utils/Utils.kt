@@ -4,9 +4,9 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.misc.DonorType
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.entities.TextChannel
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHost
 import org.json.JSONObject
@@ -123,7 +123,7 @@ object Utils {
 
     fun checkMissingPermissions(
         target: Member,
-        channel: TextChannel,
+        channel: GuildChannel,
         permissions: Array<Permission>
     ): List<Permission> {
         return permissions.filter { !target.hasPermission(channel, it) }
