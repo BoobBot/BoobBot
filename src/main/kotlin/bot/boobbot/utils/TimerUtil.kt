@@ -1,13 +1,22 @@
 package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class TimerUtil(private val identifier: String) {
-    private val timeStart = System.currentTimeMillis()
+    private val timeStart = System.nanoTime()
+
+    fun elapsed() = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart)
+
+    fun elapsedFormatted(): String {
+        val duration = Duration.ofNanos(System.nanoTime() - timeStart)
+        return "%02d:%02d:%02d.%03d".format(duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart(), duration.toMillisPart())
+    }
 
     fun stop() {
-        val timeEnd = System.currentTimeMillis()
-        BoobBot.log.info("[Timer:$identifier] Took ${timeEnd - timeStart}ms")
+        val elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - timeStart)
+        BoobBot.log.info("[Timer:$identifier] Took ${elapsed}ms")
     }
 
     companion object {

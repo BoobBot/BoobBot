@@ -2,7 +2,10 @@ package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.TimerUtil
 import bot.boobbot.utils.json
+import io.ktor.http.*
+import jdk.internal.org.jline.utils.Colors.s
 import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
 import org.json.JSONObject
@@ -40,38 +43,45 @@ class PatreonAPI(private val accessToken: String) {
     fun getDonorType(amount: Double): DonorType = DonorType.which(amount)
 
     private fun monitorPledges() {
-        log.info("Checking pledges...")
-        val s = System.currentTimeMillis()
+        log.info("Patreon cleanup task running...")
+        val timer = TimerUtil("cleanup-task")
 
         fetchPledgesOfCampaign("1928035").thenAccept { users ->
-            val e = System.currentTimeMillis()
-            log.debug("Found ${users.size} in ${e - s}ms")
+            val fetchElapsedTime = timer.elapsedFormatted()
 
             if (users.isEmpty()) {
-                return@thenAccept log.warn("[SUSPICIOUS] Scheduled pledge clean failed: No users to check")
+                return@thenAccept log.warn("Scheduled pledge clean failed: No users to check")
             }
 
             val allDonors = BoobBot.database.getAllDonors()
+            var removed = 0
+            var adjusted = 0
 
             for ((id, pledge) in allDonors) {
                 val idLong = id.toLong()
                 val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
 
+                @Suppress("KotlinConstantConditions")
                 if (user == null || user.isDeclined) {
                     BoobBot.database.removeDonor(id)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
-                    log.info("Removed $id from donors")
+                    removed += 1
+                    log.debug("User $id removed: ${user?.isDeclined?.let { "declined payment" } ?: "not found"}")
                     continue
                 }
 
                 val amount = user.pledgeCents.toDouble() / 100
 
                 if (pledge != amount) {
-                    log.info("Adjusting $id's pledge (saved: $pledge, current: $amount)")
                     BoobBot.database.setDonor(id, amount)
+                    adjusted += 1
+                    log.debug("User $id adjusted: $amount -> $pledge")
                 }
             }
+
+            val taskElapsedTime = timer.elapsedFormatted()
+            log.info("Patreon cleanup task completed in $taskElapsedTime (fetch took $fetchElapsedTime). Adjusted $adjusted/${allDonors.size}. Removed $removed.")
 
             // The above only handles users that have registered into the system.
             // To register into the system, users can run `bbperks` to receive their rewards after
@@ -84,39 +94,28 @@ class PatreonAPI(private val accessToken: String) {
      * Functional stuff
      */
 
-    fun fetchPledgesOfCampaign(campaignId: String): CompletableFuture<List<PatreonUser>> {
-        val future = CompletableFuture<List<PatreonUser>>()
-
-        getPageOfPledge(campaignId) {
-            future.complete(it)
-        }
-
-        return future
-    }
+    fun fetchPledgesOfCampaign(campaignId: String) = CompletableFuture<List<PatreonUser>>().also { f -> getPageOfPledge(campaignId) { f.complete(it) } }
 
     private fun getPageOfPledge(
         campaignId: String, offset: String? = null,
-        users: MutableSet<PatreonUser> = mutableSetOf(), cb: (List<PatreonUser>) -> Unit
+        users: MutableList<PatreonUser> = mutableListOf(), cb: (List<PatreonUser>) -> Unit
     ) {
         val url = URIBuilder("$BASE_URL/campaigns/$campaignId/pledges")
+            .addParameter("include", "pledge,patron")
+            .also { url -> offset?.let { url.addParameter("page[cursor]", offset) } }
+            .build()
 
-        url.addParameter("include", "pledge,patron")
-
-        if (offset != null) {
-            url.addParameter("page[cursor]", offset)
-        }
-
-        val request = createRequest(url.build().toString())
+        val request = createRequest(url.toString())
 
         BoobBot.requestUtil.makeRequest(request).queue {
             if (it == null || !it.isSuccessful) {
                 BoobBot.log.error("Unable to get list of pledges ({}): {}", it?.code, it?.message)
                 it?.close()
 
-                return@queue cb(users.toList())
+                return@queue cb(users)
             }
 
-            val json = it.json() ?: return@queue cb(users.toList())
+            val json = it.json() ?: return@queue cb(users)
             val pledges = json.getJSONArray("data")
 
             json.getJSONArray("included").forEachIndexed { index, user ->
@@ -127,7 +126,7 @@ class PatreonAPI(private val accessToken: String) {
                 }
             }
 
-            val nextPage = getNextPage(json) ?: return@queue cb(users.toList())
+            val nextPage = getNextPage(json) ?: return@queue cb(users)
             getPageOfPledge(campaignId, nextPage, users, cb)
         }
     }
@@ -143,12 +142,9 @@ class PatreonAPI(private val accessToken: String) {
     }
 
     private fun parseQueryString(url: String): Map<String, String> {
-        val pairs = URI(url).query.split("&")
-
-        return pairs
+        return URI(url).query.split("&")
             .map { it.split("=") }
-            .map { Pair(decode(it[0]), decode(it[1])) }
-            .toMap()
+            .associate { Pair(decode(it[0]), decode(it[1])) }
     }
 
     private fun decode(s: String) = URLDecoder.decode(s, Charsets.UTF_8)

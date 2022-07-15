@@ -1,6 +1,7 @@
 package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
+import bot.boobbot.utils.Formats.INFO_EMOTE
 import net.dv8tion.jda.api.JDAInfo
 import java.text.MessageFormat
 
@@ -168,34 +169,15 @@ object Formats {
     val readyFormat by lazy {
         val shardManager = BoobBot.shardManager
         val jda = shardManager.shards[0]
-
-        String.format(
-            "Logging in %s\n"
-                    + "Oauth link: %s\n"
-                    + "JDA Version: %s\n"
-                    + "Docs halp: http://home.dv8tion.net:8080/job/JDA/javadoc/\n"
-                    + "Logged in as: %s (%s)\n"
-                    + "Shards: %d\n",
-            BOOT_BANNER,
-            BoobBot.inviteUrl,
-            JDAInfo.VERSION,
-            jda.selfUser.name,
-            jda.selfUser.id,
-            shardManager.shardsTotal
-        )
+        "Logging in %s\nOauth link: %s\nJDA Version: %s\nLogged in as: %s (%s)\nShards: %d\n".format(
+            BOOT_BANNER, BoobBot.inviteUrl, JDAInfo.VERSION, jda.selfUser.name, jda.selfUser.id, shardManager.shardsTotal)
     }
 
-    fun error(text: String): String {
-        return MessageFormat.format("\uD83D\uDEAB {0}", text)
-    }
+    fun error(text: String) = MessageFormat.format("\uD83D\uDEAB {0}", text)
 
-    fun info(text: String): String {
-        return MessageFormat.format("{1} {0}", text, INFO_EMOTE)
-    }
+    fun info(text: String) = MessageFormat.format("{1} {0}", text, INFO_EMOTE)
 
-    fun monospaced(items: List<String>): String {
-        return items.joinToString("`, `", prefix = "`", postfix = "`")
-    }
+    fun monospaced(items: List<String>) = items.joinToString("`, `", prefix = "`", postfix = "`")
 
     fun progressPercentage(remain: Int, total: Int): String {
         require(remain <= total)
@@ -203,16 +185,12 @@ object Formats {
         val remainPercent = 100 * remain / total / maxBareSize
         val defaultChar = '◯'
         val icon = "⬤"
-        val bare = String(CharArray(maxBareSize)).replace('\u0000', defaultChar) + "]"
-        val bareDone = StringBuilder()
-        bareDone.append("[")
-        for (i in 0 until remainPercent) {
-            bareDone.append(icon)
-        }
-        val bareRemain = bare.substring(remainPercent, bare.length)
-        return "\r" + bareDone + bareRemain + " " + remainPercent * 10 + "%"
+        val bar = String(CharArray(maxBareSize)).replace('\u0000', defaultChar) + "]"
+        val barDone = StringBuilder("[")
+        (0 until remainPercent).onEach { barDone.append(icon) }
+        val barRemain = bar.substring(remainPercent, bar.length)
+        return "\r$barDone$barRemain ${remainPercent * 10}%"
     }
-
 
     fun countryCodeToEmote(countryCode: String): String {
         val code = if (countryCode.equals("uk", true)) "GB" else countryCode.uppercase()
@@ -235,6 +213,5 @@ object Formats {
         if (m > 0) r += "$m Minutes "
         if (s > 0) r += "$s Seconds "
         return r
-
     }
 }
