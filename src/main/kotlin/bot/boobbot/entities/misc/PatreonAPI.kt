@@ -59,13 +59,12 @@ class PatreonAPI(private val accessToken: String) {
                 val idLong = id.toLong()
                 val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
 
-                @Suppress("KotlinConstantConditions")
                 if (user == null || user.isDeclined) {
                     BoobBot.database.removeDonor(id)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
                     removed += 1
-                    log.debug("User $id removed: ${user?.isDeclined?.let { "declined payment" } ?: "not found"}")
+                    log.debug("User $id removed: ${user?.let { "declined payment" } ?: "not found"}") // user can only exist in this block if they're declined.
                     continue
                 }
 
