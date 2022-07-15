@@ -4,8 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.TimerUtil
 import bot.boobbot.utils.json
-import io.ktor.http.*
-import jdk.internal.org.jline.utils.Colors.s
 import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
 import org.json.JSONObject
