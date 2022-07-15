@@ -72,9 +72,9 @@ class Perks : Command {
         val guildId = ctx.guild!!.id
 
         when {
-            ctx.member!!.isOwner -> ctx.send("You own this server, whore, so it's already premium.")
             BoobBot.database.isPremiumServer(guildId) -> ctx.send("This server is already premium, whore.")
             BoobBot.pApi.getDonorType(ctx.author.id) < DonorType.SERVER_OWNER -> ctx.send("You need to be subscribed to the Server Owner tier, whore.\nJoin here: <https://www.patreon.com/join/OfficialBoobBot/checkout?rid=3186958>")
+            ctx.member!!.isOwner -> ctx.send("You own this server, whore, so it's already premium.")
             BoobBot.database.getPremiumServers(ctx.author.idLong).size > PREMIUM_SERVERS -> ctx.send("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
             else -> {
                 val predicate = { e: ButtonInteractionEvent -> e.componentId == "ps:accept:${ctx.author.id}" || e.componentId == "ps:cancel:${ctx.author.id}" }

@@ -49,11 +49,7 @@ class MessageHandler : ListenerAdapter() {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (event.channelType.isGuild) {
-            if (event.channelType != ChannelType.TEXT) {
-                return
-            }
-
-            if (guild.dropEnabled && event.textChannel.isNSFW) {
+            if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.textChannel.isNSFW) {
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
 
@@ -61,7 +57,7 @@ class MessageHandler : ListenerAdapter() {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
 
-            if (!event.textChannel.canTalk()) {
+            if (!event.channel.canTalk()) {
                 return
             }
 
