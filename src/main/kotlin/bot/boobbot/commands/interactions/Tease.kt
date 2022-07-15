@@ -20,7 +20,7 @@ class Tease : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
 
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.embed {
+            ?: return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
@@ -45,7 +45,7 @@ class Tease : AsyncCommand {
                     Formats.error(" oh? something broken af")
                 )
 
-        ctx.embed {
+        ctx.send {
             setTitle("<a:tease:866433430744596510> ${ctx.author.name} Teases ${target.name}")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))

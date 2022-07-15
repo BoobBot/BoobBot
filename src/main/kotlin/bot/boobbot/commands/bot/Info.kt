@@ -17,7 +17,7 @@ class Info : Command {
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
         val averageShardLatency = BoobBot.shardManager.averageGatewayPing
-        ctx.embed {
+        ctx.send {
             setAuthor(
                 "BoobBot (Revision ${Utils.version})",
                 ctx.selfUser.effectiveAvatarUrl,

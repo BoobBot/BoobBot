@@ -21,7 +21,7 @@ abstract class BbApiCommand(private val category: String) : AsyncCommand {
         val link = res.getString("url")
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.embed {
+        ctx.send {
             setTitle("${Formats.LEWD_EMOTE} Click me!", "https://discord.boob.bot")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(link)

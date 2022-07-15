@@ -52,7 +52,7 @@ class AudioLoader(private val ctx: Context, private val musicManager: GuildMusic
     private fun send(track: AudioTrack, trackIcon: String) {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             setAuthor("Music", track.info.uri, trackIcon)
             addField(

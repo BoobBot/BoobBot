@@ -4,11 +4,39 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.utils.Colors
 
 @CommandProperties(description = "Receive your rewards after subscribing on Patreon.")
 class Perks : Command {
+    companion object {
+        private val PREMIUM_SERVERS = 3
+    }
 
     override fun execute(ctx: Context) {
+        ctx.send {
+            setColor(Colors.rndColor)
+            setTitle("Perks.")
+            setDescription("""
+                This command has been changed.
+                Now, you can manage your subscription all in one place.
+                Run this command again with one of the subcommands listed below.
+                Example: `${ctx.friendlyTrigger}perks link`.
+                
+                Premium servers are only available as part of our "Server Owners" tier.
+                If eligible, by default any servers you own will automatically be upgraded to
+                premium. You get **$PREMIUM_SERVERS slots** for upgrading servers you don't own.
+                
+                `link  ` - Link your Patreon subscription to the bot.
+                `add   ` - Link a server to your subscription.
+                `remove` - Remove a server from your subscription.
+                `list  ` - Lists all servers attached to your subscription.
+            """.trimIndent())
+        }
+    }
+
+    @SubCommand(aliases = ["redeem"], description = "Link your Patreon subscription to the bot.")
+    fun link(ctx: Context) {
         ctx.send("Searching for your subscription. This could take up to 30 seconds.")
 
         BoobBot.pApi.fetchPledgesOfCampaign("1928035").thenAccept {
@@ -30,4 +58,26 @@ class Perks : Command {
         }
     }
 
+    @SubCommand(description = "Link a server to your subscription.")
+    fun add(ctx: Context) {
+
+    }
+
+    @SubCommand(description = "Remove a server from your subscription.")
+    fun remove(ctx: Context) {
+        ctx.message {
+            content("yes")
+            row {
+                menu("server-selector-${ctx.author.id}") {
+                    addOption("Some really cool server", "shit server")
+                    addOption("Worse server", "yeah really bad")
+                }
+            }
+        }
+    }
+
+    @SubCommand(description = "Lists all servers attached to your subscription.")
+    fun list(ctx: Context) {
+
+    }
 }

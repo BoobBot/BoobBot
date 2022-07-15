@@ -20,7 +20,7 @@ class dom : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
 
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.embed {
+            ?: return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
@@ -45,7 +45,7 @@ class dom : AsyncCommand {
                     Formats.error(" oh? something broken af")
                 )
 
-        ctx.embed {
+        ctx.send {
             setTitle("<:dom:866457723788329020> ${ctx.author.name} Dominates ${target.name}")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))

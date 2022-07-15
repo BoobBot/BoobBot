@@ -17,7 +17,7 @@ abstract class NekoLifeApiCommand(private val category: String) : AsyncCommand {
                 Formats.error(" oh? something broken af")
             )
 
-        ctx.embed {
+        ctx.send {
             setTitle("Nya~", "https://nekos.life")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))

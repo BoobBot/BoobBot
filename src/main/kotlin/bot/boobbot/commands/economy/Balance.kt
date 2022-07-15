@@ -16,7 +16,7 @@ class Balance : Command {
         val user = ctx.mentions.firstOrNull() ?: ctx.author
         val u = BoobBot.database.getUser(user.id)
 
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
                 Formats.info("**Balance Information**"),

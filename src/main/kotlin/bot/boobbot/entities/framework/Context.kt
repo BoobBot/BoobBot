@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
@@ -11,19 +12,22 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.managers.AudioManager
 import net.dv8tion.jda.api.requests.restaction.MessageAction
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val message: Message, val args: List<String>) {
+    val jda = message.jda
+    val selfUser = jda.selfUser
+
     val triggerIsMention = BOT_MENTIONS.any { it == trigger }
+    val friendlyTrigger = triggerIsMention.ifTrue { "@${selfUser.name} " } ?: trigger
+
     val channelType = message.channelType
     val isFromGuild = channelType.isGuild
 
-    val client = message.jda
-    val jda: JDA = message.jda
     val guild: Guild? = if (isFromGuild) message.guild else null
     val audioManager: AudioManager? = guild?.audioManager
 
-    val selfUser = client.selfUser
     val selfMember = guild?.selfMember
 
     val author = message.author
@@ -52,24 +56,18 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
                 (m?.hasPermission(channel as TextChannel, *permissions) ?: false)
     }
 
-    fun userCan(check: Permission): Boolean {
-        return permissionCheck(author, member, channel, check)
-    }
+    fun userCan(check: Permission) = permissionCheck(author, member, channel, check)
 
-    fun botCan(vararg check: Permission): Boolean {
-        return permissionCheck(selfUser, selfMember, channel, *check)
-    }
+    fun botCan(vararg check: Permission) = permissionCheck(selfUser, selfMember, channel, *check)
+
+    fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
 
     fun dm(embed: MessageEmbed) = dm(MessageBuilder(embed).build())
 
-    fun dm(message: Message) {
-        author.openPrivateChannel().queue {
-            it.sendMessage(message).queue()
-        }
-    }
+    fun dm(message: Message) = author.openPrivateChannel().queue { it.sendMessage(message).queue() }
 
     fun reply(content: String) {
-        send(MessageBuilder(content), {
+        send(MessageBuilder(content).build(), {
             reference(message)
             failOnInvalidReply(false)
         }, null, null)
@@ -79,19 +77,29 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         send(MessageBuilder(content), success, failure)
     }
 
+    fun send(block: EmbedBuilder.() -> Unit) = send(MessageBuilder(EmbedBuilder().apply(block).build()))
+
+    fun send(e: MessageEmbed) = send(MessageBuilder(e))
+
+    fun message(m: DSLMessageBuilder.() -> Unit) = send(DSLMessageBuilder().apply(m).build(), {}, null, null)
+
+    private fun send(message: MessageBuilder, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
+        send(message.build(), {}, success, failure)
+    }
+
+    private fun send(message: Message, options: MessageAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
+        if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
+            return
+            // Don't you just love it when people deny the bot
+            // access to a channel during command execution?
+            // https://sentry.io/share/issue/17c4b131f5ed48a6ac56c35ca276e4bf/
+        }
+
+        channel.sendMessage(message).apply(options).queue(success, failure)
+    }
+
     suspend fun sendAsync(content: String): Message {
         return channel.sendMessage(content).submit().await()
-    }
-
-    fun embed(block: EmbedBuilder.() -> Unit) {
-        val builder = MessageBuilder()
-            .setEmbeds(EmbedBuilder().apply(block).build())
-
-        send(builder, null, null)
-    }
-
-    fun embed(e: MessageEmbed) {
-        send(MessageBuilder(e), null, null)
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
@@ -103,25 +111,6 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         } catch (e: Exception) {
             null
         }
-    }
-
-    fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long): CompletableFuture<Message?> {
-        return BoobBot.waiter.waitForMessage(predicate, timeout)
-    }
-
-    private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        send(message, {}, success, failure)
-    }
-
-    private fun send(message: MessageBuilder, options: MessageAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
-        if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
-            return
-            // Don't you just love it when people deny the bot
-            // access to a channel during command execution?
-            // https://sentry.io/share/issue/17c4b131f5ed48a6ac56c35ca276e4bf/
-        }
-
-        channel.sendMessage(message.build()).apply(options).queue(success, failure)
     }
 
     companion object {

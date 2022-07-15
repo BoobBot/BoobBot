@@ -122,7 +122,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler(), UserContextHandler())
+                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler()/*, SlashHandler(), UserContextHandler()*/)
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(disabledCacheFlags)

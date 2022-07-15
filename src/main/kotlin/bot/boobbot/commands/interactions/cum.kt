@@ -20,7 +20,7 @@ class cum : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
 
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.embed {
+            ?: return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
@@ -45,7 +45,7 @@ class cum : AsyncCommand {
                     Formats.error(" oh? something broken af")
                 )
 
-        ctx.embed {
+        ctx.send {
             setTitle("<a:came:501483987370377226> ${ctx.author.name} came on ${target.name}, oh my")
             setColor(Colors.getEffectiveColor(ctx.message))
             setImage(res.getString("url"))

@@ -17,7 +17,7 @@ class Rep : Command {
 
     override fun execute(ctx: Context) {
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.embed {
+            ?: return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }

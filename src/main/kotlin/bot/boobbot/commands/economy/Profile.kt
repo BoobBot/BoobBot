@@ -19,7 +19,7 @@ class Profile : Command {
         val u = BoobBot.database.getUser(user.id)
         val e = ((u.level + 1).toDouble() * 10).pow(2.toDouble()).toInt()
 
-        ctx.embed {
+        ctx.send {
             setAuthor("Profile for : ${user.asTag}", user.avatarUrl, user.avatarUrl)
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(

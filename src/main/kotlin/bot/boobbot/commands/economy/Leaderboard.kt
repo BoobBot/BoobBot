@@ -19,7 +19,7 @@ class Leaderboard : AsyncCommand {
     @SubCommand(aliases = ["richest", "$"], description = "Global economy leaderboard \uD83C\uDFC6", async = true)
     suspend fun cash(ctx: Context) {
         val msg = buildMessage("balance", ctx)
-                 ctx.embed {
+                 ctx.send {
                     setAuthor("Global economy leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                     addField("", msg, false)
                     setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
@@ -31,7 +31,7 @@ class Leaderboard : AsyncCommand {
     @SubCommand(aliases = ["exp", "xp", "rank"], description = "Global rank leaderboard \uD83C\uDFC6", async = true)
     suspend fun level(ctx: Context) {
         val msg = buildMessage("level", ctx)
-            ctx.embed {
+            ctx.send {
                 setAuthor("Global rank leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                 addField("", msg, false)
                 setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
@@ -41,7 +41,7 @@ class Leaderboard : AsyncCommand {
     @SubCommand(aliases = ["reputation"], description = "Global reputation leaderboard \uD83C\uDFC6", async = true)
     suspend fun rep(ctx: Context) {
         val msg = buildMessage("rep", ctx)
-                ctx.embed {
+                ctx.send {
                     setAuthor("Global reputation leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                     addField("", msg, false)
                     setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)

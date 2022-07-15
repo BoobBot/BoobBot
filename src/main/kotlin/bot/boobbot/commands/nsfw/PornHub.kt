@@ -26,7 +26,7 @@ class PornHub : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
-            return ctx.embed {
+            return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
@@ -40,7 +40,7 @@ class PornHub : AsyncCommand {
         val video = rt.getJSONArray("videos").getJSONObject(0)
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.embed {
+        ctx.send {
             setAuthor(
                 "PornHub video search",
                 video.getString("url"),

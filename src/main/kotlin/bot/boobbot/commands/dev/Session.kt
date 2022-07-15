@@ -13,7 +13,7 @@ class Session : Command {
         val sessionInfo = BoobBot.shardManager.retrieveSessionInfo()
             ?: return ctx.send("fuck, some error")
 
-        ctx.embed {
+        ctx.send {
             setDescription("Session resets in ${sessionInfo.sessionResetAfter}")
             addField("Recommended Shards", sessionInfo.recommendedShards.toString(), true)
             addField("Session Limit Total", sessionInfo.sessionLimitTotal.toString(), true)

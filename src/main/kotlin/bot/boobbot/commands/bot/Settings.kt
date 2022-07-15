@@ -29,7 +29,7 @@ class Settings : Command {
     }
 
     override fun execute(ctx: Context) {
-//        ctx.embed {
+//        ctx.send {
 //            setColor(Colors.getEffectiveColor(ctx.message))
 //            setTitle("BoobBot Server Settings")
 //            setDescription("Subcommands: ${subcommands.keys.joinToString(", ")}")
@@ -42,7 +42,7 @@ class Settings : Command {
         val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
         val disabledFmt = if (disabled.isEmpty()) "*No commands disabled.*" else disabled.sorted().joinToString(", ")
 
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             setTitle("Disabled Commands")
             setDescription(disabledFmt)
@@ -107,7 +107,7 @@ class Settings : Command {
         val disabledFmt =
             if (disabled.isEmpty()) "*No commands disabled in this channel.*" else disabled.sorted().joinToString(", ")
 
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             setTitle("Commands Disabled in ${ctx.channel.name}")
             setDescription(disabledFmt)

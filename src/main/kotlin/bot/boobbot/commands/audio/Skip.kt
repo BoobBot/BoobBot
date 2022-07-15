@@ -29,7 +29,7 @@ class Skip : VoiceCommand {
         player.playNext()
 
         if (player.player.playingTrack != null) {
-            return ctx.embed {
+            return ctx.send {
                 setColor(Colors.getEffectiveColor(ctx.message))
                 addField(
                     Formats.info(" Track Skipped"),
@@ -39,7 +39,7 @@ class Skip : VoiceCommand {
             }
         }
 
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(Formats.info(" Track Skipped"), "Skipped: ${track.info.title}", false)
         }

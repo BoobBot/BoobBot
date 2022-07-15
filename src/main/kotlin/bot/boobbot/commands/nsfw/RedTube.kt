@@ -26,7 +26,7 @@ class RedTube : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
         if (ctx.args.isEmpty()) {
-            return ctx.embed {
+            return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
@@ -40,7 +40,7 @@ class RedTube : AsyncCommand {
         val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.embed {
+        ctx.send {
             setAuthor(
                 "RedTube video search",
                 video.getString("embed_url"),

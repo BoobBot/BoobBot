@@ -31,7 +31,7 @@ class Magik : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
         val category = categories[ctx.args.firstOrNull()]
-            ?: return ctx.embed {
+            ?: return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
             }

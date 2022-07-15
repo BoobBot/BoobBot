@@ -85,7 +85,7 @@ class Help : Command {
             ctx.dm(embed.build())
             ctx.message.addReaction("\uD83D\uDCEC").queue()
         } else {
-            ctx.embed(embed.build())
+            ctx.send(embed.build())
         }
     }
 

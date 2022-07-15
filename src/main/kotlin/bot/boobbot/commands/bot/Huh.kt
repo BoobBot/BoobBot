@@ -10,7 +10,7 @@ import java.time.Instant
 class Huh : Command {
 
     override fun execute(ctx: Context) {
-        ctx.embed {
+        ctx.send {
             setColor(Colors.getEffectiveColor(ctx.message))
             setTitle("It seems you don't discord, So here is a gif")
             setAuthor(ctx.selfUser.name, ctx.selfUser.effectiveAvatarUrl, ctx.selfUser.effectiveAvatarUrl)

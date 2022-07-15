@@ -43,7 +43,7 @@ class UserContextHandler : ListenerAdapter() {
                 return
             }
         }
-        val command = BoobBot.UserContextCommands.findCommand(event.name.lowercase()) ?: return
+        val command = BoobBot.userContextCommands.findCommand(event.name.lowercase()) ?: return
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel!!.id })) { return }
         if (!command.properties.enabled) {
             return

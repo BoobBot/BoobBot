@@ -49,7 +49,7 @@ interface Command {
             embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}$patreonSymbol\n")
         }
 
-        ctx.embed(embed.build())
+        ctx.send(embed.build())
     }
 
     private fun padEnd(str: String, length: Int = 15): String {

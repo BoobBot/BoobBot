@@ -26,7 +26,7 @@ abstract class SlideShowCommand : Command {
 
     override fun execute(ctx: Context) {
         if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].lowercase())) {
-            return ctx.embed {
+            return ctx.send {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: $endpointStr"))
             }

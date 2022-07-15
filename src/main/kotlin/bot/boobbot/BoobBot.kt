@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.requests.RestAction
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.ConnectException
@@ -52,9 +53,6 @@ object BoobBot {
     lateinit var shardManager: CustomShardManager
         private set
 
-    var isReady = false
-        internal set
-
     val defaultPrefix by lazy {
         if (isDebug) "!bb" else "bb"
     }
@@ -64,7 +62,7 @@ object BoobBot {
 
     val commands = CommandRegistry()
     val slashCommands = SlashCommandRegistry()
-    val UserContextCommands = UserContextCommandRegistry()
+    val userContextCommands = UserContextCommandRegistry()
     val waiter = EventWaiter()
     val requestUtil = RequestUtil()
     val playerManager = DefaultAudioPlayerManager().also {
@@ -79,11 +77,11 @@ object BoobBot {
     @Throws(Exception::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        print(UserContextCommands)
+//        print(UserContextCommands)
         isDebug = "--debug" in args
         logCom = "--comlog" in args
-        val shardCount = if (isDebug) 1 else config.SHARD_TOTAL
-        val token = if (isDebug) config.DEBUG_TOKEN else config.TOKEN
+        val shardCount = isDebug.ifTrue { 1 } ?: config.SHARD_TOTAL
+        val token = isDebug.ifTrue { config.DEBUG_TOKEN } ?: config.TOKEN
 
         log.info("--- BoobBot (Revision {}) ---", Utils.version)
         log.info(

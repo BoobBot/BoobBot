@@ -47,7 +47,7 @@ class Queue : VoiceCommand {
             }
         }
 
-        ctx.embed {
+        ctx.send {
             setAuthor("Queue | ${ctx.guild!!.name}", BoobBot.inviteUrl, ctx.selfUser.effectiveAvatarUrl)
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(
