@@ -15,6 +15,7 @@ import de.mxro.metrics.jre.Metrics
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
@@ -48,6 +49,10 @@ class MessageHandler : ListenerAdapter() {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (event.channelType.isGuild) {
+            if (event.channelType != ChannelType.TEXT) {
+                return
+            }
+
             if (guild.dropEnabled && event.textChannel.isNSFW) {
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
