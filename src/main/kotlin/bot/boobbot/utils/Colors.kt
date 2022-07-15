@@ -18,7 +18,7 @@ object Colors {
     private const val MAGENTA = -0xff01
 
     private val colorGen = Random()
-    private val sColorNameMap = HashMap<String, Int>()
+    private val sColorNameMap = hashMapOf<String, Int>()
 
     val rndColor: Color
         get() {

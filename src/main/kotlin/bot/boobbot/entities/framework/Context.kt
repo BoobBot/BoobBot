@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.managers.AudioManager
+import net.dv8tion.jda.api.requests.restaction.MessageAction
 import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val message: Message, val args: List<String>) {
@@ -59,13 +60,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         return permissionCheck(selfUser, selfMember, channel, *check)
     }
 
-    fun dm(embed: MessageEmbed) {
-        val msg = MessageBuilder()
-            .setEmbeds(embed)
-            .build()
-
-        dm(msg)
-    }
+    fun dm(embed: MessageEmbed) = dm(MessageBuilder(embed).build())
 
     fun dm(message: Message) {
         author.openPrivateChannel().queue {
@@ -73,8 +68,15 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         }
     }
 
+    fun reply(content: String) {
+        send(MessageBuilder(content), {
+            reference(message)
+            failOnInvalidReply(false)
+        }, null, null)
+    }
+
     fun send(content: String, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
-        send(MessageBuilder().setContent(content), success, failure)
+        send(MessageBuilder(content), success, failure)
     }
 
     suspend fun sendAsync(content: String): Message {
@@ -89,7 +91,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     fun embed(e: MessageEmbed) {
-        send(MessageBuilder().setEmbeds(e), null, null)
+        send(MessageBuilder(e), null, null)
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
@@ -108,6 +110,10 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     private fun send(message: MessageBuilder, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
+        send(message, {}, success, failure)
+    }
+
+    private fun send(message: MessageBuilder, options: MessageAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
         if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
             return
             // Don't you just love it when people deny the bot
@@ -115,7 +121,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
             // https://sentry.io/share/issue/17c4b131f5ed48a6ac56c35ca276e4bf/
         }
 
-        channel.sendMessage(message.build()).queue(success, failure)
+        channel.sendMessage(message.build()).apply(options).queue(success, failure)
     }
 
     companion object {
