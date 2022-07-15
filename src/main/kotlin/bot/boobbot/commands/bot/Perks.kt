@@ -5,7 +5,12 @@ import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.entities.misc.DonorType
 import bot.boobbot.utils.Colors
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 
 @CommandProperties(description = "Receive your rewards after subscribing on Patreon.")
 class Perks : Command {
@@ -64,11 +69,41 @@ class Perks : Command {
             return ctx.send("Run this command in a guild, whore.")
         }
 
-        // check already added
-        // check donor type
+        val guildId = ctx.guild!!.id
 
-        BoobBot.database.setPremiumServer(ctx.guild!!.id, ctx.author.idLong)
-        ctx.send("sheeeeesh")
+        when {
+            ctx.member!!.isOwner -> ctx.send("You own this server, whore, so it's already premium.")
+            BoobBot.database.isPremiumServer(guildId) -> ctx.send("This server is already premium, whore.")
+            BoobBot.pApi.getDonorType(ctx.author.id) < DonorType.SERVER_OWNER -> ctx.send("You need to be subscribed to the Server Owner tier, whore.\nJoin here: <https://www.patreon.com/join/OfficialBoobBot/checkout?rid=3186958>")
+            BoobBot.database.getPremiumServers(ctx.author.idLong).size > PREMIUM_SERVERS -> ctx.send("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
+            else -> {
+                val predicate = { e: ButtonInteractionEvent -> e.componentId == "ps:accept:${ctx.author.id}" || e.componentId == "ps:cancel:${ctx.author.id}" }
+                val waiterSetup = ctx.awaitNonConcurrentButton("ps:${ctx.author.id}", predicate, 10000) {
+                    if (it == null) {
+                        return@awaitNonConcurrentButton ctx.send("Fine, whore. The server won't be added.")
+                    }
+
+                    if (it.componentId == "ps:cancel:${ctx.author.id}") {
+                        return@awaitNonConcurrentButton it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
+                    }
+
+                    BoobBot.database.setPremiumServer(ctx.guild.id, ctx.author.idLong)
+                    it.editComponents().setContent("Server added, whore.").queue()
+                }
+
+                if (!waiterSetup) {
+                    return ctx.send("wtf? go cancel your other interaction first, whore.")
+                }
+
+                ctx.message {
+                    content("Hey whore, are you *really* sure you want to add **${ctx.guild.name}** to your premium servers?")
+                    row {
+                        button(ButtonStyle.SUCCESS, "ps:accept:${ctx.author.id}", "Add Server")
+                        button(ButtonStyle.DANGER, "ps:cancel:${ctx.author.id}", "Cancel")
+                    }
+                }
+            }
+        }
     }
 
     @SubCommand(description = "Remove a server from your subscription.")
@@ -81,20 +116,59 @@ class Perks : Command {
 
         val guilds = servers.map { (BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server") to it._id }
 
+        val predicate = { e: GenericComponentInteractionCreateEvent -> e.componentId == "menu:ps:${ctx.author.id}" || e.componentId == "ps:cancel:${ctx.author.id}" }
+        val waiterSetup = ctx.awaitNonConcurrentMenu("ps:${ctx.author.id}", predicate, 15000) {
+            if (it == null) {
+                return@awaitNonConcurrentMenu ctx.send("Fine, whore. No servers will be removed.")
+            }
+
+            if (it is ButtonInteractionEvent && it.componentId == "ps:cancel:${ctx.author.id}") {
+                return@awaitNonConcurrentMenu it.editComponents().setContent("Fine, whore. No servers will be removed.").queue()
+            }
+
+            val selected = (it as SelectMenuInteractionEvent).selectedOptions[0]
+            BoobBot.database.removePremiumServer(selected.value)
+            it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
+        }
+
+        if (!waiterSetup) {
+            return ctx.send("wtf? go cancel your other interaction first, whore.")
+        }
+
         ctx.message {
-            content("Select the server you want to remove from the list below.\nThis prompt will time out in 30 seconds.")
+            content("Select the server you want to remove from the list below.\nThis prompt will time out in 15 seconds.")
             row {
-                menu("server-selector-${ctx.author.id}") {
+                menu("menu:ps:${ctx.author.id}") {
                     for ((name, id) in guilds) {
                         addOption(name, id)
                     }
                 }
+            }
+            row {
+                button(ButtonStyle.DANGER, "ps:cancel:${ctx.author.id}", "Cancel")
             }
         }
     }
 
     @SubCommand(description = "Lists all servers attached to your subscription.")
     fun list(ctx: Context) {
+        val servers = BoobBot.database.getPremiumServers(ctx.author.idLong)
 
+        if (servers.isEmpty()) {
+            return ctx.send("You don't have any premium servers, whore.")
+        }
+
+        val guilds = servers.joinToString("`\n`", prefix = "`", postfix = "`") { BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server" }
+
+        ctx.send {
+            setColor(Colors.rndColor)
+            setTitle("Your Premium Servers")
+            setDescription("""
+                All your additional premium servers are listed below.
+                Any servers you own are already premium without counting towards your limit.
+                
+                $guilds
+            """.trimIndent())
+        }
     }
 }

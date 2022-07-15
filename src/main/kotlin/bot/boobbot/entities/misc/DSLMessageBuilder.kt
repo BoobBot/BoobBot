@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.ItemComponent
+import net.dv8tion.jda.api.interactions.components.buttons.Button
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu
 
 class DSLMessageBuilder {
@@ -34,6 +36,10 @@ class DSLMessageBuilder {
 
         fun menu(id: String, sm: SelectMenu.Builder.() -> Unit) {
             components.add(SelectMenu.create(id).apply(sm).build())
+        }
+
+        fun button(style: ButtonStyle, idOrUrl: String, label: String) {
+            components.add(Button.of(style, idOrUrl, label))
         }
 
         fun build(): ActionRow {

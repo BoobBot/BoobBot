@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
 import net.dv8tion.jda.api.managers.AudioManager
 import net.dv8tion.jda.api.requests.restaction.MessageAction
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
@@ -61,6 +64,14 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     fun botCan(vararg check: Permission) = permissionCheck(selfUser, selfMember, channel, *check)
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
+
+    fun awaitNonConcurrentButton(uniqueId: String, predicate: (ButtonInteractionEvent) -> Boolean, timeout: Long, cb: (ButtonInteractionEvent?) -> Unit): Boolean {
+        return BoobBot.waiter.waitForButton(uniqueId, predicate, timeout, cb)
+    }
+
+    fun awaitNonConcurrentMenu(uniqueId: String, predicate: (GenericComponentInteractionCreateEvent) -> Boolean, timeout: Long, cb: (GenericComponentInteractionCreateEvent?) -> Unit): Boolean {
+        return BoobBot.waiter.waitForMenu(uniqueId, predicate, timeout, cb)
+    }
 
     fun dm(embed: MessageEmbed) = dm(MessageBuilder(embed).build())
 
