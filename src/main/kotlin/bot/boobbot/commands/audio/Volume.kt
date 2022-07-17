@@ -17,7 +17,7 @@ import bot.boobbot.entities.framework.VoiceCommand
 )
 class Volume : VoiceCommand {
     override fun execute(ctx: Context) {
-        if (!performVoiceChecks(ctx, nsfwCheck = false)) {
+        if (!performVoiceChecks(ctx)) {
             return
         }
 
