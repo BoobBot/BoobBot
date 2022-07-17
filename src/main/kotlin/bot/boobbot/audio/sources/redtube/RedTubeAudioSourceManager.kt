@@ -16,7 +16,6 @@ import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.util.EntityUtils
-import sun.security.util.IOUtils
 import java.io.DataInput
 import java.io.DataOutput
 import java.io.IOException
