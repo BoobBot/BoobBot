@@ -22,11 +22,12 @@ class Play : VoiceCommand {
             return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
         }
 
-        if (!performVoiceChecks(ctx)) {
+        val query = ctx.args[0].removeSurrounding("<", ">")
+        val nsfwCheck = "pornhub" in query.lowercase() || "redtube" in query.lowercase()
+
+        if (!performVoiceChecks(ctx, nsfwCheck)) {
             return
         }
-
-        val query = ctx.args[0].removeSurrounding("<", ">")
 
         if (!Utils.checkDonor(ctx.message) && isYouTubeTrack(query)) {
             return ctx.send(

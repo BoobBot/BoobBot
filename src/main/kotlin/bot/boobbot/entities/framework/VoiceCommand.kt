@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.AudioChannel
 import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
@@ -22,7 +23,7 @@ interface VoiceCommand : Command {
                 || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
     }
 
-    fun performVoiceChecks(ctx: Context): Boolean {
+    fun performVoiceChecks(ctx: Context, nsfwCheck: Boolean): Boolean {
         if (ctx.guild == null) {
             return false
         }
@@ -35,7 +36,7 @@ interface VoiceCommand : Command {
         }
 
         if (ctx.audioManager!!.connectedChannel == null) {
-            val error = checkVoiceChannelPermissions(memberVoice as VoiceChannel)
+            val error = checkVoiceChannelPermissions(memberVoice, nsfwCheck)
 
             return if (error == null) {
                 ctx.audioManager.openAudioConnection(ctx.voiceState.channel)
@@ -54,23 +55,16 @@ interface VoiceCommand : Command {
         return true
     }
 
-    fun checkVoiceChannelPermissions(channel: VoiceChannel): String? {
+    fun checkVoiceChannelPermissions(channel: AudioChannel, nsfwCheck: Boolean): String? {
         val self = channel.guild.selfMember
 
-        if (channel.userLimit != 0 && channel.members.size >= channel.userLimit &&
-            !self.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
-        ) {
-            return "There's no room in your voice-channel, raise the user limit"
+        return when {
+            channel is VoiceChannel && channel.userLimit > 0 && channel.members.size >= channel.userLimit && !self.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
+                -> "There's no room in your voice-channel, raise the user limit"
+            !self.hasPermission(channel, Permission.VOICE_CONNECT) -> "No slut, I don't have permissions to connect. fucking fix it!"
+            !self.hasPermission(channel, Permission.VOICE_SPEAK) -> "No slut, I can't play music if I can't speak in your voice-channel"
+            nsfwCheck && (channel !is VoiceChannel || !channel.isNSFW) -> "I can only play in age-restricted voice-channels, whore."
+            else -> null
         }
-
-        if (!self.hasPermission(channel, Permission.VOICE_CONNECT)) {
-            return "No slut, I don't have permissions to connect. fucking fix it!"
-        }
-
-        if (!self.hasPermission(channel, Permission.VOICE_SPEAK)) {
-            return "No slut, I can't play music if I can't speak in your voice-channel"
-        }
-
-        return null
     }
 }

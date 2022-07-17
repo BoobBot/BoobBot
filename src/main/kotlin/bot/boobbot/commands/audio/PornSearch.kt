@@ -15,7 +15,7 @@ import bot.boobbot.entities.framework.VoiceCommand
 )
 class PornSearch : VoiceCommand {
     override fun execute(ctx: Context) {
-        if (!performVoiceChecks(ctx)) {
+        if (!performVoiceChecks(ctx, nsfwCheck = true)) {
             return
         }
 
