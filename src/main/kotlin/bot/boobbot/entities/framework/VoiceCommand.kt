@@ -23,7 +23,7 @@ interface VoiceCommand : Command {
                 || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
     }
 
-    fun performVoiceChecks(ctx: Context, nsfwCheck: Boolean): Boolean {
+    fun performVoiceChecks(ctx: Context, nsfwCheck: Boolean = false): Boolean {
         if (ctx.guild == null) {
             return false
         }

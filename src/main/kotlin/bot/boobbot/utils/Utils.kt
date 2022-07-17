@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
-import org.apache.commons.io.IOUtils
 import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.io.File
@@ -107,7 +106,7 @@ object Utils {
         }
     }
 
-    fun readAll(inputStream: InputStream): String = IOUtils.toString(inputStream, Charsets.UTF_8)
+    fun readAll(inputStream: InputStream): String = InputStreamReader(inputStream).use { it.readText() }
 
     fun calculateLewdLevel(user: User): Int {
         val calculateLewdPoints =

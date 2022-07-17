@@ -7,6 +7,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 
@@ -51,7 +52,7 @@ class Eval : Command {
         evalThread.run {
             try {
                 val result = engine.eval("$imports$bindString\n$stripped", bind)
-                    ?: return ctx.message.addReaction("👌").queue()
+                    ?: return ctx.message.addReaction(Emoji.fromUnicode("👌")).queue()
                 ctx.channel.sendMessage("```\n$result```").queue(null) {
                     ctx.channel.sendMessage("Response Error\n```\n$it```").queue()
                 }

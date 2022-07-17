@@ -7,8 +7,8 @@ import com.sedmelluq.discord.lavaplayer.tools.io.PersistentHttpStream
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor
-import org.apache.commons.io.IOUtils
 import org.apache.http.client.methods.HttpGet
+import org.apache.http.util.EntityUtils
 import java.io.IOException
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -45,7 +45,7 @@ class PornHubAudioTrack(trackInfo: AudioTrackInfo, private val sourceManager: Po
                 throw IOException("Invalid status code for response: $statusCode")
             }
 
-            return Utils.extractMediaString(IOUtils.toString(response.entity.content, StandardCharsets.UTF_8), httpInterface)
+            return Utils.extractMediaString(EntityUtils.toString(response.entity, StandardCharsets.UTF_8), httpInterface)
         }
     }
 }

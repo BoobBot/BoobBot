@@ -55,7 +55,7 @@ class SlashHandler : ListenerAdapter() {
             return event.reply("No, whore you can only use this in a guild").queue()
         }
 
-        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.textChannel.isNSFW)) {
+        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.channel.asTextChannel().isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
                     ?: return@queue event.reply("This channel isn't NSFW, whore.").queue()

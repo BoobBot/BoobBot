@@ -8,6 +8,7 @@ import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
@@ -58,7 +59,7 @@ class UserContextHandler : ListenerAdapter() {
             return event.reply("No, whore you can only use this in a guild").queue()
         }
 
-        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.textChannel.isNSFW)) {
+        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !(event.guildChannel as TextChannel).isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
                     ?: return@queue event.reply("This channel isn't NSFW, whore.").queue()

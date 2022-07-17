@@ -57,7 +57,7 @@ class SoftBan : AsyncCommand, ModCommand() {
 
         user.openPrivateChannel()
             .flatMap { it.sendMessage(banMsg) }
-            .flatMap { it.privateChannel.delete() }
+            .flatMap { it.channel.delete() }
             .submit()
             .awaitSuppressed()
 

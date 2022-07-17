@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import java.lang.reflect.Method
 import kotlin.coroutines.suspendCoroutine
 
@@ -24,7 +25,7 @@ class SubCommandWrapper(
                     executeAsync(ctx)
                 } catch (e: Throwable) {
                     BoobBot.log.error("Error in subcommand $name", e)
-                    ctx.message.addReaction("\uD83D\uDEAB").queue()
+                    ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
                 }
             }
         } else {
@@ -32,7 +33,7 @@ class SubCommandWrapper(
                 method.invoke(kls, ctx, *additionalArgs)
             } catch (e: Throwable) {
                 BoobBot.log.error("Error in subcommand $name", e)
-                ctx.message.addReaction("\uD83D\uDEAB").queue()
+                ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
             }
         }
     }

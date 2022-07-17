@@ -17,6 +17,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
@@ -51,7 +52,7 @@ class MessageHandler : ListenerAdapter() {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (event.channelType.isGuild) {
-            if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.textChannel.isNSFW) {
+            if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.channel.asTextChannel().isNSFW) {
                 GlobalScope.launch { BootyDropper().processDrop(event) }
             }
 
@@ -116,7 +117,7 @@ class MessageHandler : ListenerAdapter() {
         }
 
         // TODO test this logic
-        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.textChannel.isNSFW)) {
+        if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.channel.asTextChannel().isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
                     ?: return@queue event.channel.sendMessage("This channel isn't NSFW, whore.").queue()
@@ -181,7 +182,7 @@ class MessageHandler : ListenerAdapter() {
             user.save()
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.message.addReaction("\uD83D\uDEAB").queue()
+            event.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
         }
     }
 
@@ -202,7 +203,7 @@ class MessageHandler : ListenerAdapter() {
             return
         }
 
-        if (event.channelType == ChannelType.TEXT && event.message.textChannel.isNSFW) {
+        if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
             val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
             user.lewdPoints += min(tagSize, 5)
             user.nsfwMessagesSent++

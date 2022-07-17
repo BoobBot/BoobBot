@@ -6,6 +6,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.entities.internals.Config
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import java.time.Instant
 import java.util.*
 
@@ -83,7 +84,7 @@ class Help : Command {
     private fun send(ctx: Context, embed: EmbedBuilder, dm: Boolean) {
         if (dm) {
             ctx.dm(embed.build())
-            ctx.message.addReaction("\uD83D\uDCEC").queue()
+            ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDCEC")).queue()
         } else {
             ctx.send(embed.build())
         }

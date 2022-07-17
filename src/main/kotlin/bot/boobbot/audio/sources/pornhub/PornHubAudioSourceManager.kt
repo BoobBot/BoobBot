@@ -9,12 +9,12 @@ import com.sedmelluq.discord.lavaplayer.tools.JsonBrowser
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpClientTools
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpConfigurable
 import com.sedmelluq.discord.lavaplayer.track.*
-import org.apache.commons.io.IOUtils
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils
 import org.jsoup.Jsoup
 import java.io.DataInput
 import java.io.DataOutput
@@ -151,7 +151,7 @@ class PornHubAudioSourceManager : AudioSourceManager, HttpConfigurable {
                 throw IOException("Invalid status code for video page response: $statusCode")
             }
 
-            val html = IOUtils.toString(it.entity.content, StandardCharsets.UTF_8)
+            val html = EntityUtils.toString(it.entity, StandardCharsets.UTF_8)
             val match = VIDEO_INFO_REGEX.matcher(html)
 
             return if (match.find()) JsonBrowser.parse(match.group(1)) else null

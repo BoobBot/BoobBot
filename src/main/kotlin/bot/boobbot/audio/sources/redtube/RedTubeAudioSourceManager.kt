@@ -12,10 +12,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioItem
 import com.sedmelluq.discord.lavaplayer.track.AudioReference
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo
-import org.apache.commons.io.IOUtils
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils
+import sun.security.util.IOUtils
 import java.io.DataInput
 import java.io.DataOutput
 import java.io.IOException
@@ -105,7 +106,7 @@ class RedTubeAudioSourceManager : AudioSourceManager, HttpConfigurable {
                 throw IOException("Invalid status code for video page response: $statusCode")
             }
 
-            val html = IOUtils.toString(response.entity.content, CHARSET)
+            val html = EntityUtils.toString(response.entity, CHARSET)
             val match = VIDEO_INFO_REGEX.matcher(html)
 
             return if (match.find()) {

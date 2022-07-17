@@ -100,7 +100,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                 // Disable events for the following:
-                GatewayIntent.GUILD_EMOJIS,
+                GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                 GatewayIntent.GUILD_BANS,
                 GatewayIntent.GUILD_INVITES
             )
@@ -108,9 +108,10 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
             val disabledCacheFlags = EnumSet.of(
                 CacheFlag.ACTIVITY,
                 CacheFlag.CLIENT_STATUS,
-                CacheFlag.EMOTE,
+                CacheFlag.EMOJI,
                 CacheFlag.ONLINE_STATUS,
-                CacheFlag.ROLE_TAGS
+                CacheFlag.ROLE_TAGS,
+                CacheFlag.STICKER
             )
 
             val allIntents = GatewayIntent.ALL_INTENTS
