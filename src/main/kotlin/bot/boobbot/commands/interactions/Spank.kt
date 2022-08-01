@@ -16,9 +16,7 @@ import java.time.Instant
 @CommandProperties(description = "Spank someone.", category = Category.INTERACTIONS, nsfw = true)
 class Spank : AsyncCommand {
 
-
     override suspend fun executeAsync(ctx: Context) {
-
         val target = ctx.mentions.firstOrNull()
             ?: return ctx.send {
                 setColor(Color.red)
@@ -38,12 +36,10 @@ class Spank : AsyncCommand {
         }
 
 
-        val res =
-            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/spank", headersOf("Key", BoobBot.config.BB_API_KEY))
-                .await()?.json()
-                ?: return ctx.send(
-                    Formats.error(" oh? something broken af")
-                )
+        val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/spank", headersOf("Key", BoobBot.config.BB_API_KEY))
+            .await()
+            ?.json()
+            ?: return ctx.send(Formats.error(" oh? something broken af"))
 
         ctx.send {
             setTitle("<:spank:866431559557054464> ${ctx.author.name} Spanks ${target.name}")

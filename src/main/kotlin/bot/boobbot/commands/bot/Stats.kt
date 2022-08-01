@@ -2,6 +2,7 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.CodeblockBuilder
@@ -14,11 +15,11 @@ import java.text.DecimalFormat
 import kotlin.math.max
 
 @CommandProperties(description = "Overview of BoobBot's process")
-class Stats : AsyncCommand {
+class Stats : Command {
 
     private val dpFormatter = DecimalFormat("0.00")
 
-    override suspend fun executeAsync(ctx: Context) {
+    override fun execute(ctx: Context) {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)

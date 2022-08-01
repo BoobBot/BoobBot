@@ -16,9 +16,7 @@ import java.time.Instant
 @CommandProperties(description = "Make someone your sub.", category = Category.INTERACTIONS, nsfw = true)
 class Sub : AsyncCommand {
 
-
     override suspend fun executeAsync(ctx: Context) {
-
         val target = ctx.mentions.firstOrNull()
             ?: return ctx.send {
                 setColor(Color.red)
@@ -38,12 +36,10 @@ class Sub : AsyncCommand {
         }
 
 
-        val res =
-            BoobBot.requestUtil.get("https://boob.bot/api/v2/img/sub", headersOf("Key", BoobBot.config.BB_API_KEY))
-                .await()?.json()
-                ?: return ctx.send(
-                    Formats.error(" oh? something broken af")
-                )
+        val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/sub", headersOf("Key", BoobBot.config.BB_API_KEY))
+            .await()
+            ?.json()
+            ?: return ctx.send(Formats.error(" oh? something broken af"))
 
         ctx.send {
             setTitle("<:sub:866437395318833193> ${ctx.author.name} Makes ${target.name} there sub.")

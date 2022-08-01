@@ -13,6 +13,8 @@ import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
@@ -32,6 +34,7 @@ class MessageHandler : ListenerAdapter() {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
+    private val asyncScope = CoroutineScope(Dispatchers.Default)
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         BoobBot.metrics.record(Metrics.happened("MessageReceived"))
@@ -53,7 +56,7 @@ class MessageHandler : ListenerAdapter() {
 
         if (event.channelType.isGuild) {
             if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.channel.asTextChannel().isNSFW) {
-                GlobalScope.launch { BootyDropper().processDrop(event) }
+                asyncScope.launch { BootyDropper().processDrop(event) }
             }
 
             if (event.message.mentions.mentionsEveryone()) {
@@ -64,9 +67,7 @@ class MessageHandler : ListenerAdapter() {
                 return
             }
 
-            if (guild.ignoredChannels.contains(event.channel.id)
-                && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)
-            ) {
+            if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
 
@@ -80,10 +81,14 @@ class MessageHandler : ListenerAdapter() {
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
+        val args = messageContent.substring(trigger.length).trim().split(" +".toRegex()).toMutableList()
 
-        val args = messageContent.substring(trigger.length).split(" +".toRegex()).toMutableList()
+        if (trigger in Context.BOT_MENTIONS && args.isEmpty()) {
+            val prefix = guild.prefix ?: BoobBot.defaultPrefix
+            return event.channel.sendMessage("My prefix is `$prefix` whore.\nUse `${prefix}help` for a list of commands.").queue()
+        }
+
         val commandString = args.removeAt(0)
-
         val command = BoobBot.commands.findCommand(commandString)
 
         if (command == null) {

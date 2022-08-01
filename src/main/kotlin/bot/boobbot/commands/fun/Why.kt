@@ -11,13 +11,13 @@ import bot.boobbot.utils.json
 class Why : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {
-
         val res = BoobBot.requestUtil
             .get("https://nekos.life/api/v2/why")
             .await()
+            ?.json()
             ?: return ctx.send("rip some error, press f")
-        val body = res.json() ?: return ctx.send("rip some error, press f")
-        ctx.send(body.get("why").toString())
+
+        ctx.send(res.get("why").toString())
     }
 
 }
