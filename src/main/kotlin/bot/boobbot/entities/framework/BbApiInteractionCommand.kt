@@ -8,7 +8,7 @@ import okhttp3.Headers
 import java.awt.Color
 import java.time.Instant
 
-open class BbApiInteractionCommand(private val category: String, private val title: String) : AsyncCommand {
+abstract class BbApiInteractionCommand(private val category: String, private val title: String) : AsyncCommand {
     private val headers = Headers.headersOf("Key", BoobBot.config.BB_API_KEY)
 
     override suspend fun executeAsync(ctx: Context) {
