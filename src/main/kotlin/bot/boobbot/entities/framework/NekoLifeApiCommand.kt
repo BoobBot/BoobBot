@@ -13,9 +13,7 @@ abstract class NekoLifeApiCommand(private val category: String) : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
 
         val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/$category").await()?.json()
-            ?: return ctx.send(
-                Formats.error(" oh? something broken af")
-            )
+            ?: return ctx.send(Formats.error(" oh? something broken af"))
 
         ctx.send {
             setTitle("Nya~", "https://nekos.life")

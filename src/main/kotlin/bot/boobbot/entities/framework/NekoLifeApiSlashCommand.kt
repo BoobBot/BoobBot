@@ -11,9 +11,8 @@ import java.time.Instant
 abstract class NekoLifeApiSlashCommand(private val category: String) : AsyncSlashCommand {
     override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
         val res = BoobBot.requestUtil.get("https://nekos.life/api/v2/img/$category").await()?.json()
-            ?: return event.reply(
-                Formats.error(" oh? something broken af")
-            ).queue()
+            ?: return event.reply(Formats.error(" oh? something broken af")).queue()
+
         event.replyEmbeds(
             EmbedBuilder().apply {
                 setTitle("Nya~", "https://nekos.life")

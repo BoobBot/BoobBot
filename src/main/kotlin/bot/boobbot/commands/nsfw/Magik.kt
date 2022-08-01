@@ -53,10 +53,7 @@ class Magik : AsyncCommand {
 
     private suspend fun getImage(category: String): String? {
         return BoobBot.requestUtil
-            .get(
-                "https://boob.bot/api/v2/img/$category",
-                headersOf("Key", BoobBot.config.BB_API_KEY)
-            )
+            .get("https://boob.bot/api/v2/img/$category", headersOf("Key", BoobBot.config.BB_API_KEY))
             .await()
             ?.json()
             ?.getString("url")
