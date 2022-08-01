@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon
 
 
-@CommandProperties(description = " bot Settings", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Modify bot settings.", category = Category.DEV, developerOnly = true)
 class Set : Command {
 
     var isCustomGameSet = false

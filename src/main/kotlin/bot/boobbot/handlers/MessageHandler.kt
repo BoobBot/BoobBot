@@ -80,14 +80,12 @@ class MessageHandler : ListenerAdapter() {
         val acceptablePrefixes = Context.BOT_MENTIONS + standardTrigger
 
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
-            ?: return
-        val args = messageContent.substring(trigger.length).trim().split(" +".toRegex()).toMutableList()
+            ?: return Context.BOT_MENTIONS.any { messageContent.startsWith(it.trim()) }.ifTrue {
+                val prefix = guild.prefix ?: BoobBot.defaultPrefix
+                event.channel.sendMessage("My prefix is `$prefix` whore.\nUse `${prefix}help` for a list of commands.").queue()
+            }!!
 
-        if (trigger in Context.BOT_MENTIONS && args.isEmpty()) {
-            val prefix = guild.prefix ?: BoobBot.defaultPrefix
-            return event.channel.sendMessage("My prefix is `$prefix` whore.\nUse `${prefix}help` for a list of commands.").queue()
-        }
-
+        val args = messageContent.substring(trigger.length).split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
         val commandString = args.removeAt(0)
         val command = BoobBot.commands.findCommand(commandString)
 

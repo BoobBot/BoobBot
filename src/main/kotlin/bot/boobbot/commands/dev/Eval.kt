@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 
-@CommandProperties(description = "Eval", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Evaluate code.", category = Category.DEV, developerOnly = true)
 class Eval : Command {
 
     private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
