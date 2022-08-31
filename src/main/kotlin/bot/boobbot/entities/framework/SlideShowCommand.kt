@@ -5,6 +5,8 @@ import bot.boobbot.utils.*
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
@@ -49,7 +51,7 @@ abstract class SlideShowCommand : Command {
             ctx.channel.sendMessage(embedWith(1, first, color))
                 .delay(5, TimeUnit.SECONDS)
                 .intersect(images) { m, i, e ->
-                    m.editMessage(embedWith(i + 2, e, color))
+                    m.editMessage(embedEdit(i + 2, e, color))
                         .delay(5, TimeUnit.SECONDS)
                 }
                 .flatMap(Message::delete)
@@ -57,12 +59,20 @@ abstract class SlideShowCommand : Command {
         }
     }
 
-    private fun embedWith(num: Int, url: String, color: Color) = EmbedBuilder()
+    private fun embedWith(num: Int, url: String, color: Color) = MessageCreateBuilder().addEmbeds(EmbedBuilder()
         .apply {
             setColor(color)
             setDescription("$num of 20")
             setImage(url)
         }
-        .build()
-        .asMessage()
+        .build()).build()
+
+
+    private fun embedEdit(num: Int, url: String, color: Color) = MessageEditBuilder().setEmbeds(EmbedBuilder()
+        .apply {
+            setColor(color)
+            setDescription("$num of 20")
+            setImage(url)
+        }
+        .build()).build()
 }

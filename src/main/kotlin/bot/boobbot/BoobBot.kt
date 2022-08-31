@@ -23,6 +23,8 @@ import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.exceptions.ContextException
+import net.dv8tion.jda.api.interactions.commands.OptionType
+import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.requests.RestAction
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.slf4j.LoggerFactory
@@ -77,7 +79,6 @@ object BoobBot {
     @Throws(Exception::class)
     @JvmStatic
     fun main(args: Array<String>) {
-//        print(UserContextCommands)
         isDebug = "--debug" in args
         logCom = "--comlog" in args
         val shardCount = isDebug.ifTrue { 1 } ?: config.SHARD_TOTAL
@@ -99,6 +100,9 @@ object BoobBot {
         if (isDebug) {
             log.level = Level.DEBUG
             log.warn("Running in debug mode")
+            //print(slashCommands)
+            //print(selfId)
+           // shardManager.shards[0].updateCommands().queue()
         } else {
             CustomSentryClient.create(config.SENTRY_DSN)
                 .ignore(

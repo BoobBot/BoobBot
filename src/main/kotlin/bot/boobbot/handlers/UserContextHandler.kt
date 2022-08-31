@@ -21,7 +21,6 @@ class UserContextHandler : ListenerAdapter() {
     }
 
     override fun onUserContextInteraction(event: UserContextInteractionEvent) {
-        print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         BoobBot.metrics.record(Metrics.happened("ContextCommandInteractionEvent"))
         commandExecutorPool.execute {
             processMessageEvent(event)

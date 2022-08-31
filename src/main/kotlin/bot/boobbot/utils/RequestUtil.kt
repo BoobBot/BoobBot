@@ -80,8 +80,10 @@ class RequestUtil {
             @Throws(IOException::class)
             override fun intercept(chain: Interceptor.Chain): Response {
                 val request = chain.request()
-                //BoobBot.log.info(request.toString())
-                //BoobBot.log.info(response.toString())
+                if (BoobBot.isDebug) {
+                    //BoobBot.log.info(request.toString())
+                    //BoobBot.log.info(response.toString())
+                }
                 return chain.proceed(request)
             }
         }

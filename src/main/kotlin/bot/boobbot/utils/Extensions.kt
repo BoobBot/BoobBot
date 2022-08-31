@@ -3,10 +3,11 @@ package bot.boobbot.utils
 import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.future.await
-import net.dv8tion.jda.api.MessageBuilder
+
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import okhttp3.Response
 import org.json.JSONObject
 import java.net.URI
@@ -42,7 +43,7 @@ fun MessageEmbed.toWebhookEmbed(): WebhookEmbed {
     )
 }
 
-fun MessageEmbed.asMessage() = MessageBuilder().setEmbeds(this).build()
+fun MessageEmbed.asMessage() = MessageCreateBuilder().setEmbeds(this).build()
 
 fun Response.json(): JSONObject? {
     return body?.takeIf { isSuccessful }?.use { JSONObject(it.string()) }

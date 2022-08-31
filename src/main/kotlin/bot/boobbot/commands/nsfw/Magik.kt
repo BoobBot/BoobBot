@@ -7,6 +7,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
+import net.dv8tion.jda.api.utils.FileUpload
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.HttpUrl
@@ -48,7 +49,7 @@ class Magik : AsyncCommand {
             ?.body
             ?: return ctx.send("API didn't respond with an image, rip")
 
-        ctx.channel.sendFile(image.byteStream(), "magik.png").queue()
+        ctx.channel.sendFiles(FileUpload.fromData(image.byteStream(), "magik.png")).queue()
     }
 
     private suspend fun getImage(category: String): String? {

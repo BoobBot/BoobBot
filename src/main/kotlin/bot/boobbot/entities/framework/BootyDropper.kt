@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
+import net.dv8tion.jda.api.utils.FileUpload
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
@@ -78,7 +79,7 @@ class BootyDropper {
         generateDrop(dropKey)
             .thenCompose {
                 event.channel.sendMessage("Look an ass, grab it! Use `>grab <key>` to grab it!")
-                    .addFile(it, "drop.png")
+                    .addFiles(FileUpload.fromData(it, "drop.png"))
                     .submit()
             }
             .thenCombine(await(event.channel.idLong, dropKey)) { prompt, grabber ->

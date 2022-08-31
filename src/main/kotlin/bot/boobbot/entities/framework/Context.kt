@@ -6,15 +6,17 @@ import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.MessageBuilder
+
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
 import net.dv8tion.jda.api.managers.AudioManager
-import net.dv8tion.jda.api.requests.restaction.MessageAction
+
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
+import net.dv8tion.jda.api.utils.messages.MessageCreateData
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import java.util.concurrent.CompletableFuture
 
@@ -72,32 +74,31 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         return BoobBot.waiter.waitForMenu(uniqueId, predicate, timeout, cb)
     }
 
-    fun dm(embed: MessageEmbed) = dm(MessageBuilder(embed).build())
+    fun dm(embed: MessageEmbed) = dm(MessageCreateBuilder().addEmbeds(embed).build())
 
-    fun dm(message: Message) = author.openPrivateChannel().queue { it.sendMessage(message).queue() }
+    fun dm(message: MessageCreateData) = author.openPrivateChannel().queue { it.sendMessage(message).queue() }
 
     fun reply(content: String) {
-        send(MessageBuilder(content).build(), {
-            reference(message)
+        send(MessageCreateBuilder().setContent(content).build(), {
             failOnInvalidReply(false)
         }, null, null)
     }
 
     fun send(content: String, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
-        send(MessageBuilder(content), success, failure)
+        send(MessageCreateBuilder().setContent(content), success, failure)
     }
 
-    fun send(block: EmbedBuilder.() -> Unit) = send(MessageBuilder(EmbedBuilder().apply(block).build()))
+    fun send(block: EmbedBuilder.() -> Unit) = send(MessageCreateBuilder().addEmbeds(EmbedBuilder().apply(block).build()))
 
-    fun send(e: MessageEmbed) = send(MessageBuilder(e))
+    fun send(e: MessageEmbed) = send(MessageCreateBuilder().addEmbeds(e))
 
     fun message(m: DSLMessageBuilder.() -> Unit) = send(DSLMessageBuilder().apply(m).build(), {}, null, null)
 
-    private fun send(message: MessageBuilder, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
+    private fun send(message: MessageCreateBuilder, success: ((Message) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
         send(message.build(), {}, success, failure)
     }
 
-    private fun send(message: Message, options: MessageAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
+    private fun send(message: MessageCreateData, options: MessageCreateAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
         if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
             return
             // Don't you just love it when people deny the bot
@@ -109,13 +110,13 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     suspend fun sendAsync(content: String): Message {
-        return channel.sendMessage(content).submit().await()
+        return channel.sendMessage(MessageCreateBuilder().setContent(content).build()).submit().await()
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {
         return try {
             user.openPrivateChannel()
-                .flatMap { it.sendMessage(message) }
+                .flatMap { it.sendMessage(MessageCreateBuilder().setContent(message).build()) }
                 .submit()
                 .await()
         } catch (e: Exception) {

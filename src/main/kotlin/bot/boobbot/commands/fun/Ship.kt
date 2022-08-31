@@ -5,8 +5,9 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
-import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.utils.FileUpload
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import java.awt.Color
 import java.awt.Font
 import java.awt.image.BufferedImage
@@ -48,13 +49,13 @@ class Ship : Command {
 
         av1Fut.thenCombine(av2Fut) { av1, av2 ->
             val result = processImages(av1, av2)
-            val content = MessageBuilder()
+            val content = MessageCreateBuilder()
                 .setContent(newMixString(user1.name, user2.name))
-                .append(" <:icon:676613489548197915>")
+                .addContent(" <:icon:676613489548197915>")
                 .build()
 
             ctx.channel.sendMessage(content)
-                .addFile(result.toByteArray(), "shipped.png")
+                .addFiles(FileUpload.fromData(result.toByteArray(), "shipped.png"))
                 .submit()
                 .whenComplete { _, _ -> result.close() }
         }
