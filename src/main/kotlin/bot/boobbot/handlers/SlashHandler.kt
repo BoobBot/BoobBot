@@ -39,7 +39,7 @@ class SlashHandler : ListenerAdapter() {
                 return
             }
         }
-        print(event.subcommandName)
+
         val command = BoobBot.slashCommands.findCommand(event.subcommandName.toString()) ?: BoobBot.slashCommands.findCommand(event.name) ?: BoobBot.slashCommands.findCommand(event.getOption("category")!!.asString) ?: return
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) { return }
