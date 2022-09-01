@@ -102,7 +102,9 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 // Disable events for the following:
                 GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                 GatewayIntent.GUILD_BANS,
-                GatewayIntent.GUILD_INVITES
+                GatewayIntent.GUILD_INVITES,
+                // Disable Message Content
+                GatewayIntent.MESSAGE_CONTENT
             )
 
             val disabledCacheFlags = EnumSet.of(
@@ -123,7 +125,13 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setShardsTotal(shardCount)
                 .setActivity(Activity.playing("Booting...."))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .addEventListeners(BoobBot.waiter, MessageHandler(), EventHandler(), SlashHandler(), UserContextHandler())
+                .addEventListeners(
+                    BoobBot.waiter,
+                    MessageHandler(),
+                    EventHandler(),
+                    SlashHandler(),
+                    UserContextHandler()
+                )
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(disabledCacheFlags)
