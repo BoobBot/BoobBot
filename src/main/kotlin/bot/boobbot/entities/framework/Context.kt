@@ -60,9 +60,9 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
         return !isFromGuild || Config.OWNERS.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
     }
 
-    fun userCan(check: Permission) = permissionCheck(author, member, guildChannel!!, check)
+    fun userCan(check: Permission) = guildChannel?.let { permissionCheck(author, member, guildChannel, check) } ?: false
 
-    fun botCan(vararg check: Permission) = permissionCheck(selfUser, selfMember, guildChannel!!, *check)
+    fun botCan(vararg check: Permission) = guildChannel?.let { permissionCheck(selfUser, selfMember, it, *check) } ?: false
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
 
