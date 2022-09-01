@@ -231,16 +231,15 @@ class ApiServer {
                 get("/commands") {
                     val categories = hashMapOf<String, JSONArray>()
 
-                    BoobBot.slashCommands.values
+                    BoobBot.commands.values
                         .filter { it.properties.category != Category.DEV && !it.properties.hidden }
                         .forEach {
                             val category = categories.computeIfAbsent(it.properties.category.name) { JSONArray() }
                             val j = JSONObject()
-                                .put("nsfw", it.properties.nsfw)
-                                .put("name", it.name)
-                                .put("type", 1)
+                                .put("command", it.name)
+                                .put("category", it.properties.category)
                                 .put("description", it.properties.description)
-                                //.put("aliases", "[${it.properties.aliases.joinToString(", ")}]")
+                                .put("aliases", "[${it.properties.aliases.joinToString(", ")}]")
 
                             category.put(j)
                         }
