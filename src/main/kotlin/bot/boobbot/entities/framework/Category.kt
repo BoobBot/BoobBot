@@ -3,7 +3,7 @@ package bot.boobbot.entities.framework
 enum class Category(val title: String, val description: String, val nsfw: Boolean) {
     AUDIO("\uD83D\uDD08 Audio Commands", "Music and more in your voice-channel.", false),
     DEV("\u2699\ufe0f Dev shit", "Debug commands for developers only.", false),
-    ECONOMY(":moneybag: Economy", " Economy and game", false),
+    ECONOMY(":moneybag: Economy", " Economy and games", false),
     FANTASY("<:Pantsu:443870754107555842> Non-Real", "Futa, nekos, yiff etc.", true),
     FUN("\u2728 Fun Commands", "Random fun commands.", false),
     INTERACTIONS("Interactions", "Interact with someone.", false),

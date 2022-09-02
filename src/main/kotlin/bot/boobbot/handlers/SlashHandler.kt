@@ -2,6 +2,7 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
+import bot.boobbot.entities.framework.ExecutableSlashCommand
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -30,6 +31,36 @@ class SlashHandler : ListenerAdapter() {
 
     private fun processMessageEvent(event: SlashCommandInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
+        print(event.getOption("leaderboards"))
+print(event.subcommandName.toString())
+        fun getCommand(event: SlashCommandInteractionEvent): ExecutableSlashCommand? {
+
+
+
+
+            if (event.getOptionsByName("category").firstOrNull() != null){
+            return BoobBot.slashCommands.findCommand(event.getOption("category")!!.asString)
+            }
+
+
+            if (event.getOptionsByName("leaderboards").firstOrNull() != null){
+                print("?")
+                return BoobBot.slashCommands.findCommand(event.getOption("leaderboards")!!.asString)
+            }
+
+            if (BoobBot.slashCommands.findCommand(event.name) != null)
+
+            {
+                return BoobBot.slashCommands.findCommand(event.name)
+            }
+
+            if (event.subcommandName.toString().isNotEmpty()) {
+                return BoobBot.slashCommands.findCommand(event.subcommandName.toString())
+            }
+
+            return null
+        }
+
 
         if (event.isFromGuild) {
             if (!event.guildChannel.canTalk()) {
@@ -42,7 +73,7 @@ class SlashHandler : ListenerAdapter() {
             }
         }
 
-        val command = BoobBot.slashCommands.findCommand(event.subcommandName.toString()) ?: BoobBot.slashCommands.findCommand(event.name) ?: BoobBot.slashCommands.findCommand(event.getOption("category")!!.asString) ?: return
+        val command =  getCommand(event) ?: return
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) { return }
         if (!command.properties.enabled) {
