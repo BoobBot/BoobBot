@@ -30,7 +30,7 @@ class Help : Command {
     }
 
     private fun sendCategories(ctx: Context, dm: Boolean) {
-        val prefix = ctx.customPrefix ?: BoobBot.defaultPrefix
+        val prefix = ctx.jda.selfUser.asMention
         val embed = builder(ctx)
 
         val content = StringBuilder()
@@ -49,7 +49,7 @@ class Help : Command {
             }
         }
 
-        content.append("\nTo view the commands of a category, send `${prefix}help <category>`")
+        content.append("\nTo view the commands of a category, send ${prefix}help <category>")
         embed.setDescription(Formats.LING_MSG)
         embed.addField("Command Categories", content.toString(), false)
         send(ctx, embed, dm)

@@ -166,26 +166,6 @@ class Settings : Command {
         ctx.send("Enabled ${Formats.monospaced(toEnable)} for this channel.")
     }
 
-    @SubCommand(aliases = ["prefix", "sp"], description = "Change the prefix for the entire server.", donorOnly = true)
-    fun setPrefix(ctx: Context) {
-        if (ctx.args.isEmpty()) {
-            return ctx.send("wtf, i don't mind read. Specify what prefix you wanna set, whore.")
-        }
-
-        BoobBot.database.setPrefix(ctx.guild!!.id, ctx.args[0])
-        ctx.send("Set prefix to ${ctx.args[0]}")
-    }
-
-
-    @SubCommand(aliases = ["clearprefix", "dp"], description = "Resets the prefix back to the default.")
-    fun removePrefix(ctx: Context) {
-        if (BoobBot.database.getPrefix(ctx.guild!!.id) == null) {
-            return ctx.send("wtf, i don't have a prefix here, whore.")
-        }
-
-        BoobBot.database.removePrefix(ctx.guild.id)
-        ctx.send("Done.")
-    }
 
     @SubCommand(
         aliases = ["ic"],

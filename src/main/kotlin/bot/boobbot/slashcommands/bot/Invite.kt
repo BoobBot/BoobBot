@@ -5,6 +5,7 @@ import bot.boobbot.entities.framework.SlashCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.time.Instant
@@ -17,6 +18,6 @@ class Invite : SlashCommand {
             setColor(Colors.rndColor)
             setDescription(Formats.LING_MSG)
             setTimestamp(Instant.now())
-        }.build()).addActionRow(Button.link("https://discord.boob.bot", "<:discord:486939267365470210>")).queue()
+        }.build()).addActionRow(Button.link("https://discord.boob.bot", "\uD83D\uDCAC")).queue()
     }
 }

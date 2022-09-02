@@ -22,7 +22,7 @@ class Invite : Command {
             setDescription(Formats.LING_MSG)
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
-        }.build()).setActionRow(Button.link("https://discord.boob.bot", "Join the Server"), Button.link("https://invite.boob.bot", "Get support"), Button.link("https://discord.boob.bot", "Add Slash commands")).queue()
+        }.build()).setActionRow(Button.link("https://discord.boob.bot", "Join the Server"), Button.link("https://invite.boob.bot", "Get support"), Button.link("https://bot.boob.bot", "Add Slash commands")).queue()
     }
 
 }

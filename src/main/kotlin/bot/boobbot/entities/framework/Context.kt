@@ -125,7 +125,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     companion object {
-        val BOT_MENTIONS = listOf("<@${BoobBot.selfId}> ", "<@!${BoobBot.selfId}> ")
+        val BOT_MENTIONS = listOf("<@${BoobBot.selfId}>", "<@!${BoobBot.selfId}>","<@${499199815532675082}>", "<@!${499199815532675082}>","<@${BoobBot.selfId}> ", "<@!${BoobBot.selfId}> ","<@${499199815532675082}> ", "<@!${499199815532675082}> ")
     }
 
 }

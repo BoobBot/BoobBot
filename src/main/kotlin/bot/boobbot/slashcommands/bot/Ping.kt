@@ -9,9 +9,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 @CommandProperties(description = "Pong!", category = Category.MISC)
 class Ping : SlashCommand {
     override fun execute(event: SlashCommandInteractionEvent) {
-        val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.shardManager.onlineShards.size
-        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
-        event.reply("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms").queue()
+        if(event.getOption("please")?.asBoolean != null && event.getOption("please")!!.asBoolean){
+            val shards = BoobBot.shardManager.shardsTotal
+            val shardsOnline = BoobBot.shardManager.onlineShards.size
+            val averageShardLatency = BoobBot.shardManager.averageGatewayPing
+            return event.reply("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms").queue()
+        }
+        event.reply("What do you want me to say, pong? No you can go fuck yourself~").queue()
+
     }
 }

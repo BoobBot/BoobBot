@@ -76,16 +76,16 @@ class MessageHandler : ListenerAdapter() {
             }
         }
 
-        val messageContent = event.message.contentRaw
-        val standardTrigger = event.isFromGuild.ifTrue { guild.prefix } ?: BoobBot.defaultPrefix
+        val messageContent = event.message.contentRaw.trim()
+        val standardTrigger = event.jda.selfUser.asMention
         val acceptablePrefixes = Context.BOT_MENTIONS + standardTrigger
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
-        val args = messageContent.substring(trigger.length).trim().split(" +".toRegex()).toMutableList()
+        val args = messageContent.substring(trigger.length).split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
 
         if (trigger in Context.BOT_MENTIONS && args.isEmpty()) {
-            val prefix = guild.prefix ?: BoobBot.defaultPrefix
-            return event.channel.sendMessage("My prefix is `$prefix` whore.\nUse `${prefix}help` for a list of commands.").queue()
+            val prefix = event.jda.selfUser.asMention
+            return event.channel.sendMessage("My prefix is $prefix whore.\nUse ${prefix}help for a list of commands.").queue()
         }
         // null spam
         /*val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }

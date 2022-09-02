@@ -45,7 +45,6 @@ class SlashHandler : ListenerAdapter() {
             if (BoobBot.slashCommands.findCommand(event.name) != null)
 
             {
-                print(BoobBot.slashCommands.findCommand(event.name))
                 return BoobBot.slashCommands.findCommand(event.name)
             }
 
