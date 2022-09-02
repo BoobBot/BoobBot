@@ -19,6 +19,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.ThreadChannel
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -62,6 +63,8 @@ class MessageHandler : ListenerAdapter() {
             if (event.message.mentions.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
+
+            (event.channel as? ThreadChannel)?.parentChannel ?: return
 
             if (!event.channel.canTalk()) {
                 return
