@@ -34,7 +34,7 @@ class Printer : AsyncSlashCommand {
     val typeString = categories.keys.joinToString("`, `", prefix = "`", postfix = "`")
 
     override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val category = categories[event.getOption("category")!!.asString]
+        val category = categories[event.getOption("category")?.asString ?: categories.values.random()]
             ?: return event.replyEmbeds(
                 EmbedBuilder().apply {
                 setColor(Color.red)
