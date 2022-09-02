@@ -3,6 +3,8 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Formats
+import bot.boobbot.utils.Utils
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
@@ -67,6 +69,15 @@ class SlashHandler : ListenerAdapter() {
                 ).queue()
             }
             return
+        }
+
+        if (command.properties.donorOnly && !Utils.checkSlashDonor(event)) {
+            return event.reply(
+                Formats.error(
+                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
+                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
+                )
+            ).queue()
         }
 
         if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {

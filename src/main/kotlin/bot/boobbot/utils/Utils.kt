@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.io.File
@@ -59,6 +60,11 @@ object Utils {
                 || (event.channelType.isGuild && BoobBot.database.isPremiumServer(event.guild.id))
     }
 
+    fun checkSlashDonor(event: SlashCommandInteractionEvent): Boolean {
+        return BoobBot.pApi.getDonorType(event.user.id).tier >= 1 // Supporter, Server Owner, Developer
+                || (event.channelType.isGuild && BoobBot.pApi.getDonorType(event.guild!!.ownerId) == DonorType.SERVER_OWNER)
+                || (event.channelType.isGuild && BoobBot.database.isPremiumServer(event.guild!!.id))
+    }
     fun getRandomFunString(key: String): String {
         val arr = jsonArrays.getJSONArray(key)
         return arr.getString(rand.nextInt(arr.length()))
