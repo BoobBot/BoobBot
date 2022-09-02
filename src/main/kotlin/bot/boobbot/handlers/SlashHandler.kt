@@ -31,26 +31,21 @@ class SlashHandler : ListenerAdapter() {
 
     private fun processMessageEvent(event: SlashCommandInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
-        print(event.getOption("leaderboards"))
-print(event.subcommandName.toString())
+
         fun getCommand(event: SlashCommandInteractionEvent): ExecutableSlashCommand? {
-
-
-
 
             if (event.getOptionsByName("category").firstOrNull() != null){
             return BoobBot.slashCommands.findCommand(event.getOption("category")!!.asString)
             }
 
-
             if (event.getOptionsByName("leaderboards").firstOrNull() != null){
-                print("?")
                 return BoobBot.slashCommands.findCommand(event.getOption("leaderboards")!!.asString)
             }
 
             if (BoobBot.slashCommands.findCommand(event.name) != null)
 
             {
+                print(BoobBot.slashCommands.findCommand(event.name))
                 return BoobBot.slashCommands.findCommand(event.name)
             }
 
