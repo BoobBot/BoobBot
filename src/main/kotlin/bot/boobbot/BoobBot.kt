@@ -22,6 +22,7 @@ import io.sentry.connection.ConnectionException
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -117,8 +118,10 @@ object BoobBot {
                 )
         }
 
-        setupAudioSystem()
         RestAction.setPassContext(false)
+        Message.suppressContentIntentWarning()
+
+        setupAudioSystem()
         ApiServer().startServer()
     }
 

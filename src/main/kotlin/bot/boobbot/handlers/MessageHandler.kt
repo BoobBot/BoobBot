@@ -12,10 +12,10 @@ import bot.boobbot.utils.Utils.calculateLewdLevel
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
+import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.entities.ThreadChannel
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.floor
@@ -51,7 +50,6 @@ class MessageHandler : ListenerAdapter() {
         processUser(event)
     }
 
-    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun processMessageEvent(event: MessageReceivedEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
@@ -64,7 +62,10 @@ class MessageHandler : ListenerAdapter() {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
 
-            (event.channel as? ThreadChannel)?.parentChannel ?: return
+            (event.channel as? ThreadChannel)?.let {
+                @Suppress("USELESS_ELVIS")
+                it.parentChannel ?: return
+            }
 
             if (!event.channel.canTalk()) {
                 return
@@ -80,24 +81,17 @@ class MessageHandler : ListenerAdapter() {
         }
 
         val messageContent = event.message.contentRaw.trim()
-        val standardTrigger = event.jda.selfUser.asMention
-        val acceptablePrefixes = Context.BOT_MENTIONS + standardTrigger
+        //val prefixTrigger = event.jda.selfUser.asMention
+        val acceptablePrefixes = Context.BOT_MENTIONS// + prefixTrigger
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
-        val args = messageContent.substring(trigger.length).split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
+        val args = messageContent.substring(trigger.length).trim().split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
 
         if (trigger in Context.BOT_MENTIONS && args.isEmpty()) {
             val prefix = event.jda.selfUser.asMention
             return event.channel.sendMessage("My prefix is $prefix whore.\nUse ${prefix}help for a list of commands.").queue()
         }
-        // null spam
-        /*val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
-            ?: return Context.BOT_MENTIONS.any { messageContent.startsWith(it.trim()) }.ifTrue {
-                val prefix = guild.prefix ?: BoobBot.defaultPrefix
-                event.channel.sendMessage("My prefix is `$prefix` whore.\nUse `${prefix}help` for a list of commands.").queue()
-            }!!
 
-        //val args = messageContent.substring(trigger.length).split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()*/
         val commandString = args.removeAt(0)
         val command = BoobBot.commands.findCommand(commandString)
 
@@ -131,7 +125,6 @@ class MessageHandler : ListenerAdapter() {
             return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
         }
 
-        // TODO test this logic
         if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.channel.asTextChannel().isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
@@ -188,13 +181,12 @@ class MessageHandler : ListenerAdapter() {
             command.execute(trigger, event.message, args)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
-            val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-            if (command.properties.nsfw) {
-                user.nsfwCommandsUsed++
-            } else {
-                user.commandsUsed++
+
+            BoobBot.database.getUser(event.author.id).let {
+                if (command.properties.nsfw) it.nsfwCommandsUsed++
+                else it.commandsUsed++
+                it.save()
             }
-            user.save()
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
@@ -205,14 +197,16 @@ class MessageHandler : ListenerAdapter() {
         if (!event.isFromGuild) {
             return
         }
+
         val user: User by lazy { BoobBot.database.getUser(event.author.id) }
         user.messagesSent++
+
         if (user.blacklisted) {
             return
         }
 
         if (user.inJail) {
-            user.jailRemaining = min(user.jailRemaining - 1, 0)
+            user.jailRemaining = max(user.jailRemaining - 1, 0)
             user.inJail = user.jailRemaining > 0
             user.save()
             return
@@ -223,18 +217,19 @@ class MessageHandler : ListenerAdapter() {
             user.lewdPoints += min(tagSize, 5)
             user.nsfwMessagesSent++
         }
+
         if (user.coolDownCount >= random(0, 10)) {
             user.coolDownCount = random(0, 10)
-
             user.experience++
+
             if (user.bonusXp > 0) {
                 user.experience++ // extra XP
                 user.bonusXp = user.bonusXp - 1
             }
         }
+
         user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
         user.lewdLevel = calculateLewdLevel(user)
         user.save()
     }
-
 }

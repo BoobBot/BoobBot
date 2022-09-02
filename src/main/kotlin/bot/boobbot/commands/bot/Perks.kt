@@ -78,13 +78,13 @@ class Perks : Command {
             BoobBot.database.getPremiumServers(ctx.author.idLong).size > PREMIUM_SERVERS -> ctx.send("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
             else -> {
                 val predicate = { e: ButtonInteractionEvent -> e.componentId == "ps:accept:${ctx.author.id}" || e.componentId == "ps:cancel:${ctx.author.id}" }
-                val waiterSetup = ctx.awaitNonConcurrentButton("ps:${ctx.author.id}", predicate, 10000) {
+                val waiterSetup = ctx.onButtonInteraction("ps:${ctx.author.id}", predicate, 10000) {
                     if (it == null) {
-                        return@awaitNonConcurrentButton ctx.send("Fine, whore. The server won't be added.")
+                        return@onButtonInteraction ctx.send("Fine, whore. The server won't be added.")
                     }
 
                     if (it.componentId == "ps:cancel:${ctx.author.id}") {
-                        return@awaitNonConcurrentButton it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
+                        return@onButtonInteraction it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
                     }
 
                     BoobBot.database.setPremiumServer(ctx.guild.id, ctx.author.idLong)
@@ -117,13 +117,13 @@ class Perks : Command {
         val guilds = servers.map { (BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server") to it._id }
 
         val predicate = { e: GenericComponentInteractionCreateEvent -> e.componentId == "menu:ps:${ctx.author.id}" || e.componentId == "ps:cancel:${ctx.author.id}" }
-        val waiterSetup = ctx.awaitNonConcurrentMenu("ps:${ctx.author.id}", predicate, 15000) {
+        val waiterSetup = ctx.onMenuInteraction("ps:${ctx.author.id}", predicate, 15000) {
             if (it == null) {
-                return@awaitNonConcurrentMenu ctx.send("Fine, whore. No servers will be removed.")
+                return@onMenuInteraction ctx.send("Fine, whore. No servers will be removed.")
             }
 
             if (it is ButtonInteractionEvent && it.componentId == "ps:cancel:${ctx.author.id}") {
-                return@awaitNonConcurrentMenu it.editComponents().setContent("Fine, whore. No servers will be removed.").queue()
+                return@onMenuInteraction it.editComponents().setContent("Fine, whore. No servers will be removed.").queue()
             }
 
             val selected = (it as SelectMenuInteractionEvent).selectedOptions[0]

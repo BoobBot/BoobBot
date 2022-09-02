@@ -66,11 +66,11 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
 
-    fun awaitNonConcurrentButton(uniqueId: String, predicate: (ButtonInteractionEvent) -> Boolean, timeout: Long, cb: (ButtonInteractionEvent?) -> Unit): Boolean {
+    fun onButtonInteraction(uniqueId: String, predicate: (ButtonInteractionEvent) -> Boolean, timeout: Long, cb: (ButtonInteractionEvent?) -> Unit): Boolean {
         return BoobBot.waiter.waitForButton(uniqueId, predicate, timeout, cb)
     }
 
-    fun awaitNonConcurrentMenu(uniqueId: String, predicate: (GenericComponentInteractionCreateEvent) -> Boolean, timeout: Long, cb: (GenericComponentInteractionCreateEvent?) -> Unit): Boolean {
+    fun onMenuInteraction(uniqueId: String, predicate: (GenericComponentInteractionCreateEvent) -> Boolean, timeout: Long, cb: (GenericComponentInteractionCreateEvent?) -> Unit): Boolean {
         return BoobBot.waiter.waitForMenu(uniqueId, predicate, timeout, cb)
     }
 
@@ -125,7 +125,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     }
 
     companion object {
-        val BOT_MENTIONS = listOf("<@${BoobBot.selfId}>", "<@!${BoobBot.selfId}>","<@${499199815532675082}>", "<@!${499199815532675082}>","<@${BoobBot.selfId}> ", "<@!${BoobBot.selfId}> ","<@${499199815532675082}> ", "<@!${499199815532675082}> ")
+        val BOT_MENTIONS = listOf("<@${BoobBot.selfId}>", "<@!${BoobBot.selfId}>")
     }
 
 }
