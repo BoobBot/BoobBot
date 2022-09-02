@@ -29,52 +29,44 @@ class SlashHandler : ListenerAdapter() {
         }
     }
 
-    private fun processMessageEvent(event: SlashCommandInteractionEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
-
-        fun getCommand(event: SlashCommandInteractionEvent): ExecutableSlashCommand? {
-
-            if (event.getOptionsByName("category").firstOrNull() != null){
-            return BoobBot.slashCommands.findCommand(event.getOption("category")!!.asString)
-            }
-
-            if (event.getOptionsByName("leaderboards").firstOrNull() != null){
-                return BoobBot.slashCommands.findCommand(event.getOption("leaderboards")!!.asString)
-            }
-
-            if (BoobBot.slashCommands.findCommand(event.name) != null)
-
-            {
-                return BoobBot.slashCommands.findCommand(event.name)
-            }
-
-            if (event.subcommandName.toString().isNotEmpty()) {
-                return BoobBot.slashCommands.findCommand(event.subcommandName.toString())
-            }
-
-            return null
+    private fun getCommand(event: SlashCommandInteractionEvent): ExecutableSlashCommand? {
+        event.getOption("category")?.let {
+            return BoobBot.slashCommands.findCommand(it.asString)
         }
 
+        event.getOption("leaderboards")?.let {
+            return BoobBot.slashCommands.findCommand(it.asString)
+        }
+
+        BoobBot.slashCommands.findCommand(event.name)?.let { return it }
+
+        return event.subcommandName?.takeIf { it.isNotEmpty() }?.let(BoobBot.slashCommands::findCommand)
+    }
+
+    private fun processMessageEvent(event: SlashCommandInteractionEvent) {
+        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
 
         if (event.isFromGuild) {
             if (!event.guildChannel.canTalk()) {
                 return
             }
-            if (guild.ignoredChannels.contains(event.channel.id)
-                && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)
-            ) {
+
+            if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
         }
 
-        val command =  getCommand(event) ?: return
+        val command = getCommand(event) ?: return
 
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) { return }
+        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
+            return
+        }
+
         if (!command.properties.enabled) {
             return
         }
 
-        if (command.properties.developerOnly && !Config.OWNERS.contains(event.member!!.idLong)) {
+        if (command.properties.developerOnly && !Config.OWNERS.contains(event.user.idLong)) {
             return
         }
 
@@ -105,20 +97,28 @@ class SlashHandler : ListenerAdapter() {
             ).queue()
         }
 
-        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(
+                event.guildChannel,
+                Permission.MESSAGE_EMBED_LINKS
+            )
+        ) {
             return event.reply("I do not have permission to use embeds, da fuck?").queue()
         }
 
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
+            val missing =
+                checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
+
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
                 return event.reply("You need these permissions, whore:\n$fmt").queue()
             }
         }
+
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
+            val missing =
+                checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -135,6 +135,4 @@ class SlashHandler : ListenerAdapter() {
             event.reply("\uD83D\uDEAB Command `${command.name}` encountered an error during execution").queue()
         }
     }
-
-
 }
