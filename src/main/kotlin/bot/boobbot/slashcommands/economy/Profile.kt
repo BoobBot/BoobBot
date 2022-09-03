@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import kotlin.math.pow
 
-
 @CommandProperties(description = "View your economy profile.", category = Category.ECONOMY)
 class Profile : SlashCommand {
 

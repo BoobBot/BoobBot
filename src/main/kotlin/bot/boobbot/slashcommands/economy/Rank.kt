@@ -7,7 +7,6 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
-
 @CommandProperties(description = "See your current rank info.", aliases = ["level", "lvl"], category = Category.ECONOMY)
 class Rank : SlashCommand {
 

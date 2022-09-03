@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 @CommandProperties(description = "Displays bot info.", category = Category.MISC)
 class Info : SlashCommand {
-
     override fun execute(event: SlashCommandInteractionEvent) {
         val shards = BoobBot.shardManager.shardsTotal
         val shardsOnline = BoobBot.shardManager.onlineShards.size
@@ -34,5 +33,4 @@ class Info : SlashCommand {
             )
         }.build()).queue()
     }
-
 }

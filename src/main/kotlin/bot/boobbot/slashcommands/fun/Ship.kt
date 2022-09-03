@@ -1,6 +1,7 @@
 package bot.boobbot.slashcommands.`fun`
 
 import bot.boobbot.BoobBot
+import bot.boobbot.commands.`fun`.Ship.Companion.downloadAvatar
 import bot.boobbot.entities.framework.*
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
@@ -22,15 +23,11 @@ import javax.imageio.ImageIO
 @CommandProperties(description = "Shipped", category = Category.FUN)
 class Ship : SlashCommand {
     override fun execute(event: SlashCommandInteractionEvent) {
-
-        fun permissionCheck(u: User, m: Member?, channel: GuildChannel, vararg permissions: Permission): Boolean {
-            return !event.isFromGuild || Config.OWNERS.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
-        }
-
-        fun botCan(vararg check: Permission) = permissionCheck(event.jda.selfUser, event.guild?.selfMember, event.guildChannel, *check)
-
-
-        if (!botCan(Permission.MESSAGE_ATTACH_FILES)) {
+        if (event.isFromGuild && !event.guild!!.selfMember.hasPermission(
+                event.guildChannel,
+                Permission.MESSAGE_ATTACH_FILES
+            )
+        ) {
             return event.reply(Formats.error("I can't send images here, fix it whore.")).queue()
         }
 
@@ -75,7 +72,6 @@ class Ship : SlashCommand {
                 .thenApply { ImageIO.read(it) }
         }
 
-
         private fun newMixString(a: String, b: String): String? {
             val mixed = StringBuilder()
             var i = 0
@@ -86,7 +82,6 @@ class Ship : SlashCommand {
             }
             return mixed.toString()
         }
-
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
             val rng = (0..100).random()

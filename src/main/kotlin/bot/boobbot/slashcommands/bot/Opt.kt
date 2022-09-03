@@ -8,15 +8,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 class Opt : SlashCommand {
 
     override fun execute(event: SlashCommandInteractionEvent) {
-
-        if(event.subcommandName.toString() == "in"){
-            return `in`(event)
-        }
-        if(event.subcommandName.toString() == "out"){
-            return out(event)
-        }
-        if(event.subcommandName.toString() == "status"){
-            return status(event)
+        when (event.subcommandName) {
+            "in" -> `in`(event)
+            "out" -> out(event)
+            "status" -> status(event)
+            else -> event.reply("Unknown subcommand").queue()
         }
     }
 

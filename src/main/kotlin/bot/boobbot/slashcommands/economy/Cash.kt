@@ -2,23 +2,20 @@ package bot.boobbot.slashcommands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.*
-import bot.boobbot.utils.Colors
-import bot.boobbot.utils.Formats
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
-
 @CommandProperties(description = "Global leaderboards \uD83C\uDFC6.", aliases = [], category = Category.ECONOMY)
-class replb : AsyncSlashCommand {
+class Cash : AsyncSlashCommand {
 
     override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val msg = buildMessage("rep", event)
+        val msg = buildMessage("balance", event)
         event.replyEmbeds(
             EmbedBuilder().apply {
-                setAuthor("Global reputation leaderboard \uD83C\uDFC6", null, event.jda.selfUser.avatarUrl)
+                setAuthor("Global economy leaderboard \uD83C\uDFC6", null, event.jda.selfUser.avatarUrl)
                 addField("", msg, false)
                 setFooter("Requested by ${event.user.name}", event.user.effectiveAvatarUrl)
             }.build()
@@ -31,10 +28,10 @@ class replb : AsyncSlashCommand {
         var msg = ""
         var count = 0
         BoobBot.database.getAllUsers().find().sort(BasicDBObject(key, -1)).limit(25).iterator().forEach { u ->
-
             if (count >= 15) {
                 return@forEach
             }
+
             try {
                 val user = event.jda.retrieveUserById(u.getString("_id")).submit().await()
 

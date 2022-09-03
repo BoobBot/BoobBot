@@ -16,24 +16,20 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 )
 
 class Toggle : SlashCommand {
+    private fun permissionCheck(m: Member, channel: GuildChannel, vararg permissions: Permission): Boolean {
+        return Config.OWNERS.contains(m.user.idLong) || m.hasPermission(channel, *permissions)
+    }
 
     override fun execute(event: SlashCommandInteractionEvent) {
-
-        fun permissionCheck(u: User, m: Member?, channel: GuildChannel, vararg permissions: Permission): Boolean {
-            return !event.isFromGuild || Config.OWNERS.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
+        if (!event.isFromGuild) {
+            return event.reply("This can only be run within guilds.").queue()
         }
 
-        fun userCan(check: Permission) = event.guildChannel?.let { permissionCheck(event.user, event.member, event.guildChannel, check) } ?: false
-
-        fun botCan(vararg check: Permission) = event.guildChannel?.let { permissionCheck(event.jda.selfUser, event.guild?.selfMember, it, *check) } ?: false
-
-
-
-        if (!botCan(Permission.MANAGE_CHANNEL)) {
+        if (!event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MANAGE_CHANNEL)) {
             return event.reply("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this").queue()
         }
 
-        if (!userCan(Permission.MANAGE_CHANNEL)) {
+        if (!permissionCheck(event.member!!, event.guildChannel, Permission.MANAGE_CHANNEL)) {
             return event.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this").queue()
         }
 

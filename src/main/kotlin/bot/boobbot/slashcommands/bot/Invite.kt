@@ -5,7 +5,6 @@ import bot.boobbot.entities.framework.SlashCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import java.time.Instant

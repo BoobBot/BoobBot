@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-
 @CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY)
 class Payday : SlashCommand {
 
