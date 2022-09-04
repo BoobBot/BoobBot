@@ -1,6 +1,5 @@
 package bot.boobbot.entities.framework
 
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 interface SlashCommand {
 
     val name: String
@@ -16,10 +15,10 @@ interface SlashCommand {
      * Command-local check that is executed before the command or any subcommands are
      * executed.
      *
-     * @returns Whether or not command execution can proceed.
+     * @returns Whether command execution can proceed.
      */
-    fun localCheck(event: SlashCommandInteractionEvent): Boolean = true
+    fun localCheck(ctx: SlashContext): Boolean = true
 
-    fun execute(event: SlashCommandInteractionEvent)
+    fun execute(ctx: SlashContext)
 
 }

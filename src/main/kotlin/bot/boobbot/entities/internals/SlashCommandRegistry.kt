@@ -1,9 +1,7 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.ExecutableCommand
 import bot.boobbot.entities.framework.ExecutableSlashCommand
-import bot.boobbot.entities.framework.Indexer
 import bot.boobbot.entities.framework.SlashIndexer
 
 class SlashCommandRegistry : HashMap<String, ExecutableSlashCommand>() {

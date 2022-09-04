@@ -1,7 +1,9 @@
 package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.entities.emoji.Emoji
 
 interface AsyncCommand : Command {

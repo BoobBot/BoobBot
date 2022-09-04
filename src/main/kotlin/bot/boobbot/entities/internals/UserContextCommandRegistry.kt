@@ -2,8 +2,6 @@ package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.ExecutableUserContextCommand
-import bot.boobbot.entities.framework.Indexer
-import bot.boobbot.entities.framework.SlashIndexer
 import bot.boobbot.entities.framework.UserContextIndexer
 
 class UserContextCommandRegistry : HashMap<String, ExecutableUserContextCommand>() {

@@ -2,69 +2,73 @@ package bot.boobbot.slashcommands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.User
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 
 @CommandProperties(aliases = [], description = "banking operations \uD83C\uDFE6", guildOnly = true, category = Category.ECONOMY)
 class Bank : SlashCommand {
 
-    override fun execute(event: SlashCommandInteractionEvent) {
-        return when (event.subcommandName) {
-            "deposit" -> deposit(event)
-            "withdraw" -> withdraw(event)
-            "balance" -> balance(event)
-            "transfer" -> transfer(event)
+    override fun execute(ctx: SlashContext) {
+        return when (ctx.subcommandName) {
+            "deposit" -> deposit(ctx)
+            "withdraw" -> withdraw(ctx)
+            "balance" -> balance(ctx)
+            "transfer" -> transfer(ctx)
             else -> {}
         }
     }
 
-    fun deposit(event: SlashCommandInteractionEvent) {
-        val user = BoobBot.database.getUser(event.user.id)
+    fun deposit(ctx: SlashContext) {
+        val user = BoobBot.database.getUser(ctx.user.id)
+        val amount = ctx.getOption("amount", OptionMapping::getAsInt)!!
 
-        if (event.getOption("amount")!!.asInt > user.balance) {
-            return event.reply(Formats.error("wtf whore, you only have ${user.balance}")).queue()
+        if (amount > user.balance) {
+            return ctx.reply(Formats.error("wtf whore, you only have ${user.balance}"))
         }
 
-        user.balance -= event.getOption("amount")!!.asInt
-        user.bankBalance += event.getOption("amount")!!.asInt
+        user.balance -= amount
+        user.bankBalance += amount
         user.save()
-        event.reply("Deposited  $${event.getOption("amount")!!.asInt}, You now have $${user.bankBalance} in the bank.").queue()
+        ctx.reply("Deposited  $$amount, You now have $${user.bankBalance} in the bank.")
     }
 
 
-    fun withdraw(event: SlashCommandInteractionEvent) {
-        val user = BoobBot.database.getUser(event.user.id)
+    fun withdraw(ctx: SlashContext) {
+        val user = BoobBot.database.getUser(ctx.user.id)
+        val amount = ctx.getOption("amount", OptionMapping::getAsInt)!!
 
-        if (event.getOption("amount")!!.asInt > user.balance) {
-            return event.reply(Formats.error("wtf whore, you only have ${user.balance}")).queue()
+        if (amount > user.balance) {
+            return ctx.reply(Formats.error("wtf whore, you only have ${user.balance}"))
         }
 
-        user.balance -= event.getOption("amount")!!.asInt
-        user.bankBalance += event.getOption("amount")!!.asInt
+        user.balance -= amount
+        user.bankBalance += amount
         user.save()
-        event.reply("Withdrew $${event.getOption("amount")!!.asInt}, You now have $${user.bankBalance} in the bank.").queue()
+        ctx.reply("Withdrew $$amount, You now have $${user.bankBalance} in the bank.")
     }
 
-    fun balance(event: SlashCommandInteractionEvent) {
-        val user: User by lazy { BoobBot.database.getUser(event.user.id) }
-        event.reply("You are carrying $${user.balance} and have $${user.bankBalance} in the bank.").queue()
+    fun balance(ctx: SlashContext) {
+        val user: User by lazy { BoobBot.database.getUser(ctx.user.id) }
+        ctx.reply("You are carrying $${user.balance} and have $${user.bankBalance} in the bank.")
     }
 
-    fun transfer(event: SlashCommandInteractionEvent) {
-        val user = BoobBot.database.getUser(event.user.id)
-        val recipient = event.getOption("member", OptionMapping::getAsMember)!!
-        val amount = event.getOption("amount", OptionMapping::getAsInt)!!
+    fun transfer(ctx: SlashContext) {
+        val user = BoobBot.database.getUser(ctx.user.id)
+        val recipient = ctx.getOption("member", OptionMapping::getAsMember)!!
+        val amount = ctx.getOption("amount", OptionMapping::getAsInt)!!
 
-        if (recipient.idLong == event.user.idLong) {
+        if (recipient.idLong == ctx.user.idLong) {
             user.bankBalance -= 10
             user.save()
-            return event.reply("Don't be a whore, you cant transfer to yourself. I took $10 from you for trying.").queue()
+            return ctx.reply("Don't be a whore, you cant transfer to yourself. I took $10 from you for trying.")
         }
 
         if (amount > user.bankBalance) {
-            return event.reply("wtf whore, you only have $${user.bankBalance} in your bank account").queue()
+            return ctx.reply("wtf whore, you only have $${user.bankBalance} in your bank account")
         }
 
         val user2 = BoobBot.database.getUser(recipient.id)
@@ -74,7 +78,7 @@ class Bank : SlashCommand {
         user.save()
         user2.save()
 
-        event.reply("Transferred $$amount to ${recipient.user.asTag}, You now have $${user.bankBalance} in the bank.").queue()
+        ctx.reply("Transferred $$amount to ${recipient.user.asTag}, You now have $${user.bankBalance} in the bank.")
     }
 
 }

@@ -1,14 +1,13 @@
 package bot.boobbot.slashcommands.nsfw
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.AsyncSlashCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.awt.Color
 
@@ -33,40 +32,33 @@ class Printer : AsyncSlashCommand {
     )
     val typeString = categories.keys.joinToString("`, `", prefix = "`", postfix = "`")
 
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val category = categories[event.getOption("category")?.asString ?: categories.values.random()]
-            ?: return event.replyEmbeds(
-                EmbedBuilder().apply {
+    override suspend fun executeAsync(ctx: SlashContext) {
+        val category = categories[ctx.getOption("category")?.asString ?: categories.values.random()]
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: $typeString"))
-            }.build()).queue()
+            }
 
         val imageUrl = getImage(category)
-            ?: return event.reply("API didn't respond with an image URL, rip").queue()
+            ?: return ctx.reply("API didn't respond with an image URL, rip")
 
         val image = BoobBot.requestUtil
-            .get(
-                baseUrl.newBuilder().addQueryParameter("url", imageUrl).build().toString(),
-                headersOf()
-            )
+            .get(baseUrl.newBuilder().addQueryParameter("url", imageUrl).build().toString(), headersOf())
             .await()
             ?.body
             ?.string()
-            ?: return event.reply("API didn't respond, rip").queue()
+            ?: return ctx.reply("API didn't respond, rip")
 
         if (image.length > 2000) {
-            return event.reply("rip, too big for discord").queue()
+            return ctx.reply("rip, too big for discord")
         }
 
-        event.reply("```\n$image```").queue()
+        ctx.reply("```\n$image```")
     }
 
     private suspend fun getImage(category: String): String? {
         return BoobBot.requestUtil
-            .get(
-                "https://boob.bot/api/v2/img/$category",
-                headersOf("Key", BoobBot.config.BB_API_KEY)
-            )
+            .get("https://boob.bot/api/v2/img/$category", headersOf("Key", BoobBot.config.BB_API_KEY))
             .await()
             ?.json()
             ?.getString("url")

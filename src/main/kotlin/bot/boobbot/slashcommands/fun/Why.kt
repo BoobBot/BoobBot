@@ -4,19 +4,19 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncSlashCommand
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(description = "Random why questions", category = Category.FUN)
 class Why : AsyncSlashCommand {
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
+    override suspend fun executeAsync(ctx: SlashContext) {
         val res = BoobBot.requestUtil
             .get("https://nekos.life/api/v2/why")
             .await()
             ?.json()
-            ?: return event.reply("rip some error, press f").queue()
+            ?: return ctx.reply("rip some error, press f")
 
-        event.reply(res.get("why").toString()).queue()
+        ctx.reply(res.get("why").toString())
     }
 
 }

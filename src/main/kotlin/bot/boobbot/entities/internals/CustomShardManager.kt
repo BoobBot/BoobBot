@@ -2,6 +2,7 @@ package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
 import bot.boobbot.handlers.SlashHandler
@@ -78,6 +79,14 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
             BoobBot.shardManager.anonymousUser
         } else {
             ctx.author
+        }
+    }
+
+    fun authorOrAnonymous(ctx: SlashContext): User {
+        return if (BoobBot.database.getUserAnonymity(ctx.user.id)) {
+            BoobBot.shardManager.anonymousUser
+        } else {
+            ctx.user
         }
     }
 

@@ -1,15 +1,14 @@
 package bot.boobbot.slashcommands.nsfw
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.AsyncSlashCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.utils.FileUpload
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.awt.Color
 
@@ -29,18 +28,15 @@ class Magik : AsyncSlashCommand {
         "ass" to "ass"
     )
 
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val category = categories[event.getOption("category")!!.asString]
-            ?: return event.replyEmbeds(
-            EmbedBuilder().apply {
+    override suspend fun executeAsync(ctx: SlashContext) {
+        val category = categories[ctx.getOption("category")!!.asString]
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick\n"))
-            }.build()).queue()
-
-
+            }
 
         val imageUrl = getImage(category)
-            ?: return event.reply("API didn't respond with an image URL, rip").queue()
+            ?: return ctx.reply("API didn't respond with an image URL, rip")
 
         val image = BoobBot.requestUtil
             .get(
@@ -49,8 +45,9 @@ class Magik : AsyncSlashCommand {
             )
             .await()
             ?.body
-            ?: return event.reply("API didn't respond with an image, rip").queue()
-        event.replyFiles(FileUpload.fromData(image.byteStream(), "magik.png")).queue()
+            ?: return ctx.reply("API didn't respond with an image, rip")
+
+        ctx.reply(FileUpload.fromData(image.byteStream(), "magik.png"))
     }
 
     private suspend fun getImage(category: String): String? {

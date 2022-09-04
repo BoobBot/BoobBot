@@ -62,7 +62,6 @@ class AudioLoader(private val ctx: Context, private val musicManager: GuildMusic
             )
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
-            build()
         }
     }
 }

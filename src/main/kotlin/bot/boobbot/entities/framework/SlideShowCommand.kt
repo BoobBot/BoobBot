@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.util.concurrent.TimeUnit

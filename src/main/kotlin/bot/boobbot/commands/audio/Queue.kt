@@ -13,7 +13,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.time.Instant
-import java.util.*
 
 @CommandProperties(
     description = "Shows now playing and queue",

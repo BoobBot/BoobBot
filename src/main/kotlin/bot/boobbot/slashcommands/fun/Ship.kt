@@ -1,15 +1,12 @@
 package bot.boobbot.slashcommands.`fun`
 
 import bot.boobbot.BoobBot
-import bot.boobbot.commands.`fun`.Ship.Companion.downloadAvatar
-import bot.boobbot.entities.framework.*
-import bot.boobbot.entities.internals.Config
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.GuildChannel
-import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import java.awt.Color
@@ -22,31 +19,27 @@ import javax.imageio.ImageIO
 
 @CommandProperties(description = "Shipped", category = Category.FUN)
 class Ship : SlashCommand {
-    override fun execute(event: SlashCommandInteractionEvent) {
-        if (event.isFromGuild && !event.guild!!.selfMember.hasPermission(
-                event.guildChannel,
-                Permission.MESSAGE_ATTACH_FILES
-            )
-        ) {
-            return event.reply(Formats.error("I can't send images here, fix it whore.")).queue()
+    override fun execute(ctx: SlashContext) {
+        if (ctx.isFromGuild && !ctx.guild!!.selfMember.hasPermission(ctx.guildChannel!!, Permission.MESSAGE_ATTACH_FILES)) {
+            return ctx.reply(Formats.error("I can't send images here, fix it whore."))
         }
 
-        val user1 = event.getOption("member")!!.asUser
-        val user2 = event.getOption("member2")?.asUser ?: event.user
+        val user1 = ctx.getOption("member")!!.asUser
+        val user2 = ctx.getOption("member2")?.asUser ?: ctx.user
 
-        if (user1.idLong == event.user.idLong && user2.idLong == event.user.idLong) {
-            return event.reply("not even you should wanna be shipped with yourself").queue()
+        if (user1.idLong == ctx.user.idLong && user2.idLong == ctx.user.idLong) {
+            return ctx.reply("not even you should wanna be shipped with yourself")
         }
 
         if (user1.idLong == user2.idLong) {
-            return event.reply("how the fuck are you going to ship the same person whore").queue()
+            return ctx.reply("how the fuck are you going to ship the same person whore")
         }
 
-        if (user1.idLong == event.jda.selfUser.idLong || user2.idLong == event.jda.selfUser.idLong) {
-            return event.reply("Don't you fucking touch me whore, I will end you.").queue()
+        if (user1.idLong == ctx.jda.selfUser.idLong || user2.idLong == ctx.jda.selfUser.idLong) {
+            return ctx.reply("Don't you fucking touch me whore, I will end you.")
         }
 
-        event.deferReply().queue()
+        ctx.defer()
 
         val av1Fut = downloadAvatar(user1.effectiveAvatarUrl)
         val av2Fut = downloadAvatar(user2.effectiveAvatarUrl)
@@ -56,12 +49,9 @@ class Ship : SlashCommand {
             val content = MessageCreateBuilder()
                 .setContent(newMixString(user1.name, user2.name))
                 .addContent(" <:icon:676613489548197915>")
-                .build()
-
-            event.hook.sendMessage(content)
                 .addFiles(FileUpload.fromData(result.toByteArray(), "shipped.png"))
-                .submit()
-                .whenComplete { _, _ -> result.close() }
+
+            ctx.reply(content, success = { result.close() }, failure = { result.close() })
         }
     }
 

@@ -1,7 +1,6 @@
 package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
-import bot.boobbot.utils.Formats.INFO_EMOTE
 import net.dv8tion.jda.api.JDAInfo
 import java.text.MessageFormat
 

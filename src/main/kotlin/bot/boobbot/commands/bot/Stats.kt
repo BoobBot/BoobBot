@@ -1,7 +1,6 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
 import bot.boobbot.entities.framework.Command
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context

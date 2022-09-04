@@ -1,30 +1,27 @@
 package bot.boobbot.slashcommands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.AsyncSlashCommand
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashContext
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.future.await
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(description = "Global leaderboards \uD83C\uDFC6.", aliases = [], category = Category.ECONOMY)
 class Cash : AsyncSlashCommand {
-
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
-        val msg = buildMessage("balance", event)
-        event.replyEmbeds(
-            EmbedBuilder().apply {
-                setAuthor("Global economy leaderboard \uD83C\uDFC6", null, event.jda.selfUser.avatarUrl)
-                addField("", msg, false)
-                setFooter("Requested by ${event.user.name}", event.user.effectiveAvatarUrl)
-            }.build()
-        ).queue()
-
+    override suspend fun executeAsync(ctx: SlashContext) {
+        val msg = buildMessage("balance", ctx)
+        ctx.reply {
+            setAuthor("Global economy leaderboard \uD83C\uDFC6", null, ctx.jda.selfUser.avatarUrl)
+            addField("", msg, false)
+            setFooter("Requested by ${ctx.user.name}", ctx.user.effectiveAvatarUrl)
+        }
     }
 
 
-    suspend fun buildMessage(key: String, event: SlashCommandInteractionEvent): String {
+    suspend fun buildMessage(key: String, ctx: SlashContext): String {
         var msg = ""
         var count = 0
         BoobBot.database.getAllUsers().find().sort(BasicDBObject(key, -1)).limit(25).iterator().forEach { u ->
@@ -33,7 +30,7 @@ class Cash : AsyncSlashCommand {
             }
 
             try {
-                val user = event.jda.retrieveUserById(u.getString("_id")).submit().await()
+                val user = ctx.jda.retrieveUserById(u.getString("_id")).submit().await()
 
                 if (user.name.contains("Deleted User")) {
                     return@forEach
@@ -55,6 +52,5 @@ class Cash : AsyncSlashCommand {
         }
 
         return msg
-
     }
 }

@@ -41,11 +41,7 @@ class PornHub : AsyncCommand {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         ctx.send {
-            setAuthor(
-                "PornHub video search",
-                video.getString("url"),
-                "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s"
-            )
+            setAuthor("PornHub video search", video.getString("url"), "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
             setTitle(video.getString("title"), video.getString("url"))
             setDescription("PornTube video search")
             setColor(Colors.getEffectiveColor(ctx.message))
@@ -62,7 +58,6 @@ class PornHub : AsyncCommand {
             )
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
-            build()
         }
     }
 }

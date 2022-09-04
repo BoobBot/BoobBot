@@ -3,8 +3,6 @@ package bot.boobbot.utils
 import club.minnced.discord.webhook.send.WebhookEmbed
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.future.await
-
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder

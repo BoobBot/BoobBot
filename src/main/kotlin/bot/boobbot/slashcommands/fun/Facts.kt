@@ -4,21 +4,21 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncSlashCommand
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(description = "Random facts", aliases = ["fact"], category = Category.FUN)
 class Facts : AsyncSlashCommand {
 
-    override suspend fun executeAsync(event: SlashCommandInteractionEvent) {
+    override suspend fun executeAsync(ctx: SlashContext) {
         val res = BoobBot.requestUtil
             .get("https://nekos.life/api/v2/fact")
             .await()
             ?.json()
-            ?: return event.reply("rip some error, press f").queue()
+            ?: return ctx.reply("rip some error, press f")
 
-        event.reply(Formats.info(res.get("fact").toString())).queue()
+        ctx.reply(Formats.info(res.get("fact").toString()))
     }
 
 }

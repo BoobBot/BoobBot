@@ -7,9 +7,7 @@ import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.awt.Color
 

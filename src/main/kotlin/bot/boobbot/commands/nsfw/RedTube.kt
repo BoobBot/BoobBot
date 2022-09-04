@@ -41,11 +41,7 @@ class RedTube : AsyncCommand {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         ctx.send {
-            setAuthor(
-                "RedTube video search",
-                video.getString("embed_url"),
-                "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png"
-            )
+            setAuthor("RedTube video search", video.getString("embed_url"), "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png")
             setTitle(video.getString("title"), video.getString("url"))
             setDescription("RedTube video search")
             setColor(Colors.getEffectiveColor(ctx.message))
@@ -62,7 +58,6 @@ class RedTube : AsyncCommand {
             )
             setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
             setTimestamp(Instant.now())
-            build()
         }
     }
 }

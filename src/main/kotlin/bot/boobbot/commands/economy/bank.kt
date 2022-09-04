@@ -3,7 +3,6 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.*
-import java.security.Permission
 
 
 @CommandProperties(aliases = ["bank"], description = "banking operations \uD83C\uDFE6", guildOnly = true, category = Category.ECONOMY)

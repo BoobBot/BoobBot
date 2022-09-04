@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.framework.ExecutableSlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -127,7 +128,7 @@ class SlashHandler : ListenerAdapter() {
         }
 
         try {
-            command.execute(event)
+            command.execute(SlashContext(event))
             BoobBot.metrics.record(Metrics.happened("SlashCommand"))
             BoobBot.metrics.record(Metrics.happened(command.name))
         } catch (e: Exception) {

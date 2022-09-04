@@ -5,10 +5,10 @@ import bot.boobbot.audio.AudioLoader
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.VoiceCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.toUriOrNull
-import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",

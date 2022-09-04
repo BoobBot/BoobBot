@@ -1,21 +1,21 @@
 package bot.boobbot.slashcommands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(description = "See your current rank info.", aliases = ["level", "lvl"], category = Category.ECONOMY)
 class Rank : SlashCommand {
 
-    override fun execute(event: SlashCommandInteractionEvent) {
-        val user = event.getOption("member")?.asUser ?: event.user
+    override fun execute(ctx: SlashContext) {
+        val user = ctx.getOption("member")?.asUser ?: ctx.user
         val u = BoobBot.database.getUser(user.id)
 
-        event.replyEmbeds(
-            EmbedBuilder().apply {
+        ctx.reply {
             setColor(Colors.rndColor)
             addField(
                 Formats.info("**Rank Information**"),
@@ -24,7 +24,7 @@ class Rank : SlashCommand {
                         "**Current Lewd Level**: ${(u.lewdLevel)}",
                 false
             )
-        }.build()).queue()
+        }
     }
 
 }

@@ -5,7 +5,8 @@ import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.entities.framework.EventWaiter
 import bot.boobbot.entities.internals.*
-import bot.boobbot.entities.misc.*
+import bot.boobbot.entities.misc.ApiServer
+import bot.boobbot.entities.misc.PatreonAPI
 import bot.boobbot.utils.RequestUtil
 import bot.boobbot.utils.Utils
 import ch.qos.logback.classic.Level
@@ -17,7 +18,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.mxro.metrics.jre.Metrics
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.*
 import io.sentry.connection.ConnectionException
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
@@ -25,8 +26,6 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
-import net.dv8tion.jda.api.interactions.commands.OptionType
-import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.requests.ErrorResponse
 import net.dv8tion.jda.api.requests.RestAction
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue

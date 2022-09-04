@@ -1,12 +1,9 @@
 package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
-import bot.boobbot.entities.framework.Context
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import java.time.Instant
 

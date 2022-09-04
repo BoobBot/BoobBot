@@ -16,7 +16,7 @@ interface ContextCommand {
      * Command-local check that is executed before the command or any subcommands are
      * executed.
      *
-     * @returns Whether or not command execution can proceed.
+     * @returns Whether command execution can proceed.
      */
     fun localCheck(event: UserContextInteractionEvent): Boolean = true
 

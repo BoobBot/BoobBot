@@ -1,11 +1,12 @@
 package bot.boobbot.slashcommands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.CodeblockBuilder
 import bot.boobbot.utils.Utils
 import com.sun.management.OperatingSystemMXBean
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONObject
 import java.lang.management.ManagementFactory
@@ -17,7 +18,7 @@ class Stats : SlashCommand {
 
     private val dpFormatter = DecimalFormat("0.00")
 
-    override fun execute(event: SlashCommandInteractionEvent) {
+    override fun execute(ctx: SlashContext) {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
@@ -100,7 +101,7 @@ class Stats : SlashCommand {
             "Disconnect_Events   = "..disconnect
         }.build()
 
-        event.reply(block).queue()
+        ctx.reply(block)
     }
 
 }

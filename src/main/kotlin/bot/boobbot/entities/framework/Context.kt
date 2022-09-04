@@ -6,19 +6,15 @@ import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
-
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
 import net.dv8tion.jda.api.managers.AudioManager
-
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
-import java.util.concurrent.CompletableFuture
 
 class Context(val trigger: String, val message: Message, val args: List<String>) {
     val jda = message.jda
@@ -62,7 +58,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
 
     fun userCan(check: Permission) = guildChannel?.let { permissionCheck(author, member, guildChannel, check) } ?: false
 
-    fun botCan(vararg check: Permission) = guildChannel?.let { permissionCheck(selfUser, selfMember, it, *check) } ?: false
+    fun botCan(vararg check: Permission) = guildChannel?.let { permissionCheck(selfUser, selfMember, it, *check) } ?: true
 
     fun awaitMessage(predicate: (Message) -> Boolean, timeout: Long) = BoobBot.waiter.waitForMessage(predicate, timeout)
 
@@ -101,16 +97,9 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     private fun send(message: MessageCreateData, options: MessageCreateAction.() -> Unit, success: ((Message) -> Unit)?, failure: ((Throwable) -> Unit)?) {
         if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
             return
-            // Don't you just love it when people deny the bot
-            // access to a channel during command execution?
-            // https://sentry.io/share/issue/17c4b131f5ed48a6ac56c35ca276e4bf/
         }
 
         channel.sendMessage(message).apply(options).queue(success, failure)
-    }
-
-    suspend fun sendAsync(content: String): Message {
-        return channel.sendMessage(MessageCreateBuilder().setContent(content).build()).submit().await()
     }
 
     suspend fun dmUserAsync(user: User, message: String): Message? {

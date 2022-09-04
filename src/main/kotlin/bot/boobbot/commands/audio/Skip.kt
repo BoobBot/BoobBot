@@ -3,9 +3,9 @@ package bot.boobbot.commands.audio
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.VoiceCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
-import bot.boobbot.entities.framework.VoiceCommand
 
 @CommandProperties(
     description = "Skips current playing track",

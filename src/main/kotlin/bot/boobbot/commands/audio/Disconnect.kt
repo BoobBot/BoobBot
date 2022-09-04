@@ -3,10 +3,9 @@ package bot.boobbot.commands.audio
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.CommandProperties
 import bot.boobbot.entities.framework.Context
-
-import bot.boobbot.utils.Formats
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.framework.VoiceCommand
+import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(

@@ -1,13 +1,13 @@
 package bot.boobbot.entities.misc
 
 import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.ItemComponent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu
+import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 
@@ -22,6 +22,10 @@ class DSLMessageBuilder {
 
     fun embed(e: EmbedBuilder.() -> Unit) {
         embeds.add(EmbedBuilder().apply(e).build())
+    }
+
+    fun file(f: FileUpload) {
+        builder.addFiles(f)
     }
 
     fun row(ar: ActionRowBuilder.() -> Unit) {

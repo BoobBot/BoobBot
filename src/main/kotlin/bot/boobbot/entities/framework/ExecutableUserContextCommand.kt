@@ -1,6 +1,5 @@
 package bot.boobbot.entities.framework
 
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 
 class ExecutableUserContextCommand(

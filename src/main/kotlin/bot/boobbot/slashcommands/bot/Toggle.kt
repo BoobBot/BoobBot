@@ -1,12 +1,13 @@
 package bot.boobbot.slashcommands.bot
 
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.SlashCommand
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.Config
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 
 @CommandProperties(
     description = "Toggles the current channels nsfw setting",
@@ -20,28 +21,29 @@ class Toggle : SlashCommand {
         return Config.OWNERS.contains(m.user.idLong) || m.hasPermission(channel, *permissions)
     }
 
-    override fun execute(event: SlashCommandInteractionEvent) {
-        if (!event.isFromGuild) {
-            return event.reply("This can only be run within guilds.").queue()
+    override fun execute(ctx: SlashContext) {
+        if (!ctx.isFromGuild) {
+            return ctx.reply("This can only be run within guilds.")
         }
 
-        if (!event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MANAGE_CHANNEL)) {
-            return event.reply("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this").queue()
+        if (!ctx.guild!!.selfMember.hasPermission(ctx.guildChannel!!, Permission.MANAGE_CHANNEL)) {
+            return ctx.reply("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
-        if (!permissionCheck(event.member!!, event.guildChannel, Permission.MANAGE_CHANNEL)) {
-            return event.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this").queue()
+        if (!permissionCheck(ctx.member!!, ctx.guildChannel, Permission.MANAGE_CHANNEL)) {
+            return ctx.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
         // TODO: Check channel type.
 
-        val nsfwStatus = !event.guildChannel.asTextChannel().isNSFW
+        val nsfwStatus = ctx.textChannel?.let { !it.isNSFW }
+            ?: return ctx.reply("This can only be run in a text channel, whore.")
 
-        event.guildChannel.asTextChannel().manager.setNSFW(nsfwStatus).queue({
+        ctx.textChannel.manager.setNSFW(nsfwStatus).queue({
             val changed = if (nsfwStatus) "allowed" else "disallowed"
-            event.reply("NSFW on this channel is now $changed").queue()
+            ctx.reply("NSFW on this channel is now $changed")
         }, {
-            event.reply("shit something broke\n\n$it").queue()
+            ctx.reply("shit something broke\n\n$it")
         })
     }
 

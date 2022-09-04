@@ -3,11 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.AudioChannel
-import net.dv8tion.jda.api.entities.ChannelType
-import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.User
-import net.dv8tion.jda.api.entities.VoiceChannel
+import net.dv8tion.jda.api.entities.*
 
 interface VoiceCommand : Command {
     fun isAlone(member: Member) = member.voiceState?.channel?.members?.count { !it.user.isBot } == 1

@@ -4,9 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.utils.FileUpload
-import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
