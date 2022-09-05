@@ -36,7 +36,7 @@ class Context(val trigger: String, val message: Message, val args: List<String>)
     val voiceState = member?.voiceState
 
     val channel = message.channel
-    val textChannel: TextChannel? = if (isFromGuild) message.channel.asTextChannel() else null // todo reconsider
+    val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) message.channel.asTextChannel() else null // todo reconsider
     val guildChannel: GuildChannel? = if (isFromGuild) message.guildChannel else null
 
     val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild!!.id) }

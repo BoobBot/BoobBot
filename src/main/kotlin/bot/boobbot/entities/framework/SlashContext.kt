@@ -46,7 +46,7 @@ class SlashContext(val event: SlashCommandInteractionEvent) {
     val voiceState = member?.voiceState
 
     val channel = event.channel
-    val textChannel: TextChannel? = if (isFromGuild) event.channel.asTextChannel() else null // todo reconsider
+    val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) event.channel.asTextChannel() else null // todo reconsider
     val guildChannel: GuildChannel? = if (isFromGuild) event.guildChannel else null
 
     val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild!!.id) }
