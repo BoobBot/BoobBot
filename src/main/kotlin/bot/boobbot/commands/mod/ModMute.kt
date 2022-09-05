@@ -18,9 +18,9 @@ import net.dv8tion.jda.api.Permission
 )
 class ModMute : ModCommand() {
     override fun execute(ctx: Context) {
-        val (member, user, _, resolved) = resolveTargetAndReason(ctx)
+        val (member, user, _) = resolveTargetAndReason(ctx)
 
-        if (!resolved) {
+        if (user == null) {
             return ctx.send("How in the fuck would i know who you want to mute if you don't give me a valid target?")
         }
 

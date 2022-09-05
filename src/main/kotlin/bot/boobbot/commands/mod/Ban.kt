@@ -17,10 +17,10 @@ import net.dv8tion.jda.api.Permission
 )
 class Ban : ModCommand() {
     override fun execute(ctx: Context) {
-        val (member, user, reason, resolved) = resolveTargetAndReason(ctx)
+        val (member, user, reason) = resolveTargetAndReason(ctx)
         val auditReason = reason ?: "No reason was given"
 
-        if (!resolved) {
+        if (user == null) {
             return ctx.send("How in the fuck would i know who you want to ban if you don't give me a valid target?")
         }
 

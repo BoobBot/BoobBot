@@ -11,37 +11,24 @@ abstract class ModCommand : Command {
         val reasonArgument = ctx.args.drop(1)
 
         if (userArgument.isEmpty()) {
-            return Resolved(null, null, false)
+            return Resolved(null, null)
         }
 
         val reason = if (reasonArgument.isEmpty()) null else reasonArgument.joinToString(" ")
         val target = ctx.message.mentions.members.firstOrNull()
             ?: userArgument.first().matchGroup(snowflakePattern)?.let(User::fromId)
-            ?: return Resolved(null, null, false)
+            ?: return Resolved(null, null)
 
-        return Resolved(target, reason, true)
+        return Resolved(target, reason)
     }
 
-    class Resolved(target: IMentionable?, val actionReason: String?, val targetResolved: Boolean) {
-        var member: Member? = null
-        lateinit var user: User
-
-        init {
-            when (target) {
-                is Member -> {
-                    member = target
-                    user = target.user
-                }
-                is User -> {
-                    user = target
-                }
-            }
-        }
+    class Resolved(target: IMentionable?, val actionReason: String?) {
+        val member: Member? = target as? Member
+        val user: User? = target as? User ?: member?.user
 
         operator fun component1() = member
         operator fun component2() = user
         operator fun component3() = actionReason
-        operator fun component4() = targetResolved
     }
 
     companion object {
