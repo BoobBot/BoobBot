@@ -8,6 +8,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import io.sentry.Sentry
+import io.sentry.event.Breadcrumb
+import io.sentry.event.BreadcrumbBuilder
+import io.sentry.event.Event
+import io.sentry.event.EventBuilder
+import io.sentry.event.interfaces.ExceptionInterface
 import java.time.Instant
 
 
@@ -52,16 +58,35 @@ class AudioLoader(private val ctx: Context, private val musicManager: GuildMusic
     private fun send(track: AudioTrack, trackIcon: String) {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.send {
-            setColor(Colors.getEffectiveColor(ctx.message))
-            setAuthor("Music", track.info.uri, trackIcon)
-            addField(
-                "Enqueued Track",
-                "**Title**: ${track.info.title}\n**Duration**: ${Utils.fTime(track.info.length)}\n**Link**: ${track.info.uri}",
-                false
-            )
-            setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
-            setTimestamp(Instant.now())
+        runCatching {
+            ctx.send {
+                setColor(Colors.getEffectiveColor(ctx.message))
+                setAuthor("Music", track.info.uri, trackIcon)
+                addField(
+                    "Enqueued Track",
+                    "**Title**: ${track.info.title}\n**Duration**: ${Utils.fTime(track.info.length)}\n**Link**: ${track.info.uri}",
+                    false
+                )
+                setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
+                setTimestamp(Instant.now())
+            }
+        }.onFailure {
+            val builder = EventBuilder()
+                .withMessage(it.localizedMessage)
+                .withLevel(Event.Level.ERROR)
+                .withSentryInterface(ExceptionInterface(it))
+
+            if (it is IllegalArgumentException) {
+                val breadcrumb = BreadcrumbBuilder()
+                    .setLevel(Breadcrumb.Level.INFO)
+                    .withData("Track ID", track.identifier)
+                    .withData("Track URL", track.info.uri)
+                    .build()
+
+                builder.withBreadcrumbs(listOf(breadcrumb))
+            }
+
+            Sentry.capture(builder)
         }
     }
 }
