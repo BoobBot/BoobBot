@@ -189,7 +189,10 @@ class MessageHandler : ListenerAdapter() {
             }
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
+
+            if (event.isFromGuild && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_HISTORY)) {
+                event.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
+            }
         }
     }
 

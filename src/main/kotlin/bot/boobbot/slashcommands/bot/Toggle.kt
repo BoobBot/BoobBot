@@ -36,11 +36,11 @@ class Toggle : SlashCommand {
 
         // TODO: Check channel type.
 
-        val nsfwStatus = ctx.textChannel?.let { !it.isNSFW }
-            ?: return ctx.reply("This can only be run in a text channel, whore.")
+        val channel = ctx.textChannel ?: return ctx.reply("This can only be run in a text channel, whore.")
+        val newNsfw = !channel.isNSFW
 
-        ctx.textChannel.manager.setNSFW(nsfwStatus).queue({
-            val changed = if (nsfwStatus) "allowed" else "disallowed"
+        channel.manager.setNSFW(newNsfw).queue({
+            val changed = if (newNsfw) "allowed" else "disallowed"
             ctx.reply("NSFW on this channel is now $changed")
         }, {
             ctx.reply("shit something broke\n\n$it")

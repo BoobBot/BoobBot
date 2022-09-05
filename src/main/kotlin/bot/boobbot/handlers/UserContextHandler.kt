@@ -23,11 +23,11 @@ class UserContextHandler : ListenerAdapter() {
     override fun onUserContextInteraction(event: UserContextInteractionEvent) {
         BoobBot.metrics.record(Metrics.happened("ContextCommandInteractionEvent"))
         commandExecutorPool.execute {
-            processMessageEvent(event)
+            processUserContextEvent(event)
         }
     }
 
-    private fun processMessageEvent(event: UserContextInteractionEvent) {
+    private fun processUserContextEvent(event: UserContextInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
 
         if (event.channel == null) {

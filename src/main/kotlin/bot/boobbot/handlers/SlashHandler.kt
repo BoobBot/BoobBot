@@ -26,7 +26,7 @@ class SlashHandler : ListenerAdapter() {
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         BoobBot.metrics.record(Metrics.happened("SlashCommandInteractionEvent"))
         commandExecutorPool.execute {
-            processMessageEvent(event)
+            processSlashEvent(event)
         }
     }
 
@@ -44,7 +44,7 @@ class SlashHandler : ListenerAdapter() {
         return event.subcommandName?.takeIf { it.isNotEmpty() }?.let(BoobBot.slashCommands::findCommand)
     }
 
-    private fun processMessageEvent(event: SlashCommandInteractionEvent) {
+    private fun processSlashEvent(event: SlashCommandInteractionEvent) {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
 
         if (event.isFromGuild) {
