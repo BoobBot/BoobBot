@@ -34,7 +34,7 @@ class RedTube : AsyncCommand {
 
         val query = if (ctx.args[0].lowercase() != "random") ctx.args[0].lowercase() else Formats.tag.random()
 
-        val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()
+        val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()?.takeIf { it.has("videos") }
             ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
 
         val video = rt.getJSONArray("videos").getJSONObject(0).getJSONObject("video")
