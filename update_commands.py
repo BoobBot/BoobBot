@@ -2,7 +2,6 @@ import requests
 import pprint
 import os
 
-
 MANAGE_CHANNELS = str(1 << 4)
 KICK_MEMBERS = str(1 << 1)
 BAN_MEMBERS = str(1 << 2)
@@ -731,6 +730,20 @@ payload = [
         "type": 2,
         "nsfw": "false",
     },
+
+    {'name': 'pickup'
+        , 'nsfw': False,
+     'type': 2},
+
+    {'name': 'kill',
+     'nsfw': False,
+     'type': 2},
+
+    {'name': 'insult',
+     'nsfw': False,
+     'type': 2}
+
+    ,
     {'description': 'random cat', 'name': 'meow', 'nsfw': False, 'type': 1}
     ,
     {'description': 'random dog', 'name': 'dog', 'nsfw': False, 'type': 1}
@@ -770,7 +783,8 @@ payload = [
              'type': 1}
             ,
             {'description': 'Play rough with someone.', 'name': 'playrough', 'nsfw': True,
-             'options': [{'description': 'Member to playrough with}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [
+                 {'description': 'Member to playrough with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'cum on someone', 'name': 'cum', 'nsfw': True,
@@ -789,10 +803,6 @@ payload = [
              'options': [{'description': 'Member to finger}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
-            {'description': 'Pickup someone.', 'name': 'pickup', 'nsfw': False,
-             'options': [{'description': 'Member to pickup}', 'name': 'member', 'required': True, 'type': 6}],
-             'type': 1}
-            ,
             {'description': 'Suck someone.', 'name': 'suck', 'nsfw': True,
              'options': [{'description': 'Member to suck}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
@@ -802,7 +812,8 @@ payload = [
              'type': 1}
             ,
             {'description': 'Are you extreme?', 'name': 'extreme', 'nsfw': True,
-             'options': [{'description': 'Member to be extreme with}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [
+                 {'description': 'Member to be extreme with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'duh?', 'name': '69', 'nsfw': True,
@@ -810,7 +821,8 @@ payload = [
              'type': 1}
             ,
             {'description': 'fun interactions.', 'name': 'interact', 'nsfw': False,
-             'options': [{'description': 'Member to interact with}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [
+                 {'description': 'Member to interact with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Spank someone.', 'name': 'spank', 'nsfw': True,
@@ -1135,6 +1147,6 @@ if __name__ == '__main__':
     # count()
     # update_prd()
     # add_to_prd()
-    # update_debug()
+    update_debug()
     # add_to_debug()
     # clear_debug()
