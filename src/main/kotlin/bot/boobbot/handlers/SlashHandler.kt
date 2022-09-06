@@ -31,6 +31,12 @@ class SlashHandler : ListenerAdapter() {
     }
 
     private fun getCommand(event: SlashCommandInteractionEvent): ExecutableSlashCommand? {
+        //hacky yes i know
+        //TODO fix later
+        if (event.name =="printer"){
+            BoobBot.slashCommands.findCommand(event.name)?.let { return it }
+        }
+
         event.getOption("category")?.let {
             return BoobBot.slashCommands.findCommand(it.asString)
         }

@@ -33,6 +33,6 @@ class Coin : SlashCommand {
         }
         u.save()
         ctx.reply(res.second)
-        ctx.reply(Formats.info(res.first + msg))
+        ctx.event.hook.sendMessage(Formats.info(res.first + msg)).queue()
     }
 }

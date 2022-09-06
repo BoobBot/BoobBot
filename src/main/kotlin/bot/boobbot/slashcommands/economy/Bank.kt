@@ -38,17 +38,18 @@ class Bank : SlashCommand {
 
 
     fun withdraw(ctx: SlashContext) {
-        val user = BoobBot.database.getUser(ctx.user.id)
+        var user = BoobBot.database.getUser(ctx.user.id)
         val amount = ctx.getOption("amount", OptionMapping::getAsInt)!!
 
-        if (amount > user.balance) {
-            return ctx.reply(Formats.error("wtf whore, you only have ${user.balance}"))
+        if (amount > user.bankBalance) {
+            return ctx.reply(Formats.error("wtf whore, you only have ${user.bankBalance}"))
         }
 
-        user.balance -= amount
-        user.bankBalance += amount
+        user.bankBalance -= amount
+        user.balance += amount
         user.save()
-        ctx.reply("Withdrew $$amount, You now have $${user.bankBalance} in the bank.")
+        user = BoobBot.database.getUser(ctx.user.id)
+        ctx.reply("Withdrew $$amount, You now have $${user.balance} on you and $${user.bankBalance} in the bank.")
     }
 
     fun balance(ctx: SlashContext) {

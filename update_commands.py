@@ -1,5 +1,6 @@
 import requests
 import pprint
+import os
 
 
 MANAGE_CHANNELS = str(1 << 4)
@@ -8,9 +9,9 @@ BAN_MEMBERS = str(1 << 2)
 ADMINISTRATOR = str(1 << 3)
 
 DEGUB_ID = 0
-DEBUG_TOKEN = ""
+DEBUG_TOKEN = os.getenv('DEBUG_TOKEN', "")
 PRD_ID = 0
-PRD_TOKEN = ""
+PRD_TOKEN = os.getenv('TOKEN', "")
 
 payload = [
 
@@ -765,59 +766,59 @@ payload = [
         "nsfw": True,
         "options": [
             {'description': 'kiss someone.', 'name': 'kiss', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to kiss}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Play rough with someone.', 'name': 'playrough', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to playrough with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'cum on someone', 'name': 'cum', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to cum on}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'dom someone', 'name': 'dom', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to dom}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Fuck someone.', 'name': 'fuck', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to fuck}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'finger someone.', 'name': 'finger', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to finger}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Pickup someone.', 'name': 'pickup', 'nsfw': False,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to pickup}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Suck someone.', 'name': 'suck', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to suck}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'lick someone.', 'name': 'lick', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to lick}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Are you extreme?', 'name': 'extreme', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to be extreme with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'duh?', 'name': '69', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to 69}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'fun interactions.', 'name': 'interact', 'nsfw': False,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to interact with}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Spank someone.', 'name': 'spank', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to spank}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Tease someone.', 'name': 'tease', 'nsfw': True,
-             'options': [{'description': 'Member to m["name"]}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to tease}', 'name': 'member', 'required': True, 'type': 6}],
              'type': 1}
         ]
     },
@@ -839,6 +840,12 @@ payload = [
 
     {'description': 'Pickup someone.', 'name': 'pickup', 'nsfw': False,
      'options': [{'description': 'Member to pickup', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
+
+    {'description': 'kill someone.', 'name': 'kill', 'nsfw': False,
+     'options': [{'description': 'Member to kill', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
+
+    {'description': 'Insult someone.', 'name': 'insult', 'nsfw': False,
+     'options': [{'description': 'Member to Insult', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
 
     {
         "name": "economy",
@@ -1130,4 +1137,4 @@ if __name__ == '__main__':
     # add_to_prd()
     # update_debug()
     # add_to_debug()
-    clear_debug()
+    # clear_debug()
