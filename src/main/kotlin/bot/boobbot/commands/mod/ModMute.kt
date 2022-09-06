@@ -2,9 +2,9 @@ package bot.boobbot.commands.mod
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.ModCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.impl.ModCommand
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
@@ -17,28 +17,28 @@ import net.dv8tion.jda.api.Permission
     botPermissions = [Permission.KICK_MEMBERS]
 )
 class ModMute : ModCommand() {
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         val (member, user, _) = resolveTargetAndReason(ctx)
 
         if (user == null) {
-            return ctx.send("How in the fuck would i know who you want to mute if you don't give me a valid target?")
+            return ctx.reply("How in the fuck would i know who you want to mute if you don't give me a valid target?")
         }
 
-        if (user.idLong == ctx.author.idLong) {
-            return ctx.send("You must be special if you're really trying to mute yourself.")
+        if (user.idLong == ctx.user.idLong) {
+            return ctx.reply("You must be special if you're really trying to mute yourself.")
         }
 
         if (user.idLong == ctx.selfMember!!.idLong) {
-            return ctx.send("Don't you fucking touch me whore, I will end you.")
+            return ctx.reply("Don't you fucking touch me whore, I will end you.")
         }
 
         if (member != null) {
             if (!ctx.member!!.canInteract(member)) {
-                return ctx.send("You don't have permission to do that, fuck off.")
+                return ctx.reply("You don't have permission to do that, fuck off.")
             }
 
             if (!ctx.selfMember.canInteract(member)) {
-                return ctx.send("I don't have permission to do that, fix it or fuck off.")
+                return ctx.reply("I don't have permission to do that, fix it or fuck off.")
             }
         }
 
@@ -52,6 +52,6 @@ class ModMute : ModCommand() {
             g.modMute.add(user.id)
         }
         g.save()
-        ctx.send("$status ${user.asMention}.")
+        ctx.reply("$status ${user.asMention}.")
     }
 }

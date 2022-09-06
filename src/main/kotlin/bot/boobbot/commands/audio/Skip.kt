@@ -1,9 +1,9 @@
 package bot.boobbot.commands.audio
 
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.VoiceCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 
@@ -13,23 +13,23 @@ import bot.boobbot.utils.Formats
     guildOnly = true
 )
 class Skip : VoiceCommand {
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         if (!performVoiceChecks(ctx)) {
             return
         }
 
         val player = ctx.audioPlayer
         val track = player.player.playingTrack
-            ?: return ctx.send(Formats.error("Wtf whore, How can i skip when im not playing anything?!"))
+            ?: return ctx.reply(Formats.error("Wtf whore, How can i skip when im not playing anything?!"))
 
         if (!canSkip(ctx)) {
-            return ctx.send(Formats.error("No whore, i can't let you do that"))
+            return ctx.reply(Formats.error("No whore, i can't let you do that"))
         }
 
         player.playNext()
 
         if (player.player.playingTrack != null) {
-            return ctx.send {
+            return ctx.reply {
                 setColor(Colors.getEffectiveColor(ctx.message))
                 addField(
                     Formats.info(" Track Skipped"),
@@ -39,7 +39,7 @@ class Skip : VoiceCommand {
             }
         }
 
-        ctx.send {
+        ctx.reply {
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(Formats.info(" Track Skipped"), "Skipped: ${track.info.title}", false)
         }

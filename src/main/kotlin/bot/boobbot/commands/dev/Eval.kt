@@ -2,9 +2,9 @@ package bot.boobbot.commands.dev
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -21,7 +21,7 @@ class Eval : Command {
         evalThread.priority = Thread.MIN_PRIORITY
     }
 
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         val code = ctx.args.joinToString("\n")
 
         val imports = code.lines()
@@ -41,7 +41,7 @@ class Eval : Command {
             "sm" to BoobBot.shardManager,
             "colors" to Colors,
             "utils" to Utils,
-            "self" to BoobBot.database.getUser(ctx.author.id)
+            "self" to BoobBot.database.getUser(ctx.user.id)
         )
 
         val bindString = bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }

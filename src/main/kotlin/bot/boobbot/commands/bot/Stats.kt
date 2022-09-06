@@ -1,9 +1,9 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.internals.CodeblockBuilder
 import bot.boobbot.utils.Utils
 import com.sun.management.OperatingSystemMXBean
@@ -18,7 +18,7 @@ class Stats : Command {
 
     private val dpFormatter = DecimalFormat("0.00")
 
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
@@ -101,7 +101,7 @@ class Stats : Command {
             "Disconnect_Events   = "..disconnect
         }.build()
 
-        ctx.send(block)
+        ctx.reply(block)
     }
 
 }

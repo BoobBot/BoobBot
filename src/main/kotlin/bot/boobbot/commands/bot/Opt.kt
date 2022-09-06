@@ -1,35 +1,35 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.SubCommand
 
 @CommandProperties(description = "Changes whether you can receive nudes or not")
 class Opt : Command {
 
-    override fun execute(ctx: Context) {
-        ctx.send("`bbopt <${subcommands.keys.joinToString("|")}>`")
+    override fun execute(ctx: MessageContext) {
+        ctx.reply("`bbopt <${subcommands.keys.joinToString("|")}>`")
     }
 
     @SubCommand(aliases = ["In"])
-    fun `in`(ctx: Context) {
-        BoobBot.database.setUserCanReceiveNudes(ctx.author.id, true)
-        ctx.send("You're now able to receive nudes <:moans:583453348984913933>")
+    fun `in`(ctx: MessageContext) {
+        BoobBot.database.setUserCanReceiveNudes(ctx.user.id, true)
+        ctx.reply("You're now able to receive nudes <:moans:583453348984913933>")
     }
 
     @SubCommand(aliases = ["Out"])
-    fun out(ctx: Context) {
-        BoobBot.database.setUserCanReceiveNudes(ctx.author.id, false)
-        ctx.send("You can no longer receive nudes. Whore.")
+    fun out(ctx: MessageContext) {
+        BoobBot.database.setUserCanReceiveNudes(ctx.user.id, false)
+        ctx.reply("You can no longer receive nudes. Whore.")
     }
 
     @SubCommand(aliases = ["Status"])
-    fun status(ctx: Context) {
-        val current = BoobBot.database.getCanUserReceiveNudes(ctx.author.id)
+    fun status(ctx: MessageContext) {
+        val current = BoobBot.database.getCanUserReceiveNudes(ctx.user.id)
         val s = if (current) "can" else "can't"
-        ctx.send("You $s receive nudes.")
+        ctx.reply("You $s receive nudes.")
     }
 
 }

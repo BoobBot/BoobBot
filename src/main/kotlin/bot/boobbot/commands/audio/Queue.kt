@@ -2,9 +2,9 @@ package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.VoiceCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -22,14 +22,14 @@ import java.time.Instant
     nsfw = true
 )
 class Queue : VoiceCommand {
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         if (!performVoiceChecks(ctx)) {
             return
         }
 
         val player = ctx.audioPlayer
         val track = player.player.playingTrack
-            ?: return ctx.send(Formats.info("Im not playing anything? Play something or fuck off"))
+            ?: return ctx.reply(Formats.info("Im not playing anything? Play something or fuck off"))
 
         val queue = player.queue
         val queueTime = Utils.fTime(queue.sumByLong { it.duration })
@@ -46,7 +46,7 @@ class Queue : VoiceCommand {
             }
         }
 
-        ctx.send {
+        ctx.reply {
             setAuthor("Queue | ${ctx.guild!!.name}", BoobBot.inviteUrl, ctx.selfUser.effectiveAvatarUrl)
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(

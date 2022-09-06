@@ -3,7 +3,7 @@ package bot.boobbot.slashcommands.nsfw
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncSlashCommand
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats

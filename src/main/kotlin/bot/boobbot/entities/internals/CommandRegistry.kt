@@ -1,8 +1,8 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.ExecutableCommand
-import bot.boobbot.entities.framework.Indexer
+import bot.boobbot.entities.framework.impl.ExecutableCommand
+import bot.boobbot.entities.framework.utils.Indexer
 
 class CommandRegistry : HashMap<String, ExecutableCommand>() {
     init {

@@ -1,9 +1,9 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
@@ -14,13 +14,13 @@ import net.dv8tion.jda.api.Permission
 )
 class NsfwToggle : Command {
 
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         if (!ctx.botCan(Permission.MANAGE_CHANNEL)) {
-            return ctx.send("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this")
+            return ctx.reply("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
         if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
-            return ctx.send("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
+            return ctx.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
         // TODO: Check channel type.
@@ -29,9 +29,9 @@ class NsfwToggle : Command {
 
         ctx.textChannel.manager.setNSFW(nsfwStatus).queue({
             val changed = if (nsfwStatus) "allowed" else "disallowed"
-            ctx.send("NSFW on this channel is now $changed")
+            ctx.reply("NSFW on this channel is now $changed")
         }, {
-            ctx.send("shit something broke\n\n$it")
+            ctx.reply("shit something broke\n\n$it")
         })
     }
 

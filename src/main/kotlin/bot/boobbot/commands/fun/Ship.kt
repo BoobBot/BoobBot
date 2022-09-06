@@ -2,9 +2,9 @@ package bot.boobbot.commands.`fun`
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
@@ -18,28 +18,28 @@ import javax.imageio.ImageIO
 
 @CommandProperties(description = "Shipped", category = Category.FUN)
 class Ship : Command {
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
-            return ctx.send("I can't send attachments. Fix it, whore.")
+            return ctx.reply("I can't send attachments. Fix it, whore.")
         }
 
         if (ctx.mentions.isEmpty()) {
-            return ctx.send("How in the fuck would i know who you want to ship if you don't give me a valid target?")
+            return ctx.reply("How in the fuck would i know who you want to ship if you don't give me a valid target?")
         }
 
         val user1 = ctx.mentions.first()
-        val user2 = ctx.mentions.lastOrNull() ?: ctx.author
+        val user2 = ctx.mentions.lastOrNull() ?: ctx.user
 
-        if (user1.idLong == ctx.author.idLong && user2.idLong == ctx.author.idLong) {
-            return ctx.send("not even you should wanna be shipped with yourself")
+        if (user1.idLong == ctx.user.idLong && user2.idLong == ctx.user.idLong) {
+            return ctx.reply("not even you should wanna be shipped with yourself")
         }
 
         if (user1.idLong == user2.idLong) {
-            return ctx.send("how the fuck are you going to ship the same person whore")
+            return ctx.reply("how the fuck are you going to ship the same person whore")
         }
 
         if (user1.idLong == ctx.selfUser.idLong || user2.idLong == ctx.selfUser.idLong) {
-            return ctx.send("Don't you fucking touch me whore, I will end you.")
+            return ctx.reply("Don't you fucking touch me whore, I will end you.")
         }
 
         ctx.channel.sendTyping().queue()
@@ -68,8 +68,7 @@ class Ship : Command {
                 .thenApply { ImageIO.read(it) }
         }
 
-
-        private fun newMixString(a: String, b: String): String? {
+        private fun newMixString(a: String, b: String): String {
             val mixed = StringBuilder()
             var i = 0
             while (i < a.length || i < b.length) {

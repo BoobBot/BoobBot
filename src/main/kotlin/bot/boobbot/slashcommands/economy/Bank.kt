@@ -1,9 +1,8 @@
 package bot.boobbot.slashcommands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.SlashCommand
 import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.utils.Formats

@@ -1,9 +1,9 @@
 package bot.boobbot.commands.audio
 
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.VoiceCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
@@ -15,12 +15,12 @@ import net.dv8tion.jda.api.Permission
     guildOnly = true
 )
 class Disconnect : VoiceCommand {
-    override fun execute(ctx: Context) {
-        if (ctx.userCan(Permission.MESSAGE_MANAGE) || Config.OWNERS.contains(ctx.author.idLong) ||
+    override fun execute(ctx: MessageContext) {
+        if (ctx.userCan(Permission.MESSAGE_MANAGE) || Config.OWNERS.contains(ctx.user.idLong) ||
             isDJ(ctx.member!!) || isAlone(ctx.member)) {
             ctx.audioPlayer.shutdown()
-            return ctx.send(Formats.info("Done, Whore"))
+            return ctx.reply(Formats.info("Done, Whore"))
         }
-        return ctx.send(Formats.error("No whore, i can't let you do that"))
+        return ctx.reply(Formats.error("No whore, i can't let you do that"))
     }
 }

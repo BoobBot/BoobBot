@@ -18,7 +18,6 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 
-
 class BootyDropper {
     private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
     private val random = Random()

@@ -3,9 +3,9 @@ package bot.boobbot.commands.audio
 import bot.boobbot.BoobBot.playerManager
 import bot.boobbot.audio.AudioLoader
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.VoiceCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.toUriOrNull
@@ -17,9 +17,9 @@ import bot.boobbot.utils.toUriOrNull
     nsfw = true
 )
 class Play : VoiceCommand {
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         if (ctx.args.firstOrNull()?.isEmpty() != false) {
-            return ctx.send("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
+            return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
         }
 
         val query = ctx.args[0].removeSurrounding("<", ">")
@@ -30,7 +30,7 @@ class Play : VoiceCommand {
         }
 
         if (!Utils.checkDonor(ctx.message) && isYouTubeTrack(query)) {
-            return ctx.send(
+            return ctx.reply(
                 Formats.error(
                     " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today! https://www.patreon.com/OfficialBoobBot"

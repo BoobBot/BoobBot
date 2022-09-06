@@ -1,10 +1,10 @@
 package bot.boobbot.commands.nsfw
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.utils.FileUpload
@@ -28,24 +28,22 @@ class Magik : AsyncCommand {
         "ass" to "ass"
     )
 
-    override suspend fun executeAsync(ctx: Context) {
+    override suspend fun executeAsync(ctx: MessageContext) {
         val category = categories[ctx.args.firstOrNull()]
-            ?: return ctx.send {
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
             }
 
         val imageUrl = getImage(category)
-            ?: return ctx.send("API didn't respond with an image URL, rip")
+            ?: return ctx.reply("API didn't respond with an image URL, rip")
 
         val image = BoobBot.requestUtil
-            .get(
-                baseUrl.newBuilder().addQueryParameter("avatar1", imageUrl).build().toString(),
-                headersOf("Authorization", BoobBot.config.MEMER_IMGEN_KEY)
-            )
+            .get(baseUrl.newBuilder().addQueryParameter("avatar1", imageUrl).build().toString(), headersOf("Authorization", BoobBot.config.MEMER_IMGEN_KEY))
             .await()
             ?.body
-            ?: return ctx.send("API didn't respond with an image, rip")
+            ?: return ctx.reply("API didn't respond with an image, rip")
+
 
         ctx.channel.sendFiles(FileUpload.fromData(image.byteStream(), "magik.png")).queue()
     }

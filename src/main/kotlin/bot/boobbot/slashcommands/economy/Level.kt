@@ -3,7 +3,7 @@ package bot.boobbot.slashcommands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.AsyncSlashCommand
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
+import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.SlashContext
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters

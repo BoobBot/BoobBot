@@ -2,9 +2,9 @@ package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Formats.progressPercentage
@@ -14,12 +14,12 @@ import kotlin.math.pow
 @CommandProperties(description = "View your economy profile.", category = Category.ECONOMY)
 class Profile : Command {
 
-    override fun execute(ctx: Context) {
-        val user = ctx.mentions.firstOrNull() ?: ctx.author
+    override fun execute(ctx: MessageContext) {
+        val user = ctx.mentions.firstOrNull() ?: ctx.user
         val u = BoobBot.database.getUser(user.id)
         val e = ((u.level + 1).toDouble() * 10).pow(2.toDouble()).toInt()
 
-        ctx.send {
+        ctx.reply {
             setAuthor("Profile for : ${user.asTag}", user.avatarUrl, user.avatarUrl)
             setColor(Colors.getEffectiveColor(ctx.message))
             addField(

@@ -2,9 +2,9 @@ package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Formats.getRemainingCoolDown
 import bot.boobbot.utils.Utils
 import java.time.Instant
@@ -14,15 +14,15 @@ import java.time.temporal.ChronoUnit
 @CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY)
 class Payday : Command {
 
-    override fun execute(ctx: Context) {
-        val user = BoobBot.database.getUser(ctx.author.id)
+    override fun execute(ctx: MessageContext) {
+        val user = BoobBot.database.getUser(ctx.user.id)
 
         if (user.lastDaily != null) {
             val t = user.lastDaily!!.plus(6, ChronoUnit.HOURS)
             val now = Instant.now()
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore((now))) {
-                return ctx.send("You have to work for it, whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
+                return ctx.reply("You have to work for it, whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
             }
         }
 
@@ -36,7 +36,7 @@ class Payday : Command {
         msg.append("\nTake it and fuck off.")
         user.balance += rng
         user.save()
-        ctx.send(msg.toString())
+        ctx.reply(msg.toString())
     }
 
 //    fun getRemaining(x: Long): String {

@@ -1,10 +1,10 @@
 package bot.boobbot.commands.nsfw
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
@@ -24,9 +24,9 @@ class PornHub : AsyncCommand {
         return "https://www.pornhub.com/webmasters/search?search=$query&output=json${(0..99999).random()}"
     }
 
-    override suspend fun executeAsync(ctx: Context) {
+    override suspend fun executeAsync(ctx: MessageContext) {
         if (ctx.args.isEmpty()) {
-            return ctx.send {
+            return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
@@ -35,12 +35,12 @@ class PornHub : AsyncCommand {
         val query = if (ctx.args[0].lowercase() != "random") ctx.args[0].lowercase() else Formats.tag.random()
 
         val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()?.takeIf { it.has("videos") }
-            ?: return ctx.send("\uD83D\uDEAB oh? something broken af")
+            ?: return ctx.reply("\uD83D\uDEAB oh? something broken af")
 
         val video = rt.getJSONArray("videos").getJSONObject(0)
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
-        ctx.send {
+        ctx.reply {
             setAuthor("PornHub video search", video.getString("url"), "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
             setTitle(video.getString("title"), video.getString("url"))
             setDescription("PornTube video search")

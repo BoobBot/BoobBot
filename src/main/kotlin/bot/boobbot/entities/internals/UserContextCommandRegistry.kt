@@ -1,8 +1,8 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.ExecutableUserContextCommand
-import bot.boobbot.entities.framework.UserContextIndexer
+import bot.boobbot.entities.framework.impl.ExecutableUserContextCommand
+import bot.boobbot.entities.framework.utils.UserContextIndexer
 
 class UserContextCommandRegistry : HashMap<String, ExecutableUserContextCommand>() {
     init {

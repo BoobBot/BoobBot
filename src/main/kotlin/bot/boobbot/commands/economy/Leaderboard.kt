@@ -1,10 +1,10 @@
 package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.entities.framework.interfaces.AsyncCommand
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.SubCommand
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.future.await
@@ -12,44 +12,42 @@ import kotlinx.coroutines.future.await
 @CommandProperties(description = "Global leaderboards \uD83C\uDFC6", aliases = ["lb"], guildOnly = true)
 class Leaderboard : AsyncCommand {
 
-    override suspend fun executeAsync(ctx: Context) {
+    override suspend fun executeAsync(ctx: MessageContext) {
         sendSubcommandHelp(ctx)
     }
 
     @SubCommand(aliases = ["richest", "$"], description = "Global economy leaderboard \uD83C\uDFC6", async = true)
-    suspend fun cash(ctx: Context) {
+    suspend fun cash(ctx: MessageContext) {
         val msg = buildMessage("balance", ctx)
-                 ctx.send {
+                 ctx.reply {
                     setAuthor("Global economy leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                     addField("", msg, false)
-                    setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+                    setFooter("Requested by ${ctx.user.name}", ctx.user.effectiveAvatarUrl)
                 }
             }
 
-
-
     @SubCommand(aliases = ["exp", "xp", "rank"], description = "Global rank leaderboard \uD83C\uDFC6", async = true)
-    suspend fun level(ctx: Context) {
+    suspend fun level(ctx: MessageContext) {
         val msg = buildMessage("level", ctx)
-            ctx.send {
+            ctx.reply {
                 setAuthor("Global rank leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                 addField("", msg, false)
-                setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+                setFooter("Requested by ${ctx.user.name}", ctx.user.effectiveAvatarUrl)
             }
     }
 
     @SubCommand(aliases = ["reputation"], description = "Global reputation leaderboard \uD83C\uDFC6", async = true)
-    suspend fun rep(ctx: Context) {
+    suspend fun rep(ctx: MessageContext) {
         val msg = buildMessage("rep", ctx)
-                ctx.send {
+                ctx.reply {
                     setAuthor("Global reputation leaderboard \uD83C\uDFC6", null, ctx.selfUser.avatarUrl)
                     addField("", msg, false)
-                    setFooter("Requested by ${ctx.author.name}", ctx.author.effectiveAvatarUrl)
+                    setFooter("Requested by ${ctx.user.name}", ctx.user.effectiveAvatarUrl)
                 }
         }
 
 
-    suspend fun buildMessage(key: String, ctx: Context): String {
+    suspend fun buildMessage(key: String, ctx: MessageContext): String {
         var msg = ""
         var count = 0
         BoobBot.database.getAllUsers().find().sort(BasicDBObject(key, -1)).limit(25).iterator().forEach { u ->

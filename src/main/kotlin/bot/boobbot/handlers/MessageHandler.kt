@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -82,12 +82,12 @@ class MessageHandler : ListenerAdapter() {
 
         val messageContent = event.message.contentRaw.trim()
         //val prefixTrigger = event.jda.selfUser.asMention
-        val acceptablePrefixes = Context.BOT_MENTIONS// + prefixTrigger
+        val acceptablePrefixes = MessageContext.BOT_MENTIONS// + prefixTrigger
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
         val args = messageContent.substring(trigger.length).trim().split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
 
-        if (trigger in Context.BOT_MENTIONS && args.isEmpty()) {
+        if (trigger in MessageContext.BOT_MENTIONS && args.isEmpty()) {
             val prefix = event.jda.selfUser.asMention
             return event.channel.sendMessage("My prefix is $prefix whore.\nUse ${prefix}help for a list of commands.").queue()
         }
@@ -178,7 +178,7 @@ class MessageHandler : ListenerAdapter() {
 
         try {
             Utils.logCommand(event.message)
-            command.execute(trigger, event.message, args)
+            command.execute(event.message, args)
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 

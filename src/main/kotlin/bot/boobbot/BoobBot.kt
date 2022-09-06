@@ -3,7 +3,7 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
-import bot.boobbot.entities.framework.EventWaiter
+import bot.boobbot.entities.framework.utils.EventWaiter
 import bot.boobbot.entities.internals.*
 import bot.boobbot.entities.misc.ApiServer
 import bot.boobbot.entities.misc.PatreonAPI
@@ -65,7 +65,6 @@ object BoobBot {
     val database = Database()
 
     val commands = CommandRegistry()
-    val slashCommands = SlashCommandRegistry()
     val userContextCommands = UserContextCommandRegistry()
     val waiter = EventWaiter()
     val requestUtil = RequestUtil()

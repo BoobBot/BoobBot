@@ -1,10 +1,10 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.SubCommand
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.SubCommand
 
 @CommandProperties(
     description = "Change whether you're shown on embeds",
@@ -12,20 +12,20 @@ import bot.boobbot.entities.framework.SubCommand
     aliases = ["cb"]
 )
 class Anonymity : Command {
-    override fun execute(ctx: Context) {
-        ctx.send("`bbanonymity <${subcommands.keys.joinToString("|")}>`")
+    override fun execute(ctx: MessageContext) {
+        ctx.reply("`bbanonymity <${subcommands.keys.joinToString("|")}>`")
     }
 
     @SubCommand(aliases = ["On"])
-    fun on(ctx: Context) {
-        BoobBot.database.setUserAnonymity(ctx.author.id, true)
-        ctx.send("You're now anonymous \uD83D\uDD75")
+    fun on(ctx: MessageContext) {
+        BoobBot.database.setUserAnonymity(ctx.user.id, true)
+        ctx.reply("You're now anonymous \uD83D\uDD75")
     }
 
     @SubCommand(aliases = ["Off"])
-    fun off(ctx: Context) {
-        BoobBot.database.setUserAnonymity(ctx.author.id, false)
-        ctx.send("You're no longer anonymous 👀")
+    fun off(ctx: MessageContext) {
+        BoobBot.database.setUserAnonymity(ctx.user.id, false)
+        ctx.reply("You're no longer anonymous 👀")
     }
 
 }

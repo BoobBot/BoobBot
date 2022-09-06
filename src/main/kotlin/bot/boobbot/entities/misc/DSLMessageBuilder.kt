@@ -24,6 +24,10 @@ class DSLMessageBuilder {
         embeds.add(EmbedBuilder().apply(e).build())
     }
 
+    fun embed(e: MessageEmbed) {
+        embeds.add(e)
+    }
+
     fun file(f: FileUpload) {
         builder.addFiles(f)
     }

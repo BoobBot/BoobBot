@@ -2,9 +2,9 @@ package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.Command
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Formats.getRemainingCoolDown
 import java.awt.Color
@@ -15,29 +15,29 @@ import java.time.temporal.ChronoUnit
 @CommandProperties(aliases = ["+"], description = "Give rep.", category = Category.ECONOMY)
 class Rep : Command {
 
-    override fun execute(ctx: Context) {
+    override fun execute(ctx: MessageContext) {
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.send {
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
 
         if (target.idLong == BoobBot.selfId) {
-            return ctx.send("Don't you fucking touch me whore, I will end you.")
+            return ctx.reply("Don't you fucking touch me whore, I will end you.")
         }
 
-        if (target.idLong == ctx.author.idLong) {
-            return ctx.send("aww how sad you wanna rep yourself, well fucking don't. Go find a friend whore.")
+        if (target.idLong == ctx.user.idLong) {
+            return ctx.reply("aww how sad you wanna rep yourself, well fucking don't. Go find a friend whore.")
         }
 
-        val author = BoobBot.database.getUser(ctx.author.id)
+        val author = BoobBot.database.getUser(ctx.user.id)
         val now = Instant.now()
 
         if (author.lastRep != null) {
             val t = author.lastRep!!.plus(12, ChronoUnit.HOURS)
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore(now)) {
-                return ctx.send("You already gave rep today whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
+                return ctx.reply("You already gave rep today whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
             }
         }
 
@@ -48,7 +48,7 @@ class Rep : Command {
             .apply { rep += 1 }
             .save()
 
-        ctx.send("You gave ${target.asTag} a rep point, Good job! Seems you're not completely useless after all.")
+        ctx.reply("You gave ${target.asTag} a rep point, Good job! Seems you're not completely useless after all.")
     }
 
 }

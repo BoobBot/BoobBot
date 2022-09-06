@@ -1,10 +1,10 @@
 package bot.boobbot.slashcommands.interactions
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.AsyncCommand
+import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
-import bot.boobbot.entities.framework.CommandProperties
-import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
@@ -15,7 +15,7 @@ import java.time.Instant
 @CommandProperties(description = "Make someone your sub.", category = Category.INTERACTIONS, nsfw = true)
 class Sub : AsyncCommand {
 
-    override suspend fun executeAsync(ctx: Context) {
+    override suspend fun executeAsync(ctx: MessageContext) {
         val target = ctx.mentions.firstOrNull()
             ?: return ctx.send {
                 setColor(Color.red)
