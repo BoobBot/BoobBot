@@ -31,8 +31,10 @@ class Coin : SlashCommand {
             u.balance -= bet
             msg = " You Lost $$bet"
         }
+
         u.save()
-        ctx.reply(res.second)
-        ctx.event.hook.sendMessage(Formats.info(res.first + msg)).queue()
+
+        val hook: (Any) -> Unit = { ctx.reply(Formats.info(res.first + msg)) }
+        ctx.reply(res.second, success = hook, failure = hook)
     }
 }
