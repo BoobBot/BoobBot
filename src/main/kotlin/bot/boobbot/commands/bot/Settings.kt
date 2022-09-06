@@ -29,11 +29,6 @@ class Settings : Command {
     }
 
     override fun execute(ctx: Context) {
-//        ctx.send {
-//            setColor(Colors.getEffectiveColor(ctx.message))
-//            setTitle("BoobBot Server Settings")
-//            setDescription("Subcommands: ${subcommands.keys.joinToString(", ")}")
-//        }
         sendSubcommandHelp(ctx)
     }
 
