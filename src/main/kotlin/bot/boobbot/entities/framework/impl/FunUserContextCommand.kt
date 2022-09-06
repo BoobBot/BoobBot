@@ -26,7 +26,7 @@ abstract class FunUserContextCommand(private val category: String) : AsyncUserCo
             return event.reply("aww how sad you wanna play with yourself, well fucking don't go find a friend whore.").queue()
         }
 
-        val funString = MessageFormat.format(getRandomFunString(category), event.member!!.effectiveName, target.effectiveName)
+        val funString = MessageFormat.format(getRandomFunString(category), event.member!!.asMention, target.asMention)
         event.reply(funString).queue()
     }
 }

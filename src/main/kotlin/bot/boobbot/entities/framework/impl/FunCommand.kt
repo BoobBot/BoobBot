@@ -24,7 +24,7 @@ abstract class FunCommand(private val category: String) : AsyncCommand {
             return ctx.reply("aww how sad you wanna play with yourself, well fucking don't go find a friend whore.")
         }
 
-        val funString = MessageFormat.format(getRandomFunString(category), ctx.user.name, target.name)
+        val funString = MessageFormat.format(getRandomFunString(category), ctx.user.asMention, target.asMention)
         ctx.reply(funString)
     }
 }
