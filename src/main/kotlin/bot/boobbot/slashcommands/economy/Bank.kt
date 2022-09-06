@@ -54,7 +54,7 @@ class Bank : SlashCommand {
     }
 
     fun balance(ctx: SlashContext) {
-        val user: User by lazy { BoobBot.database.getUser(ctx.user.id) }
+        val user = BoobBot.database.getUser(ctx.user.id)
         ctx.reply("You are carrying $${user.balance} and have $${user.bankBalance} in the bank.")
     }
 
