@@ -12,6 +12,10 @@ class CommandRegistry : HashMap<String, ExecutableCommand>() {
         BoobBot.log.info("Successfully loaded ${commands.size} commands!")
     }
 
+    fun findCommand(parent: String, group: String): ExecutableCommand? { // slash
+        return this.values.find { it.category == parent && it.name == group }
+    }
+
     fun findCommand(commandName: String): ExecutableCommand? {
         return this[commandName]
             ?: values.firstOrNull { it.properties.aliases.contains(commandName) }

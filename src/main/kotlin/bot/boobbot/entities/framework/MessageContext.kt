@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageCreateAction
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 
-class MessageContext(val message: Message, val args: List<String>) : Context(true, message.mentions.users.toMutableList(), false, message.jda, message.author, message.member, message.channel, message.takeIf { it.isFromGuild }?.guild) {
+class MessageContext(val message: Message, args: List<String>) : Context(true, message.mentions.users.toMutableList(), false, message.jda, message.author, message.member, message.channel, message.takeIf { it.isFromGuild }?.guild) {
     override val options = MessageOptions(args.toMutableList())
 
     private val defaultReplyOptions: MessageCreateAction.() -> Unit

@@ -9,7 +9,7 @@ import io.sentry.event.interfaces.SentryException
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.slf4j.LoggerFactory
 
-class CustomSentryClient(private val sentryClient: SentryClient) : ShouldSendEventCallback {
+class CustomSentryClient(sentryClient: SentryClient) : ShouldSendEventCallback {
 
     init {
         sentryClient.addShouldSendEventCallback(this)

@@ -5,6 +5,7 @@ import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -22,6 +23,7 @@ import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.ThreadChannel
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.GenericEvent
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -31,45 +33,35 @@ import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class MessageHandler : EventListener {
+class SlashHandler : EventListener {
     private val threadCounter = AtomicInteger()
     private val commandExecutorPool = Executors.newCachedThreadPool {
-        Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
+        Thread(it, "Slash-Executor-${threadCounter.getAndIncrement()}")
     }
     private val asyncScope = CoroutineScope(Dispatchers.Default)
 
     override fun onEvent(event: GenericEvent) {
         when (event) {
-            is MessageReceivedEvent -> onMessageReceived(event)
+            is SlashCommandInteractionEvent -> onSlashInteraction(event)
         }
     }
 
-    private fun onMessageReceived(event: MessageReceivedEvent) {
-        BoobBot.metrics.record(Metrics.happened("MessageReceived"))
+    private fun onSlashInteraction(event: SlashCommandInteractionEvent) {
+        BoobBot.metrics.record(Metrics.happened("SlashReceived"))
 
-        if (event.author.isBot) { // Basic check to reduce usage
+        if (event.user.isBot) { // Basic check to reduce usage
             return
         }
 
         commandExecutorPool.execute {
-            processMessageEvent(event)
+            processSlashEvent(event)
         }
-
-        processUser(event)
     }
 
-    private fun processMessageEvent(event: MessageReceivedEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
+    private fun processSlashEvent(event: SlashCommandInteractionEvent) {
+        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
 
         if (event.channelType.isGuild) {
-            if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.channel.asTextChannel().isNSFW) {
-                asyncScope.launch { BootyDropper().processDrop(event) }
-            }
-
-            if (event.message.mentions.mentionsEveryone()) {
-                BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
-            }
-
             (event.channel as? ThreadChannel)?.let {
                 @Suppress("USELESS_ELVIS")
                 it.parentChannel ?: return
@@ -82,37 +74,13 @@ class MessageHandler : EventListener {
             if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
-
-            if (guild.modMute.contains(event.author.id)) {
-                return event.message.delete().reason("mod mute").queue()
-            }
         }
 
-        val messageContent = event.message.contentRaw.trim()
-        //val prefixTrigger = event.jda.selfUser.asMention
-        val acceptablePrefixes = MessageContext.BOT_MENTIONS// + prefixTrigger
-        val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
-            ?: return
-        val args = messageContent.substring(trigger.length).trim().split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
-
-        if (trigger in MessageContext.BOT_MENTIONS && args.isEmpty()) {
-            val prefix = event.jda.selfUser.asMention
-            return event.channel.sendMessage("My prefix is $prefix whore.\nUse ${prefix}help for a list of commands.").queue()
-        }
-
-        val commandString = args.removeAt(0)
-        val command = BoobBot.commands.findCommand(commandString)
-
-        if (command == null) {
-            if (!event.channelType.isGuild) {
-                return
-            }
-
-            val customCommand = guild.customCommands.firstOrNull { it.name == commandString }
-                ?: return
-
-            return event.channel.sendMessage(customCommand.content).queue()
-        }
+        val commandString = event.name
+        val commandGroup = event.subcommandGroup
+        val command = commandGroup?.let { BoobBot.commands.findCommand(commandString, commandGroup) }
+            ?: BoobBot.commands.findCommand(commandString)
+            ?: return event.reply("Command not found").setEphemeral(true).queue()
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
             return
@@ -122,7 +90,7 @@ class MessageHandler : EventListener {
             return
         }
 
-        if (command.properties.developerOnly && !Config.OWNERS.contains(event.author.idLong)) {
+        if (command.properties.developerOnly && !Config.OWNERS.contains(event.user.idLong)) {
             return
         }
 
@@ -144,11 +112,11 @@ class MessageHandler : EventListener {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
-        if (command.properties.donorOnly && !Utils.checkDonor(event.message)) {
+        if (command.properties.donorOnly && !Utils.checkDonor(event.user, event.guild)) {
             return event.channel.sendMessage(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
@@ -167,7 +135,7 @@ class MessageHandler : EventListener {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.guild.selfMember, event.guildChannel, command.properties.botPermissions)
+            val missing = checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -175,67 +143,25 @@ class MessageHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.id) && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
-            event.message.delete().queue()
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
+            //event.message.delete().queue()
+            // TODO maybe set ephemeral reply?
         }
 
         try {
-            Utils.logCommand(event.message)
-            command.execute(MessageContext(event.message, args))
+            //Utils.logCommand(event.message)
+            command.execute(SlashContext(event))
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.author.id).let {
+            BoobBot.database.getUser(event.user.id).let {
                 if (command.properties.nsfw) it.nsfwCommandsUsed++
                 else it.commandsUsed++
                 it.save()
             }
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-
-            if (event.isFromGuild && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_HISTORY)) {
-                event.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
-            }
+            event.reply("Error occurred during command processing.").queue()
         }
-    }
-
-    private fun processUser(event: MessageReceivedEvent) {
-        if (!event.isFromGuild) {
-            return
-        }
-
-        val user: User by lazy { BoobBot.database.getUser(event.author.id) }
-        user.messagesSent++
-
-        if (user.blacklisted) {
-            return
-        }
-
-        if (user.inJail) {
-            user.jailRemaining = max(user.jailRemaining - 1, 0)
-            user.inJail = user.jailRemaining > 0
-            user.save()
-            return
-        }
-
-        if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
-            val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-            user.lewdPoints += min(tagSize, 5)
-            user.nsfwMessagesSent++
-        }
-
-        if (user.coolDownCount >= random(0, 10)) {
-            user.coolDownCount = random(0, 10)
-            user.experience++
-
-            if (user.bonusXp > 0) {
-                user.experience++ // extra XP
-                user.bonusXp = user.bonusXp - 1
-            }
-        }
-
-        user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-        user.lewdLevel = calculateLewdLevel(user)
-        user.save()
     }
 }

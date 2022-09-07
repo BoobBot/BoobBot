@@ -42,12 +42,13 @@ class Custom : Command {
     }
 
     @SubCommand(aliases = ["del", "remove", "rem"])
+    @Option(name = "name", description = "The name of the tag to delete.")
     fun delete(ctx: MessageContext) {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             return ctx.reply("You don't have `MANAGE_SERVER` permission, whore.")
         }
 
-        val tagName = ctx.args.firstOrNull()
+        val tagName = ctx.options.getByNameOrNext("name", Resolver.STRING)
             ?: return ctx.reply("what tag do you want to delete, whore")
 
         if (BoobBot.database.findCustomCommand(ctx.guild!!.id, tagName) == null) {

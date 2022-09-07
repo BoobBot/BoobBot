@@ -9,18 +9,26 @@ import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
+import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
-class UserContextHandler : ListenerAdapter() {
+class UserContextHandler : EventListener {
     private val threadCounter = AtomicInteger()
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
 
-    override fun onUserContextInteraction(event: UserContextInteractionEvent) {
+    override fun onEvent(event: GenericEvent) {
+        when (event) {
+            is UserContextInteractionEvent -> onUserContextInteraction(event)
+        }
+    }
+
+    private fun onUserContextInteraction(event: UserContextInteractionEvent) {
         BoobBot.metrics.record(Metrics.happened("ContextCommandInteractionEvent"))
         commandExecutorPool.execute {
             processUserContextEvent(event)

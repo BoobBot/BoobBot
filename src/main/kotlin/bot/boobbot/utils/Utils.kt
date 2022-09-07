@@ -22,6 +22,7 @@ import java.util.*
 import kotlin.math.floor
 import kotlin.math.sqrt
 
+typealias JDAUser = net.dv8tion.jda.api.entities.User
 
 object Utils {
     private val rand = Random()
@@ -56,7 +57,7 @@ object Utils {
         }
     )
 
-    fun checkDonor(user: net.dv8tion.jda.api.entities.User, guild: Guild?): Boolean {
+    fun checkDonor(user: JDAUser, guild: Guild?): Boolean {
         return BoobBot.pApi.getDonorType(user.id).tier >= 1 // Supporter, Server Owner, Developer
                 || (guild != null && BoobBot.pApi.getDonorType(guild.ownerId) == DonorType.SERVER_OWNER)
                 || (guild != null && BoobBot.database.isPremiumServer(guild.id))

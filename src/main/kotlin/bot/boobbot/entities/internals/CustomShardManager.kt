@@ -6,6 +6,7 @@ import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.handlers.EventHandler
 import bot.boobbot.handlers.MessageHandler
+import bot.boobbot.handlers.SlashHandler
 import bot.boobbot.handlers.UserContextHandler
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.WebhookManager
@@ -73,7 +74,6 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
         }
     }
 
-
     fun authorOrAnonymous(ctx: Context): User {
         return anonymousUser.takeIf { BoobBot.database.getUserAnonymity(ctx.user.id) } ?: ctx.user
     }
@@ -126,7 +126,8 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                     BoobBot.waiter,
                     MessageHandler(),
                     EventHandler(),
-                    UserContextHandler()
+                    UserContextHandler(),
+                    SlashHandler()
                 )
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
