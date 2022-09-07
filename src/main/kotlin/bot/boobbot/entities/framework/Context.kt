@@ -36,7 +36,7 @@ abstract class Context(val mentionTrigger: Boolean,
     val channelType = channel.type
     val isFromGuild = channelType.isGuild
 
-    val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) channel.asTextChannel() else null // todo reconsider
+    val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) channel.asTextChannel() else null
     val guildChannel: GuildChannel? = channel as? GuildChannel
 
     val voiceState: GuildVoiceState? get() = member?.voiceState

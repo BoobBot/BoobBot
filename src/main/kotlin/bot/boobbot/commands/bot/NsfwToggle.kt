@@ -24,9 +24,8 @@ class NsfwToggle : Command {
             return ctx.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
-        // TODO: Check channel type.
-
-        val nsfwStatus = !ctx.textChannel!!.isNSFW
+        val nsfwStatus = ctx.textChannel?.isNSFW?.not()
+            ?: return ctx.reply("This isn't a text-channel that supports NSFW, whore.")
 
         ctx.textChannel.manager.setNSFW(nsfwStatus).queue({
             val changed = if (nsfwStatus) "allowed" else "disallowed"

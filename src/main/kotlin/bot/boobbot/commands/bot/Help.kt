@@ -50,7 +50,7 @@ class Help : Command {
 
             content.append("`${padEnd(category.name.lowercase(), 14)}:` ")
 
-            if (category.nsfw && ctx.channelType.isGuild && !ctx.textChannel!!.isNSFW) { // todo test this check.
+            if (category.nsfw && ctx.channelType.isGuild && ctx.textChannel?.isNSFW != true) {
                 content.append("Unavailable. Move to an NSFW channel.\n")
             } else {
                 content.append(category.description).append("\n")
