@@ -2,21 +2,24 @@ package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Formats.getRemainingCoolDown
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.awt.Color
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-
 @CommandProperties(aliases = ["+"], description = "Give rep.", category = Category.ECONOMY)
+@Option(name = "user", description = "The user to give rep to.", type = OptionType.USER)
 class Rep : Command {
 
-    override fun execute(ctx: MessageContext) {
-        val target = ctx.mentions.firstOrNull()
+    override fun execute(ctx: Context) {
+        val target = ctx.options.getByNameOrNext("user", Resolver.USER)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
@@ -32,9 +35,10 @@ class Rep : Command {
 
         val author = BoobBot.database.getUser(ctx.user.id)
         val now = Instant.now()
+        val lastRep = author.lastRep
 
-        if (author.lastRep != null) {
-            val t = author.lastRep!!.plus(12, ChronoUnit.HOURS)
+        if (lastRep != null) {
+            val t = lastRep.plus(12, ChronoUnit.HOURS)
             val x = t.toEpochMilli() - now.toEpochMilli()
             if (!t.isBefore(now)) {
                 return ctx.reply("You already gave rep today whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")

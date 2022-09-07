@@ -27,6 +27,7 @@ class ExecutableCommand(
     fun execute(message: Message, args: MutableList<String>) {
         val subcommand = getSubCommand(args.firstOrNull())
 
+        // TODO
         val ctx = if (subcommand != null) {
             MessageContext(message, args.drop(1))
         } else {
