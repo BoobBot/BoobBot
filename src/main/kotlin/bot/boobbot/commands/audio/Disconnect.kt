@@ -1,6 +1,7 @@
 package bot.boobbot.commands.audio
 
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
@@ -15,7 +16,7 @@ import net.dv8tion.jda.api.Permission
     guildOnly = true
 )
 class Disconnect : VoiceCommand {
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (ctx.userCan(Permission.MESSAGE_MANAGE) || Config.OWNERS.contains(ctx.user.idLong) ||
             isDJ(ctx.member!!) || isAlone(ctx.member)) {
             ctx.audioPlayer.shutdown()

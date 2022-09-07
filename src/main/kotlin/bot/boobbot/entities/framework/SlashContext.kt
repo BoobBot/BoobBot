@@ -47,13 +47,11 @@ class SlashContext(val event: SlashCommandInteractionEvent) : Context(false, mut
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message(ephemeral) { file(file) }
 
-    fun reply(content: String, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
-        reply(MessageCreateData.fromContent(content), ephemeral, success, failure)
-    }
-
     override fun reply(ephemeral: Boolean, embed: EmbedBuilder.() -> Unit) = message(ephemeral) { embed(embed) }
 
-    fun reply(e: MessageEmbed, ephemeral: Boolean = false) = reply(MessageCreateData.fromEmbeds(e), ephemeral, null, null)
+    override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message(ephemeral) { embed(embed) }
+
+    fun reply(content: String, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)?, failure: ((Throwable) -> Unit)) = reply(MessageCreateData.fromContent(content), ephemeral, success, failure)
 
     fun message(ephemeral: Boolean = false, m: DSLMessageBuilder.() -> Unit) = reply(DSLMessageBuilder().apply(m).build(), ephemeral, null, null)
 

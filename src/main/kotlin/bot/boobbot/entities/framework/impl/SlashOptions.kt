@@ -7,4 +7,8 @@ class SlashOptions(private val options: List<OptionMapping>) : Options {
     override fun <T> getByNameOrNext(name: String, resolver: Resolver<T>): T? {
         return options.firstOrNull { it.name == name }?.let(resolver::resolve)
     }
+
+    override fun getOptionOrGather(name: String): String? {
+        return options.firstOrNull { it.name == name }?.let(OptionMapping::getAsString)
+    }
 }

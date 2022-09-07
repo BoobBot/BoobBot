@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.interfaces
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
@@ -26,14 +27,14 @@ interface Command {
      *
      * @returns Whether command execution can proceed.
      */
-    fun localCheck(ctx: MessageContext): Boolean = true
+    fun localCheck(ctx: Context): Boolean = true
 
-    fun execute(ctx: MessageContext)
+    fun execute(ctx: Context)
 
-    fun sendSubcommandHelp(ctx: MessageContext) {
+    fun sendSubcommandHelp(ctx: Context) {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
         val embed = EmbedBuilder()
-            .setColor(Colors.getEffectiveColor(ctx.message))
+            .setColor(Colors.getEffectiveColor(ctx.member))
             .setAuthor(
                 "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
                 "https://boob.bot/commands",
@@ -49,7 +50,7 @@ interface Command {
             embed.appendDescription("`${padEnd(sc.name, maxLen)}:` ${sc.description}$patreonSymbol\n")
         }
 
-        ctx.send(embed.build())
+        ctx.reply(embed.build())
     }
 
     private fun padEnd(str: String, length: Int = 15): String {

@@ -92,5 +92,6 @@ abstract class Context(val mentionTrigger: Boolean,
 
     abstract fun reply(ephemeral: Boolean = false, embed: EmbedBuilder.() -> Unit)
 
+    abstract fun reply(embed: MessageEmbed, ephemeral: Boolean = false)
 
 }

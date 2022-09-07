@@ -1,6 +1,6 @@
 package bot.boobbot.entities.framework.interfaces
 
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
@@ -10,17 +10,17 @@ interface VoiceCommand : Command {
     fun isAlone(member: Member) = member.voiceState?.channel?.members?.count { !it.user.isBot } == 1
     fun isDJ(member: Member) = member.roles.any { it.name.equals("dj", true) }
 
-    fun canSkip(ctx: MessageContext): Boolean {
+    fun canSkip(ctx: Context): Boolean {
         val user = ctx.audioPlayer.player.playingTrack.userData as User
 
         return ctx.userCan(Permission.MESSAGE_MANAGE)
                 || ctx.user.idLong == user.idLong
                 || Config.OWNERS.contains(ctx.user.idLong)
                 || isDJ(ctx.member!!)
-                || ctx.member.voiceState!!.channel!!.members.filter { !it.user.isBot }.size == 1
+                || isAlone(ctx.member)
     }
 
-    fun performVoiceChecks(ctx: MessageContext, nsfwCheck: Boolean = false): Boolean {
+    fun performVoiceChecks(ctx: Context, nsfwCheck: Boolean = false): Boolean {
         if (ctx.guild == null) {
             return false
         }

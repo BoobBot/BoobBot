@@ -11,6 +11,6 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
     fun resolve(o: OptionMapping): T? = mapping(o)
 
     companion object {
-
+        val INTEGER = Resolver(OptionMapping::getAsInt, String::toIntOrNull)
     }
 }

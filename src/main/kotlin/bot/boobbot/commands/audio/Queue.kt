@@ -2,6 +2,7 @@ package bot.boobbot.commands.audio
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
@@ -22,7 +23,7 @@ import java.time.Instant
     nsfw = true
 )
 class Queue : VoiceCommand {
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (!performVoiceChecks(ctx)) {
             return
         }
@@ -48,7 +49,7 @@ class Queue : VoiceCommand {
 
         ctx.reply {
             setAuthor("Queue | ${ctx.guild!!.name}", BoobBot.inviteUrl, ctx.selfUser.effectiveAvatarUrl)
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             addField(
                 "Current", """
                 **Title:** ${abbreviate(getTrackTitle(track))}

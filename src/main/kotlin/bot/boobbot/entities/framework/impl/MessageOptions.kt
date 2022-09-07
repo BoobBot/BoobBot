@@ -6,4 +6,8 @@ class MessageOptions(private val args: MutableList<String>) : Options {
     override fun <T> getByNameOrNext(name: String, resolver: Resolver<T>): T? {
         return args.takeIf { it.isNotEmpty() }?.removeAt(0)?.let(resolver::resolve)
     }
+
+    override fun getOptionOrGather(name: String): String {
+        return args.joinToString(" ")
+    }
 }

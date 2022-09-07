@@ -1,6 +1,7 @@
 package bot.boobbot.commands.audio
 
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
@@ -13,7 +14,7 @@ import bot.boobbot.utils.Formats
     guildOnly = true
 )
 class Skip : VoiceCommand {
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (!performVoiceChecks(ctx)) {
             return
         }
@@ -30,7 +31,7 @@ class Skip : VoiceCommand {
 
         if (player.player.playingTrack != null) {
             return ctx.reply {
-                setColor(Colors.getEffectiveColor(ctx.message))
+                setColor(Colors.getEffectiveColor(ctx.member))
                 addField(
                     Formats.info(" Track Skipped"),
                     "Skipped: ${track.info.title}\nNow Playing: ${player.player.playingTrack.info.title}",
@@ -40,7 +41,7 @@ class Skip : VoiceCommand {
         }
 
         ctx.reply {
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             addField(Formats.info(" Track Skipped"), "Skipped: ${track.info.title}", false)
         }
     }

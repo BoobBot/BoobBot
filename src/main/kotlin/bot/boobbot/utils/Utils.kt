@@ -2,8 +2,10 @@ package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.User
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.misc.DonorType
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
@@ -54,17 +56,15 @@ object Utils {
         }
     )
 
-    fun checkDonor(event: Message): Boolean {
-        return BoobBot.pApi.getDonorType(event.author.id).tier >= 1 // Supporter, Server Owner, Developer
-                || (event.isFromGuild && BoobBot.pApi.getDonorType(event.guild.ownerId) == DonorType.SERVER_OWNER)
-                || (event.isFromGuild && BoobBot.database.isPremiumServer(event.guild.id))
+    fun checkDonor(user: net.dv8tion.jda.api.entities.User, guild: Guild?): Boolean {
+        return BoobBot.pApi.getDonorType(user.id).tier >= 1 // Supporter, Server Owner, Developer
+                || (guild != null && BoobBot.pApi.getDonorType(guild.ownerId) == DonorType.SERVER_OWNER)
+                || (guild != null && BoobBot.database.isPremiumServer(guild.id))
     }
 
-    fun checkSlashDonor(event: SlashCommandInteractionEvent): Boolean {
-        return BoobBot.pApi.getDonorType(event.user.id).tier >= 1 // Supporter, Server Owner, Developer
-                || (event.isFromGuild && BoobBot.pApi.getDonorType(event.guild!!.ownerId) == DonorType.SERVER_OWNER)
-                || (event.isFromGuild && BoobBot.database.isPremiumServer(event.guild!!.id))
-    }
+    fun checkDonor(msg: Message): Boolean = checkDonor(msg.author, msg.guild)
+    fun checkDonor(ctx: Context): Boolean = checkDonor(ctx.user, ctx.guild)
+
     fun getRandomFunString(key: String): String {
         val arr = jsonArrays.getJSONArray(key)
         return arr.getString(rand.nextInt(arr.length()))

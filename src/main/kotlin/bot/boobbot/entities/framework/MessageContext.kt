@@ -25,6 +25,8 @@ class MessageContext(val message: Message, val args: List<String>) : Context(tru
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message({ file(file) }, defaultReplyOptions)
 
+    override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message({ embed(embed) }, defaultReplyOptions)
+
     fun send(e: MessageEmbed) = message({ embed(e) })
 
     fun message(m: DSLMessageBuilder.() -> Unit, sendOptions: MessageCreateAction.() -> Unit = {}) = send(DSLMessageBuilder().apply(m).build(), sendOptions, null, null)

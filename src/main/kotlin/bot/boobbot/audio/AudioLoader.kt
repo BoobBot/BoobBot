@@ -1,6 +1,7 @@
 package bot.boobbot.audio
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
@@ -16,8 +17,7 @@ import io.sentry.event.EventBuilder
 import io.sentry.event.interfaces.ExceptionInterface
 import java.time.Instant
 
-
-class AudioLoader(private val ctx: MessageContext, private val musicManager: GuildMusicManager = ctx.audioPlayer) : AudioLoadResultHandler {
+class AudioLoader(private val ctx: Context, private val musicManager: GuildMusicManager = ctx.audioPlayer) : AudioLoadResultHandler {
 
     private val youtubeIcon =
         "https://media.discordapp.net/attachments/440667148315262978/501803781130813450/kisspng-youtube-play-button-logo-computer-icons-youtube-icon-app-logo-png-5ab067d2053a02.15273601152.png?width=300&height=300"
@@ -60,7 +60,7 @@ class AudioLoader(private val ctx: MessageContext, private val musicManager: Gui
 
         runCatching {
             ctx.reply {
-                setColor(Colors.getEffectiveColor(ctx.message))
+                setColor(Colors.getEffectiveColor(ctx.member))
                 setAuthor("Music", track.info.uri, trackIcon)
                 addField(
                     "Enqueued Track",

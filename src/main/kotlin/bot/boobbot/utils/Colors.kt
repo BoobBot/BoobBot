@@ -1,5 +1,6 @@
 package bot.boobbot.utils
 
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import java.awt.Color
 import java.util.*
@@ -54,7 +55,7 @@ object Colors {
         sColorNameMap["teal"] = -0xff7f80
     }
 
-    fun getEffectiveColor(msg: Message): Color = msg.member?.color ?: Color(255, 0, 128)
+    fun getEffectiveColor(member: Member?): Color = member?.color ?: Color(255, 0, 128)
 
     fun parseColor(colorString: String): Int {
         if (colorString[0] == '#') {

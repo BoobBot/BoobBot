@@ -3,6 +3,7 @@ package bot.boobbot.commands.audio
 import bot.boobbot.BoobBot.playerManager
 import bot.boobbot.audio.AudioLoader
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
@@ -17,19 +18,17 @@ import bot.boobbot.utils.toUriOrNull
     nsfw = true
 )
 class Play : VoiceCommand {
-    override fun execute(ctx: MessageContext) {
-        if (ctx.args.firstOrNull()?.isEmpty() != false) {
-            return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
-        }
+    override fun execute(ctx: Context) {
+        val query = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }?.removeSurrounding("<", ">")
+            ?: return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
 
-        val query = ctx.args[0].removeSurrounding("<", ">")
         val nsfwCheck = "pornhub" in query.lowercase() || "redtube" in query.lowercase()
 
         if (!performVoiceChecks(ctx, nsfwCheck)) {
             return
         }
 
-        if (!Utils.checkDonor(ctx.message) && isYouTubeTrack(query)) {
+        if (!Utils.checkDonor(ctx) && isYouTubeTrack(query)) {
             return ctx.reply(
                 Formats.error(
                     " Sorry YouTube music is only available to our Patrons.\n<:p_:475801484282429450> "
