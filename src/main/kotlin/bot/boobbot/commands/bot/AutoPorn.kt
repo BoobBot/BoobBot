@@ -2,7 +2,9 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.annotations.Choice
 import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
@@ -30,9 +32,7 @@ class AutoPorn : Command {
     )
     private val typeString = types.keys.joinToString("`, `", prefix = "`", postfix = "`")
 
-    private fun formatWebhookUrl(channelId: String, token: String): String {
-        return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
-    }
+    private fun formatWebhookUrl(channelId: String, token: String) = "https://discordapp.com/api/webhooks/%s/%s".format(channelId, token)
 
     override fun execute(ctx: Context) {
         if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
@@ -42,7 +42,8 @@ class AutoPorn : Command {
         sendSubcommandHelp(ctx)
     }
 
-    @SubCommand
+    @SubCommand(description = "Set the Auto-Porn category and channel.")
+    @Option(name = "category", description = "The image category.", choices = [Choice("gif", "Gifs"), Choice("boobs", "boobs"), Choice("ass", "ass"), Choice("gay", "gay"), Choice("random", "nsfw")])
     fun set(ctx: Context) {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.let(types::get)
             ?: return ctx.reply {
@@ -94,7 +95,7 @@ class AutoPorn : Command {
             }
     }
 
-    @SubCommand(aliases = ["disable"])
+    @SubCommand(description = "Delete the Auto-Porn configuration for this server.", aliases = ["disable"])
     fun delete(ctx: Context) {
         if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
             return ctx.reply {
@@ -110,7 +111,7 @@ class AutoPorn : Command {
         }
     }
 
-    @SubCommand
+    @SubCommand(description = "View the Auto-Porn configuration for this server.")
     fun status(ctx: Context) {
         val wh = BoobBot.database.getWebhook(ctx.guild!!.id)
             ?: return ctx.reply {
