@@ -1,18 +1,21 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import okhttp3.Headers.Companion.headersOf
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {
 
     private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
 
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val user = ctx.mentions.firstOrNull() ?: ctx.user
+    override suspend fun executeAsync(ctx: Context) {
+        val user = ctx.options.getByNameOrNext("to", Resolver.USER) ?: ctx.user
 
         if (user.idLong == BoobBot.selfId) {
             return ctx.reply(Formats.error("Don't you fucking touch me whore, i will end you."))
@@ -25,7 +28,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
 
         if (!isUserReceivingNudes) {
-            return ctx.reply(Formats.error("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `bbopt in`"))
+            return ctx.reply(Formats.error("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `@BoobBot opt in`"))
         }
 
         if (category == "dicks") {

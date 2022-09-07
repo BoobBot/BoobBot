@@ -3,8 +3,10 @@ package bot.boobbot.commands.nsfw
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
@@ -19,20 +21,20 @@ import java.time.Instant
     category = Category.VIDEOSEARCHING,
     donorOnly = true
 )
+@Option(name = "query", description = "The search query.")
 class RedTube : AsyncCommand {
     private fun urlFor(query: String): String {
         return "https://api.redtube.com/?data=redtube.Videos.searchVideos&output=json&thumbsize=big&ordering=mostviewed&page=1&search=$query"
     }
 
-    override suspend fun executeAsync(ctx: MessageContext) {
-        if (ctx.args.isEmpty()) {
-            return ctx.reply {
+    override suspend fun executeAsync(ctx: Context) {
+        val userQuery = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
             }
-        }
 
-        val query = if (ctx.args[0].lowercase() != "random") ctx.args[0].lowercase() else Formats.tag.random()
+        val query = if (userQuery.lowercase() != "random") userQuery.lowercase() else Formats.tag.random()
 
         val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()?.takeIf { it.has("videos") }
             ?: return ctx.reply("\uD83D\uDEAB oh? something broken af")
@@ -44,7 +46,7 @@ class RedTube : AsyncCommand {
             setAuthor("RedTube video search", video.getString("embed_url"), "https://cdn.discordapp.com/attachments/440667148315262978/490353839577497623/rt.png")
             setTitle(video.getString("title"), video.getString("url"))
             setDescription("RedTube video search")
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             setImage(video.getString("thumb"))
             addField(
                 "Video stats",

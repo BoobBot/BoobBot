@@ -15,6 +15,7 @@ class Indexer(pkg: String) {
         val allCommands = reflections.getSubTypesOf(Command::class.java)
             .filter { !Modifier.isAbstract(it.modifiers) && !it.isInterface }
 
+        // TODO: Options
         return allCommands.map { it.getDeclaredConstructor().newInstance() }.map {
             val category = if (it.properties.groupByCategory) it::class.java.packageName.split('.').last() else null
             ExecutableCommand(it, getSubCommands(it).associateBy(SubCommandWrapper::name), it.properties.slashEnabled, category)
@@ -22,21 +23,14 @@ class Indexer(pkg: String) {
     }
 
     fun getSubCommands(kls: Command): List<SubCommandWrapper> {
-        val subcommands = mutableListOf<SubCommandWrapper>()
+        // TODO: Options
 
-        for (meth in kls::class.java.methods) { // WAS' BREWING Y'ALLL
-            if (!meth.isAnnotationPresent(SubCommand::class.java)) {
-                continue
+        return kls::class.java.methods.filter { it.isAnnotationPresent(SubCommand::class.java) }
+            .map {
+                val name = it.name.lowercase()
+                val props = it.getDeclaredAnnotation(SubCommand::class.java)
+                SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, it, kls)
             }
-
-            val props = meth.getDeclaredAnnotation(SubCommand::class.java)
-
-            val name = meth.name.lowercase()
-            val wrapper = SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, meth, kls)
-            subcommands.add(wrapper)
-        }
-
-        return subcommands.toList()
     }
 
 }

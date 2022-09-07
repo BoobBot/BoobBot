@@ -20,7 +20,7 @@ import java.time.Instant
 )
 class Help : Command {
     override fun execute(ctx: Context) {
-        if (ctx is SlashContext) {
+        if (ctx.isSlashContext) {
             return ctx.reply("This command can't be used as a slash command, whore.")
         }
 

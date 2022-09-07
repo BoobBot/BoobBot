@@ -3,8 +3,11 @@ package bot.boobbot.commands.nsfw
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Choice
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import okhttp3.Headers.Companion.headersOf
@@ -17,23 +20,25 @@ import java.awt.Color
     guildOnly = true,
     category = Category.GENERAL
 )
+@Option(name = "category", description = "The image category to print.", choices = [Choice("Dick", "penis"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Black", "black"), Choice("Tentacle", "tentacle"), Choice("PAWG", "pawg"), Choice("Hentai", "hentai"), Choice("Easter", "easter")])
 class Printer : AsyncCommand {
+    companion object {
+        private val baseUrl = "http://127.0.0.1:7080/printer".toHttpUrlOrNull()!!
+        private val categories = mapOf(
+            "dick" to "penis",
+            "boobs" to "boobs",
+            "ass" to "ass",
+            "black" to "black",
+            "tentacle" to "tentacle",
+            "pawg" to "pawg",
+            "hentai" to "hentai",
+            "easter" to "easter"
+        )
+        val typeString = categories.keys.joinToString("`, `", prefix = "`", postfix = "`")
+    }
 
-    private val baseUrl = "http://127.0.0.1:7080/printer".toHttpUrlOrNull()!!
-    private val categories = mapOf(
-        "dick" to "penis",
-        "boobs" to "boobs",
-        "ass" to "ass",
-        "black" to "black",
-        "tentacle" to "tentacle",
-        "pawg" to "pawg",
-        "hentai" to "hentai",
-        "easter" to "easter"
-    )
-    val typeString = categories.keys.joinToString("`, `", prefix = "`", postfix = "`")
-
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val category = categories[ctx.args.firstOrNull()]
+    override suspend fun executeAsync(ctx: Context) {
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.let(categories::get)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: $typeString"))

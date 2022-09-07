@@ -39,5 +39,18 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
 
         val STRING = Resolver(OptionMapping::getAsString) { it }
         val INTEGER = Resolver(OptionMapping::getAsInt, String::toIntOrNull)
+        val USER = Resolver(OptionMapping::getAsUser) { arg ->
+            when {
+                arg.length > 1 && arg.startsWith('@') -> {
+                    val parsed = arg.drop(1)
+                    return@Resolver BoobBot.shardManager.userCache.find { u -> u.name.equals(parsed, true) }
+                }
+                arg.length > 1 && arg.startsWith('<') -> {
+                    val parsed = arg.dropWhile { !it.isDigit() }.takeWhile { it.isDigit() }
+                    return@Resolver parseSnowflake(parsed, BoobBot.shardManager::getUserById)
+                }
+                else -> return@Resolver parseSnowflake(arg, BoobBot.shardManager::getUserById)
+            }
+        }
     }
 }

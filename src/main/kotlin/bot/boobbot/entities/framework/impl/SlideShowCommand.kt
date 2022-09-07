@@ -1,7 +1,7 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.*
 import net.dv8tion.jda.api.EmbedBuilder
@@ -16,34 +16,22 @@ import java.util.concurrent.TimeUnit
 
 abstract class SlideShowCommand : Command {
 
-    private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
+    companion object {
+        private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
+        private val allowedEndpoints = arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "tentacle", "thicc", "red")
+        private val endpointStr = allowedEndpoints.joinToString(", ")
+    }
 
-    private val aliases = mapOf(
-        "dick" to "penis",
-        "gif" to "Gifs",
-        "aly" to "tentacle"
-    )
-    private val allowedEndpoints =
-        arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "aly", "thicc", "red")
-    private val endpointStr = allowedEndpoints.joinToString(", ")
-
-    override fun execute(ctx: MessageContext) {
-        if (ctx.args.isEmpty() || !allowedEndpoints.contains(ctx.args[0].lowercase())) {
-            return ctx.reply {
+    override fun execute(ctx: Context) {
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.takeIf { it in allowedEndpoints }
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: $endpointStr"))
             }
-        }
 
-        if (ctx.guild != null && ctx.botCan(Permission.MESSAGE_MANAGE)) {
-            ctx.message.delete().queue(null, {})
-        }
+        val color = Colors.getEffectiveColor(ctx.member)
 
-        val query = ctx.args[0].lowercase()
-        val endpoint = aliases[query] ?: query
-        val color = Colors.getEffectiveColor(ctx.message)
-
-        BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$endpoint?count=20", headers).queue { res ->
+        BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category?count=20", headers).queue { res ->
             val json = res?.json()
                 ?: return@queue ctx.reply(Formats.error(" oh? something broken af"))
 

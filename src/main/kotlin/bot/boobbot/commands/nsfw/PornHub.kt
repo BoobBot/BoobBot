@@ -3,8 +3,10 @@ package bot.boobbot.commands.nsfw
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
@@ -19,20 +21,20 @@ import java.time.Instant
     nsfw = true,
     category = Category.VIDEOSEARCHING
 )
+@Option(name = "query", description = "The search query.")
 class PornHub : AsyncCommand {
     private fun urlFor(query: String): String {
         return "https://www.pornhub.com/webmasters/search?search=$query&output=json${(0..99999).random()}"
     }
 
-    override suspend fun executeAsync(ctx: MessageContext) {
-        if (ctx.args.isEmpty()) {
-            return ctx.reply {
+    override suspend fun executeAsync(ctx: Context) {
+        val userQuery = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }
+            ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
+                setDescription(Formats.error("Missing Args\nbbph <tag> or random\n"))
             }
-        }
 
-        val query = if (ctx.args[0].lowercase() != "random") ctx.args[0].lowercase() else Formats.tag.random()
+        val query = if (userQuery.lowercase() != "random") userQuery.lowercase() else Formats.tag.random()
 
         val rt = BoobBot.requestUtil.get(urlFor(query)).await()?.json()?.takeIf { it.has("videos") }
             ?: return ctx.reply("\uD83D\uDEAB oh? something broken af")
@@ -44,7 +46,7 @@ class PornHub : AsyncCommand {
             setAuthor("PornHub video search", video.getString("url"), "https://data.apkhere.com/b2/com.app.pornhub/4.1.1/icon.png!s")
             setTitle(video.getString("title"), video.getString("url"))
             setDescription("PornTube video search")
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             setImage(video.getString("thumb"))
             addField(
                 "Video stats",

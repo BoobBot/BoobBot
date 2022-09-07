@@ -3,8 +3,11 @@ package bot.boobbot.commands.nsfw
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Choice
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.utils.FileUpload
@@ -19,17 +22,19 @@ import java.awt.Color
     donorOnly = true,
     category = Category.GENERAL
 )
+@Option(name = "category", description = "The image category to use.", choices = [Choice("Dick", "penis"), Choice("Boobs", "boobs"), Choice("Ass", "ass")])
 class Magik : AsyncCommand {
+    companion object {
+        private val baseUrl = "https://memes.subspace.gg/api/magik".toHttpUrlOrNull()!!
+        private val categories = mapOf(
+            "dick" to "penis",
+            "boobs" to "boobs",
+            "ass" to "ass"
+        )
+    }
 
-    private val baseUrl = "https://memes.subspace.gg/api/magik".toHttpUrlOrNull()!!
-    private val categories = mapOf(
-        "dick" to "penis",
-        "boobs" to "boobs",
-        "ass" to "ass"
-    )
-
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val category = categories[ctx.args.firstOrNull()]
+    override suspend fun executeAsync(ctx: Context) {
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.let(categories::get)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
@@ -44,8 +49,7 @@ class Magik : AsyncCommand {
             ?.body
             ?: return ctx.reply("API didn't respond with an image, rip")
 
-
-        ctx.channel.sendFiles(FileUpload.fromData(image.byteStream(), "magik.png")).queue()
+        ctx.reply(FileUpload.fromData(image.byteStream(), "magik.png"))
     }
 
     private suspend fun getImage(category: String): String? {

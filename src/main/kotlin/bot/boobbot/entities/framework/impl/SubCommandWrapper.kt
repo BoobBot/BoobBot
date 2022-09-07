@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.Command
 import kotlinx.coroutines.GlobalScope
@@ -20,14 +21,17 @@ class SubCommandWrapper(
 ) {
 
     @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
-    fun execute(ctx: MessageContext, vararg additionalArgs: Any?) {
+    fun execute(ctx: Context, vararg additionalArgs: Any?) {
         if (async) {
             GlobalScope.async {
                 try {
                     executeAsync(ctx)
                 } catch (e: Throwable) {
                     BoobBot.log.error("Error in subcommand $name", e)
-                    ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
+
+                    if (!ctx.isSlashContext) {
+                        ctx.react(Emoji.fromUnicode("\uD83D\uDEAB"))
+                    }
                 }
             }
         } else {
@@ -35,12 +39,15 @@ class SubCommandWrapper(
                 method.invoke(kls, ctx, *additionalArgs)
             } catch (e: Throwable) {
                 BoobBot.log.error("Error in subcommand $name", e)
-                ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDEAB")).queue()
+
+                if (!ctx.isSlashContext) {
+                    ctx.react(Emoji.fromUnicode("\uD83D\uDEAB"))
+                }
             }
         }
     }
 
-    private suspend fun executeAsync(ctx: MessageContext, vararg additionalArgs: Any?) {
+    private suspend fun executeAsync(ctx: Context, vararg additionalArgs: Any?) {
         suspendCoroutine<Unit> {
             method.invoke(kls, ctx, *additionalArgs, it)
         }

@@ -44,7 +44,7 @@ class AutoPorn : Command {
     }
 
     @SubCommand(description = "Set the Auto-Porn category and channel.")
-    @Option(name = "category", description = "The image category.", choices = [Choice("gif", "Gifs"), Choice("boobs", "boobs"), Choice("ass", "ass"), Choice("gay", "gay"), Choice("random", "nsfw")])
+    @Option(name = "category", description = "The image category.", choices = [Choice("Gif", "Gifs"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Gay", "gay"), Choice("Random", "nsfw")])
     @Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     fun set(ctx: Context) {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.let(types::get)

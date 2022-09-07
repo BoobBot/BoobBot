@@ -37,7 +37,7 @@ abstract class BbApiInteractionCommand(private val category: String, private val
 
         ctx.reply {
             setTitle(title.format(ctx.user.name, target.name))
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             setImage(res.getString("url"))
             setTimestamp(Instant.now())
         }
