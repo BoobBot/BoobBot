@@ -1,36 +1,34 @@
 package bot.boobbot.entities.framework.impl
 
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.Command
 import net.dv8tion.jda.api.entities.IMentionable
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
+import org.jetbrains.kotlin.builtins.StandardNames.FqNames.target
 import java.util.regex.Pattern
 
 abstract class ModCommand : Command {
-    fun resolveTargetAndReason(ctx: MessageContext): Resolved {
-        val userArgument = ctx.args.take(1)
-        val reasonArgument = ctx.args.drop(1)
+    fun resolveTargetAndReason(ctx: Context): Resolved {
+        val user = ctx.options.getByNameOrNext("target", Resolver.USER)
+        val reason = ctx.options.getOptionStringOrGather("reason")
 
-        if (userArgument.isEmpty()) {
-            return Resolved(null, null)
+        if (user == null) {
+            return Resolved.EMPTY
         }
 
-        val reason = if (reasonArgument.isEmpty()) null else reasonArgument.joinToString(" ")
-        val target = ctx.message.mentions.members.firstOrNull()
-            ?: userArgument.first().matchGroup(snowflakePattern)?.let(User::fromId)
-            ?: return Resolved(null, null)
-
-        return Resolved(target, reason)
+        return Resolved(user, ctx.guild!!.getMemberById(user.idLong), reason)
     }
 
-    class Resolved(target: IMentionable?, val actionReason: String?) {
-        val member: Member? = target as? Member
-        val user: User? = target as? User ?: member?.user
-
-        operator fun component1() = member
-        operator fun component2() = user
+    class Resolved(val user: User?, val member: Member?, val actionReason: String?) {
+        operator fun component1() = user
+        operator fun component2() = member
         operator fun component3() = actionReason
+
+        companion object {
+            val EMPTY = Resolved(null, null, null)
+        }
     }
 
     companion object {

@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework.impl
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildChannel
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
@@ -33,6 +34,22 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
                         return@Resolver parseSnowflake(parsed, guild::getGuildChannelById)
                     }
                     else -> return@Resolver parseSnowflake(arg, guild::getGuildChannelById)
+                }
+            }
+        }
+
+        fun member(guild: Guild): Resolver<Member> {
+            return Resolver(OptionMapping::getAsMember) { arg ->
+                when {
+                    arg.length > 1 && arg.startsWith('@') -> {
+                        val parsed = arg.drop(1)
+                        return@Resolver guild.memberCache.find { m -> m.user.name.equals(parsed, true) }
+                    }
+                    arg.length > 1 && arg.startsWith('<') -> {
+                        val parsed = arg.dropWhile { !it.isDigit() }.takeWhile { it.isDigit() }
+                        return@Resolver parseSnowflake(parsed, guild::getMemberById)
+                    }
+                    else -> return@Resolver parseSnowflake(arg, guild::getMemberById)
                 }
             }
         }

@@ -2,6 +2,7 @@ package bot.boobbot.commands.mod
 
 import bot.boobbot.entities.framework.*
 import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ModCommand
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.awaitSuppressed
@@ -9,6 +10,7 @@ import bot.boobbot.utils.thenException
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Invite
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -20,9 +22,11 @@ import java.util.concurrent.TimeUnit
     userPermissions = [Permission.BAN_MEMBERS],
     botPermissions = [Permission.BAN_MEMBERS]
 )
+@Option(name = "target", description = "The user to ban.", type = OptionType.USER)
+@Option(name = "reason", description = "The reason for the action.", required = false)
 class SoftBan : AsyncCommand, ModCommand() {
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val (member, user, reason) = resolveTargetAndReason(ctx)
+    override suspend fun executeAsync(ctx: Context) {
+        val (user, member, reason) = resolveTargetAndReason(ctx)
         val auditReason = reason ?: "No reason was given"
 
         if (user == null) {
@@ -71,7 +75,7 @@ class SoftBan : AsyncCommand, ModCommand() {
             })
     }
 
-    fun generateInvite(ctx: MessageContext): CompletableFuture<Invite?> {
+    fun generateInvite(ctx: Context): CompletableFuture<Invite?> {
         val fut = CompletableFuture<Invite?>()
         val targetChannel = ctx.guild!!.textChannelCache.firstOrNull { ctx.selfMember!!.hasPermission(it, Permission.CREATE_INSTANT_INVITE) }
 

@@ -1,10 +1,13 @@
 package bot.boobbot.commands.mod
 
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ModCommand
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.interactions.commands.OptionType
 
 @CommandProperties(
     description = "Boot an asshat from the server.",
@@ -15,9 +18,11 @@ import net.dv8tion.jda.api.Permission
     userPermissions = [Permission.BAN_MEMBERS],
     botPermissions = [Permission.BAN_MEMBERS]
 )
+@Option(name = "target", description = "The user to ban.", type = OptionType.USER)
+@Option(name = "reason", description = "The reason for the action.", required = false)
 class Ban : ModCommand() {
-    override fun execute(ctx: MessageContext) {
-        val (member, user, reason) = resolveTargetAndReason(ctx)
+    override fun execute(ctx: Context) {
+        val (user, member, reason) = resolveTargetAndReason(ctx)
         val auditReason = reason ?: "No reason was given"
 
         if (user == null) {
