@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
@@ -18,7 +19,7 @@ class Perks : Command {
         private const val PREMIUM_SERVERS = 3
     }
 
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         ctx.reply {
             setColor(Colors.rndColor)
             setTitle("Perks.")
@@ -41,7 +42,7 @@ class Perks : Command {
     }
 
     @SubCommand(aliases = ["redeem"], description = "Link your Patreon subscription to the bot.")
-    fun link(ctx: MessageContext) {
+    fun link(ctx: Context) {
         ctx.reply("Searching for your subscription. This could take up to 30 seconds.")
 
         BoobBot.pApi.fetchPledgesOfCampaign("1928035").thenAccept {
@@ -64,7 +65,7 @@ class Perks : Command {
     }
 
     @SubCommand(description = "Link a server to your subscription.")
-    fun add(ctx: MessageContext) {
+    fun add(ctx: Context) {
         if (!ctx.isFromGuild) {
             return ctx.reply("Run this command in a guild, whore.")
         }
@@ -95,19 +96,19 @@ class Perks : Command {
                     return ctx.reply("wtf? go cancel your other interaction first, whore.")
                 }
 
-                ctx.message({
+                ctx.message {
                     content("Hey whore, are you *really* sure you want to add **${ctx.guild.name}** to your premium servers?")
                     row {
                         button(ButtonStyle.SUCCESS, "ps:accept:${ctx.user.id}", "Add Server")
                         button(ButtonStyle.DANGER, "ps:cancel:${ctx.user.id}", "Cancel")
                     }
-                })
+                }
             }
         }
     }
 
     @SubCommand(description = "Remove a server from your subscription.")
-    fun remove(ctx: MessageContext) {
+    fun remove(ctx: Context) {
         val servers = BoobBot.database.getPremiumServers(ctx.user.idLong)
 
         if (servers.isEmpty()) {
@@ -135,7 +136,7 @@ class Perks : Command {
             return ctx.reply("wtf? go cancel your other interaction first, whore.")
         }
 
-        ctx.message({
+        ctx.message {
             content("Select the server you want to remove from the list below.\nThis prompt will time out in 15 seconds.")
             row {
                 menu("menu:ps:${ctx.user.id}") {
@@ -147,11 +148,11 @@ class Perks : Command {
             row {
                 button(ButtonStyle.DANGER, "ps:cancel:${ctx.user.id}", "Cancel")
             }
-        })
+        }
     }
 
     @SubCommand(description = "Lists all servers attached to your subscription.")
-    fun list(ctx: MessageContext) {
+    fun list(ctx: Context) {
         val servers = BoobBot.database.getPremiumServers(ctx.user.idLong)
 
         if (servers.isEmpty()) {

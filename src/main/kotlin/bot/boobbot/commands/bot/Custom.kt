@@ -1,10 +1,13 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.Permission
@@ -12,31 +15,27 @@ import net.dv8tion.jda.api.Permission
 @CommandProperties(aliases = ["cc"], description = "Custom commands", guildOnly = true)
 class Custom : Command {
 
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         ctx.reply("`bbcc <${subcommands.keys.joinToString("|")}>`")
     }
 
-    @SubCommand
-    fun add(ctx: MessageContext) {
+    @SubCommand(description = "Add a custom tag.")
+    @Option(name = "name", description = "The name of the tag.")
+    @Option(name = "content", description = "The tag content.")
+    fun add(ctx: Context) {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             return ctx.reply("You don't have `MANAGE_SERVER` permission, whore.")
         }
 
-        if (!Utils.checkDonor(ctx.message)) {
-            return ctx.reply(
-                Formats.error(
-                    " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
-                            + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
-                )
-            )
+        if (!Utils.checkDonor(ctx)) {
+            return ctx.reply(Formats.error(" Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"))
         }
 
-        if (ctx.args.isEmpty() || ctx.args.size < 2) {
-            return ctx.reply("You need to specify tag name and content, whore.")
-        }
+        val tagName = ctx.options.getByNameOrNext("name", Resolver.STRING)
+            ?: return ctx.reply("You need to specify a tag name, whore.")
 
-        val tagName = ctx.args[0]
-        val tagContent = ctx.args.drop(1).joinToString(" ")
+        val tagContent = ctx.options.getOptionStringOrGather("content")
+            ?: return ctx.reply("You need to specify tag content, whore.")
 
         BoobBot.database.addCustomCommand(ctx.guild!!.id, tagName, tagContent)
         ctx.reply("done whore")

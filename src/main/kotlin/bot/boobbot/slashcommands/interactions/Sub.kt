@@ -17,32 +17,32 @@ class Sub : AsyncCommand {
 
     override suspend fun executeAsync(ctx: MessageContext) {
         val target = ctx.mentions.firstOrNull()
-            ?: return ctx.send {
+            ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
             }
 
         if (target.idLong == BoobBot.selfId) {
-            return ctx.send("Don't you fucking touch me whore, I will end you.")
+            return ctx.reply("Don't you fucking touch me whore, I will end you.")
         }
 
         if (target.isBot) {
-            return ctx.send("Don't you fucking touch the bots, I will end you.")
+            return ctx.reply("Don't you fucking touch the bots, I will end you.")
         }
 
-        if (target.idLong == ctx.author.idLong) {
-            return ctx.send("aww how sad you wanna fuck with yourself, well fucking don't, go find a friend whore.")
+        if (target.idLong == ctx.user.idLong) {
+            return ctx.reply("aww how sad you wanna fuck with yourself, well fucking don't, go find a friend whore.")
         }
 
 
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/sub", headersOf("Key", BoobBot.config.BB_API_KEY))
             .await()
             ?.json()
-            ?: return ctx.send(Formats.error(" oh? something broken af"))
+            ?: return ctx.reply(Formats.error(" oh? something broken af"))
 
-        ctx.send {
-            setTitle("<:sub:866437395318833193> ${ctx.author.name} Makes ${target.name} there sub.")
-            setColor(Colors.getEffectiveColor(ctx.message))
+        ctx.reply {
+            setTitle("<:sub:866437395318833193> ${ctx.user.name} Makes ${target.name} there sub.")
+            setColor(Colors.getEffectiveColor(ctx.member))
             setImage(res.getString("url"))
             setTimestamp(Instant.now())
         }

@@ -4,12 +4,14 @@ import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.entities.framework.interfaces.Options
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
+import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import net.dv8tion.jda.api.managers.AudioManager
@@ -86,12 +88,18 @@ abstract class Context(val mentionTrigger: Boolean,
         }
     }
 
+    open fun react(emoji: Emoji) {
+        throw UnsupportedOperationException()
+    }
+
     abstract fun reply(content: String, ephemeral: Boolean = false)
 
     abstract fun reply(file: FileUpload, ephemeral: Boolean = false)
 
+    abstract fun reply(embed: MessageEmbed, ephemeral: Boolean = false)
+
     abstract fun reply(ephemeral: Boolean = false, embed: EmbedBuilder.() -> Unit)
 
-    abstract fun reply(embed: MessageEmbed, ephemeral: Boolean = false)
+    abstract fun message(ephemeral: Boolean = false, message: DSLMessageBuilder.() -> Unit)
 
 }

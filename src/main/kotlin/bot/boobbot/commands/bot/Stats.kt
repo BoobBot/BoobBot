@@ -1,9 +1,11 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.internals.CodeblockBuilder
 import bot.boobbot.utils.Utils
 import com.sun.management.OperatingSystemMXBean
@@ -18,7 +20,18 @@ class Stats : Command {
 
     private val dpFormatter = DecimalFormat("0.00")
 
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) = full(ctx)
+
+    @SubCommand(description = "Overview of bot statistics.")
+    fun minimal(ctx: Context) {
+        val shards = BoobBot.shardManager.shardsTotal
+        val shardsOnline = BoobBot.shardManager.onlineShards.size
+        val averageShardLatency = BoobBot.shardManager.averageGatewayPing
+        ctx.reply("**Shard info**: $shardsOnline/$shards\n**Average latency**: ${averageShardLatency}ms")
+    }
+
+    @SubCommand(description = "Full bot statistics.")
+    fun full(ctx: Context) {
         val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)

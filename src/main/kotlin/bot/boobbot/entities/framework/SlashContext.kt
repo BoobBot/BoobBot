@@ -47,17 +47,15 @@ class SlashContext(val event: SlashCommandInteractionEvent) : Context(false, mut
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message(ephemeral) { file(file) }
 
+    override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message(ephemeral) { embed(embed) }
+
     override fun reply(ephemeral: Boolean, embed: EmbedBuilder.() -> Unit) = message(ephemeral) { embed(embed) }
 
-    override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message(ephemeral) { embed(embed) }
+    override fun message(ephemeral: Boolean, message: DSLMessageBuilder.() -> Unit) = reply(DSLMessageBuilder().apply(message).build(), ephemeral, null, null)
 
     fun reply(content: String, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)?, failure: ((Throwable) -> Unit)) = reply(MessageCreateData.fromContent(content), ephemeral, success, failure)
 
-    fun message(ephemeral: Boolean = false, m: DSLMessageBuilder.() -> Unit) = reply(DSLMessageBuilder().apply(m).build(), ephemeral, null, null)
-
-    fun reply(message: MessageCreateBuilder, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) {
-        reply(message.build(), ephemeral, success, failure)
-    }
+    fun reply(message: MessageCreateBuilder, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)? = null, failure: ((Throwable) -> Unit)? = null) = reply(message.build(), ephemeral, success, failure)
 
     private fun reply(message: MessageCreateData, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)?, failure: ((Throwable) -> Unit)?) {
         if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {

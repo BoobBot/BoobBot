@@ -8,7 +8,11 @@ class SlashOptions(private val options: List<OptionMapping>) : Options {
         return options.firstOrNull { it.name == name }?.let(resolver::resolve)
     }
 
-    override fun getOptionOrGather(name: String): String? {
+    override fun getOptionStringOrGather(name: String): String? {
         return options.firstOrNull { it.name == name }?.let(OptionMapping::getAsString)
+    }
+
+    override fun raw(): List<String> {
+        throw UnsupportedOperationException("SlashOptions does not support raw()!")
     }
 }

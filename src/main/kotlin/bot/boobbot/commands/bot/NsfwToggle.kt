@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
@@ -14,7 +15,7 @@ import net.dv8tion.jda.api.Permission
 )
 class NsfwToggle : Command {
 
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (!ctx.botCan(Permission.MANAGE_CHANNEL)) {
             return ctx.reply("\uD83D\uDEAB Hey whore, I lack the `MANAGE_CHANNEL` permission needed to do this")
         }

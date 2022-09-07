@@ -12,6 +12,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.awt.Color
 
 @CommandProperties(
@@ -44,6 +45,7 @@ class AutoPorn : Command {
 
     @SubCommand(description = "Set the Auto-Porn category and channel.")
     @Option(name = "category", description = "The image category.", choices = [Choice("gif", "Gifs"), Choice("boobs", "boobs"), Choice("ass", "ass"), Choice("gay", "gay"), Choice("random", "nsfw")])
+    @Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     fun set(ctx: Context) {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.let(types::get)
             ?: return ctx.reply {
@@ -95,7 +97,7 @@ class AutoPorn : Command {
             }
     }
 
-    @SubCommand(description = "Delete the Auto-Porn configuration for this server.", aliases = ["disable"])
+    @SubCommand(aliases = ["disable"], description = "Delete the Auto-Porn configuration for this server.")
     fun delete(ctx: Context) {
         if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
             return ctx.reply {

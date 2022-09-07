@@ -6,4 +6,6 @@ interface Options {
     fun <T> getByNameOrNext(name: String, resolver: Resolver<T>): T?
 
     fun getOptionStringOrGather(name: String): String?
+
+    fun raw(): List<String>
 }

@@ -1,6 +1,7 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
@@ -12,20 +13,19 @@ import bot.boobbot.entities.framework.annotations.SubCommand
     aliases = ["cb"]
 )
 class CockBlock : Command {
-    override fun execute(ctx: MessageContext) {
-        ctx.reply("`bbcockblock <${subcommands.keys.joinToString("|")}>`")
+    override fun execute(ctx: Context) {
+        sendSubcommandHelp(ctx)
     }
 
-    @SubCommand(aliases = ["On"])
-    fun on(ctx: MessageContext) {
+    @SubCommand(aliases = ["On"], description = "Disable receiving dicks in DMs.")
+    fun on(ctx: Context) {
         BoobBot.database.setUserCockBlocked(ctx.user.id, true)
         ctx.reply("You're no longer able to receive dicks via DMs \uD83C\uDF46") // eggplant
     }
 
-    @SubCommand(aliases = ["Off"])
-    fun off(ctx: MessageContext) {
+    @SubCommand(aliases = ["Off"], description = "Enable receiving dicks in DMs.")
+    fun off(ctx: Context) {
         BoobBot.database.setUserCockBlocked(ctx.user.id, false)
         ctx.reply("You're now able to receive dicks via DMs <:moans:583453348984913933>")
     }
-
 }

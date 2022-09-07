@@ -20,6 +20,6 @@ annotation class CommandProperties(
 
     // Whether this should be indexed as a slash command.
     val slashEnabled: Boolean = true,
-    // Whether this command should be part of a
+    // Whether this command should be grouped by its parent package name.
     val groupByCategory: Boolean = false
 )

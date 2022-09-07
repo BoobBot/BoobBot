@@ -19,21 +19,26 @@ import java.time.Instant
     slashEnabled = false
 )
 class Help : Command {
-    override fun execute(ctx: MessageContext) {
-        val isDm = ctx.args.lastOrNull()?.lowercase() == "--dm"
-        val command = ctx.args.firstOrNull()?.let(BoobBot.commands::findCommand)
-        val category = ctx.args.firstOrNull()?.let(::getCategoryByName)
+    override fun execute(ctx: Context) {
+        if (ctx is SlashContext) {
+            return ctx.reply("This command can't be used as a slash command, whore.")
+        }
+
+        val args = ctx.options.raw()
+        val isDm = args.lastOrNull()?.lowercase() == "--dm"
+        val command = args.firstOrNull()?.let(BoobBot.commands::findCommand)
+        val category = args.firstOrNull()?.let(::getCategoryByName)
 
         when {
-            ctx.args.isEmpty() || ctx.args.first().equals("--dm", true) -> sendCategories(ctx, isDm)
+            args.isEmpty() || args.first().equals("--dm", true) -> sendCategories(ctx, isDm)
             command != null -> sendCommandHelp(ctx, command, isDm)
             category != null -> sendCategoryCommands(ctx, category, isDm)
-            else -> ctx.reply("`${ctx.args.first().replace("@", "")}` is not a command/category, whore.")
+            else -> ctx.reply("`${args.first().replace("@", "")}` is not a command/category, whore.")
         }
     }
 
-    private fun sendCategories(ctx: MessageContext, dm: Boolean) {
-        val prefix = ctx.jda.selfUser.asMention
+    private fun sendCategories(ctx: Context, dm: Boolean) {
+        val prefix = ctx.selfUser.asMention
         val embed = builder(ctx)
 
         val content = StringBuilder()
@@ -58,7 +63,7 @@ class Help : Command {
         send(ctx, embed, dm)
     }
 
-    private fun sendCategoryCommands(ctx: MessageContext, category: Category, dm: Boolean) {
+    private fun sendCategoryCommands(ctx: Context, category: Category, dm: Boolean) {
         val prefix = ctx.prefix
 
         val categoryCommands = BoobBot.commands.values
@@ -72,7 +77,7 @@ class Help : Command {
         send(ctx, embed, dm)
     }
 
-    private fun sendCommandHelp(ctx: MessageContext, command: ExecutableCommand, dm: Boolean) {
+    private fun sendCommandHelp(ctx: Context, command: ExecutableCommand, dm: Boolean) {
         val prefix = ctx.prefix
         val aliases = command.properties.aliases.takeUnless { it.isEmpty() }?.joinToString(", ") ?: "None"
         val info = String.format(
@@ -84,20 +89,20 @@ class Help : Command {
         send(ctx, embed, dm)
     }
 
-    private fun send(ctx: MessageContext, embed: EmbedBuilder, dm: Boolean) {
+    private fun send(ctx: Context, embed: EmbedBuilder, dm: Boolean) {
         if (dm) {
             ctx.dm(embed.build())
-            ctx.message.addReaction(Emoji.fromUnicode("\uD83D\uDCEC")).queue()
+            ctx.react(Emoji.fromUnicode("\uD83D\uDCEC"))
         } else {
-            ctx.send(embed.build())
+            ctx.reply(embed.build())
         }
     }
 
-    private fun builder(ctx: MessageContext): EmbedBuilder {
+    private fun builder(ctx: Context): EmbedBuilder {
         val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
 
         return EmbedBuilder()
-            .setColor(Colors.getEffectiveColor(ctx.message))
+            .setColor(Colors.getEffectiveColor(ctx.member))
             .setAuthor(
                 "${ctx.selfUser.name} help ${Formats.MAGIC_EMOTE}",
                 "https://boob.bot/commands",
