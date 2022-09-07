@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.*
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.SubCommand
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
@@ -33,33 +34,27 @@ class AutoPorn : Command {
         return String.format("https://discordapp.com/api/webhooks/%s/%s", channelId, token)
     }
 
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
             return ctx.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
         }
 
-        if (ctx.args.isEmpty()) {
-            return ctx.reply {
-                setColor(Color.red)
-                setDescription(Formats.error("Missing subcommand\nbbautoporn <subcommand>\nSubcommands: `set`, `delete`, `status`"))
-            }
-        }
+        sendSubcommandHelp(ctx)
     }
 
     @SubCommand
-    fun set(ctx: MessageContext) {
-        if (ctx.args.size < 2 ||
-            ctx.args[0].isEmpty() ||
-            !types.containsKey(ctx.args[0].lowercase()) ||
-            ctx.message.mentions.getChannels(TextChannel::class.java).isEmpty()
-        ) {
-            return ctx.reply {
+    fun set(ctx: Context) {
+        val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.let(types::get)
+            ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
+                setDescription(Formats.error("Invalid Category\nbbautoporn set <category> <#channel>\nCategories: $typeString"))
             }
-        }
 
-        val channel = ctx.message.mentions.getChannels(TextChannel::class.java)[0]
+        val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild!!)) as? TextChannel
+            ?: return ctx.reply {
+                setColor(Color.red)
+                setDescription(Formats.error("Invalid Channel\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
+            }
 
         if (!channel.isNSFW) {
             return ctx.reply {
@@ -77,8 +72,7 @@ class AutoPorn : Command {
             .submit()
             .thenAccept {
                 val url = formatWebhookUrl(it.id, it.token!!)
-                val imageType = types[ctx.args[0].lowercase()]!!
-                BoobBot.database.setWebhook(ctx.guild!!.id, url, imageType, channel.id)
+                BoobBot.database.setWebhook(ctx.guild.id, url, imageCategory, channel.id)
 
                 ctx.reply {
                     setColor(Color.red)
@@ -101,7 +95,7 @@ class AutoPorn : Command {
     }
 
     @SubCommand(aliases = ["disable"])
-    fun delete(ctx: MessageContext) {
+    fun delete(ctx: Context) {
         if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
             return ctx.reply {
                 setColor(Color.red)
@@ -117,7 +111,7 @@ class AutoPorn : Command {
     }
 
     @SubCommand
-    fun status(ctx: MessageContext) {
+    fun status(ctx: Context) {
         val wh = BoobBot.database.getWebhook(ctx.guild!!.id)
             ?: return ctx.reply {
                 setColor(Color.red)
