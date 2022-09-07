@@ -7,8 +7,8 @@ class MessageOptions(private val args: MutableList<String>) : Options {
         return args.takeIf { it.isNotEmpty() }?.removeAt(0)?.let(resolver::resolve)
     }
 
-    override fun getOptionStringOrGather(name: String): String {
-        return args.joinToString(" ")
+    override fun getOptionStringOrGather(name: String): String? {
+        return args.joinToString(" ").takeIf { it.isNotEmpty() }
     }
 
     override fun raw() = args

@@ -19,7 +19,7 @@ import bot.boobbot.utils.toUriOrNull
 )
 class Play : VoiceCommand {
     override fun execute(ctx: Context) {
-        val query = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }?.removeSurrounding("<", ">")
+        val query = ctx.options.getOptionStringOrGather("query")?.removeSurrounding("<", ">")
             ?: return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
 
         val nsfwCheck = "pornhub" in query.lowercase() || "redtube" in query.lowercase()

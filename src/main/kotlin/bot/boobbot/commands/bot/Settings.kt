@@ -159,7 +159,7 @@ class Settings : Command {
 
 
     @SubCommand(aliases = ["ic"], description = "Ignores messages in a channel for any member without \"manage messages\".")
-    @Option(name = "channel", description = "The channel to ignore.", type = OptionType.CHANNEL)
+    @Option(name = "channel", description = "The channel to ignore.", type = OptionType.CHANNEL, required = false)
     fun ignoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) ?: ctx.channel
@@ -174,7 +174,7 @@ class Settings : Command {
     }
 
     @SubCommand(aliases = ["uic"], description = "Removes a channel from the ignored list.")
-    @Option(name = "channel", description = "The channel to unignore.", type = OptionType.CHANNEL)
+    @Option(name = "channel", description = "The channel to unignore.", type = OptionType.CHANNEL, required = false)
     fun unignoreChannel(ctx: Context) {
         val g = BoobBot.database.getGuild(ctx.guild!!.id)
         val c = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) ?: ctx.channel

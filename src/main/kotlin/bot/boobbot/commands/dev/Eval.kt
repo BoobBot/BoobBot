@@ -6,6 +6,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -13,6 +14,7 @@ import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactor
 
 
 @CommandProperties(description = "Evaluate code.", category = Category.DEV, developerOnly = true)
+@Option(name = "code", description = "Self-explanatory.")
 class Eval : Command {
 
     private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
@@ -23,17 +25,18 @@ class Eval : Command {
     }
 
     override fun execute(ctx: Context) {
-//        val code = ctx.args.joinToString("\n")
-//
-//        val imports = code.lines()
-//            .takeWhile { it.startsWith("import ") }
-//            .joinToString("\n", postfix = "\n")
-//
-//        val stripped = code.replace("^```\\w+".toRegex(), "")
-//            .removeSuffix("```")
-//            .lines()
-//            .dropWhile { it.startsWith("import ") }
-//            .joinToString("\n")
+        val code = ctx.options.getOptionStringOrGather("code")
+            ?: return ctx.reply("wtf? what do you want to evaluate?")
+
+        val imports = code.lines()
+            .takeWhile { it.startsWith("import ") }
+            .joinToString("\n", postfix = "\n")
+
+        val stripped = code.replace("^```\\w+".toRegex(), "")
+            .removeSuffix("```")
+            .lines()
+            .dropWhile { it.startsWith("import ") }
+            .joinToString("\n")
 
         val bindings = mapOf(
             "bb" to BoobBot,
@@ -52,11 +55,11 @@ class Eval : Command {
 
         evalThread.run {
             try {
-//                val result = engine.eval("$imports$bindString\n$stripped", bind)
-//                    ?: return ctx.message.addReaction(Emoji.fromUnicode("👌")).queue()
-//                ctx.channel.sendMessage("```\n$result```").queue(null) {
-//                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue()
-//                }
+                val result = engine.eval("$imports$bindString\n$stripped", bind)
+                    ?: return ctx.reply("<null>")
+                ctx.channel.sendMessage("```\n$result```").queue(null) {
+                    ctx.channel.sendMessage("Response Error\n```\n$it```").queue()
+                }
             } catch (e: Exception) {
                 val error = e.localizedMessage.split("\n").first()
                 ctx.channel.sendMessage("Engine Error\n```\n$error```").queue(null) {

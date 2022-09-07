@@ -8,7 +8,6 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 
 @CommandProperties(description = "Check how fucked the bot session is", category = Category.DEV, developerOnly = true)
 class Session : Command {
-
     override fun execute(ctx: Context) {
         val sessionInfo = BoobBot.shardManager.retrieveSessionInfo()
             ?: return ctx.reply("fuck, some error")
@@ -20,5 +19,4 @@ class Session : Command {
             addField("Session Limit Remaining", sessionInfo.sessionLimitRemaining.toString(), true)
         }
     }
-
 }

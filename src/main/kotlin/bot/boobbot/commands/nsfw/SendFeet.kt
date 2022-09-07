@@ -12,5 +12,5 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     aliases = ["senddyna"],
     category = Category.SEND
 )
-@Option(name = "to", description = "The user to send to.", type = OptionType.USER)
+@Option(name = "to", description = "The user to send to.", type = OptionType.USER, required = false)
 class SendFeet : SendCommand("feet", "feet")

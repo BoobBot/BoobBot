@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Formats
@@ -9,8 +10,8 @@ import java.awt.Color
 import java.text.MessageFormat
 
 abstract class FunCommand(private val category: String) : AsyncCommand {
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val target = ctx.mentions.firstOrNull()
+    override suspend fun executeAsync(ctx: Context) {
+        val target = ctx.options.getByNameOrNext("user", Resolver.USER)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))

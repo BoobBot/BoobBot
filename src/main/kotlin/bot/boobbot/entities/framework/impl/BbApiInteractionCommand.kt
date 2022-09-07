@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Colors
@@ -13,8 +14,8 @@ import java.time.Instant
 abstract class BbApiInteractionCommand(private val category: String, private val title: String) : AsyncCommand {
     private val headers = Headers.headersOf("Key", BoobBot.config.BB_API_KEY)
 
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val target = ctx.mentions.firstOrNull()
+    override suspend fun executeAsync(ctx: Context) {
+        val target = ctx.options.getByNameOrNext("with", Resolver.USER)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
     guildOnly = true,
     category = Category.MISC
 )
-@Option("amount", description = "The maximum number of messages to remove. Limit of 500.", type = OptionType.INTEGER)
+@Option("amount", description = "The maximum number of messages to remove. Limit of 500.", type = OptionType.INTEGER, required = false)
 class Clean : Command {
     private fun filterDeletable(ctx: Context, messages: List<Message>): List<Message> {
         val selfId = ctx.selfUser.idLong

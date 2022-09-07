@@ -13,5 +13,5 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     category = Category.SEND,
     donorOnly = true
 )
-@Option(name = "to", description = "The user to send to.", type = OptionType.USER)
+@Option(name = "to", description = "The user to send to.", type = OptionType.USER, required = false)
 class SendPussy : SendCommand("pussy", "pussy")

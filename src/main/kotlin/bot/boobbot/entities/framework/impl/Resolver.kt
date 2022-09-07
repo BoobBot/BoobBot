@@ -37,7 +37,7 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
             }
         }
 
-        val STRING = Resolver(OptionMapping::getAsString) { it }
+        val STRING = Resolver(OptionMapping::getAsString) { it.takeIf { it.isNotEmpty() } }
         val INTEGER = Resolver(OptionMapping::getAsInt, String::toIntOrNull)
         val USER = Resolver(OptionMapping::getAsUser) { arg ->
             when {

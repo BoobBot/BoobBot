@@ -12,5 +12,5 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     aliases = ["sendaly"],
     category = Category.SEND
 )
-@Option(name = "to", description = "The user to send to.", type = OptionType.USER)
-class SendTentacle : SendCommand("Tentacles", "tentacle")
+@Option(name = "to", description = "The user to send to.", type = OptionType.USER, required = false)
+class SendTentacle : SendCommand("tentacles", "tentacle")

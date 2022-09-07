@@ -3,20 +3,25 @@ package bot.boobbot.commands.interactions
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.time.Instant
 
 @CommandProperties(description = "Spank someone.", category = Category.INTERACTIONS, nsfw = true)
+@Option(name = "user", description = "The user to spank.", type = OptionType.USER)
 class Spank : AsyncCommand {
 
-    override suspend fun executeAsync(ctx: MessageContext) {
-        val target = ctx.mentions.firstOrNull()
+    override suspend fun executeAsync(ctx: Context) {
+        val target = ctx.options.getByNameOrNext("user", Resolver.USER)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))
@@ -41,7 +46,7 @@ class Spank : AsyncCommand {
 
         ctx.reply {
             setTitle("<:spank:866431559557054464> ${ctx.user.name} Spanks ${target.name}")
-            setColor(Colors.getEffectiveColor(ctx.message))
+            setColor(Colors.getEffectiveColor(ctx.member))
             setImage(res.getString("url"))
             setTimestamp(Instant.now())
         }

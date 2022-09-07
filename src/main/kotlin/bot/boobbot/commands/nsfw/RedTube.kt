@@ -28,7 +28,7 @@ class RedTube : AsyncCommand {
     }
 
     override suspend fun executeAsync(ctx: Context) {
-        val userQuery = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }
+        val userQuery = ctx.options.getOptionStringOrGather("query")
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))

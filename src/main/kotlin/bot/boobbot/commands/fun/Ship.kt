@@ -2,10 +2,14 @@ package bot.boobbot.commands.`fun`
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.Resolver
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import java.awt.Color
@@ -17,18 +21,21 @@ import javax.imageio.ImageIO
 
 
 @CommandProperties(description = "Shipped", category = Category.FUN)
+@Option(name = "first", description = "The first user to ship.", type = OptionType.USER)
+@Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)
 class Ship : Command {
-    override fun execute(ctx: MessageContext) {
+    override fun execute(ctx: Context) {
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
             return ctx.reply("I can't send attachments. Fix it, whore.")
         }
 
         if (ctx.mentions.isEmpty()) {
-            return ctx.reply("How in the fuck would i know who you want to ship if you don't give me a valid target?")
+            return
         }
 
-        val user1 = ctx.mentions.first()
-        val user2 = ctx.mentions.lastOrNull() ?: ctx.user
+        val user1 = ctx.options.getByNameOrNext("first", Resolver.USER)
+            ?: return ctx.reply("How in the fuck would i know who you want to ship if you don't specify someone?")
+        val user2 = ctx.options.getByNameOrNext("second", Resolver.USER) ?: ctx.user
 
         if (user1.idLong == ctx.user.idLong && user2.idLong == ctx.user.idLong) {
             return ctx.reply("not even you should wanna be shipped with yourself")
@@ -78,7 +85,6 @@ class Ship : Command {
             }
             return mixed.toString()
         }
-
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
             val rng = (0..100).random()

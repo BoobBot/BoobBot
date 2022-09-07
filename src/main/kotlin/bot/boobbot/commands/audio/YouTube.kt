@@ -23,7 +23,7 @@ class YouTube : VoiceCommand {
             return
         }
 
-        val query = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }
+        val query = ctx.options.getOptionStringOrGather("query")
             ?: return ctx.reply(Formats.error("Gotta specify a search query, whore"))
 
         playerManager.loadItem("ytsearch:$query", AudioLoader(ctx))

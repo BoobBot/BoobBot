@@ -20,7 +20,7 @@ class PornSearch : VoiceCommand {
             return
         }
 
-        val query = ctx.options.getOptionStringOrGather("query")?.takeIf { it.isNotEmpty() }
+        val query = ctx.options.getOptionStringOrGather("query")
             ?: return ctx.reply("Gotta specify a search query, whore")
 
         playerManager.loadItem("phsearch:$query", AudioLoader(ctx))
