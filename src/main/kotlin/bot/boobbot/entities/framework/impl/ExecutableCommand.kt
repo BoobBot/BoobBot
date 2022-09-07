@@ -8,9 +8,10 @@ import net.dv8tion.jda.api.entities.Message
 
 class ExecutableCommand(
     private val cmd: Command,
-    val subcommands: Map<String, SubCommandWrapper>
+    val subcommands: Map<String, SubCommandWrapper>,
+    val slashEnabled: Boolean,
+    val category: String?
 ) {
-
     val name = cmd.name
     val properties = cmd.properties
 
@@ -38,12 +39,7 @@ class ExecutableCommand(
 
         if (subcommand != null) {
             if (subcommand.donorOnly && !Utils.checkDonor(ctx.message)) {
-                return ctx.reply(
-                    Formats.error(
-                        " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
-                                + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
-                    )
-                )
+                return ctx.reply(Formats.error(" Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"))
             }
             subcommand.execute(ctx)
         } else {

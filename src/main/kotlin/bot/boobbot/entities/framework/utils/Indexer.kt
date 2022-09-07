@@ -15,8 +15,10 @@ class Indexer(pkg: String) {
         val allCommands = reflections.getSubTypesOf(Command::class.java)
             .filter { !Modifier.isAbstract(it.modifiers) && !it.isInterface }
 
-        return allCommands.map { it.getDeclaredConstructor().newInstance() }
-            .map { ExecutableCommand(it, getSubCommands(it).associateBy(SubCommandWrapper::name)) }
+        return allCommands.map { it.getDeclaredConstructor().newInstance() }.map {
+            val category = if (it.properties.groupByCategory) it::class.java.packageName.split('.').last() else null
+            ExecutableCommand(it, getSubCommands(it).associateBy(SubCommandWrapper::name), it.properties.slashEnabled, category)
+        }
     }
 
     fun getSubCommands(kls: Command): List<SubCommandWrapper> {
