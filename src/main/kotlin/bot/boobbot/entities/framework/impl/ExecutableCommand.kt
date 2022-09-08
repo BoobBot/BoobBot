@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework.impl
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.SlashContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -11,7 +12,8 @@ class ExecutableCommand(
     private val cmd: Command,
     val subcommands: Map<String, SubCommandWrapper>,
     val slashEnabled: Boolean,
-    val category: String?
+    val category: String?,
+    val options: List<Option>
 ) {
     val name = cmd.name
     val properties = cmd.properties

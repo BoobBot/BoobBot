@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework.impl
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.Command
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -16,6 +17,7 @@ class SubCommandWrapper(
     val async: Boolean,
     val description: String,
     val donorOnly: Boolean,
+    val options: List<Option>,
     val method: Method,
     private val kls: Command
 ) {
