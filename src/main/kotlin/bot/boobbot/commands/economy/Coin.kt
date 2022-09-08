@@ -8,14 +8,17 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Choice
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.commands.OptionType
 
 
 @CommandProperties(description = "Flip a coin.", aliases = ["flip"], category = Category.ECONOMY)
-@Option(name = "side", description = "Heads or tails.", choices = [Choice("Heads", "heads"), Choice("Tails", "tails")])
-@Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
+@Options([ // TODO: Revisit
+    Option(name = "side", description = "Heads or tails.", choices = [Choice("Heads", "heads"), Choice("Tails", "tails")]),
+    Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
+])
 class Coin : Command {
 
     override fun execute(ctx: Context) {

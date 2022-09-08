@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.*
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
@@ -37,8 +38,10 @@ class Set : Command {
     }
 
     @SubCommand(aliases = ["activity"], description = "Set the bot activity.")
-    @Option(name = "type", description = "The activity type.")
-    @Option(name = "content", description = "<content>/<url> <content>/clear")
+    @Options([ // TODO: Revisit
+        Option(name = "type", description = "The activity type."),
+        Option(name = "content", description = "<content>/<url> <content>/clear")
+    ])
     fun game(ctx: Context) {
         val type = ctx.options.getByNameOrNext("type", Resolver.STRING)
             ?: return ctx.reply("${ctx.prefix}set game <type> <content...>")

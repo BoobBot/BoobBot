@@ -7,6 +7,7 @@ import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.Resolver
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -21,8 +22,10 @@ import javax.imageio.ImageIO
 
 
 @CommandProperties(description = "Shipped", category = Category.FUN)
-@Option(name = "first", description = "The first user to ship.", type = OptionType.USER)
-@Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)
+@Options([ // TODO: Revisit
+    Option(name = "first", description = "The first user to ship.", type = OptionType.USER),
+    Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)
+])
 class Ship : Command {
     override fun execute(ctx: Context) {
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {

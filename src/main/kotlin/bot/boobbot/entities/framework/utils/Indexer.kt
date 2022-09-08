@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.utils
 
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
@@ -23,7 +24,8 @@ class Indexer(pkg: String) {
             .map { it.getDeclaredConstructor().newInstance() }
             .map {
                 val category = if (it.properties.groupByCategory) it::class.java.packageName.split('.').last() else null
-                val options = it::class.annotations.filterIsInstance(Option::class.java)
+                val options = it::class.findAnnotation<Options>()?.value?.toList()
+                    ?: it::class.annotations.filterIsInstance(Option::class.java)
                 ExecutableCommand(it, getSubCommands(it).associateBy(SubCommandWrapper::name), it.properties.slashEnabled, category, options)
             }
     }
@@ -33,7 +35,8 @@ class Indexer(pkg: String) {
             .map {
                 val name = it.name.lowercase()
                 val props = it.findAnnotation<SubCommand>()!!
-                val options = it.annotations.filterIsInstance(Option::class.java)
+                val options = it::class.findAnnotation<Options>()?.value?.toList()
+                    ?: it::class.annotations.filterIsInstance(Option::class.java)
                 SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, options, it.javaMethod!!, kls)
             }
     }

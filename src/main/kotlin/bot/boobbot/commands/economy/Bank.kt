@@ -5,6 +5,7 @@ import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.*
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
@@ -70,8 +71,10 @@ class Bank : Command {
     }
 
     @SubCommand(aliases = ["trans"], description = "transfer funds. ⇆")
-    @Option(name = "amount", description = "The amount to transfer.", type = OptionType.INTEGER)
-    @Option(name = "to", description = "The user to transfer to.", type = OptionType.USER)
+    @Options([ // TODO: Revisit
+        Option(name = "amount", description = "The amount to transfer.", type = OptionType.INTEGER),
+        Option(name = "to", description = "The user to transfer to.", type = OptionType.USER)
+    ])
     fun transfer(ctx: Context) {
         val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
             ?: return ctx.reply("wtf, i don't mind read. Specify how much to deposit, whore.")

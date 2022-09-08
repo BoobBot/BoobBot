@@ -4,7 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
@@ -12,9 +11,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.ifEmpty
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.AudioChannel
 import net.dv8tion.jda.api.entities.GuildMessageChannel
-import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 

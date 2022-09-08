@@ -6,6 +6,7 @@ import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.utils.Formats
@@ -20,8 +21,10 @@ class Custom : Command {
     }
 
     @SubCommand(description = "Add a custom tag.")
-    @Option(name = "name", description = "The name of the tag.")
-    @Option(name = "content", description = "The tag content.")
+    @Options([ // TODO: Revisit
+        Option(name = "name", description = "The name of the tag."),
+        Option(name = "content", description = "The tag content.")
+    ])
     fun add(ctx: Context) {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             return ctx.reply("You don't have `MANAGE_SERVER` permission, whore.")

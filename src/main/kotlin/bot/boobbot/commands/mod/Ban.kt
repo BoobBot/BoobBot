@@ -5,6 +5,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.ModCommand
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -18,8 +19,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     userPermissions = [Permission.BAN_MEMBERS],
     botPermissions = [Permission.BAN_MEMBERS]
 )
-@Option(name = "target", description = "The user to ban.", type = OptionType.USER)
-@Option(name = "reason", description = "The reason for the action.", required = false)
+@Options([ // TODO: Revisit
+    Option(name = "target", description = "The user to ban.", type = OptionType.USER),
+    Option(name = "reason", description = "The reason for the action.", required = false)
+])
 class Ban : ModCommand() {
     override fun execute(ctx: Context) {
         val (user, member, reason) = resolveTargetAndReason(ctx)
