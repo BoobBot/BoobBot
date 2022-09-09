@@ -20,7 +20,8 @@ import java.time.Instant
     aliases = ["q", "np", "nowplaying"],
     category = Category.AUDIO,
     guildOnly = true,
-    nsfw = true
+    nsfw = true,
+    groupByCategory = true
 )
 class Queue : VoiceCommand {
     override fun execute(ctx: Context) {

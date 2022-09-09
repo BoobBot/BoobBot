@@ -12,10 +12,10 @@ import bot.boobbot.utils.Formats
 @CommandProperties(
     description = "Searches YouTube for videos to play",
     aliases = ["yt"],
-    nsfw = false,
     category = Category.AUDIO,
     guildOnly = true,
-    donorOnly = true
+    donorOnly = true,
+    groupByCategory = true
 )
 class YouTube : VoiceCommand {
     override fun execute(ctx: Context) {

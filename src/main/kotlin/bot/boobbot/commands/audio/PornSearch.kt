@@ -12,7 +12,8 @@ import bot.boobbot.entities.framework.interfaces.VoiceCommand
     description = "Searches PornHub for videos to play",
     nsfw = true,
     category = Category.AUDIO,
-    guildOnly = true
+    guildOnly = true,
+    groupByCategory = true
 )
 class PornSearch : VoiceCommand {
     override fun execute(ctx: Context) {

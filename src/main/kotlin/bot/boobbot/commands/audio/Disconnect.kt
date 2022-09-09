@@ -13,7 +13,8 @@ import net.dv8tion.jda.api.Permission
     description = "Disconnects bot",
     aliases = ["stop", "leave"],
     category = Category.AUDIO,
-    guildOnly = true
+    guildOnly = true,
+    groupByCategory = true
 )
 class Disconnect : VoiceCommand {
     override fun execute(ctx: Context) {

@@ -15,7 +15,8 @@ import bot.boobbot.utils.toUriOrNull
     description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",
     category = Category.AUDIO,
     guildOnly = true,
-    nsfw = true
+    nsfw = true,
+    groupByCategory = true
 )
 class Play : VoiceCommand {
     override fun execute(ctx: Context) {

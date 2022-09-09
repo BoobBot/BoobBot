@@ -15,7 +15,8 @@ import bot.boobbot.utils.Formats
     category = Category.AUDIO,
     guildOnly = true,
     donorOnly = true,
-    aliases = ["v", "vol"]
+    aliases = ["v", "vol"],
+    groupByCategory = true
 )
 class Volume : VoiceCommand {
     override fun execute(ctx: Context) {

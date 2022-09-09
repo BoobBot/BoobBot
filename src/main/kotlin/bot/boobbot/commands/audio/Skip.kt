@@ -11,7 +11,8 @@ import bot.boobbot.utils.Formats
 @CommandProperties(
     description = "Skips current playing track",
     category = Category.AUDIO,
-    guildOnly = true
+    guildOnly = true,
+    groupByCategory = true
 )
 class Skip : VoiceCommand {
     override fun execute(ctx: Context) {

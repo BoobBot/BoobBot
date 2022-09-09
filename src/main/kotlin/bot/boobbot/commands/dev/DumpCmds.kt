@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.framework.interfaces.Command
@@ -14,6 +15,8 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.data.DataArray
+import net.dv8tion.jda.api.utils.data.DataObject
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 @CommandProperties(description = "Get all commands as JSON.", category = Category.DEV, developerOnly = true)
 class DumpCmds : Command {
@@ -27,102 +30,75 @@ class DumpCmds : Command {
             .addAll(remaining)
             .toPrettyString()
 
-        println(categorised.size)
-        println(remaining.size)
+        println("${categorised.size} categorised, ${remaining.size} non-categorised. ${categorised.size + remaining.size} commands total.")
 
         ctx.reply(FileUpload.fromData(json.toByteArray(Charsets.UTF_8), "commands.json"))
     }
 
-    private fun buildCommand(cmd: ExecutableCommand): CommandData {
-        val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description).also {
-            it.isGuildOnly = cmd.properties.guildOnly
-        }
+    private fun buildCommand(cmd: ExecutableCommand): DataObject {
+        val isNsfw = cmd.properties.nsfw
 
-        when {
-            cmd.subcommands.isNotEmpty() -> {
-                for (sc in cmd.subcommands.values) {
-                    val data = SubcommandData(sc.name, sc.description)
+        val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
+            .also { it.isGuildOnly = cmd.properties.guildOnly }
+            .also { buildOptions(cmd.options).also(it::addOptions) }
+            .toData()
+            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
 
-                    for (option in sc.options) {
-                        val od = OptionData(option.type, option.name, option.description, option.required)
-
-                        for (choice in option.choices) {
-                            od.addChoice(choice.name, choice.value)
-                        }
-
-                        data.addOptions(od)
-                    }
-
-                    slash.addSubcommands(data)
-                }
-            }
-            cmd.options.isNotEmpty() -> {
-                for (option in cmd.options) {
-                    val data = OptionData(option.type, option.name, option.description, option.required)
-
-                    for (choice in option.choices) {
-                        data.addChoice(choice.name, choice.value)
-                    }
-
-                    slash.addOptions(data)
-                }
-            }
+        if (cmd.subcommands.isNotEmpty()) {
+            slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
         }
 
         return slash
     }
 
-    private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): CommandData {
+    private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): DataObject {
         val (category, cmds) = entry
-        val slash = Commands.slash(category, "$category commands")
 
         if (cmds.size > 25) {
             throw IllegalArgumentException("Cannot have more than 25 subcommands/groups per command!")
         }
 
+        val isNsfw = entry.value.any { it.properties.nsfw }
+        val isGuildOnly = entry.value.all { it.properties.guildOnly }
+
+        val slash = Commands.slash(category, "$category commands")
+            .also { it.isGuildOnly = isGuildOnly }
+            .toData()
+            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+
         for (cmd in cmds) {
             if (cmd.subcommands.isNotEmpty()) {
-                val group = SubcommandGroupData(cmd.name, cmd.properties.description)
+                val group = SubcommandGroupData(cmd.name, cmd.properties.description).toData()
+                val scs = cmd.subcommands.values.map(::buildSubcommand)
 
-                for (sc in cmd.subcommands.values) {
-                    group.addSubcommands(buildSubcommand(sc))
-                }
-
-                slash.addSubcommandGroups(group)
+                group.getArray("options").addAll(scs)
+                slash.getArray("options").add(group)
                 continue
             }
 
             val sc = SubcommandData(cmd.name, cmd.properties.description)
+                .also { buildOptions(cmd.options).also(it::addOptions) }
+                .toData()
 
-            for (option in cmd.options) {
-                val data = OptionData(option.type, option.name, option.description, option.required)
-
-                for (choice in option.choices) {
-                    data.addChoice(choice.name, choice.value)
-                }
-
-                sc.addOptions(data)
-            }
-
-            slash.addSubcommands(sc)
+            slash.getArray("options").add(sc)
         }
 
         return slash
     }
 
-    private fun buildSubcommand(cmd: SubCommandWrapper): SubcommandData {
-        val subcommand = SubcommandData(cmd.name.lowercase(), cmd.description)
+    private fun buildSubcommand(cmd: SubCommandWrapper): DataObject {
+        return SubcommandData(cmd.name.lowercase(), cmd.description)
+            .also { buildOptions(cmd.options).also(it::addOptions) }
+            .toData()
+    }
 
-        for (option in cmd.options) {
-            val data = OptionData(option.type, option.name, option.description, option.required)
-
-            for (choice in option.choices) {
-                data.addChoice(choice.name, choice.value)
+    private fun buildOptions(options: List<Option>): List<OptionData> {
+        return options.map {
+            OptionData(it.type, it.name, it.description, it.required).also { data ->
+                for (choice in it.choices) {
+                    data.addChoice(choice.name, choice.value)
+                }
             }
-
-            subcommand.addOptions(data)
         }
-
-        return subcommand
     }
 }

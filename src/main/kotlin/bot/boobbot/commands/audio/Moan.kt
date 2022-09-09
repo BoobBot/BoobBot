@@ -9,7 +9,7 @@ import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Utils.getRandomMoan
 
-@CommandProperties(description = "moans \uD83D\uDE2B", nsfw = true, category = Category.AUDIO, guildOnly = true)
+@CommandProperties(description = "moans \uD83D\uDE2B", nsfw = true, category = Category.AUDIO, guildOnly = true, groupByCategory = true)
 class Moan : VoiceCommand {
     override fun execute(ctx: Context) {
         if (!performVoiceChecks(ctx, nsfwCheck = true)) {
