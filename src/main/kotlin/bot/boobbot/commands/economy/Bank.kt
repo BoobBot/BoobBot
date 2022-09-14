@@ -79,7 +79,7 @@ class Bank : Command {
         val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
             ?: return ctx.reply("wtf, i don't mind read. Specify how much to deposit, whore.")
 
-        val to = ctx.options.getByNameOrNext("user", Resolver.USER)
+        val to = ctx.options.getByNameOrNext("to", Resolver.USER)
             ?: return ctx.reply("How in the fuck would i know who you want to transfer to if you don't give me a valid mention? try `@BoobBot bank transfer 500 @user#0000`")
 
         if (amount < 0) {
