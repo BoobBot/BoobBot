@@ -371,5 +371,19 @@
     "{1} was scooped by {0} and their innards are now Ennard.",
     "{0} Alt+F4'd {1}.exe!",
     "{1} was accused of stealing Neptune's crown..."
+  ],
+  "hugs": [
+    "{0} squishes {1}",
+    "{0} runs up to {1} and hugs em from behind.",
+    "{0} picks up {1} and accidentally yeets them across the room. Sorry {1}.",
+    "{0} barrel roles into {1}'s room and hugs them tight. UWU.",
+    "{0} pulls {1} into a tight hug telling them everything will be okay.",
+    "{0} puts their arm around {1}",
+    "{0} leaps over the sofa, jumps in to {1} arms and give them a hug.",
+    "{0} runs to hug {1} but trips over a cat and falls down.",
+    "{0} scooches beside {1} and wraps their arms around them.",
+    "{0} picks a flower and gives it to {1} in exchange for a hug",
+    "{0} walks to {1} to give a hug but {1} turns away",
+    "{0} clings to {1}"
   ]
 }

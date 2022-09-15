@@ -751,6 +751,10 @@ payload = [
 
     {'name': 'insult',
      'nsfw': False,
+     'type': 2},
+
+    {'name': 'hug',
+     'nsfw': False,
      'type': 2}
 
     ,
