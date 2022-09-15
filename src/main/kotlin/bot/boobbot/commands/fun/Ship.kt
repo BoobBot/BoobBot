@@ -9,6 +9,7 @@ import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.Resolver
+import bot.boobbot.entities.misc.DSLMessageBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.utils.FileUpload
@@ -28,13 +29,15 @@ import javax.imageio.ImageIO
 ])
 class Ship : Command {
     override fun execute(ctx: Context) {
+        print("ship")
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
             return ctx.reply("I can't send attachments. Fix it, whore.")
         }
 
-        if (ctx.mentions.isEmpty()) {
-            return
-        }
+//        if (ctx.mentions.isEmpty()) {
+//            print("shipdsdfsdf")
+//            return
+//        }
 
         val user1 = ctx.options.getByNameOrNext("first", Resolver.USER)
             ?: return ctx.reply("How in the fuck would i know who you want to ship if you don't specify someone?")
@@ -59,15 +62,13 @@ class Ship : Command {
 
         av1Fut.thenCombine(av2Fut) { av1, av2 ->
             val result = processImages(av1, av2)
-            val content = MessageCreateBuilder()
-                .setContent(newMixString(user1.name, user2.name))
-                .addContent(" <:icon:676613489548197915>")
-                .build()
 
-            ctx.channel.sendMessage(content)
-                .addFiles(FileUpload.fromData(result.toByteArray(), "shipped.png"))
-                .submit()
-                .whenComplete { _, _ -> result.close() }
+           ctx.message {
+               content(newMixString(user1.name, user2.name)+" <:icon:676613489548197915>")
+               file(FileUpload.fromData(result.toByteArray(), "shipped.png"))
+
+           }
+
         }
     }
 

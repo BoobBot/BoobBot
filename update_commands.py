@@ -853,12 +853,12 @@ payload = [
      'name': 'ship',
      'nsfw': False,
      'options': [{'description': 'Member to ship.',
-                  'name': 'user',
+                  'name': 'first',
                   'required': True,
                   'type': 6},
 
                  {'description': '2nd Member to ship.',
-                  'name': 'member2',
+                  'name': 'second',
                   'required': False,
                   'type': 6}
                  ],
