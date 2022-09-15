@@ -11,20 +11,26 @@ import bot.boobbot.utils.Utils
 import com.google.gson.Gson
 import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
-import io.ktor.application.*
-import io.ktor.auth.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.client.*
+import io.ktor.client.call.body
 import io.ktor.client.engine.apache.*
 import io.ktor.client.request.*
-import io.ktor.features.*
-import io.ktor.gson.*
+import io.ktor.server.plugins.*
+import io.ktor.serialization.gson.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.sessions.*
+import io.ktor.server.plugins.autohead.AutoHeadResponse
+import io.ktor.server.plugins.callloging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
+import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.sessions.*
 import io.ktor.util.*
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -117,71 +123,71 @@ class ApiServer {
     val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand)
 
     private fun buildCommand(cmd: ExecutableCommand): DataObject {
-    val isNsfw = cmd.properties.nsfw
+        val isNsfw = cmd.properties.nsfw
 
-    val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
-        .also { it.isGuildOnly = cmd.properties.guildOnly }
-        .also { buildOptions(cmd.options).also(it::addOptions) }
-        .toData()
-        .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
-
-    if (cmd.subcommands.isNotEmpty()) {
-        slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
-    }
-
-    return slash
-}
-
-private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): DataObject {
-    val (category, cmds) = entry
-
-    if (cmds.size > 25) {
-        throw IllegalArgumentException("Cannot have more than 25 subcommands/groups per command!")
-    }
-
-    val isNsfw = entry.value.any { it.properties.nsfw }
-    val isGuildOnly = entry.value.all { it.properties.guildOnly }
-
-    val slash = Commands.slash(category, "$category commands")
-        .also { it.isGuildOnly = isGuildOnly }
-        .toData()
-        .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
-
-    for (cmd in cmds) {
-        if (cmd.subcommands.isNotEmpty()) {
-            val group = SubcommandGroupData(cmd.name, cmd.properties.description).toData()
-            val scs = cmd.subcommands.values.map(::buildSubcommand)
-
-            group.getArray("options").addAll(scs)
-            slash.getArray("options").add(group)
-            continue
-        }
-
-        val sc = SubcommandData(cmd.name, cmd.properties.description)
+        val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
+            .also { it.isGuildOnly = cmd.properties.guildOnly }
             .also { buildOptions(cmd.options).also(it::addOptions) }
             .toData()
+            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
 
-        slash.getArray("options").add(sc)
+        if (cmd.subcommands.isNotEmpty()) {
+            slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
+        }
+
+        return slash
     }
 
-    return slash
-}
+    private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): DataObject {
+        val (category, cmds) = entry
 
-private fun buildSubcommand(cmd: SubCommandWrapper): DataObject {
-    return SubcommandData(cmd.name.lowercase(), cmd.description)
-        .also { buildOptions(cmd.options).also(it::addOptions) }
-        .toData()
-}
+        if (cmds.size > 25) {
+            throw IllegalArgumentException("Cannot have more than 25 subcommands/groups per command!")
+        }
 
-private fun buildOptions(options: List<Option>): List<OptionData> {
-    return options.map {
-        OptionData(it.type, it.name, it.description, it.required).also { data ->
-            for (choice in it.choices) {
-                data.addChoice(choice.name, choice.value)
+        val isNsfw = entry.value.any { it.properties.nsfw }
+        val isGuildOnly = entry.value.all { it.properties.guildOnly }
+
+        val slash = Commands.slash(category, "$category commands")
+            .also { it.isGuildOnly = isGuildOnly }
+            .toData()
+            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+
+        for (cmd in cmds) {
+            if (cmd.subcommands.isNotEmpty()) {
+                val group = SubcommandGroupData(cmd.name, cmd.properties.description).toData()
+                val scs = cmd.subcommands.values.map(::buildSubcommand)
+
+                group.getArray("options").addAll(scs)
+                slash.getArray("options").add(group)
+                continue
+            }
+
+            val sc = SubcommandData(cmd.name, cmd.properties.description)
+                .also { buildOptions(cmd.options).also(it::addOptions) }
+                .toData()
+
+            slash.getArray("options").add(sc)
+        }
+
+        return slash
+    }
+
+    private fun buildSubcommand(cmd: SubCommandWrapper): DataObject {
+        return SubcommandData(cmd.name.lowercase(), cmd.description)
+            .also { buildOptions(cmd.options).also(it::addOptions) }
+            .toData()
+    }
+
+    private fun buildOptions(options: List<Option>): List<OptionData> {
+        return options.map {
+            OptionData(it.type, it.name, it.description, it.required).also { data ->
+                for (choice in it.choices) {
+                    data.addChoice(choice.name, choice.value)
+                }
             }
         }
     }
-}
 
     class UserSession(val id: String, val avatar: String, val username: String, val discriminator: String)
 
@@ -222,8 +228,8 @@ private fun buildOptions(options: List<Option>): List<OptionData> {
                 )
                 header("server", "yOu DoNt NeEd To KnOw")
             }
-            install(ForwardedHeaderSupport)
-            install(XForwardedHeaderSupport)
+            install(ForwardedHeaders)
+            install(XForwardedHeaders)
             install(ContentNegotiation) {
                 gson {
                     setPrettyPrinting()
@@ -251,9 +257,10 @@ private fun buildOptions(options: List<Option>): List<OptionData> {
                 authenticate("discord") {
                     get("/oauth") {
                         val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
-                        val data = HttpClient(Apache).get<String>("https://discordapp.com/api/users/@me") {
+                        val data = HttpClient(Apache).get("https://discordapp.com/api/users/@me") {
                             header("Authorization", "Bearer ${principal!!.accessToken}")
                         }
+                            .body<String>()
                         val s = Gson().fromJson(data, UserSession::class.java)
                         call.sessions.set(s)
                         call.respondRedirect("/admin")

@@ -103,7 +103,7 @@ object BoobBot {
             log.warn("Running in debug mode")
             //print(slashCommands)
             //print(selfId)
-             //shardManager.shards[0].updateCommands().queue()
+            //shardManager.shards[0].updateCommands().queue()
         } else {
             CustomSentryClient.create(config.SENTRY_DSN)
                 .ignore(
