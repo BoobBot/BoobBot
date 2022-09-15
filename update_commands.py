@@ -922,7 +922,7 @@ payload = [
                         "choices": [
                             {
                                 "name": "rep",
-                                "value": "replb"
+                                "value": "rep"
                             },
                             {
                                 "name": "level",
@@ -942,7 +942,7 @@ payload = [
                 "description": "Flip a coin.",
                 "options": [
                     {
-                        "name": "coin",
+                        "name": "side",
                         "description": "Heads or Tails",
                         "type": 3,
                         "required": True,
@@ -1217,38 +1217,6 @@ payload = [
         }],
         "description": "Change whether you're shown on embeds",
         "description_localizations": {},
-        "type": 1
-    },
-
-    {
-        "dm_permission": False,
-        "name_localizations": {},
-        "name": "custom",
-        "options": [{
-            "name_localizations": {},
-            "name": "add",
-            "options": [],
-            "description": "Add a custom tag.",
-            "description_localizations": {},
-            "type": 1
-        }, {
-            "name_localizations": {},
-            "name": "delete",
-            "options": [],
-            "description": "*No description available.*",
-            "description_localizations": {},
-            "type": 1
-        }, {
-            "name_localizations": {},
-            "name": "list",
-            "options": [],
-            "description": "*No description available.*",
-            "description_localizations": {},
-            "type": 1
-        }],
-        "description": "Custom commands",
-        "description_localizations": {},
-        "default_member_permissions": MANAGE_CHANNELS,
         "type": 1
     },
 

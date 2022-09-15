@@ -15,15 +15,22 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 
 
 @CommandProperties(description = "Flip a coin.", aliases = ["flip"], category = Category.ECONOMY)
-@Options([ // TODO: Revisit
-    Option(name = "side", description = "Heads or tails.", choices = [Choice("Heads", "heads"), Choice("Tails", "tails")]),
-    Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
-])
+@Options(
+    [ // TODO: Revisit
+        Option(
+            name = "side",
+            description = "Heads or tails.",
+            choices = [Choice("Heads", "heads"), Choice("Tails", "tails")]
+        ),
+        Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
+    ]
+)
 class Coin : Command {
 
     override fun execute(ctx: Context) {
-        val side = ctx.options.getByNameOrNext("side", Resolver.STRING)?.lowercase()?.takeIf { it == "heads" || it == "tails" }
-            ?: return ctx.reply(Formats.error("Specify `heads` or `tails`, whore."))
+        val side =
+            ctx.options.getByNameOrNext("side", Resolver.STRING)?.lowercase()?.takeIf { it == "heads" || it == "tails" }
+                ?: return ctx.reply(Formats.error("Specify `heads` or `tails`, whore."))
 
         val amount = ctx.options.getByNameOrNext("bet", Resolver.INTEGER)?.takeIf { it in 1..500 }
             ?: return ctx.reply(Formats.error("Hey whore, Only bets of 1 - 500 are allowed"))
@@ -49,8 +56,8 @@ class Coin : Command {
         }
 
         u.save()
-        ctx.reply(res.second)
-        ctx.reply(Formats.info(res.first + msg))
+        ctx.message { content(Formats.info("`${res.first}`" + msg)) }
+        ctx.channel.sendMessage(res.second).queue()
     }
 
 }
