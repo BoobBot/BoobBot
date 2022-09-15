@@ -1,6 +1,16 @@
 import requests
 import pprint
 import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+dotenv_path = Path('bb.env')
+
+if not dotenv_path.exists():
+    print("env not found")
+    exit(1)
+
+load_dotenv(dotenv_path=dotenv_path)
 
 MANAGE_CHANNELS = str(1 << 4)
 KICK_MEMBERS = str(1 << 1)
@@ -1016,7 +1026,7 @@ payload = [
                 "type": 1,
                 "options": [
                     {'description': 'Member to transfer.',
-                     'name': 'tor',
+                     'name': 'to',
                      'required': True,
                      'type': 6},
                     {

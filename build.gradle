@@ -72,17 +72,17 @@ dependencies {
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
-    implementation 'io.ktor:ktor-server-netty-jvm:2.1.1'
-    implementation 'io.ktor:ktor-server-websockets-jvm:2.1.1'
-    implementation 'io.ktor:ktor-serialization-gson:2.1.1'
-    implementation 'io.ktor:ktor-server-auth-jvm:2.1.1'
-    implementation 'io.ktor:ktor-client-apache-jvm:2.1.1'
-    implementation 'io.ktor:ktor-server-html-builder-jvm:2.1.1'
-    implementation 'io.ktor:ktor-server-auto-head-response:2.1.1'
-    implementation 'io.ktor:ktor-server-default-headers:2.1.1'
-    implementation 'io.ktor:ktor-server-forwarded-header:2.1.1'
-    implementation 'io.ktor:ktor-server-call-logging:2.1.1'
-    implementation 'io.ktor:ktor-server-content-negotiation-jvm:2.1.1'
+    implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-websockets-jvm:$ktor_version"
+    implementation "io.ktor:ktor-serialization-gson:$ktor_version"
+    implementation "io.ktor:ktor-server-auth-jvm:$ktor_version"
+    implementation "io.ktor:ktor-client-apache-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-html-builder-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-auto-head-response:$ktor_version"
+    implementation "io.ktor:ktor-server-default-headers:$ktor_version"
+    implementation "io.ktor:ktor-server-forwarded-header:$ktor_version"
+    implementation "io.ktor:ktor-server-call-logging:$ktor_version"
+    implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.jsoup:jsoup:$jsoup_version"
 }
