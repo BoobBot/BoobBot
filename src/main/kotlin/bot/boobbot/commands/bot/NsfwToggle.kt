@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission
 
 @CommandProperties(
     description = "Toggles the current channels nsfw setting",
-    aliases = ["nsfw", "toggle"],
+    aliases = ["toggle"],
     guildOnly = true,
     category = Category.MISC
 )
