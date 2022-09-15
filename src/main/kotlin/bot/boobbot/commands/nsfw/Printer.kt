@@ -23,7 +23,7 @@ import java.awt.Color
 @Option(name = "category", description = "The image category to print.", choices = [Choice("Dick", "penis"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Black", "black"), Choice("Tentacle", "tentacle"), Choice("PAWG", "pawg"), Choice("Hentai", "hentai"), Choice("Easter", "easter")])
 class Printer : AsyncCommand {
     companion object {
-        private val baseUrl = "http://127.0.0.1:7080/printer".toHttpUrlOrNull()!!
+        private val baseUrl = "https://printer.boob.bot/printer".toHttpUrlOrNull()!!
         private val categories = mapOf(
             "dick" to "penis",
             "boobs" to "boobs",

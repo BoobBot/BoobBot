@@ -36,11 +36,14 @@ abstract class BbApiInteractionCommand(private val category: String, private val
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
             ?: return ctx.reply(Formats.error(" oh? something broken af"))
 
-        ctx.reply {
-            setTitle(title.format(ctx.user.name, target.name))
-            setColor(Colors.getEffectiveColor(ctx.member))
-            setImage(res.getString("url"))
-            setTimestamp(Instant.now())
-        }
+        ctx.reply(title.format(ctx.user.asMention, target.asMention)+"\n"+res.getString("url"))
+        //ctx.reply {
+       //     setTitle(title.format(ctx.user.asMention, target.asMention))
+         //   setColor(Colors.getEffectiveColor(ctx.member))
+         //   setImage(res.getString("url"))
+       //    setTimestamp(Instant.now())
+      //  }
+
+
     }
 }

@@ -2,6 +2,9 @@ package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.impl.ExecutableCommand
+import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.TimerUtil
 import bot.boobbot.utils.Utils
@@ -24,6 +27,13 @@ import io.ktor.server.netty.*
 import io.ktor.sessions.*
 import io.ktor.util.*
 import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.interactions.commands.build.Commands
+import net.dv8tion.jda.api.interactions.commands.build.OptionData
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
+import net.dv8tion.jda.api.utils.data.DataArray
+import net.dv8tion.jda.api.utils.data.DataObject
+import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONArray
 import org.json.JSONObject
@@ -100,6 +110,78 @@ class ApiServer {
             }
         }
     }
+
+
+    val allSlashCommands = BoobBot.commands.values.filter { it.slashEnabled }
+    val categorised = allSlashCommands.filter { it.category != null }.groupBy { it.category!! }.map(::buildCategory)
+    val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand)
+
+    private fun buildCommand(cmd: ExecutableCommand): DataObject {
+    val isNsfw = cmd.properties.nsfw
+
+    val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
+        .also { it.isGuildOnly = cmd.properties.guildOnly }
+        .also { buildOptions(cmd.options).also(it::addOptions) }
+        .toData()
+        .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+
+    if (cmd.subcommands.isNotEmpty()) {
+        slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
+    }
+
+    return slash
+}
+
+private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): DataObject {
+    val (category, cmds) = entry
+
+    if (cmds.size > 25) {
+        throw IllegalArgumentException("Cannot have more than 25 subcommands/groups per command!")
+    }
+
+    val isNsfw = entry.value.any { it.properties.nsfw }
+    val isGuildOnly = entry.value.all { it.properties.guildOnly }
+
+    val slash = Commands.slash(category, "$category commands")
+        .also { it.isGuildOnly = isGuildOnly }
+        .toData()
+        .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+
+    for (cmd in cmds) {
+        if (cmd.subcommands.isNotEmpty()) {
+            val group = SubcommandGroupData(cmd.name, cmd.properties.description).toData()
+            val scs = cmd.subcommands.values.map(::buildSubcommand)
+
+            group.getArray("options").addAll(scs)
+            slash.getArray("options").add(group)
+            continue
+        }
+
+        val sc = SubcommandData(cmd.name, cmd.properties.description)
+            .also { buildOptions(cmd.options).also(it::addOptions) }
+            .toData()
+
+        slash.getArray("options").add(sc)
+    }
+
+    return slash
+}
+
+private fun buildSubcommand(cmd: SubCommandWrapper): DataObject {
+    return SubcommandData(cmd.name.lowercase(), cmd.description)
+        .also { buildOptions(cmd.options).also(it::addOptions) }
+        .toData()
+}
+
+private fun buildOptions(options: List<Option>): List<OptionData> {
+    return options.map {
+        OptionData(it.type, it.name, it.description, it.required).also { data ->
+            for (choice in it.choices) {
+                data.addChoice(choice.name, choice.value)
+            }
+        }
+    }
+}
 
     class UserSession(val id: String, val avatar: String, val username: String, val discriminator: String)
 
@@ -240,6 +322,38 @@ class ApiServer {
                     val response = JSONObject(categories)
                     call.respondText("{\"commands\": $response}", ContentType.Application.Json)
                 }
+
+                get("/slashjson") {
+                    val json = DataArray.empty()
+                        .addAll(categorised)
+                        .addAll(remaining)
+                        .toPrettyString()
+                    call.respondText("{\"json\": $json}", ContentType.Application.Json)
+                }
+
+                get("/slash") {
+                    val json = DataArray.empty()
+                        .addAll(categorised)
+                        .addAll(remaining)
+                        .toPrettyString()
+                    val slash_html = "<!DOCTYPE html>\n" +
+                            "<html>\n" +
+                            "<head>\n" +
+                            "<title>SLash Commands</title>\n" +
+                            "<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@1.2/dist/pretty-print-json.dark-mode.css>\n" +
+                            "<script src=https://cdn.jsdelivr.net/npm/pretty-print-json@1.2/dist/pretty-print-json.min.js></script>\n" +
+                            "</head>\n" +
+                            "<body>\n" +
+                            "<pre id=commands class=json-container></pre>\n" +
+                            "<script>\n" +
+                            "const elem = document.getElementById('commands');\n" +
+                            "elem.innerHTML = prettyPrintJson.toHtml($json);\n" +
+                            "</script>\n" +
+                            "</body>\n" +
+                            "</html>\n"
+                    call.respondText(slash_html, ContentType.Text.Html)
+                }
+
             }
         }.start(wait = false)
     }

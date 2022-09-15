@@ -7,9 +7,9 @@ KICK_MEMBERS = str(1 << 1)
 BAN_MEMBERS = str(1 << 2)
 ADMINISTRATOR = str(1 << 3)
 
-DEGUB_ID = 0
+DEGUB_ID = 499199815532675082
 DEBUG_TOKEN = os.getenv('DEBUG_TOKEN', "")
-PRD_ID = 0
+PRD_ID = 285480424904327179
 PRD_TOKEN = os.getenv('TOKEN', "")
 
 payload = [
@@ -186,7 +186,7 @@ payload = [
                     {
                         "name": "redtube",
                         "type": 1,
-                        "nsfw": "true",
+                        "nsfw": "True",
                         "description": "RedTube video search.",
                         "options": [
                             {
@@ -344,7 +344,7 @@ payload = [
                      'name': 'door',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -353,7 +353,7 @@ payload = [
                      'name': 'triggered',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -362,7 +362,7 @@ payload = [
                      'name': 'dab',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -371,7 +371,7 @@ payload = [
                      'name': 'egg',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -380,7 +380,7 @@ payload = [
                      'name': 'disability',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -389,7 +389,7 @@ payload = [
                      'name': 'aborted',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -398,7 +398,7 @@ payload = [
                      'name': 'sick',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -407,7 +407,7 @@ payload = [
                      'name': 'america',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -416,7 +416,7 @@ payload = [
                      'name': 'satan',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -425,7 +425,7 @@ payload = [
                      'name': 'rip',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -434,7 +434,7 @@ payload = [
                      'name': 'brazzers',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -443,7 +443,7 @@ payload = [
                      'name': 'roblox',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -452,7 +452,7 @@ payload = [
                      'name': 'invert',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -461,7 +461,7 @@ payload = [
                      'name': 'ugly',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -470,7 +470,7 @@ payload = [
                      'name': 'jail',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -479,7 +479,7 @@ payload = [
                      'name': 'trash',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -496,7 +496,7 @@ payload = [
                      'name': 'wanted',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -505,7 +505,7 @@ payload = [
                      'name': 'goggles',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -514,7 +514,7 @@ payload = [
                      'name': 'failure',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -523,7 +523,7 @@ payload = [
                      'name': 'warp',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -532,7 +532,7 @@ payload = [
                      'name': 'affect',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -541,7 +541,7 @@ payload = [
                      'name': 'blur',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -550,7 +550,7 @@ payload = [
                      'name': 'deepfry',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -559,7 +559,7 @@ payload = [
                      'name': 'delete',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -568,7 +568,7 @@ payload = [
                      'name': 'hitler',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -577,7 +577,7 @@ payload = [
                      'name': 'dank',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -586,7 +586,7 @@ payload = [
                      'name': 'bongocat',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -595,7 +595,7 @@ payload = [
                      'name': 'salty',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -604,7 +604,7 @@ payload = [
                      'name': 'laid',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -613,7 +613,7 @@ payload = [
                      'name': 'fakenews',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -622,7 +622,7 @@ payload = [
                      'name': 'corporate',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -631,7 +631,7 @@ payload = [
                      'name': 'fedora',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -640,7 +640,7 @@ payload = [
                      'name': 'whodidthis',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -649,7 +649,7 @@ payload = [
                      'name': 'cancer',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -658,7 +658,7 @@ payload = [
                      'name': 'communism',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -667,7 +667,7 @@ payload = [
                      'name': 'airpods',
                      'nsfw': False,
                      'options': [{'description': 'Member to Meme.',
-                                  'name': 'member',
+                                  'name': 'user',
                                   'required': False,
                                   'type': 6}],
                      'type': 1}
@@ -728,7 +728,7 @@ payload = [
     {
         "name": "Interact",
         "type": 2,
-        "nsfw": "false",
+        "nsfw": "False",
     },
 
     {'name': 'pickup'
@@ -779,58 +779,58 @@ payload = [
         "nsfw": True,
         "options": [
             {'description': 'kiss someone.', 'name': 'kiss', 'nsfw': True,
-             'options': [{'description': 'Member to kiss}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to kiss}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Play rough with someone.', 'name': 'playrough', 'nsfw': True,
              'options': [
-                 {'description': 'Member to playrough with}', 'name': 'member', 'required': True, 'type': 6}],
+                 {'description': 'Member to playrough with}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'cum on someone', 'name': 'cum', 'nsfw': True,
-             'options': [{'description': 'Member to cum on}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to cum on}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'dom someone', 'name': 'dom', 'nsfw': True,
-             'options': [{'description': 'Member to dom}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to dom}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Fuck someone.', 'name': 'fuck', 'nsfw': True,
-             'options': [{'description': 'Member to fuck}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to fuck}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'finger someone.', 'name': 'finger', 'nsfw': True,
-             'options': [{'description': 'Member to finger}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to finger}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Suck someone.', 'name': 'suck', 'nsfw': True,
-             'options': [{'description': 'Member to suck}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to suck}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'lick someone.', 'name': 'lick', 'nsfw': True,
-             'options': [{'description': 'Member to lick}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to lick}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Are you extreme?', 'name': 'extreme', 'nsfw': True,
              'options': [
-                 {'description': 'Member to be extreme with}', 'name': 'member', 'required': True, 'type': 6}],
+                 {'description': 'Member to be extreme with}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'duh?', 'name': '69', 'nsfw': True,
-             'options': [{'description': 'Member to 69}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to 69}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'fun interactions.', 'name': 'interact', 'nsfw': False,
              'options': [
-                 {'description': 'Member to interact with}', 'name': 'member', 'required': True, 'type': 6}],
+                 {'description': 'Member to interact with}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Spank someone.', 'name': 'spank', 'nsfw': True,
-             'options': [{'description': 'Member to spank}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to spank}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
             ,
             {'description': 'Tease someone.', 'name': 'tease', 'nsfw': True,
-             'options': [{'description': 'Member to tease}', 'name': 'member', 'required': True, 'type': 6}],
+             'options': [{'description': 'Member to tease}', 'name': 'with', 'required': True, 'type': 6}],
              'type': 1}
         ]
     },
@@ -839,7 +839,7 @@ payload = [
      'name': 'ship',
      'nsfw': False,
      'options': [{'description': 'Member to ship.',
-                  'name': 'member',
+                  'name': 'user',
                   'required': True,
                   'type': 6},
 
@@ -851,13 +851,13 @@ payload = [
      'type': 1},
 
     {'description': 'Pickup someone.', 'name': 'pickup', 'nsfw': False,
-     'options': [{'description': 'Member to pickup', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
+     'options': [{'description': 'Member to pickup', 'name': 'user', 'required': True, 'type': 6}], 'type': 1},
 
     {'description': 'kill someone.', 'name': 'kill', 'nsfw': False,
-     'options': [{'description': 'Member to kill', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
+     'options': [{'description': 'Member to kill', 'name': 'user', 'required': True, 'type': 6}], 'type': 1},
 
     {'description': 'Insult someone.', 'name': 'insult', 'nsfw': False,
-     'options': [{'description': 'Member to Insult', 'name': 'member', 'required': True, 'type': 6}], 'type': 1},
+     'options': [{'description': 'Member to Insult', 'name': 'user', 'required': True, 'type': 6}], 'type': 1},
 
     {
         "name": "economy",
@@ -869,7 +869,7 @@ payload = [
              'name': 'rep',
              'nsfw': False,
              'options': [{'description': 'Member to Rep.',
-                          'name': 'member',
+                          'name': 'user',
                           'required': True,
                           'type': 6}],
              'type': 1},
@@ -878,7 +878,7 @@ payload = [
              'name': 'rank',
              'nsfw': False,
              'options': [{'description': 'Member to Check.',
-                          'name': 'member',
+                          'name': 'user',
                           'required': False,
                           'type': 6}],
              'type': 1},
@@ -887,7 +887,7 @@ payload = [
              'name': 'profile',
              'nsfw': False,
              'options': [{'description': 'Member to Check.',
-                          'name': 'member',
+                          'name': 'user',
                           'required': False,
                           'type': 6}],
              'type': 1},
@@ -958,7 +958,7 @@ payload = [
              'name': 'balance',
              'nsfw': False,
              'options': [{'description': 'Member to Check.',
-                          'name': 'member',
+                          'name': 'user',
                           'required': False,
                           'type': 6}],
              'type': 1}
@@ -1016,7 +1016,7 @@ payload = [
                 "type": 1,
                 "options": [
                     {'description': 'Member to transfer.',
-                     'name': 'member',
+                     'name': 'tor',
                      'required': True,
                      'type': 6},
                     {
@@ -1096,6 +1096,432 @@ payload = [
         "description": "Toggles the current channels nsfw setting",
         "type": 1,
         "default_member_permissions": MANAGE_CHANNELS
+    },
+
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "nsfw": True,
+        "name": "audio",
+        "options": [{
+            "name_localizations": {},
+            "name": "play",
+            "options": [],
+            "description": "Plays from a PornHub or RedTube URL (and YouTube if Donor)",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "disconnect",
+            "options": [],
+            "description": "Disconnects bot",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "pornsearch",
+            "options": [],
+            "description": "Searches PornHub for videos to play",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "skip",
+            "options": [],
+            "description": "Skips current playing track",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "moan",
+            "options": [],
+            "description": "moans 😫",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "queue",
+            "options": [],
+            "description": "Shows now playing and queue",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "volume",
+            "options": [],
+            "description": "Sets the Volume",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "youtube",
+            "options": [],
+            "description": "Searches YouTube for videos to play",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "audio commands",
+        "description_localizations": {},
+        "type": 1
+    },
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "name": "clean",
+        "options": [{
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "amount",
+            "description": "The maximum number of messages to remove. Limit of 500.",
+            "description_localizations": {},
+            "type": 4,
+            "required": False
+        }],
+        "description": "Cleans up all the bot and trigger messages",
+        "description_localizations": {},
+        "default_member_permissions": MANAGE_CHANNELS,
+        "type": 1
+    },
+    {
+        "dm_permission": True,
+        "name_localizations": {},
+        "name": "anonymity",
+        "options": [{
+            "name_localizations": {},
+            "name": "off",
+            "options": [],
+            "description": "Turn off anonymity.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "on",
+            "options": [],
+            "description": "Turn on anonymity.",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "Change whether you're shown on embeds",
+        "description_localizations": {},
+        "type": 1
+    },
+
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "name": "custom",
+        "options": [{
+            "name_localizations": {},
+            "name": "add",
+            "options": [],
+            "description": "Add a custom tag.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "delete",
+            "options": [],
+            "description": "*No description available.*",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "list",
+            "options": [],
+            "description": "*No description available.*",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "Custom commands",
+        "description_localizations": {},
+        "default_member_permissions": MANAGE_CHANNELS,
+        "type": 1
+    },
+
+    {
+        "dm_permission": True,
+        "name_localizations": {},
+        "name": "huh",
+        "options": [],
+        "description": "Seems you don't discord.",
+        "description_localizations": {},
+        "type": 1
+    },
+
+    {
+        "dm_permission": True,
+        "name_localizations": {},
+        "nsfw": True,
+        "name": "slideshow",
+        "options": [{
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "category",
+            "description": "The image category to view.",
+            "description_localizations": {},
+            "type": 3,
+            "choices": [{
+                "name_localizations": {},
+                "name": "Boobs",
+                "value": "boobs"
+            }, {
+                "name_localizations": {},
+                "name": "Ass",
+                "value": "ass"
+            }, {
+                "name_localizations": {},
+                "name": "Dick",
+                "value": "penis"
+            }, {
+                "name_localizations": {},
+                "name": "Gif",
+                "value": "Gifs"
+            }, {
+                "name_localizations": {},
+                "name": "Gay",
+                "value": "gay"
+            }, {
+                "name_localizations": {},
+                "name": "Tiny",
+                "value": "tiny"
+            }, {
+                "name_localizations": {},
+                "name": "Cum Sluts",
+                "value": "cumsluts"
+            }, {
+                "name_localizations": {},
+                "name": "Collared",
+                "value": "collared"
+            }, {
+                "name_localizations": {},
+                "name": "Yiff",
+                "value": "yiff"
+            }, {
+                "name_localizations": {},
+                "name": "Tentacle",
+                "value": "tentacle"
+            }, {
+                "name_localizations": {},
+                "name": "Thicc",
+                "value": "thicc"
+            }, {
+                "name_localizations": {},
+                "name": "Red",
+                "value": "red"
+            }],
+            "required": True
+        }],
+        "description": "Cycles though 20 images at 5 seconds each.",
+        "description_localizations": {},
+        "type": 1
+    },
+
+    {
+        "dm_permission": True,
+        "name_localizations": {},
+        "name": "settings",
+        "options": [{
+            "name_localizations": {},
+            "name": "disablecmds",
+            "options": [],
+            "description": "Disables commands for the entire server.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "disablehere",
+            "options": [],
+            "description": "Disables commands for the current channel.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "economyenable",
+            "options": [],
+            "description": "Toggles economy drops.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "enablecmds",
+            "options": [],
+            "description": "Re-enable disabled commands for the entire server.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "enablehere",
+            "options": [],
+            "description": "Re-enables disabled commands for the current channel.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "ignorechannel",
+            "options": [],
+            "description": "Ignores messages in a channel for any member without \"manage messages\".",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "listignoredchannels",
+            "options": [],
+            "description": "Lists all ignored channels.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "unignorechannel",
+            "options": [],
+            "description": "Removes a channel from the ignored list.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "viewdisabledcmds",
+            "options": [],
+            "description": "Lists all disabled commands.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "viewdisabledhere",
+            "options": [],
+            "description": "Lists commands disabled in the current channel.",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "Manage BoobBot's settings for this server",
+        "description_localizations": {},
+        "default_member_permissions": ADMINISTRATOR,
+        "type": 1
+    },
+    {
+        "dm_permission": True,
+        "name_localizations": {},
+        "name": "cockblock",
+        "options": [{
+            "name_localizations": {},
+            "name": "off",
+            "options": [],
+            "description": "Enable receiving dicks in DMs.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "on",
+            "options": [],
+            "description": "Disable receiving dicks in DMs.",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "Change whether you can receive dicks in your DMs",
+        "description_localizations": {},
+        "type": 1
+    },
+
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "nsfw": True,
+        "name": "autoporn",
+        "options": [{
+            "name_localizations": {},
+            "name": "delete",
+            "options": [],
+            "description": "Delete the Auto-Porn configuration for this server.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "set",
+            "options": [],
+            "description": "Set the Auto-Porn category and channel.",
+            "description_localizations": {},
+            "type": 1
+        }, {
+            "name_localizations": {},
+            "name": "status",
+            "options": [],
+            "description": "View the Auto-Porn configuration for this server.",
+            "description_localizations": {},
+            "type": 1
+        }],
+        "description": "AutoPorn, Sub-commands: set, delete, status",
+        "description_localizations": {},
+        "default_member_permissions": MANAGE_CHANNELS,
+        "type": 1
+    }
+    ,
+
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "name": "ban",
+        "options": [{
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "target",
+            "description": "The user to ban.",
+            "description_localizations": {},
+            "type": 6,
+            "required": True
+        }, {
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "reason",
+            "description": "The reason for the action.",
+            "description_localizations": {},
+            "type": 3,
+            "required": False
+        }],
+        "description": "Boot an asshat from the server.",
+        "description_localizations": {},
+        "default_member_permissions": BAN_MEMBERS,
+        "type": 1
+    }, {
+        "dm_permission": False,
+        "name_localizations": {},
+        "name": "softban",
+        "options": [{
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "target",
+            "description": "The user to ban.",
+            "description_localizations": {},
+            "type": 6,
+            "required": True
+        }, {
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "reason",
+            "description": "The reason for the action.",
+            "description_localizations": {},
+            "type": 3,
+            "required": False
+        }],
+        "description": "Quickly ban+unban a user to clean their messages.",
+        "description_localizations": {},
+        "default_member_permissions": BAN_MEMBERS,
+        "type": 1
+    },
+    {
+        "dm_permission": False,
+        "name_localizations": {},
+        "name": "modmute",
+        "options": [{
+            "name_localizations": {},
+            "autocomplete": False,
+            "name": "target",
+            "description": "The user to ban.",
+            "description_localizations": {},
+            "type": 6,
+            "required": True
+        }],
+        "description": "Mute an Admin.",
+        "description_localizations": {},
+        "default_member_permissions": ADMINISTRATOR,
+        "type": 1
     }
 
 ]
@@ -1119,6 +1545,16 @@ def update_debug():
     url = f"https://discord.com/api/v10/applications/{DEGUB_ID}/commands"
     headers = {"Authorization": f"Bot {DEBUG_TOKEN}"}
     r = requests.put(url, headers=headers, json=payload)
+    pprint.pprint(r.json())
+
+
+def update_debug_from_api():
+    r = requests.get("http://127.0.0.1:8769/slashjson")
+    r = r.json()
+    pprint.pprint(r["json"])
+    url = f"https://discord.com/api/v10/applications/{DEGUB_ID}/commands"
+    headers = {"Authorization": f"Bot {DEBUG_TOKEN}"}
+    r = requests.put(url, headers=headers, json=r["json"])
     pprint.pprint(r.json())
 
 
@@ -1148,5 +1584,6 @@ if __name__ == '__main__':
     # update_prd()
     # add_to_prd()
     update_debug()
+    # update_debug_from_api()
     # add_to_debug()
     # clear_debug()

@@ -76,10 +76,12 @@ class SlashHandler : EventListener {
             }
         }
 
+
         val commandString = event.name
         val commandGroup = event.subcommandGroup
+        val commandGroupName = event.subcommandName
         val command = commandGroup?.let { BoobBot.commands.findCommand(commandString, commandGroup) }
-            ?: BoobBot.commands.findCommand(commandString)
+            ?: BoobBot.commands.findCommand(commandString) ?: BoobBot.commands.findCommand(commandGroupName.toString())
             ?: return event.reply("Command not found").setEphemeral(true).queue()
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
@@ -112,7 +114,11 @@ class SlashHandler : EventListener {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(
+                event.guildChannel,
+                Permission.MESSAGE_EMBED_LINKS
+            )
+        ) {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
@@ -126,7 +132,8 @@ class SlashHandler : EventListener {
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
+            val missing =
+                checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -135,7 +142,8 @@ class SlashHandler : EventListener {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing = checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
+            val missing =
+                checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -143,7 +151,11 @@ class SlashHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(
+                event.guildChannel,
+                Permission.MESSAGE_MANAGE
+            )
+        ) {
             //event.message.delete().queue()
             // TODO maybe set ephemeral reply?
         }
