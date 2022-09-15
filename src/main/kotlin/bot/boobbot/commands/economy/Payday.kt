@@ -29,12 +29,13 @@ class Payday : Command {
         }
 
         user.lastDaily = Instant.now()
-        var rng = (0..50).random()
+        var rng = (10..500).random()
         val msg = StringBuilder("You got $$rng")
 
         if (Utils.checkDonor(ctx)) {
-            msg.append(" and an extra $$rng for being a <:p_:475801484282429450>")
-            rng += rng
+            var prng = (1..100).random()
+            msg.append(" and an extra $$prng for being a <:p_:475801484282429450>")
+            rng += prng
         }
 
         msg.append("\nTake it and fuck off.")
