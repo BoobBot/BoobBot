@@ -1,4 +1,4 @@
-![](https://cdn.discordapp.com/attachments/377619690513498133/406183455123177481/OpenSauce.svg) ![](https://cdn.discordapp.com/attachments/330777295952543744/478325842188042241/license.svg) [![CircleCI](https://circleci.com/gh/BoobBot/BoobBot.svg?style=svg)](https://circleci.com/gh/BoobBot/BoobBot) [![Patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/OfficialBoobBot) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/boobbot)  
+![](https://cdn.discordapp.com/attachments/1020903723133829210/1020915800493793400/OpenSauce.svg) ![](https://cdn.discordapp.com/attachments/330777295952543744/478325842188042241/license.svg) [![CircleCI](https://circleci.com/gh/BoobBot/BoobBot.svg?style=svg)](https://circleci.com/gh/BoobBot/BoobBot) [![Patreon](https://img.shields.io/badge/patreon-donate-green.svg)](https://www.patreon.com/OfficialBoobBot) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/boobbot)  
 
 # BoobBot
 
