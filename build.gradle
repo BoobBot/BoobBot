@@ -54,7 +54,7 @@ dependencies {
     /* Logging */
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.sentry:sentry-logback:$sentry_version"
-    implementation "org.codehaus.janino:janino:3.1.7"
+    implementation 'org.codehaus.janino:janino:3.1.8'
 
     /* Webserver */
     implementation "com.google.code.gson:gson:2.9.1"
@@ -68,10 +68,10 @@ dependencies {
     /* Misc */
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
-    implementation "io.github.cdimascio:java-dotenv:3.1.2"
+    implementation "io.github.cdimascio:java-dotenv:5.2.2"
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.mongodb:mongodb-driver-sync:3.10.1'
+    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
     implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
     implementation "io.ktor:ktor-server-websockets-jvm:$ktor_version"
     implementation "io.ktor:ktor-serialization-gson:$ktor_version"
