@@ -10,7 +10,7 @@ import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.future.await
 
-@CommandProperties(description = "Global leaderboards \uD83C\uDFC6", aliases = ["lb"], guildOnly = true)
+@CommandProperties(description = "Global leaderboards \uD83C\uDFC6", aliases = ["lb"], guildOnly = true, groupByCategory = true)
 class Leaderboard : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {

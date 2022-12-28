@@ -2,36 +2,23 @@ package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
-import bot.boobbot.entities.db.User
-import bot.boobbot.entities.framework.BootyDropper
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
-import bot.boobbot.utils.Utils.calculateLewdLevel
 import bot.boobbot.utils.Utils.checkMissingPermissions
-import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
-import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.ChannelType
-import net.dv8tion.jda.api.entities.ThreadChannel
-import net.dv8tion.jda.api.entities.emoji.Emoji
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
-import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.floor
-import kotlin.math.min
-import kotlin.math.sqrt
 
 class SlashHandler : EventListener {
     private val threadCounter = AtomicInteger()
@@ -76,7 +63,6 @@ class SlashHandler : EventListener {
             }
         }
 
-
         val commandString = event.name
         val commandGroup = event.subcommandGroup
         val commandGroupName = event.subcommandName
@@ -114,11 +100,7 @@ class SlashHandler : EventListener {
             return
         }
 
-        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(
-                event.guildChannel,
-                Permission.MESSAGE_EMBED_LINKS
-            )
-        ) {
+        if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
             return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
         }
 
@@ -151,11 +133,7 @@ class SlashHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(
-                event.guildChannel,
-                Permission.MESSAGE_MANAGE
-            )
-        ) {
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
             //event.message.delete().queue()
             // TODO maybe set ephemeral reply?
         }

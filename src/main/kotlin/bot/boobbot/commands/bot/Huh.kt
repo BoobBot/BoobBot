@@ -7,7 +7,7 @@ import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Colors
 import java.time.Instant
 
-@CommandProperties(description = "Seems you don't discord.", aliases = ["howto"])
+@CommandProperties(description = "Seems you don't discord.", aliases = ["howto"], groupByCategory = true)
 class Huh : Command {
 
     override fun execute(ctx: Context) {

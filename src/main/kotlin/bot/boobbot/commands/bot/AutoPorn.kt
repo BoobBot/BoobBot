@@ -7,7 +7,7 @@ import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import java.awt.Color
@@ -18,7 +18,8 @@ import java.awt.Color
     nsfw = true,
     guildOnly = true,
     category = Category.MISC,
-    donorOnly = true
+    donorOnly = true,
+    groupByCategory = true
 )
 class AutoPorn : Command {
     private val types = mapOf(
@@ -52,7 +53,7 @@ class AutoPorn : Command {
                 setDescription(Formats.error("Invalid Category\nbbautoporn set <category> <#channel>\nCategories: $typeString"))
             }
 
-        val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild!!)) as? TextChannel
+        val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) as? TextChannel
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Invalid Channel\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
@@ -98,7 +99,7 @@ class AutoPorn : Command {
 
     @SubCommand(aliases = ["disable"], description = "Delete the Auto-Porn configuration for this server.")
     fun delete(ctx: Context) {
-        if (BoobBot.database.getWebhook(ctx.guild!!.id) == null) {
+        if (BoobBot.database.getWebhook(ctx.guild.id) == null) {
             return ctx.reply {
                 setColor(Color.red)
                 setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
@@ -114,7 +115,7 @@ class AutoPorn : Command {
 
     @SubCommand(description = "View the Auto-Porn configuration for this server.")
     fun status(ctx: Context) {
-        val wh = BoobBot.database.getWebhook(ctx.guild!!.id)
+        val wh = BoobBot.database.getWebhook(ctx.guild.id)
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription("Wtf, this server doesn't even have Auto-Porn set up?")

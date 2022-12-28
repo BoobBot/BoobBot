@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture
 import javax.imageio.ImageIO
 
 
-@CommandProperties(description = "Shipped", category = Category.FUN)
+@CommandProperties(description = "Shipped", category = Category.FUN, groupByCategory = true)
 @Options([ // TODO: Revisit
     Option(name = "first", description = "The first user to ship.", type = OptionType.USER),
     Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)

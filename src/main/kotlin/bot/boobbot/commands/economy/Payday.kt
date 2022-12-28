@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 
-@CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY)
+@CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY, groupByCategory = true)
 class Payday : Command {
 
     override fun execute(ctx: Context) {

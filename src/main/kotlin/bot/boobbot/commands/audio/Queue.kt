@@ -49,7 +49,7 @@ class Queue : VoiceCommand {
         }
 
         ctx.reply {
-            setAuthor("Queue | ${ctx.guild!!.name}", BoobBot.inviteUrl, ctx.selfUser.effectiveAvatarUrl)
+            setAuthor("Queue | ${ctx.guild.name}", BoobBot.inviteUrl, ctx.selfUser.effectiveAvatarUrl)
             setColor(Colors.getEffectiveColor(ctx.member))
             addField(
                 "Current", """

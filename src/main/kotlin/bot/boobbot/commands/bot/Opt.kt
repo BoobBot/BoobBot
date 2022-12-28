@@ -7,7 +7,7 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.SubCommand
 
-@CommandProperties(description = "Changes whether you can receive nudes or not")
+@CommandProperties(description = "Changes whether you can receive nudes or not", groupByCategory = true)
 class Opt : Command {
 
     override fun execute(ctx: Context) {

@@ -5,6 +5,9 @@ import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel
 
 interface VoiceCommand : Command {
     fun isAlone(member: Member) = member.voiceState?.channel?.members?.count { !it.user.isBot } == 1
@@ -21,7 +24,7 @@ interface VoiceCommand : Command {
     }
 
     fun performVoiceChecks(ctx: Context, nsfwCheck: Boolean = false): Boolean {
-        if (ctx.guild == null) {
+        if (ctx._guild == null) {
             return false
         }
 

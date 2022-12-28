@@ -11,11 +11,11 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.ifEmpty
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.GuildMessageChannel
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
-@CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
+@CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true, groupByCategory = true)
 class Settings : Command {
 
     private val prohibitDisable = arrayOf("help", "settings")
@@ -37,7 +37,7 @@ class Settings : Command {
 
     @SubCommand(aliases = ["vdc", "disabled"], description = "Lists all disabled commands.")
     fun viewDisabledCmds(ctx: Context) {
-        val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
+        val disabled = BoobBot.database.getDisabledCommands(ctx.guild.id)
         val disabledFmt = if (disabled.isEmpty()) "*No commands disabled.*" else disabled.sorted().joinToString(", ")
 
         ctx.reply {
@@ -53,7 +53,7 @@ class Settings : Command {
         val disable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna disable, whore.")
 
-        val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
+        val disabled = BoobBot.database.getDisabledCommands(ctx.guild.id)
         val alreadyDisabled = disable.filter(disabled::contains)
 
         if (alreadyDisabled.isNotEmpty()) {
@@ -78,7 +78,7 @@ class Settings : Command {
         val enable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna re-enable, whore.")
 
-        val disabled = BoobBot.database.getDisabledCommands(ctx.guild!!.id)
+        val disabled = BoobBot.database.getDisabledCommands(ctx.guild.id)
         val invalid = enable.filterNot(BoobBot.commands::containsKey)
 
         if (invalid.isNotEmpty()) {
@@ -97,7 +97,7 @@ class Settings : Command {
 
     @SubCommand(aliases = ["vdh"], description = "Lists commands disabled in the current channel.")
     fun viewDisabledHere(ctx: Context) {
-        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild.id, ctx.channel.id)
         val disabledFmt =
             if (disabled.isEmpty()) "*No commands disabled in this channel.*" else disabled.sorted().joinToString(", ")
 
@@ -113,7 +113,7 @@ class Settings : Command {
         val disable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna disable for this channel, whore.")
 
-        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild.id, ctx.channel.id)
         val alreadyDisabled = disable.filter(disabled::contains)
 
         if (alreadyDisabled.isNotEmpty()) {
@@ -137,7 +137,7 @@ class Settings : Command {
         val enable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna re-enable for this channel, whore.")
 
-        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild!!.id, ctx.channel.id)
+        val disabled = BoobBot.database.getDisabledForChannel(ctx.guild.id, ctx.channel.id)
         val invalid = enable.filterNot(BoobBot.commands::containsKey)
 
         if (invalid.isNotEmpty()) {
@@ -158,7 +158,7 @@ class Settings : Command {
     @SubCommand(aliases = ["ic"], description = "Ignores messages in a channel for any member without \"manage messages\".")
     @Option(name = "channel", description = "The channel to ignore.", type = OptionType.CHANNEL, required = false)
     fun ignoreChannel(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val g = BoobBot.database.getGuild(ctx.guild.id)
         val c = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) ?: ctx.channel
 
         if (c !is GuildMessageChannel) {
@@ -173,7 +173,7 @@ class Settings : Command {
     @SubCommand(aliases = ["uic"], description = "Removes a channel from the ignored list.")
     @Option(name = "channel", description = "The channel to unignore.", type = OptionType.CHANNEL, required = false)
     fun unignoreChannel(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val g = BoobBot.database.getGuild(ctx.guild.id)
         val c = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) ?: ctx.channel
 
         if (c !is GuildMessageChannel) {
@@ -187,14 +187,14 @@ class Settings : Command {
 
     @SubCommand(aliases = ["lic"], description = "Lists all ignored channels.")
     fun listIgnoredChannels(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val g = BoobBot.database.getGuild(ctx.guild.id)
         val ignored = g.ignoredChannels.ifEmpty("*None*") { joinToString("\n", transform = { "<#$it>" }) }
         ctx.reply("__**Ignored Channels**__\n$ignored")
     }
 
     @SubCommand(aliases = ["economytoggle"], description = "Toggles economy drops.")
     fun economyEnable(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild!!.id)
+        val g = BoobBot.database.getGuild(ctx.guild.id)
 
         g.dropEnabled = !g.dropEnabled
         BoobBot.database.setGuild(g)

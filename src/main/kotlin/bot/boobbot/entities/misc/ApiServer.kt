@@ -191,7 +191,6 @@ class ApiServer {
 
     class UserSession(val id: String, val avatar: String, val username: String, val discriminator: String)
 
-    @KtorExperimentalAPI
     fun startServer() {
         embeddedServer(Netty, host = "127.0.0.1", port = 8769) {
             install(Sessions) {

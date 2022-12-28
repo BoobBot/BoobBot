@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import java.util.concurrent.CompletableFuture
@@ -75,7 +75,7 @@ class EventWaiter : EventListener {
         when (event) {
             is MessageReceivedEvent -> onMessageReceived(event)
             is ButtonInteractionEvent -> onButtonInteraction(event)
-            is SelectMenuInteractionEvent -> onSelectMenuInteraction(event)
+            is StringSelectInteractionEvent -> onSelectMenuInteraction(event)
         }
     }
 
@@ -95,7 +95,7 @@ class EventWaiter : EventListener {
     private fun onButtonInteraction(event: ButtonInteractionEvent) = checkAndRemove(pendingButtonEvents, event)
         .also { checkAndRemove(pendingMenuEvents, event) }
 
-    private fun onSelectMenuInteraction(event: SelectMenuInteractionEvent) = checkAndRemove(pendingMenuEvents, event)
+    private fun onSelectMenuInteraction(event: StringSelectInteractionEvent) = checkAndRemove(pendingMenuEvents, event)
 
     private fun <E : GenericEvent, W : WaitingEvent<E>> checkAndRemove(map: ConcurrentHashMap<String, W>, event: E) {
         for ((k, v) in map) {

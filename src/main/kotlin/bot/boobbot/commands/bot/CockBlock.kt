@@ -10,7 +10,8 @@ import bot.boobbot.entities.framework.annotations.SubCommand
 @CommandProperties(
     description = "Change whether you can receive dicks in your DMs",
     donorOnly = true,
-    aliases = ["cb"]
+    aliases = ["cb"],
+    groupByCategory = true
 )
 class CockBlock : Command {
     override fun execute(ctx: Context) {

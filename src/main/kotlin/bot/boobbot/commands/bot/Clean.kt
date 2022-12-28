@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit
     description = "Cleans up all the bot and trigger messages",
     aliases = ["clean", "cleanup", "purge", "del"],
     guildOnly = true,
-    category = Category.MISC
+    category = Category.MISC,
+    groupByCategory = true
 )
 @Option("amount", description = "The maximum number of messages to remove. Limit of 500.", type = OptionType.INTEGER, required = false)
 class Clean : Command {

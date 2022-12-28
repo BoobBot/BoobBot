@@ -6,6 +6,7 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -18,6 +19,7 @@ import bot.boobbot.utils.toUriOrNull
     nsfw = true,
     groupByCategory = true
 )
+@Option(name = "query", description = "Thing to search for.")
 class Play : VoiceCommand {
     override fun execute(ctx: Context) {
         val query = ctx.options.getOptionStringOrGather("query")?.removeSurrounding("<", ">")

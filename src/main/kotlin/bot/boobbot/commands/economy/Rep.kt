@@ -14,7 +14,7 @@ import java.awt.Color
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@CommandProperties(aliases = ["+"], description = "Give rep.", category = Category.ECONOMY)
+@CommandProperties(aliases = ["+"], description = "Give rep.", category = Category.ECONOMY, groupByCategory = true)
 @Option(name = "user", description = "The user to give rep to.", type = OptionType.USER)
 class Rep : Command {
 

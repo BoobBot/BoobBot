@@ -18,7 +18,7 @@ abstract class ModCommand : Command {
             return Resolved.EMPTY
         }
 
-        return Resolved(user, ctx.guild!!.getMemberById(user.idLong), reason)
+        return Resolved(user, ctx.guild.getMemberById(user.idLong), reason)
     }
 
     class Resolved(val user: User?, val member: Member?, val actionReason: String?) {

@@ -7,12 +7,11 @@ import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.ChannelType
-import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 import net.dv8tion.jda.api.hooks.EventListener
-import net.dv8tion.jda.api.hooks.ListenerAdapter
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 

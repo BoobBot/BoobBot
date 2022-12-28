@@ -11,7 +11,7 @@ import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import net.dv8tion.jda.api.interactions.commands.OptionType
 
-@CommandProperties(aliases = ["bank"], description = "banking operations \uD83C\uDFE6", guildOnly = true, category = Category.ECONOMY)
+@CommandProperties(aliases = ["bank"], description = "banking operations \uD83C\uDFE6", guildOnly = true, category = Category.ECONOMY, groupByCategory = true)
 class Bank : Command {
 
     override fun execute(ctx: Context) {

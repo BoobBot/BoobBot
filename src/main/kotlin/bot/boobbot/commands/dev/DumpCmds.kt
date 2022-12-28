@@ -5,12 +5,16 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.ExecutableCommand
+import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
 import net.dv8tion.jda.api.utils.FileUpload
@@ -18,12 +22,12 @@ import net.dv8tion.jda.api.utils.data.DataArray
 import net.dv8tion.jda.api.utils.data.DataObject
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
-@CommandProperties(description = "Get all commands as JSON.", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Get all commands as JSON.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class DumpCmds : Command {
     override fun execute(ctx: Context) {
         val allSlashCommands = BoobBot.commands.values.filter { it.slashEnabled }
-        val categorised = allSlashCommands.filter { it.category != null }.groupBy { it.category!! }.map(::buildCategory)
-        val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand)
+        val categorised = allSlashCommands.filter { it.category != null }.groupBy { it.category!! }.map(::buildCategory).map { it.toData() }
+        val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand).map { it.toData() }
 
         val json = DataArray.empty()
             .addAll(categorised)
@@ -35,61 +39,66 @@ class DumpCmds : Command {
         ctx.reply(FileUpload.fromData(json.toByteArray(Charsets.UTF_8), "commands.json"))
     }
 
-    private fun buildCommand(cmd: ExecutableCommand): DataObject {
-        val isNsfw = cmd.properties.nsfw
+    @SubCommand(description = "Sync command list to Discord.")
+    fun sync(ctx: Context) {
+        val allSlashCommands = BoobBot.commands.values.filter { it.slashEnabled }
+        val categorised = allSlashCommands.filter { it.category != null }.groupBy { it.category!! }.map(::buildCategory)
+        val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand)
 
-        val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
-            .also { it.isGuildOnly = cmd.properties.guildOnly }
-            .also { buildOptions(cmd.options).also(it::addOptions) }
-            .toData()
-            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
-
-        if (cmd.subcommands.isNotEmpty()) {
-            slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
-        }
-
-        return slash
+        ctx.jda.updateCommands()
+            .addCommands(categorised)
+            .addCommands(remaining)
+            .queue(
+                { ctx.reply("yeet lmao synced") },
+                { ctx.reply("piss"); it.printStackTrace() }
+            )
     }
 
-    private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): DataObject {
+    private fun buildCommand(cmd: ExecutableCommand): SlashCommandData {
+        return Commands.slash(cmd.name.lowercase(), cmd.properties.description)
+            .also {
+                it.isGuildOnly = cmd.properties.guildOnly
+                it.isNSFW = cmd.properties.nsfw
+                it.addOptions(buildOptions(cmd.options))
+                it.addSubcommands(cmd.subcommands.values.map(::buildSubcommand))
+            }
+    }
+
+    private fun buildCategory(entry: Map.Entry<String, List<ExecutableCommand>>): SlashCommandData {
         val (category, cmds) = entry
 
         if (cmds.size > 25) {
             throw IllegalArgumentException("Cannot have more than 25 subcommands/groups per command!")
         }
 
-        val isNsfw = entry.value.any { it.properties.nsfw }
-        val isGuildOnly = entry.value.all { it.properties.guildOnly }
-
         val slash = Commands.slash(category, "$category commands")
-            .also { it.isGuildOnly = isGuildOnly }
-            .toData()
-            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+            .also {
+                it.isGuildOnly = entry.value.all { props -> props.properties.guildOnly }
+                it.isNSFW = entry.value.any { props -> props.properties.nsfw }
+            }
 
         for (cmd in cmds) {
             if (cmd.subcommands.isNotEmpty()) {
-                val group = SubcommandGroupData(cmd.name, cmd.properties.description).toData()
-                val scs = cmd.subcommands.values.map(::buildSubcommand)
+                val group = SubcommandGroupData(cmd.name, cmd.properties.description).also {
+                    it.addSubcommands(cmd.subcommands.values.map(::buildSubcommand))
+                }
 
-                group.getArray("options").addAll(scs)
-                slash.getArray("options").add(group)
+                slash.addSubcommandGroups(group)
                 continue
             }
 
             val sc = SubcommandData(cmd.name, cmd.properties.description)
-                .also { buildOptions(cmd.options).also(it::addOptions) }
-                .toData()
+                .also { it.addOptions(buildOptions(cmd.options)) }
 
-            slash.getArray("options").add(sc)
+            slash.addSubcommands(sc)
         }
 
         return slash
     }
 
-    private fun buildSubcommand(cmd: SubCommandWrapper): DataObject {
+    private fun buildSubcommand(cmd: SubCommandWrapper): SubcommandData {
         return SubcommandData(cmd.name.lowercase(), cmd.description)
-            .also { buildOptions(cmd.options).also(it::addOptions) }
-            .toData()
+            .addOptions(buildOptions(cmd.options))
     }
 
     private fun buildOptions(options: List<Option>): List<OptionData> {

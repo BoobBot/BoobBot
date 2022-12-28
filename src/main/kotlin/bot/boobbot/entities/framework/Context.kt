@@ -10,13 +10,15 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.entities.channel.ChannelType
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import net.dv8tion.jda.api.managers.AudioManager
 import net.dv8tion.jda.api.utils.FileUpload
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 
 abstract class Context(val mentionTrigger: Boolean,
@@ -26,15 +28,17 @@ abstract class Context(val mentionTrigger: Boolean,
                        val user: User,
                        val member: Member?,
                        val channel: MessageChannelUnion,
-                       val guild: Guild?) {
+                       val _guild: Guild?) {
     val prefix = if (isSlashContext) "/" else "@${jda.selfUser.name} "
-    val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild!!.id) }
+    val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild.id) }
 
     val selfUser = jda.selfUser
-    val selfMember = guild?.selfMember
+    val selfMember = _guild?.selfMember
 
     val channelType = channel.type
     val isFromGuild = channelType.isGuild
+
+    val guild = _guild ?: throw IllegalStateException("Guild is not available.")
 
     val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) channel.asTextChannel() else null
     val guildChannel: GuildChannel? = channel as? GuildChannel
@@ -42,12 +46,12 @@ abstract class Context(val mentionTrigger: Boolean,
     val voiceState: GuildVoiceState? get() = member?.voiceState
 
     val audioManager: AudioManager?
-        get() = guild?.audioManager
+        get() = _guild?.audioManager
 
     val audioPlayer: GuildMusicManager
         get() {
-            check(guild != null) { "Cannot retrieve a GuildMusicManager when guild is null!" }
-            return BoobBot.getMusicManager(guild)
+            check(_guild != null) { "Cannot retrieve a GuildMusicManager when guild is null!" }
+            return BoobBot.getMusicManager(_guild)
         }
 
     val mentions: List<User>

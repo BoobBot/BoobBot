@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 import kotlin.math.pow
 
 
-@CommandProperties(description = "View your economy profile.", category = Category.ECONOMY)
+@CommandProperties(description = "View your economy profile.", category = Category.ECONOMY, groupByCategory = true)
 @Option(name = "user", description = "The user whose profile you want to view. Defaults to you.", type = OptionType.USER, required = false)
 class Profile : Command {
 

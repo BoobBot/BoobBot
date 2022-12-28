@@ -14,7 +14,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.commands.OptionType
 
 
-@CommandProperties(description = "Flip a coin.", aliases = ["flip"], category = Category.ECONOMY)
+@CommandProperties(description = "Flip a coin.", aliases = ["flip"], category = Category.ECONOMY, groupByCategory = true)
 @Options(
     [ // TODO: Revisit
         Option(

@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.events.*
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.http.HttpRequestEvent
+import net.dv8tion.jda.api.events.session.ReadyEvent
+import net.dv8tion.jda.api.events.session.SessionDisconnectEvent
+import net.dv8tion.jda.api.events.session.SessionRecreateEvent
+import net.dv8tion.jda.api.events.session.SessionResumeEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import java.awt.Color
 
@@ -22,9 +26,9 @@ class EventHandler : EventListener {
     override fun onEvent(event: GenericEvent) {
         when (event) {
             is ReadyEvent -> onReady(event)
-            is ReconnectedEvent -> onReconnect(event)
-            is ResumedEvent -> onResume(event)
-            is DisconnectEvent -> onDisconnect(event)
+            is SessionRecreateEvent -> onReconnect(event)
+            is SessionResumeEvent -> onResume(event)
+            is SessionDisconnectEvent -> onDisconnect(event)
             is HttpRequestEvent -> onHttpRequest()
             is GuildJoinEvent -> onGuildJoin(event)
             is GuildLeaveEvent -> onGuildLeave(event)
@@ -46,7 +50,7 @@ class EventHandler : EventListener {
         }
     }
 
-    private fun onReconnect(event: ReconnectedEvent) {
+    private fun onReconnect(event: SessionRecreateEvent) {
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -56,7 +60,7 @@ class EventHandler : EventListener {
         }
     }
 
-    private fun onResume(event: ResumedEvent) {
+    private fun onResume(event: SessionResumeEvent) {
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
@@ -66,7 +70,7 @@ class EventHandler : EventListener {
         }
     }
 
-    private fun onDisconnect(event: DisconnectEvent) {
+    private fun onDisconnect(event: SessionDisconnectEvent) {
         BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 

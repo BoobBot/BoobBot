@@ -6,7 +6,7 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
 
-@CommandProperties(description = "Check how fucked the bot session is", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Check how fucked the bot session is", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class Session : Command {
     override fun execute(ctx: Context) {
         val sessionInfo = BoobBot.shardManager.retrieveSessionInfo()

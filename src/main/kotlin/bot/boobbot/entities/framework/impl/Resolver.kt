@@ -2,10 +2,8 @@ package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.TextChannel
-import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 
 typealias Mapping<T> = (OptionMapping) -> T?

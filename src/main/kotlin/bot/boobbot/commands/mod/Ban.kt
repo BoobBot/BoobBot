@@ -9,6 +9,7 @@ import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.ModCommand
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
+import java.util.concurrent.TimeUnit
 
 @CommandProperties(
     description = "Boot an asshat from the server.",
@@ -50,7 +51,8 @@ class Ban : ModCommand() {
             }
         }
 
-        ctx.guild!!.ban(user, 7, "Banned by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
+        ctx.guild.ban(user, 7, TimeUnit.DAYS)
+            .reason("Banned by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
             .queue(
                 { ctx.reply("done, good riddance stupid bitch") },
                 { ctx.reply("what the fuck i couldn't ban?") }

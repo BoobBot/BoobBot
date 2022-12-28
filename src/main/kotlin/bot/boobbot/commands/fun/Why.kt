@@ -9,7 +9,7 @@ import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 
-@CommandProperties(description = "Random why questions", aliases = ["fact"], category = Category.FUN)
+@CommandProperties(description = "Random why questions", aliases = ["fact"], category = Category.FUN, groupByCategory = true)
 class Why : AsyncCommand {
 
     override suspend fun executeAsync(ctx: Context) {

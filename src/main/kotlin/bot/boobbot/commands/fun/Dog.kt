@@ -4,5 +4,5 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.impl.NekoLifeApiCommand
 
-@CommandProperties(description = "random dog", category = Category.FUN, aliases = ["woof"])
+@CommandProperties(description = "random dog", category = Category.FUN, aliases = ["woof"], groupByCategory = true)
 class Dog : NekoLifeApiCommand("woof")

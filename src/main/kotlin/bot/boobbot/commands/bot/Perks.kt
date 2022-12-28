@@ -4,16 +4,15 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.misc.DonorType
 import bot.boobbot.utils.Colors
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 
-@CommandProperties(description = "Receive your rewards after subscribing on Patreon.")
+@CommandProperties(description = "Receive your rewards after subscribing on Patreon.", groupByCategory = true)
 class Perks : Command {
     companion object {
         private const val PREMIUM_SERVERS = 3
@@ -70,7 +69,7 @@ class Perks : Command {
             return ctx.reply("Run this command in a guild, whore.")
         }
 
-        val guildId = ctx.guild!!.id
+        val guildId = ctx.guild.id
 
         when {
             BoobBot.database.isPremiumServer(guildId) -> ctx.reply("This server is already premium, whore.")
@@ -127,7 +126,7 @@ class Perks : Command {
                 return@onMenuInteraction it.editComponents().setContent("Fine, whore. No servers will be removed.").queue()
             }
 
-            val selected = (it as SelectMenuInteractionEvent).selectedOptions[0]
+            val selected = (it as StringSelectInteractionEvent).selectedOptions[0] // TODO: test
             BoobBot.database.removePremiumServer(selected.value)
             it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
         }

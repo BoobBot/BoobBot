@@ -13,7 +13,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.commands.OptionType
 
 
-@CommandProperties(description = "See your current balance.", aliases = ["bal", "$"], category = Category.ECONOMY)
+@CommandProperties(description = "See your current balance.", aliases = ["bal", "$"], category = Category.ECONOMY, groupByCategory = true)
 @Option(name = "user", description = "The user to check the balance of. Defaults to you.", type = OptionType.USER)
 class Balance : Command {
 

@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 
-@CommandProperties(description = "Evaluate code.", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Evaluate code.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 @Option(name = "code", description = "Self-explanatory.")
 class Eval : Command {
 

@@ -15,7 +15,7 @@ import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 import kotlin.math.max
 
-@CommandProperties(description = "Overview of BoobBot's process")
+@CommandProperties(description = "Overview of BoobBot's process", groupByCategory = true)
 class Stats : Command {
 
     private val dpFormatter = DecimalFormat("0.00")

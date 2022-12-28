@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.interactions.components.ItemComponent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
@@ -43,8 +44,8 @@ class DSLMessageBuilder {
     inner class ActionRowBuilder {
         private val components = mutableListOf<ItemComponent>()
 
-        fun menu(id: String, sm: SelectMenu.Builder.() -> Unit) {
-            components.add(SelectMenu.create(id).apply(sm).build())
+        fun menu(id: String, sm: StringSelectMenu.Builder.() -> Unit) {
+            components.add(StringSelectMenu.create(id).apply(sm).build())
         }
 
         fun button(style: ButtonStyle, idOrUrl: String, label: String) {

@@ -9,7 +9,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import java.time.Instant
 
-@CommandProperties(description = "Bot and support guild links", aliases = ["join", "oauth", "link", "links", "support"])
+@CommandProperties(description = "Bot and support guild links", aliases = ["join", "oauth", "link", "links", "support"], groupByCategory = true)
 class Invite : Command {
 
     override fun execute(ctx: Context) {

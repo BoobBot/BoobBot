@@ -57,7 +57,7 @@ class SoftBan : AsyncCommand, ModCommand() {
         val invite = generateInvite(ctx).awaitSuppressed()
         val extraMsg = invite?.let { "\nHere is an invite, don't be a dick.\n${it.url}" } ?: ""
         val banMsg = """
-            You have been soft-banned in **${ctx.guild!!.name}** by **${ctx.user.asTag}** for: $auditReason
+            You have been soft-banned in **${ctx.guild.name}** by **${ctx.user.asTag}** for: $auditReason
             $extraMsg
         """.trimIndent()
 
@@ -67,7 +67,8 @@ class SoftBan : AsyncCommand, ModCommand() {
             .submit()
             .awaitSuppressed()
 
-        ctx.guild.ban(user, 7, "Soft-banned by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
+        ctx.guild.ban(user, 7, TimeUnit.DAYS)
+            .reason("Soft-banned by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
             .flatMap { ctx.guild.unban(user) }
             .queue({ ctx.reply("done") }, {
                 if (it is ErrorResponseException) {
@@ -80,7 +81,7 @@ class SoftBan : AsyncCommand, ModCommand() {
 
     fun generateInvite(ctx: Context): CompletableFuture<Invite?> {
         val fut = CompletableFuture<Invite?>()
-        val targetChannel = ctx.guild!!.textChannelCache.firstOrNull { ctx.selfMember!!.hasPermission(it, Permission.CREATE_INSTANT_INVITE) }
+        val targetChannel = ctx.guild.textChannelCache.firstOrNull { ctx.selfMember!!.hasPermission(it, Permission.CREATE_INSTANT_INVITE) }
 
         if (targetChannel != null) {
             targetChannel.createInvite()

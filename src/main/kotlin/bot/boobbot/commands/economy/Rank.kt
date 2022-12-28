@@ -13,7 +13,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.commands.OptionType
 
 
-@CommandProperties(description = "See your current rank info.", aliases = ["level", "lvl"], category = Category.ECONOMY)
+@CommandProperties(description = "See your current rank info.", aliases = ["level", "lvl"], category = Category.ECONOMY, groupByCategory = true)
 @Option(name = "user", description = "Who do you want to view the rank of? Defaults to you.", type = OptionType.USER, required = false)
 class Rank : Command {
 

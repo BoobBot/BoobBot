@@ -6,10 +6,9 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.misc.DonorType
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import org.apache.http.HttpHost
 import org.json.JSONObject
 import java.io.File

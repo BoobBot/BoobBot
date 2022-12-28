@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon
 
 
-@CommandProperties(description = "Modify bot settings.", category = Category.DEV, developerOnly = true)
+@CommandProperties(description = "Modify bot settings.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class Set : Command {
 
     var isCustomGameSet = false
@@ -77,7 +77,7 @@ class Set : Command {
     @SubCommand(description = "Set the bot nickname.")
     @Option(name = "new_nick", description = "The new bot nickname.")
     fun nick(ctx: Context) {
-        if (ctx.guild == null) {
+        if (ctx._guild == null) {
             return ctx.reply("This command must be executed within a guild.")
         }
 
