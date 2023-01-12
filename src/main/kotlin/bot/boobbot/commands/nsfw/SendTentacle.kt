@@ -10,7 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     description = "Sends Tentacles to you or another user",
     guildOnly = true,
     aliases = ["sendaly"],
-    category = Category.SEND
+    category = Category.SEND,
+    nsfw = true
 )
 @Option(name = "to", description = "The user to send to.", type = OptionType.USER, required = false)
 class SendTentacle : SendCommand("tentacles", "tentacle")

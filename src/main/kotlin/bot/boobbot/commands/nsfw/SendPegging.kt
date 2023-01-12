@@ -10,7 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     description = "Sends pegging to you or another user!",
     guildOnly = true,
     category = Category.SEND,
-    donorOnly = true
+    donorOnly = true,
+    nsfw = true
 )
 @Option(name = "to", description = "The user to send to.", type = OptionType.USER, required = false)
 class SendPegging : SendCommand("pegged", "pegged")
