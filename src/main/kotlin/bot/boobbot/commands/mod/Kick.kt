@@ -53,7 +53,7 @@ class Kick : ModCommand() {
         ctx.guild.kick(user)
             .reason("Kicked by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
             .queue(
-                { ctx.reply("done, good riddance stupid bitch") },
+                { ctx.reply("kicked **${user.asTag}**, good riddance stupid bitch") },
                 { ctx.reply("what the fuck i couldn't kick?") }
             )
     }

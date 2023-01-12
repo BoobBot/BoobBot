@@ -55,7 +55,7 @@ class Ban : ModCommand() {
         ctx.guild.ban(user, 7, TimeUnit.DAYS)
             .reason("Banned by: ${ctx.user.name} [${ctx.user.idLong}] for: $auditReason")
             .queue(
-                { ctx.reply("done, good riddance stupid bitch") },
+                { ctx.reply("banned **${user.asTag}**, good riddance stupid bitch") },
                 { ctx.reply("what the fuck i couldn't ban?") }
             )
     }

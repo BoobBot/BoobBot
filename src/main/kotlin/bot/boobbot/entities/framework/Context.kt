@@ -97,6 +97,8 @@ abstract class Context(val mentionTrigger: Boolean,
         throw UnsupportedOperationException()
     }
 
+    open suspend fun defer() = Unit
+
     abstract fun reply(content: String, ephemeral: Boolean = false)
 
     abstract fun reply(file: FileUpload, ephemeral: Boolean = false)

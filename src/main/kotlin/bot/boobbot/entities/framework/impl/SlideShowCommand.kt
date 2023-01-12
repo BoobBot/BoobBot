@@ -37,6 +37,8 @@ abstract class SlideShowCommand : Command {
 
             val (first, images) = json.getJSONArray("urls").map { it.toString() }.separate()
 
+            ctx.reply("Your slideshow should appear soon, whore.", ephemeral = true)
+
             ctx.channel.sendMessage(embedWith(1, first, color))
                 .delay(5, TimeUnit.SECONDS)
                 .intersect(images) { m, i, e ->

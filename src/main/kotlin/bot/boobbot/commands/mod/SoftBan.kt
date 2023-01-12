@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit
 ])
 class SoftBan : AsyncCommand, ModCommand() {
     override suspend fun executeAsync(ctx: Context) {
+        ctx.defer()
+
         val (user, member, reason) = resolveTargetAndReason(ctx)
         val auditReason = reason ?: "No reason was given"
 

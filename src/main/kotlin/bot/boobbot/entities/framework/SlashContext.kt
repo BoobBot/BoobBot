@@ -43,6 +43,8 @@ class SlashContext(val event: SlashCommandInteractionEvent) : Context(false, mut
         }
     }
 
+    override suspend fun defer() = deferAsync()
+
     override fun reply(content: String, ephemeral: Boolean) = message(ephemeral) { content(content) }
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message(ephemeral) { file(file) }
