@@ -13,12 +13,16 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.Permission
 
-@CommandProperties(aliases = ["cc"], description = "Custom commands", guildOnly = true, groupByCategory = true)
+@CommandProperties(
+    aliases = ["cc"],
+    description = "Custom commands",
+    guildOnly = true,
+    groupByCategory = true,
+    slashEnabled = false
+)
 class Custom : Command {
 
-    override fun execute(ctx: Context) {
-        ctx.reply("`bbcc <${subcommands.keys.joinToString("|")}>`")
-    }
+    override fun execute(ctx: Context) = sendSubcommandHelp(ctx)
 
     @SubCommand(description = "Add a custom tag.")
     @Options([ // TODO: Revisit
