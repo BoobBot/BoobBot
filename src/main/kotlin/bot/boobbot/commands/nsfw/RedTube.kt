@@ -17,9 +17,9 @@ import java.time.Instant
     description = "RedTube video search.",
     guildOnly = true,
     aliases = ["rt"],
-    nsfw = true,
     category = Category.VIDEOSEARCHING,
-    donorOnly = true
+    donorOnly = true,
+    nsfw = true
 )
 @Option(name = "query", description = "The search query.")
 class RedTube : AsyncCommand {
