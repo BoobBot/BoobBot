@@ -126,7 +126,6 @@ class DumpCmds : Command {
     }
 
     private fun buildOptions(options: List<Option>): List<OptionData> {
-        println(options.size)
         return options.map {
             OptionData(it.type, it.name, it.description, it.required).also { data ->
                 for (choice in it.choices) {
