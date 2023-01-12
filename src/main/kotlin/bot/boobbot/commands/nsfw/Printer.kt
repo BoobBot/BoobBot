@@ -20,7 +20,7 @@ import java.awt.Color
     guildOnly = true,
     category = Category.GENERAL
 )
-@Option(name = "category", description = "The image category to print.", choices = [Choice("Dick", "penis"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Black", "black"), Choice("Tentacle", "tentacle"), Choice("PAWG", "pawg"), Choice("Hentai", "hentai"), Choice("Easter", "easter")])
+@Option(name = "category", description = "The image category to print.", choices = [Choice("Dick", "dick"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Black", "black"), Choice("Tentacle", "tentacle"), Choice("PAWG", "pawg"), Choice("Hentai", "hentai"), Choice("Easter", "easter")])
 class Printer : AsyncCommand {
     companion object {
         private val baseUrl = "https://printer.boob.bot/printer".toHttpUrlOrNull()!!
