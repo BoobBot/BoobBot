@@ -29,7 +29,6 @@ import javax.imageio.ImageIO
 ])
 class Ship : Command {
     override fun execute(ctx: Context) {
-        print("ship")
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
             return ctx.reply("I can't send attachments. Fix it, whore.")
         }
@@ -64,11 +63,9 @@ class Ship : Command {
             val result = processImages(av1, av2)
 
            ctx.message {
-               content(newMixString(user1.name, user2.name)+" <:icon:676613489548197915>")
+               content(newMixString(user1.name, user2.name) + " <:icon:676613489548197915>")
                file(FileUpload.fromData(result.toByteArray(), "shipped.png"))
-
            }
-
         }
     }
 
@@ -76,7 +73,7 @@ class Ship : Command {
         fun downloadAvatar(url: String): CompletableFuture<BufferedImage> {
             return BoobBot.requestUtil.get(url).submit()
                 .thenApply { it.body?.byteStream() ?: throw IllegalStateException("ResponseBody is null!") }
-                .thenApply { ImageIO.read(it) }
+                .thenApply { it.use(ImageIO::read) }
         }
 
         private fun newMixString(a: String, b: String): String {
