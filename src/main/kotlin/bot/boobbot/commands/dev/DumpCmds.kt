@@ -36,7 +36,6 @@ class DumpCmds : Command {
             .toPrettyString()
 
         println("${categorised.size} categorised, ${remaining.size} non-categorised. ${categorised.size + remaining.size} commands total.")
-
         ctx.reply(FileUpload.fromData(json.toByteArray(Charsets.UTF_8), "commands.json"))
     }
 

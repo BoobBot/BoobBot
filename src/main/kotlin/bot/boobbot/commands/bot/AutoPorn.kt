@@ -17,9 +17,7 @@ import java.awt.Color
     description = "AutoPorn, Sub-commands: set, delete, status",
     nsfw = true,
     guildOnly = true,
-    category = Category.MISC,
-    donorOnly = true,
-    groupByCategory = true
+    donorOnly = true
 )
 class AutoPorn : Command {
     private val types = mapOf(

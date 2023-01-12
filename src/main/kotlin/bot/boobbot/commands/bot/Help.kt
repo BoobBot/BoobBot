@@ -15,7 +15,6 @@ import java.time.Instant
 @CommandProperties(
     description = "help, --dm for dm",
     aliases = ["halp", "halllp", "coms", "commands", "cmds"],
-    category = Category.MISC,
     slashEnabled = false
 )
 class Help : Command {

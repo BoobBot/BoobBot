@@ -11,7 +11,7 @@ import bot.boobbot.utils.Utils
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import net.dv8tion.jda.api.JDAInfo
 
-@CommandProperties(description = "Displays bot info.", category = Category.MISC, groupByCategory = true)
+@CommandProperties(description = "Displays bot info.", groupByCategory = true)
 class Info : Command {
 
     override fun execute(ctx: Context) {

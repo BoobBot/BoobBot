@@ -7,7 +7,7 @@ import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 
-@CommandProperties(description = "Pong!", category = Category.MISC, groupByCategory = true)
+@CommandProperties(description = "Pong!", groupByCategory = true)
 class Ping : Command {
     override fun execute(ctx: Context) {
         if (ctx.options.getOptionStringOrGather("please") == "true") {
