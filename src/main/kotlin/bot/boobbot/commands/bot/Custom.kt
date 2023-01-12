@@ -17,8 +17,7 @@ import net.dv8tion.jda.api.Permission
     aliases = ["cc"],
     description = "Custom commands",
     guildOnly = true,
-    groupByCategory = true,
-    slashEnabled = false
+    groupByCategory = true
 )
 class Custom : Command {
 
@@ -66,7 +65,7 @@ class Custom : Command {
         ctx.reply("done whore")
     }
 
-    @SubCommand
+    @SubCommand(description = "List all custom commands in this server.")
     fun list(ctx: MessageContext) {
         val allCommands = BoobBot.database.getCustomCommands(ctx.guild.id)
 
