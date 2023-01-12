@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.CompletableFuture
 import javax.imageio.ImageIO
+import kotlin.math.roundToInt
 
 
 @CommandProperties(description = "Shipped", category = Category.FUN, groupByCategory = true)
@@ -76,15 +77,19 @@ class Ship : Command {
                 .thenApply { it.use(ImageIO::read) }
         }
 
+//        private fun newMixString(a: String, b: String): String {
+//            val mixed = StringBuilder()
+//            var i = 0
+//            while (i < a.length || i < b.length) {
+//                if (i < a.length) mixed.append(a[i])
+//                if (i < b.length) mixed.append(b[i])
+//                i++
+//            }
+//            return mixed.toString()
+//        }
+
         private fun newMixString(a: String, b: String): String {
-            val mixed = StringBuilder()
-            var i = 0
-            while (i < a.length || i < b.length) {
-                if (i < a.length) mixed.append(a[i])
-                if (i < b.length) mixed.append(b[i])
-                i++
-            }
-            return mixed.toString()
+            return a.take(a.length / 2) + b.drop((b.length.toDouble() / 2.0).roundToInt())
         }
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
