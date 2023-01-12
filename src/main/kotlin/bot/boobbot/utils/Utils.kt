@@ -63,7 +63,7 @@ object Utils {
     }
 
     fun checkDonor(msg: Message): Boolean = checkDonor(msg.author, msg.guild)
-    fun checkDonor(ctx: Context): Boolean = checkDonor(ctx.user, ctx.guild)
+    fun checkDonor(ctx: Context): Boolean = checkDonor(ctx.user, ctx._guild)
 
     fun getRandomFunString(key: String): String {
         val arr = jsonArrays.getJSONArray(key)

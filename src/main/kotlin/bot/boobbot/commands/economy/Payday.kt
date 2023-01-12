@@ -33,7 +33,7 @@ class Payday : Command {
         val msg = StringBuilder("You got $$rng")
 
         if (Utils.checkDonor(ctx)) {
-            var prng = (1..100).random()
+            val prng = (1..100).random()
             msg.append(" and an extra $$prng for being a <:p_:475801484282429450>")
             rng += prng
         }
