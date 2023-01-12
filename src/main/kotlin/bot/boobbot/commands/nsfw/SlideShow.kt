@@ -13,5 +13,5 @@ import bot.boobbot.entities.framework.impl.SlideShowCommand
     nsfw = true,
     donorOnly = true
 )
-@Option(name = "category", description = "The image category to view.", choices = [Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Dick", "penis"), Choice("Gif", "Gifs"), Choice("Gay", "gay"), Choice("Tiny", "tiny"), Choice("Cum Sluts", "cumsluts"), Choice("Collared", "collared"), Choice("Yiff", "yiff"), Choice("Tentacle", "tentacle"), Choice("Thicc", "thicc"), Choice("Red", "red")])
+@Option(name = "category", description = "The image category to view.", choices = [Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Dick", "dick"), Choice("Gif", "Gifs"), Choice("Gay", "gay"), Choice("Tiny", "tiny"), Choice("Cum Sluts", "cumsluts"), Choice("Collared", "collared"), Choice("Yiff", "yiff"), Choice("Tentacle", "tentacle"), Choice("Thicc", "thicc"), Choice("Red", "red")])
 class SlideShow : SlideShowCommand()

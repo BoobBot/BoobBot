@@ -18,7 +18,7 @@ abstract class SlideShowCommand : Command {
 
     companion object {
         private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
-        private val allowedEndpoints = arrayOf("boobs", "ass", "dick", "gif", "gay", "tiny", "cumsluts", "collared", "yiff", "tentacle", "thicc", "red")
+        private val allowedEndpoints = arrayOf("boobs", "ass", "dick", "Gifs", "gay", "tiny", "cumsluts", "collared", "yiff", "tentacle", "thicc", "red")
         private val endpointStr = allowedEndpoints.joinToString(", ")
     }
 
