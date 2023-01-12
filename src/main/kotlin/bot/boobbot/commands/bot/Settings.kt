@@ -109,6 +109,7 @@ class Settings : Command {
     }
 
     @SubCommand(aliases = ["dh"], description = "Disables commands for the current channel.", donorOnly = true)
+    @Option(name = "commands", description = "A list of commands separated by space")
     fun disableHere(ctx: Context) {
         val disable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna disable for this channel, whore.")
@@ -133,6 +134,7 @@ class Settings : Command {
     }
 
     @SubCommand(aliases = ["eh"], description = "Re-enables disabled commands for the current channel.")
+    @Option(name = "commands", description = "A list of commands separated by space")
     fun enableHere(ctx: Context) {
         val enable = ctx.options.getOptionStringOrGather("commands")?.split(' ')?.takeIf { it.isNotEmpty() }?.map(String::lowercase)
             ?: return ctx.reply("wtf, i don't mind-read. Specify what commands you wanna re-enable for this channel, whore.")

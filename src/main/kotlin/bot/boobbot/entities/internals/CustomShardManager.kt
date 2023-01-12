@@ -139,8 +139,6 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
             return CustomShardManager(token, sm.build())
         }
 
-        fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(
-            token
-        )?.sessionLimitRemaining ?: 0
+        fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0
     }
 }
