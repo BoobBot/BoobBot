@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     aliases = ["mm"],
     category = Category.MOD,
     userPermissions = [Permission.KICK_MEMBERS],
-    botPermissions = [Permission.KICK_MEMBERS]
+    botPermissions = [Permission.KICK_MEMBERS],
+    groupByCategory = true
 )
 @Option(name = "target", description = "The user to ban.", type = OptionType.USER)
 class ModMute : ModCommand() {

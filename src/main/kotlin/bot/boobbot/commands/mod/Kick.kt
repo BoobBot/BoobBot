@@ -16,7 +16,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     guildOnly = true,
     category = Category.MOD,
     userPermissions = [Permission.KICK_MEMBERS],
-    botPermissions = [Permission.KICK_MEMBERS]
+    botPermissions = [Permission.KICK_MEMBERS],
+    groupByCategory = true
 )
 @Options([ // TODO: Revisit
     Option(name = "target", description = "The user to ban.", type = OptionType.USER),

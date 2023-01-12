@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit
     guildOnly = true,
     category = Category.MOD,
     userPermissions = [Permission.BAN_MEMBERS],
-    botPermissions = [Permission.BAN_MEMBERS]
+    botPermissions = [Permission.BAN_MEMBERS],
+    groupByCategory = true
 )
 @Options([ // TODO: Revisit
     Option(name = "target", description = "The user to ban.", type = OptionType.USER),
