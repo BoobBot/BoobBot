@@ -22,7 +22,7 @@ import java.awt.Color
     donorOnly = true,
     category = Category.GENERAL
 )
-@Option(name = "category", description = "The image category to use.", choices = [Choice("Dick", "penis"), Choice("Boobs", "boobs"), Choice("Ass", "ass")])
+@Option(name = "category", description = "The image category to use.", choices = [Choice("Dick", "dick"), Choice("Boobs", "boobs"), Choice("Ass", "ass")])
 class Magik : AsyncCommand {
     companion object {
         private val baseUrl = "https://memes.subspace.gg/api/magik".toHttpUrlOrNull()!!

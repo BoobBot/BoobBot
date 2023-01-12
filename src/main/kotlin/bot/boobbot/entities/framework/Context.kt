@@ -38,7 +38,8 @@ abstract class Context(val mentionTrigger: Boolean,
     val channelType = channel.type
     val isFromGuild = channelType.isGuild
 
-    val guild = _guild ?: throw IllegalStateException("Guild is not available.")
+    val guild: Guild
+        get() = _guild ?: throw IllegalStateException("Guild is not available.")
 
     val textChannel: TextChannel? = if (channelType == ChannelType.TEXT) channel.asTextChannel() else null
     val guildChannel: GuildChannel? = channel as? GuildChannel
