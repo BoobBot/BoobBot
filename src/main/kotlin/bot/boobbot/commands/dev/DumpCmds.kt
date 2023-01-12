@@ -5,6 +5,7 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.Resolver
@@ -49,9 +50,33 @@ class DumpCmds : Command {
             .addCommands(categorised)
             .addCommands(remaining)
             .queue(
-                { ctx.reply("yeet lmao synced") },
-                { ctx.reply("piss"); it.printStackTrace() }
+                { ctx.reply("commands re-synced with discord") },
+                { ctx.reply("sync failed (`${it.localizedMessage}`)"); it.printStackTrace() }
             )
+    }
+
+    @SubCommand(description = "Trace command build information.")
+    @Options([
+        Option(name = "command", description = "Command name to diagnose."),
+        Option(name = "subcommand", description = "Subcommand name to diagnose.", required = false)
+    ])
+    fun trace(ctx: Context) {
+        val command = ctx.options.getByNameOrNext("command", Resolver.STRING)
+            ?: return ctx.reply("Wtf, specify a command whore.")
+        val subcommand = ctx.options.getByNameOrNext("subcommand", Resolver.STRING)
+
+        val cmd = BoobBot.commands.findCommand(command)
+            ?: return ctx.reply("Wtf, I couldn't find a command with that name, whore.")
+        val sc = subcommand?.let { cmd.subcommands[subcommand] }
+
+        val cmdData = buildCommand(cmd).toData().toPrettyString()
+        val scData = sc?.let { buildSubcommand(it) }?.toData()?.toPrettyString()
+
+        ctx.reply(FileUpload.fromData(cmdData.toByteArray(Charsets.UTF_8), "command.json"))
+
+        if (scData != null) {
+            ctx.reply(FileUpload.fromData(scData.toByteArray(Charsets.UTF_8), "subcommand.json"))
+        }
     }
 
     private fun buildCommand(cmd: ExecutableCommand): SlashCommandData {
@@ -102,6 +127,7 @@ class DumpCmds : Command {
     }
 
     private fun buildOptions(options: List<Option>): List<OptionData> {
+        println(options.size)
         return options.map {
             OptionData(it.type, it.name, it.description, it.required).also { data ->
                 for (choice in it.choices) {

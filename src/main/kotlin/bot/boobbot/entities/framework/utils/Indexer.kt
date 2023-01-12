@@ -35,8 +35,8 @@ class Indexer(pkg: String) {
             .map {
                 val name = it.name.lowercase()
                 val props = it.findAnnotation<SubCommand>()!!
-                val options = it::class.findAnnotation<Options>()?.value?.toList()
-                    ?: it::class.annotations.filterIsInstance(Option::class.java)
+                val options = it.findAnnotation<Options>()?.value?.toList()
+                    ?: it.annotations.filterIsInstance(Option::class.java)
                 SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, options, it.javaMethod!!, kls)
             }
     }
