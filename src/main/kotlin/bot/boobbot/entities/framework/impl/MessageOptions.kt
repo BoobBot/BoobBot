@@ -14,7 +14,7 @@ class MessageOptions(private val args: MutableList<String>) : Options {
     override fun raw() = args
 
     fun dropNext() {
-        if (args.size > 1) {
+        if (args.size > 0) {
             args.removeAt(0)
         }
     }
