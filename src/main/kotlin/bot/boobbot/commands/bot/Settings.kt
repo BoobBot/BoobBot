@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
-@CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true, groupByCategory = true)
+@CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
 class Settings : Command {
 
     private val prohibitDisable = arrayOf("help", "settings")
