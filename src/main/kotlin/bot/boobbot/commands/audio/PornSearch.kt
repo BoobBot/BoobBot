@@ -15,6 +15,7 @@ import bot.boobbot.entities.framework.interfaces.VoiceCommand
     guildOnly = true,
     groupByCategory = true
 )
+@Option(name = "query", description = "Thing to search for.")
 class PornSearch : VoiceCommand {
     override fun execute(ctx: Context) {
         if (!performVoiceChecks(ctx, nsfwCheck = true)) {

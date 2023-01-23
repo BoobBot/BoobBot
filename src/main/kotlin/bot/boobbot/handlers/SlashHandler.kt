@@ -93,7 +93,7 @@ class SlashHandler : EventListener {
 
                 event.channel.sendMessage(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                            "Confused? Try `bbhuh` or join the support server https://discord.gg/bra\n" +
+                            "Confused? Try `/nsfwtoggle` or join the support server https://discord.gg/bra\n" +
                             j.getString("url")
                 ).queue()
             }

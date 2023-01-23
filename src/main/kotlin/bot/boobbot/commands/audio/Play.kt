@@ -13,7 +13,7 @@ import bot.boobbot.utils.Utils
 import bot.boobbot.utils.toUriOrNull
 
 @CommandProperties(
-    description = "Plays from a PornHub or RedTube URL (and YouTube if Donor)",
+    description = "Plays music from supported sources.",
     category = Category.AUDIO,
     guildOnly = true,
     nsfw = true,
@@ -23,7 +23,7 @@ import bot.boobbot.utils.toUriOrNull
 class Play : VoiceCommand {
     override fun execute(ctx: Context) {
         val query = ctx.options.getOptionStringOrGather("query")?.removeSurrounding("<", ">")
-            ?: return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `youtube`")
+            ?: return ctx.reply("Specify something to play, whore.\nSupported sites: `pornhub`, `redtube`, `soundcloud`")
 
         val nsfwCheck = "pornhub" in query.lowercase() || "redtube" in query.lowercase()
 
