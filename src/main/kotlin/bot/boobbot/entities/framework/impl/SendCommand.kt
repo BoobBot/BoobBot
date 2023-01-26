@@ -15,6 +15,8 @@ abstract class SendCommand(private val category: String, private val endpoint: S
     private val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
 
     override suspend fun executeAsync(ctx: Context) {
+        ctx.defer()
+
         val user = ctx.options.getByNameOrNext("to", Resolver.USER) ?: ctx.user
 
         if (user.idLong == BoobBot.selfId) {
