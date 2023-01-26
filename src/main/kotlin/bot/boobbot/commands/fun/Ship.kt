@@ -89,7 +89,7 @@ class Ship : Command {
 //        }
 
         private fun newMixString(a: String, b: String): String {
-            return a.take(a.length / 2) + b.drop((b.length.toDouble() / 2.0).roundToInt())
+            return a.take((a.length.toDouble() / 2.0).roundToInt()) + b.drop((b.length.toDouble() / 2.0).roundToInt())
         }
 
         private fun processImages(av1: BufferedImage, av2: BufferedImage): ByteArrayOutputStream {
