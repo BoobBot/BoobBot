@@ -2,21 +2,24 @@
 
 # BoobBot
 
-This repository is intended for eductional purposes, and to allow people to contribute towards/improve the bot's codebase. While we don't encourage self-hosting, if you insist on doing so you will need to do several things to get it in a useable state. See `prerequisites` for more information.
+This repository is intended for educational purposes, and to allow people to contribute towards/improve the codebase of the bot.
+While we don't encourage self-hosting, if you insist on doing so you will need to do several things to get it in a usable state.
+See [prerequisites](#prerequisites) for more information.
 
 ## Prerequisites
 
-* You will need to create a `bb.env` file in [Resources](src/main/resources), or supply your env variables some other way on boot. See [Constants](src/main/java/bot/boobbot/misc/Constants.kt) for the variable names
-* You will need a bbapi key which you can purchase [here](https://www.patreon.com/OfficialBoobBot)
-* You will need a dank memer API key which you can purchase from [Mel](https://github.com/melmsie)/
-* You will need several proxies for large-scale support Which can be found in [Utils](src/main/java/bot/boobbot/misc/Utils.kt)
+* You will need to create a `bb.env` file in [Resources](src/main/resources), or supply your env variables some other way on boot.
+  * Refer to [Constants](src/main/kotlin/bot/boobbot/entities/internals/Config.kt) for the variable names.
+* You will need a BB API key which you can purchase [here](https://www.patreon.com/OfficialBoobBot).
+* You will need an instance of [Imgen](https://github.com/DankMemer/imgen) for image generation.
+* You will need several proxies for large-scale support Which can be found in [Utils](src/main/kotlin/bot/boobbot/utils/Utils.kt).
 
 
 ## Built With
 
-* [JDA](https://github.com/DV8FromTheWorld/JDA) - A Java Discord API Wrapper 
-* [Gradle](https://gradle.org/) - Dependency Management
-* [Kotlin](https://kotlinlang.org/) - Do more with less code
+* [JDA](https://github.com/DV8FromTheWorld/JDA) - A Java Discord API Wrapper.
+* [Gradle](https://gradle.org/) - Dependency Management.
+* [Kotlin](https://kotlinlang.org/) - A powerful JVM-based language with support for coroutines and more.
 
 ## Contributing
 
@@ -29,6 +32,6 @@ This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE)
 ## Projects Powering BoobBot
 
 [![Yourkit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/java/profiler)  
-BoobBot uses Yourkit to profile the application and provide statistics for the performance of the bot.
+BoobBot uses YourKit to profile the application and provide statistics for the performance of the bot.
 
 [![JetBrains](https://cdn.discordapp.com/attachments/440683853364068381/570687889634099238/untitled.svg)](https://www.jetbrains.com/?from=BoobBot)

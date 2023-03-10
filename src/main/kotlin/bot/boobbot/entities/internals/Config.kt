@@ -40,9 +40,7 @@ class Config(
                 ignoreIfMissing = false
             }
 
-            return Klash.construct<Config>(
-                { dotenv[it] },
-                { "" })
+            return Klash.construct({ dotenv[it] }, { "" })
         }
     }
 
