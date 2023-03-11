@@ -50,7 +50,7 @@ class Set : Command {
             ?: return ctx.reply("${ctx.prefix}set game <type> <content...>")
 
         val content = ctx.options.getOptionStringOrGather("content")?.split(' ')
-            ?: return ctx.reply("${ctx.prefix}set game <type> <STREAMING: stream url> [reset-after (e.g. 4h)] <content...>")
+            ?: return ctx.reply("${ctx.prefix}set game <type> [reset-after (e.g. 4h)] <STREAMING: stream url> <content...>")
 
         val validTypes = Activity.ActivityType.values().map { it.name.lowercase() }
 
