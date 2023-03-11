@@ -1,17 +1,14 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.Resolver
+import bot.boobbot.entities.framework.interfaces.Command
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import java.util.concurrent.TimeUnit
 
 
 @CommandProperties(

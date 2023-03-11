@@ -11,17 +11,9 @@ import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.framework.interfaces.Command
-import bot.boobbot.utils.Formats
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
-import net.dv8tion.jda.api.interactions.commands.build.Commands
-import net.dv8tion.jda.api.interactions.commands.build.OptionData
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
+import net.dv8tion.jda.api.interactions.commands.build.*
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.data.DataArray
-import net.dv8tion.jda.api.utils.data.DataObject
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 @CommandProperties(description = "Get all commands as JSON.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class DumpCmds : Command {

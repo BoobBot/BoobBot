@@ -2,8 +2,8 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle

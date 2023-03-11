@@ -6,7 +6,7 @@ import bot.boobbot.utils.WebhookManager
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.events.*
+import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.http.HttpRequestEvent

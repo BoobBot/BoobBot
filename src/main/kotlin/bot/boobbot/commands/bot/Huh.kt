@@ -1,9 +1,8 @@
 package bot.boobbot.commands.bot
 
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Colors
 import java.time.Instant
 

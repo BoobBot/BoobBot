@@ -2,12 +2,9 @@ package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.MessageContext
-import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.interactions.commands.OptionType
 import okhttp3.Headers.Companion.headersOf
 
 abstract class SendCommand(private val category: String, private val endpoint: String) : AsyncCommand {

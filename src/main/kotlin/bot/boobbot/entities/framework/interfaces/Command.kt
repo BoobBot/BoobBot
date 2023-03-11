@@ -3,7 +3,6 @@ package bot.boobbot.entities.framework.interfaces
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats

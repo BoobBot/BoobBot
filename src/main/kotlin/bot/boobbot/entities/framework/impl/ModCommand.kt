@@ -1,12 +1,9 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.Command
-import net.dv8tion.jda.api.entities.IMentionable
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
-import org.jetbrains.kotlin.builtins.StandardNames.FqNames.target
 import java.util.regex.Pattern
 
 abstract class ModCommand : Command {

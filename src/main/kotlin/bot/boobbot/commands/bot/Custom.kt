@@ -2,13 +2,13 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.interfaces.Command
-import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.MessageContext
+import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
+import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import net.dv8tion.jda.api.Permission
@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.Permission
     aliases = ["cc"],
     description = "Custom commands",
     guildOnly = true,
-    groupByCategory = true
+    groupByCategory = true,
+    slashEnabled = false
 )
 class Custom : Command {
 

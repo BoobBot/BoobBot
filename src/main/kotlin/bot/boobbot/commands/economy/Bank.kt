@@ -1,8 +1,8 @@
 package bot.boobbot.commands.economy
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.User
-import bot.boobbot.entities.framework.*
+import bot.boobbot.entities.framework.Category
+import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.Options

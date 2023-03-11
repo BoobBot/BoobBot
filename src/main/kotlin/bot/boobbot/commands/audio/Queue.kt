@@ -4,7 +4,6 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats

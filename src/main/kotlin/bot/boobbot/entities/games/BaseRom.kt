@@ -1,8 +1,5 @@
 package bot.boobbot.entities.games;
 
-import bot.boobbot.BoobBot
-import java.time.Instant
-
 abstract class BaseRom(
     val GuildId: Long = 0,
     var ChannelID: Long = 0,

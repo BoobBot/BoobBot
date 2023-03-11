@@ -1,7 +1,6 @@
 package bot.boobbot.utils
 
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.Message
 import java.awt.Color
 import java.util.*
 
