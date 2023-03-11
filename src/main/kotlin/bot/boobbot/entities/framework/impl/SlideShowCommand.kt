@@ -22,7 +22,10 @@ abstract class SlideShowCommand : Command {
     }
 
     override fun execute(ctx: Context) {
-        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.takeIf { it in allowedEndpoints }
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)
+            ?.replace("gif", "Gifs")
+            ?.replace("gifs", "Gifs")
+            ?.takeIf { it in allowedEndpoints }
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("Missing Args\n/slideshow <category>\nTypes: $endpointStr"))
