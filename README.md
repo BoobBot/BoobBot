@@ -9,7 +9,7 @@ See [prerequisites](#prerequisites) for more information.
 ## Prerequisites
 
 * You will need to create a `bb.env` file in [Resources](src/main/resources), or supply your env variables some other way on boot.
-  * Refer to [Constants](src/main/kotlin/bot/boobbot/entities/internals/Config.kt) for the variable names.
+  * Refer to [Config](src/main/kotlin/bot/boobbot/entities/internals/Config.kt) for the variable names.
 * You will need a BB API key which you can purchase [here](https://www.patreon.com/OfficialBoobBot).
 * You will need an instance of [Imgen](https://github.com/DankMemer/imgen) for image generation.
 * You will need several proxies for large-scale support Which can be found in [Utils](src/main/kotlin/bot/boobbot/utils/Utils.kt).

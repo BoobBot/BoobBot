@@ -13,6 +13,8 @@ import java.util.concurrent.CompletableFuture
 
 fun Dotenv.get(key: String, default: String): String = get(key) ?: default
 
+fun <T> List<T>.discard(amount: Int) = if (amount > 0) this.drop(amount) else this
+
 fun <T> List<T>.separate(): Pair<T, List<T>> = Pair(first(), drop(1))
 
 fun String.toUriOrNull(): URI? {

@@ -63,7 +63,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     override fun onEvent(event: GenericEvent) {
         if (event is ReadyEvent && allShardsConnected && !readyFired) {
             readyFired = true
-            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("@BoobBot help || bbinvite"))
+            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("discord.gg/bra || @BoobBot help"))
             BoobBot.log.info(Formats.readyFormat)
             WebhookManager.sendShard(null) {
                 setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
