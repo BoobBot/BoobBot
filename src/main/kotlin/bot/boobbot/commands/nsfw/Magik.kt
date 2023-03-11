@@ -37,7 +37,7 @@ class Magik : AsyncCommand {
         val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.let(categories::get)
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbmagik <type>\nTypes: boobs, ass, dick"))
+                setDescription(Formats.error("Missing Args\n/magik <type>\nTypes: boobs, ass, dick"))
             }
 
         val imageUrl = getImage(category)

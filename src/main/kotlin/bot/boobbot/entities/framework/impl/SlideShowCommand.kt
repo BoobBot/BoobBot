@@ -23,10 +23,10 @@ abstract class SlideShowCommand : Command {
     }
 
     override fun execute(ctx: Context) {
-        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.takeIf { it in allowedEndpoints }
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.takeIf { it in allowedEndpoints }
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbslideshow <type>\nTypes: $endpointStr"))
+                setDescription(Formats.error("Missing Args\n/slideshow <category>\nTypes: $endpointStr"))
             }
 
         val color = Colors.getEffectiveColor(ctx.member)

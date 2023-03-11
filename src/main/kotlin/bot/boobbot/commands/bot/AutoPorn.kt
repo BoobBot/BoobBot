@@ -48,13 +48,13 @@ class AutoPorn : Command {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)?.lowercase()?.let(types::get)
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Invalid Category\nbbautoporn set <category> <#channel>\nCategories: $typeString"))
+                setDescription(Formats.error("Invalid Category\n/autoporn set <category> <#channel>\nCategories: $typeString"))
             }
 
         val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild)) as? TextChannel
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Invalid Channel\nbbautoporn set <type> <#channel>\nTypes: $typeString"))
+                setDescription(Formats.error("Invalid Channel\n/autoporn set <category> <#channel>\nTypes: $typeString"))
             }
 
         if (!channel.isNSFW) {

@@ -41,7 +41,7 @@ class Printer : AsyncCommand {
         val category = ctx.options.getByNameOrNext("category", Resolver.STRING)?.let(categories::get)
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbprinter <type>\nTypes: $typeString"))
+                setDescription(Formats.error("Missing Args\n/printer <type>\nTypes: $typeString"))
             }
 
         val imageUrl = getImage(category)

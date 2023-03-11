@@ -72,12 +72,12 @@ fun <T, O> RestAction<T>.intersect(other: List<O>, apply: (T, Int, O) -> RestAct
     return last
 }
 
-fun <T> Collection<T>.ifEmpty(do_: String, else_: Collection<T>.() -> String): String {
+fun <T> Collection<T>.ifEmpty(trueValue: String, falseValue: Collection<T>.() -> String): String {
     if (this.isEmpty()) {
-        return do_
+        return trueValue
     }
 
-    return else_(this)
+    return falseValue(this)
 }
 
-fun <K, V> Map<K, V>.joinToString(separator: CharSequence) = "{\n" + this.entries.joinToString(separator) { "${it.key}=${it.value}" } + "\n}"
+fun <K, V> Map<K, V>.joinToString(separator: CharSequence) = "{\n${this.entries.joinToString(separator) { "${it.key}=${it.value}" }}\n}"

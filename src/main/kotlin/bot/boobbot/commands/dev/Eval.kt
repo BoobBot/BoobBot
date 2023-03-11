@@ -5,11 +5,9 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.framework.annotations.CommandProperties
-import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
-import net.dv8tion.jda.api.entities.emoji.Emoji
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 
 

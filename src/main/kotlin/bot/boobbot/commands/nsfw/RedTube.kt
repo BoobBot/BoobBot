@@ -31,7 +31,7 @@ class RedTube : AsyncCommand {
         val userQuery = ctx.options.getOptionStringOrGather("query")
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\nbbrt <tag> or random\n"))
+                setDescription(Formats.error("Missing Args\n/redtube <tag> or random\n"))
             }
 
         val query = if (userQuery.lowercase() != "random") userQuery.lowercase() else Formats.tag.random()
