@@ -28,7 +28,7 @@ abstract class SlideShowCommand : Command {
             ?.takeIf { it in allowedEndpoints }
             ?: return ctx.reply {
                 setColor(Color.red)
-                setDescription(Formats.error("Missing Args\n/slideshow <category>\nTypes: $endpointStr"))
+                setDescription(Formats.error("Missing Args\n/slideshow <type>\nTypes: $endpointStr"))
             }
 
         val color = Colors.getEffectiveColor(ctx.member)

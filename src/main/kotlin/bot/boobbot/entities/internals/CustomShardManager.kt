@@ -96,8 +96,10 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                 // Disable events for the following:
                 GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-                GatewayIntent.GUILD_BANS,
+                GatewayIntent.GUILD_MODERATION,
                 GatewayIntent.GUILD_INVITES,
+                GatewayIntent.GUILD_WEBHOOKS,
+                GatewayIntent.SCHEDULED_EVENTS,
                 // Disable Message Content
                 GatewayIntent.MESSAGE_CONTENT
             )
