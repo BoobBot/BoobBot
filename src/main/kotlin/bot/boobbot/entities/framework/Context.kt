@@ -52,7 +52,7 @@ abstract class Context(val mentionTrigger: Boolean,
     val audioPlayer: GuildMusicManager
         get() {
             check(_guild != null) { "Cannot retrieve a GuildMusicManager when guild is null!" }
-            return BoobBot.getMusicManager(_guild)
+            return BoobBot.getOrCreateMusicManager(_guild)
         }
 
     val mentions: List<User>

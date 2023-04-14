@@ -132,11 +132,13 @@ object BoobBot {
         playerManager.registerSourceManager(LocalAudioSourceManager())
     }
 
-    fun getMusicManager(g: Guild): GuildMusicManager {
-        val audioManager = g.audioManager
+    @Synchronized
+    fun getOrCreateMusicManager(g: Guild): GuildMusicManager {
         val manager = musicManagers.computeIfAbsent(g.idLong) {
             GuildMusicManager(it, playerManager.createPlayer())
         }
+
+        val audioManager = g.audioManager
 
         if (audioManager.sendingHandler == null) {
             audioManager.sendingHandler = manager
@@ -144,4 +146,7 @@ object BoobBot {
 
         return manager
     }
+
+    @Synchronized
+    fun getMusicManager(g: Guild): GuildMusicManager? = musicManagers[g.idLong]
 }

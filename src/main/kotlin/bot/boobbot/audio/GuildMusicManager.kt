@@ -12,8 +12,9 @@ import net.dv8tion.jda.api.audio.AudioSendHandler
 import java.nio.ByteBuffer
 
 class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEventAdapter(), AudioSendHandler {
-
+    private var shutdown = false
     val queue = mutableListOf<AudioTrack>()
+
     private var lastTrack: AudioTrack? = null
     private var repeat = RepeatMode.NONE
 
@@ -82,22 +83,22 @@ class GuildMusicManager(val guildId: Long, val player: AudioPlayer) : AudioEvent
     // MISC
     // ----------------------------------------------
 
+    @Synchronized
     fun shutdown() {
+        if (shutdown) {
+            return
+        }
+
         player.stopTrack()
         player.destroy()
 
-        val guild = BoobBot.shardManager.getGuildById(guildId)
-
-        if (guild != null) {
-            guild.audioManager.sendingHandler = null
-            disconnect()
+        BoobBot.shardManager.getGuildById(guildId)?.let {
+            it.audioManager.sendingHandler = null
+            it.audioManager.closeAudioConnection()
         }
 
         BoobBot.musicManagers.remove(guildId)
-    }
-
-    fun disconnect() {
-        BoobBot.shardManager.getGuildById(guildId)?.audioManager?.closeAudioConnection()
+        shutdown = true
     }
 
     companion object {

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent
 import net.dv8tion.jda.api.events.http.HttpRequestEvent
 import net.dv8tion.jda.api.events.session.ReadyEvent
 import net.dv8tion.jda.api.events.session.SessionDisconnectEvent
@@ -32,6 +33,7 @@ class EventHandler : EventListener {
             is HttpRequestEvent -> onHttpRequest()
             is GuildJoinEvent -> onGuildJoin(event)
             is GuildLeaveEvent -> onGuildLeave(event)
+            is GuildVoiceUpdateEvent -> onGuildVoiceUpdate(event)
         }
     }
 
@@ -92,9 +94,20 @@ class EventHandler : EventListener {
 
     private fun onGuildLeave(event: GuildLeaveEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
+        BoobBot.getMusicManager(event.guild)?.shutdown()
 
         WebhookManager.sendLeave {
             buildGuildEmbed(this, event.guild, false)
+        }
+    }
+
+    private fun onGuildVoiceUpdate(event: GuildVoiceUpdateEvent) {
+        if (event.member.idLong != event.jda.selfUser.idLong) {
+            return
+        }
+
+        if (event.channelJoined == null && event.channelLeft != null) { // bot leaving voice channel
+            BoobBot.getMusicManager(event.guild)?.shutdown()
         }
     }
 
