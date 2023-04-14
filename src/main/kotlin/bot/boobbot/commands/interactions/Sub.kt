@@ -45,7 +45,7 @@ class Sub : AsyncCommand {
             ?: return ctx.reply(Formats.error(" oh? something broken af"))
 
         ctx.reply {
-            setTitle("<:sub:866437395318833193> ${ctx.user.name} Makes ${target.name} there sub.")
+            setTitle("<:sub:866437395318833193> ${ctx.user.name} Makes ${target.name} their sub.")
             setColor(Colors.getEffectiveColor(ctx.member))
             setImage(res.getString("url"))
             setTimestamp(Instant.now())
