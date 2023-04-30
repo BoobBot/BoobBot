@@ -78,7 +78,7 @@ class Perks : Command {
             BoobBot.database.getPremiumServers(ctx.user.idLong).size > PREMIUM_SERVERS -> ctx.reply("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
             else -> {
                 val predicate = { e: ButtonInteractionEvent -> e.componentId == "ps:accept:${ctx.user.id}" || e.componentId == "ps:cancel:${ctx.user.id}" }
-                val waiterSetup = ctx.onButtonInteraction("ps:${ctx.user.id}", predicate, 10000) {
+                val waiterSetup = ctx.onButtonInteraction("ps:${ctx.user.id}", predicate, 20000) {
                     if (it == null) {
                         return@onButtonInteraction ctx.reply("Fine, whore. The server won't be added.")
                     }
