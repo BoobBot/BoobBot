@@ -16,15 +16,12 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 
 @CommandProperties(description = "Modify bot settings.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class Set : Command {
-
-    var isCustomGameSet = false
-        private set
-
     override fun execute(ctx: Context) {
         sendSubcommandHelp(ctx)
     }
@@ -41,24 +38,25 @@ class Set : Command {
         )
     }
 
-    @SubCommand(aliases = ["activity"], description = "Set the bot activity.")
+    @SubCommand(aliases = ["game"], description = "Set the bot activity.")
     @Options([ // TODO: Revisit
-        Option(name = "type", description = "The activity type."),
-        Option(name = "content", description = "<content>/<url> <content>/clear")
+        Option(name = "type", description = "The activity type, or 'clear' to remove."),
+        Option(name = "content", description = "<content>/<url> <content>")
     ])
-    fun game(ctx: Context) {
+    fun activity(ctx: Context) {
         val type = ctx.options.getByNameOrNext("type", Resolver.STRING)
-            ?: return ctx.reply("${ctx.prefix}set game <type> <content...>")
+            ?: return ctx.reply("${ctx.prefix}set activity <type> <content...>")
 
         val content = ctx.options.getOptionStringOrGather("content")?.split(' ')
-            ?: return ctx.reply("${ctx.prefix}set game <type> [reset-after (e.g. 4h)] <STREAMING: stream url> <content...>")
-
         val validTypes = Activity.ActivityType.values().map { it.name.lowercase() }
 
         if (type == "clear") {
-            isCustomGameSet = false
-            BoobBot.shardManager.setActivity(Activity.playing("discord.gg/bra || @BoobBot help"))
-            return ctx.reply(Formats.info("Yes daddy, cleared game"))
+            BoobBot.shardManager.setActivity(DEFAULT_ACTIVITY)
+            return ctx.reply(Formats.info("Yes daddy, cleared activity"))
+        }
+
+        if (content == null) {
+            return ctx.reply("${ctx.prefix}set activity <type> [reset after (e.g. 4h)] [stream URL] <content...>")
         }
 
         if (!validTypes.contains(type) && type != "playing") {
@@ -68,16 +66,16 @@ class Set : Command {
         val activityType = gameTypeByString(type)
         val matcher = TIME_PATTERN.matcher(content[0])
         val hasTime = matcher.matches()
-        val contentOffset = if (hasTime) 1 else 0
+        val parsedContent = content.discard(if (hasTime) 1 else 0)
 
-        if (activityType == Activity.ActivityType.STREAMING) { // Special handling
-            val (url, extra) = content.discard(contentOffset).separate()
-            BoobBot.shardManager.setActivity(Activity.of(activityType, extra.joinToString(" "), url))
-        } else {
-            BoobBot.shardManager.setActivity(Activity.of(activityType, content.discard(contentOffset).joinToString(" ")))
+        when (activityType) {
+            Activity.ActivityType.STREAMING -> { // Special handling
+                val (url, extra) = parsedContent.separate()
+                BoobBot.shardManager.setActivity(Activity.of(activityType, extra.joinToString(" "), url))
+            }
+            else -> BoobBot.shardManager.setActivity(Activity.of(activityType, parsedContent.joinToString(" ")))
         }
 
-        isCustomGameSet = true
         var append = ""
 
         if (hasTime) {
@@ -87,8 +85,7 @@ class Set : Command {
                 append = "The status will not be automatically reset due to parsing failure (unrecognised unit?)"
             } else {
                 SCHEDULER.schedule({
-                    BoobBot.shardManager.setActivity(Activity.playing("discord.gg/bra || @BoobBot help"))
-                    isCustomGameSet = false
+                    BoobBot.shardManager.setActivity(DEFAULT_ACTIVITY)
                 }, resetAfter, TimeUnit.MILLISECONDS)
             }
         }
@@ -138,7 +135,9 @@ class Set : Command {
     private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.uppercase())
 
     companion object {
-        val SCHEDULER = Executors.newSingleThreadScheduledExecutor()
+        private val DEFAULT_ACTIVITY = Activity.playing("discord.gg/bra | @BoobBot help")
+
+        val SCHEDULER: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         private val TIME_PATTERN = "(\\d+)(s|m|h|d)".toPattern()
 
         fun parseTimeToMillis(duration: Long, unit: String): Long? = when(unit) {
