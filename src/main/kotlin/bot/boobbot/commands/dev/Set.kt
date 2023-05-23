@@ -17,11 +17,14 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Icon
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 
 @CommandProperties(description = "Modify bot settings.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class Set : Command {
+    private var activityResetTask: ScheduledFuture<*>? = null
+
     override fun execute(ctx: Context) {
         sendSubcommandHelp(ctx)
     }
@@ -51,6 +54,8 @@ class Set : Command {
         val validTypes = Activity.ActivityType.values().map { it.name.lowercase() }
 
         if (type == "clear") {
+            activityResetTask?.cancel(true)
+            activityResetTask = null
             BoobBot.shardManager.setActivity(DEFAULT_ACTIVITY)
             return ctx.reply(Formats.info("Yes daddy, cleared activity"))
         }
@@ -84,8 +89,10 @@ class Set : Command {
             if (resetAfter == null) {
                 append = "The status will not be automatically reset due to parsing failure (unrecognised unit?)"
             } else {
-                SCHEDULER.schedule({
+                activityResetTask?.cancel(true)
+                activityResetTask = SCHEDULER.schedule({
                     BoobBot.shardManager.setActivity(DEFAULT_ACTIVITY)
+                    activityResetTask = null
                 }, resetAfter, TimeUnit.MILLISECONDS)
             }
         }
