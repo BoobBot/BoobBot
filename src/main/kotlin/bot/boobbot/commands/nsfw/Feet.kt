@@ -8,6 +8,6 @@ import bot.boobbot.entities.framework.impl.BbApiCommand
     description = "feet.",
     nsfw = true,
     category = Category.KINKS,
-    aliases = ["devo"]
+    aliases = ["dyna"]
 )
 class Feet : BbApiCommand("feet")
