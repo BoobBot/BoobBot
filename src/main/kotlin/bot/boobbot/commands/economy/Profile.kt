@@ -3,6 +3,7 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.Resolver
@@ -19,7 +20,7 @@ import kotlin.math.pow
 class Profile : Command {
 
     override fun execute(ctx: Context) {
-        val user = ctx.options.getByNameOrNext("user", Resolver.USER) ?: ctx.user
+        val user = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
         val u = BoobBot.database.getUser(user.id)
         val e = ((u.level + 1).toDouble() * 10).pow(2.0).toInt()
 

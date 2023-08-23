@@ -3,6 +3,7 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.Resolver
@@ -17,7 +18,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 class Balance : Command {
 
     override fun execute(ctx: Context) {
-        val user = ctx.options.getByNameOrNext("user", Resolver.USER) ?: ctx.user
+        val user = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
         val u = BoobBot.database.getUser(user.id)
 
         ctx.reply {

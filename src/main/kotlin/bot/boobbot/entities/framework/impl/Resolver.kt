@@ -1,8 +1,12 @@
 package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 
@@ -52,6 +56,22 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
             }
         }
 
+        fun mentionableUser(m: Message): Resolver<User> {
+            return Resolver(OptionMapping::getAsUser) { arg ->
+                when {
+                    arg.length > 1 && arg.startsWith('@') -> {
+                        val parsed = arg.drop(1)
+                        return@Resolver BoobBot.shardManager.userCache.find { u -> u.name.equals(parsed, true) }
+                    }
+                    arg.length > 1 && arg.startsWith('<') -> {
+                        val parsed = arg.dropWhile { !it.isDigit() }.takeWhile { it.isDigit() }.toLongOrNull()
+                        return@Resolver parsed?.let { m.mentions.users.firstOrNull { u -> u.idLong == it } ?: BoobBot.shardManager.getUserById(it) }
+                    }
+                    else -> return@Resolver parseSnowflake(arg, BoobBot.shardManager::getUserById)
+                }
+            }
+        }
+
         val STRING = Resolver(OptionMapping::getAsString) { it.takeIf { it.isNotEmpty() } }
         val INTEGER = Resolver(OptionMapping::getAsInt, String::toIntOrNull)
         val USER = Resolver(OptionMapping::getAsUser) { arg ->
@@ -66,6 +86,10 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
                 }
                 else -> return@Resolver parseSnowflake(arg, BoobBot.shardManager::getUserById)
             }
+        }
+
+        fun CONTEXT_AWARE_USER(ctx: Context): Resolver<User> {
+            return if (ctx is MessageContext) mentionableUser(ctx.message) else USER
         }
     }
 }

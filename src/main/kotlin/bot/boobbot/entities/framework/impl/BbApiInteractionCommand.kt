@@ -14,7 +14,7 @@ abstract class BbApiInteractionCommand(private val category: String, private val
     private val headers = Headers.headersOf("Key", BoobBot.config.BB_API_KEY)
 
     override suspend fun executeAsync(ctx: Context) {
-        val target = ctx.options.getByNameOrNext("with", Resolver.USER)
+        val target = ctx.options.getByNameOrNext("with", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))

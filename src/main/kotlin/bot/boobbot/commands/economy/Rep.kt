@@ -3,6 +3,7 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.Resolver
@@ -19,7 +20,7 @@ import java.time.temporal.ChronoUnit
 class Rep : Command {
 
     override fun execute(ctx: Context) {
-        val target = ctx.options.getByNameOrNext("user", Resolver.USER)
+        val target = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))

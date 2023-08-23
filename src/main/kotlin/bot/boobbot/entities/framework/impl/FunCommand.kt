@@ -10,7 +10,7 @@ import java.text.MessageFormat
 
 abstract class FunCommand(private val category: String) : AsyncCommand {
     override suspend fun executeAsync(ctx: Context) {
-        val target = ctx.options.getByNameOrNext("user", Resolver.USER)
+        val target = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription(Formats.error("you didn't mention a @user, dumbass.\n"))

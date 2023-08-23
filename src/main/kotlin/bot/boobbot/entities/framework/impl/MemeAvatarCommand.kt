@@ -26,7 +26,7 @@ abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
             return ctx.reply(Formats.error("I can't send images here, fix it whore."))
         }
 
-        val user = ctx.options.getByNameOrNext("user", Resolver.USER) ?: ctx.user
+        val user = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
         val url = urlBuilder.addQueryParameter("avatar1", user.effectiveAvatarUrl).build()
 
         val res = BoobBot.requestUtil.get(url.toString(), headers).await()?.body

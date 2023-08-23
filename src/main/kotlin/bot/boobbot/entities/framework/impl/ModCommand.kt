@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 abstract class ModCommand : Command {
     fun resolveTargetAndReason(ctx: Context): Resolved {
-        val user = ctx.options.getByNameOrNext("target", Resolver.USER)
+        val user = ctx.options.getByNameOrNext("target", Resolver.CONTEXT_AWARE_USER(ctx))
         val reason = ctx.options.getOptionStringOrGather("reason")
 
         if (user == null) {

@@ -2,6 +2,7 @@ package bot.boobbot.entities.framework.impl
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
@@ -14,7 +15,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
     override suspend fun executeAsync(ctx: Context) {
         ctx.defer()
 
-        val user = ctx.options.getByNameOrNext("to", Resolver.USER) ?: ctx.user
+        val user = ctx.options.getByNameOrNext("to", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
 
         if (user.idLong == BoobBot.selfId) {
             return ctx.reply(Formats.error("Don't you fucking touch me whore, i will end you."))

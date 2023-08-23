@@ -36,9 +36,9 @@ class Ship : Command {
 //            return
 //        }
 
-        val user1 = ctx.options.getByNameOrNext("first", Resolver.USER)
+        val user1 = ctx.options.getByNameOrNext("first", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply("How in the fuck would i know who you want to ship if you don't specify someone?")
-        val user2 = ctx.options.getByNameOrNext("second", Resolver.USER) ?: ctx.user
+        val user2 = ctx.options.getByNameOrNext("second", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
 
         if (user1.idLong == ctx.user.idLong && user2.idLong == ctx.user.idLong) {
             return ctx.reply("not even you should wanna be shipped with yourself")

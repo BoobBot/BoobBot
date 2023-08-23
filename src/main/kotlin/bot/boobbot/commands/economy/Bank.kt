@@ -3,6 +3,7 @@ package bot.boobbot.commands.economy
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
+import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.Options
@@ -79,7 +80,7 @@ class Bank : Command {
         val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
             ?: return ctx.reply("wtf, i don't mind read. Specify how much to deposit, whore.")
 
-        val to = ctx.options.getByNameOrNext("to", Resolver.USER)
+        val to = ctx.options.getByNameOrNext("to", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply("How in the fuck would i know who you want to transfer to if you don't give me a valid mention? try `@BoobBot bank transfer 500 @user#0000`")
 
         if (amount < 0) {
