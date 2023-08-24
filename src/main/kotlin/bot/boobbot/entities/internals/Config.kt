@@ -29,7 +29,7 @@ class Config(
 
     companion object {
         val OWNERS = listOf(
-            248294452307689473L, 180093157554388993L, 173237945149423619L
+            248294452307689473L, 180093157554388993L, 173237945149423619L, 596330574109474848L
         )
 
         fun load(path: String = Paths.get("").toAbsolutePath().toString()): Config {
