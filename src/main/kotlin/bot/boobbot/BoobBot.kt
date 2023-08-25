@@ -7,6 +7,8 @@ import bot.boobbot.entities.framework.utils.EventWaiter
 import bot.boobbot.entities.internals.*
 import bot.boobbot.entities.misc.ApiServer
 import bot.boobbot.entities.misc.PatreonAPI
+import bot.boobbot.entities.registries.CommandRegistry
+import bot.boobbot.entities.registries.UserContextCommandRegistry
 import bot.boobbot.utils.RequestUtil
 import bot.boobbot.utils.Utils
 import ch.qos.logback.classic.Level

@@ -45,14 +45,18 @@ class UserContextHandler : EventListener {
             if (!event.messageChannel.canTalk()) {
                 return
             }
-            if (guild.ignoredChannels.contains(event.channel!!.id)
-                && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)
-            ) {
+
+            if (guild.ignoredChannels.contains(event.channel!!.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
         }
+
         val command = BoobBot.userContextCommands.findCommand(event.name.lowercase()) ?: return
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel!!.id })) { return }
+
+        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel!!.id })) {
+            return
+        }
+
         if (!command.properties.enabled) {
             return
         }
@@ -66,7 +70,7 @@ class UserContextHandler : EventListener {
         }
 
         if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !(event.guildChannel as TextChannel).isNSFW)) {
-            BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
+            return BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
                     ?: return@queue event.reply("This channel isn't NSFW, whore.").queue()
 
@@ -76,7 +80,6 @@ class UserContextHandler : EventListener {
                             j.getString("url")
                 ).queue()
             }
-            return
         }
 
         if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
@@ -86,6 +89,7 @@ class UserContextHandler : EventListener {
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
             val missing = checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
+
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
                 return event.reply("You need these permissions, whore:\n$fmt").queue()
@@ -109,6 +113,4 @@ class UserContextHandler : EventListener {
             event.reply("\uD83D\uDEAB Command `${command.name}` encountered an error during execution").queue()
         }
     }
-
-
 }
