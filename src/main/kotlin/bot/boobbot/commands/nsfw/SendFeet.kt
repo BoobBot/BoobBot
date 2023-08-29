@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 @CommandProperties(
     description = "Sends feet to you or another user",
     guildOnly = true,
-    aliases = ["senddevo"],
+    aliases = ["sendtom"],
     category = Category.SEND,
     nsfw = true
 )
