@@ -32,6 +32,10 @@ class DSLMessageBuilder {
         builder.addFiles(f)
     }
 
+    fun files(fs: List<FileUpload>) {
+        builder.addFiles(fs)
+    }
+
     fun row(ar: ActionRowBuilder.() -> Unit) {
         actionRows.add(ActionRowBuilder().apply(ar).build())
     }

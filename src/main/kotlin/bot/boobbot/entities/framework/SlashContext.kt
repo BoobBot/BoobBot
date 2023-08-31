@@ -49,6 +49,8 @@ class SlashContext(val event: SlashCommandInteractionEvent) : Context(false, mut
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message(ephemeral) { file(file) }
 
+    override fun reply(files: List<FileUpload>, ephemeral: Boolean) = message(ephemeral) { files(files) }
+
     override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message(ephemeral) { embed(embed) }
 
     override fun reply(ephemeral: Boolean, embed: EmbedBuilder.() -> Unit) = message(ephemeral) { embed(embed) }

@@ -18,6 +18,11 @@ import net.dv8tion.jda.api.utils.data.DataArray
 @CommandProperties(description = "Get all commands as JSON.", category = Category.DEV, developerOnly = true, groupByCategory = true)
 class DumpCmds : Command {
     override fun execute(ctx: Context) {
+        sendSubcommandHelp(ctx)
+    }
+
+    @SubCommand(description = "Sends a JSON of all command trees.")
+    fun all(ctx: Context) {
         val json = BoobBot.commands.export()
             .map { it.toData() }
             .let(DataArray::fromCollection)
@@ -57,10 +62,14 @@ class DumpCmds : Command {
         val cmdData = BoobBot.commands.buildCommand(cmd).toData().toPrettyString()
         val scData = sc?.let { BoobBot.commands.buildSubcommand(it) }?.toData()?.toPrettyString()
 
-        ctx.reply(FileUpload.fromData(cmdData.toByteArray(Charsets.UTF_8), "command.json"))
+        val files = mutableListOf(
+            FileUpload.fromData(cmdData.toByteArray(Charsets.UTF_8), "command.json")
+        )
 
         if (scData != null) {
-            ctx.reply(FileUpload.fromData(scData.toByteArray(Charsets.UTF_8), "subcommand.json"))
+            files.add(FileUpload.fromData(scData.toByteArray(Charsets.UTF_8), "subcommand.json"))
         }
+
+        ctx.reply(FileUpload.fromData(cmdData.toByteArray(Charsets.UTF_8), "command.json"))
     }
 }
