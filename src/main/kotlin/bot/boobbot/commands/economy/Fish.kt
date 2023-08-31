@@ -74,7 +74,7 @@ class Fish : Command {
 
         u.save()
 
-        val formattedResults = results.joinToString(" ")
+        val formattedResults = results.joinToString(" ") { fishEmotes[it] ?: "❓" }
         ctx.message { content(Formats.info("Fishing Results:\n$formattedResults\nTotal Fish Value: $$totalFishValue")) }
     }
 
