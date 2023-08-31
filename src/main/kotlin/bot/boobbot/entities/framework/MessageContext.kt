@@ -3,6 +3,7 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.impl.MessageOptions
 import bot.boobbot.entities.misc.DSLMessageBuilder
+import club.minnced.discord.webhook.send.WebhookMessage.files
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
@@ -28,6 +29,8 @@ class MessageContext(val message: Message, args: List<String>) : Context(true, m
     override fun reply(content: String, ephemeral: Boolean) = message({ content(content) }, defaultReplyOptions)
 
     override fun reply(file: FileUpload, ephemeral: Boolean) = message({ file(file) }, defaultReplyOptions)
+
+    override fun reply(files: List<FileUpload>, ephemeral: Boolean) = message({ files(files) }, defaultReplyOptions)
 
     override fun reply(embed: MessageEmbed, ephemeral: Boolean) = message({ embed(embed) }, defaultReplyOptions)
 
