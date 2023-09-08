@@ -25,6 +25,7 @@ class AutoPorn : Command {
         "boobs" to "boobs",
         "ass" to "ass",
         "gay" to "gay",
+        "lesbians" to "lesbians",
         "random" to "nsfw"
     )
     private val typeString = types.keys.joinToString("`, `", prefix = "`", postfix = "`")
@@ -41,7 +42,14 @@ class AutoPorn : Command {
 
     @SubCommand(description = "Set the Auto-Porn category and channel.")
     @Options([ // TODO: Revisit
-        Option(name = "category", description = "The image category.", choices = [Choice("GIF", "gif"), Choice("Boobs", "boobs"), Choice("Ass", "ass"), Choice("Gay", "gay"), Choice("Random", "random")]),
+        Option(name = "category", description = "The image category.", choices = [
+            Choice("GIF", "gif"),
+            Choice("Boobs", "boobs"),
+            Choice("Ass", "ass"),
+            Choice("Gay", "gay"),
+            Choice("Lesbians", "lesbians"),
+            Choice("Random", "random")
+        ]),
         Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     ])
     fun set(ctx: Context) {
