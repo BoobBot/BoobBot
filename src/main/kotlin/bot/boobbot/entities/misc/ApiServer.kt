@@ -116,7 +116,6 @@ class ApiServer {
         }
     }
 
-
     val allSlashCommands = BoobBot.commands.values.filter { it.slashEnabled }
     val categorised = allSlashCommands.filter { it.category != null }.groupBy { it.category!! }.map(::buildCategory)
     val remaining = allSlashCommands.filter { it.category == null }.map(::buildCommand)
@@ -320,6 +319,7 @@ class ApiServer {
                                 .put("category", it.properties.category)
                                 .put("description", it.properties.description)
                                 .put("aliases", "[${it.properties.aliases.joinToString(", ")}]")
+                                .put("nsfw", it.properties.nsfw)
 
                             category.put(j)
                         }
