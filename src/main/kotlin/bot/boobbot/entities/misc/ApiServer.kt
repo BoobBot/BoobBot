@@ -319,7 +319,7 @@ class ApiServer {
                                 .put("category", it.properties.category)
                                 .put("description", it.properties.description)
                                 .put("aliases", "[${it.properties.aliases.joinToString(", ")}]")
-                                .put("nsfw", it.properties.nsfw)
+                                .put("paid", it.properties.donorOnly)
 
                             category.put(j)
                         }
