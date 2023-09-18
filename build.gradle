@@ -43,7 +43,7 @@ dependencies {
     implementation "club.minnced:discord-webhooks:$webhooks_version"
 
     /* Audio */
-    implementation "com.github.walkyst.lavaplayer-fork:lavaplayer:$lp_version"
+    implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
     implementation "com.sedmelluq:jda-nas:$nas_version"
 
     /* Kotlin Stuff */
