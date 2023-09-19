@@ -20,12 +20,12 @@ class CockBlock : Command {
     @SubCommand(aliases = ["On"], description = "Disable receiving dicks in DMs.")
     fun on(ctx: Context) {
         BoobBot.database.setUserCockBlocked(ctx.user.id, true)
-        ctx.reply("You're no longer able to receive dicks via DMs \uD83C\uDF46") // eggplant
+        ctx.reply("You're no longer able to receive dicks via DMs \uD83C\uDF46", true) // eggplant
     }
 
     @SubCommand(aliases = ["Off"], description = "Enable receiving dicks in DMs.")
     fun off(ctx: Context) {
         BoobBot.database.setUserCockBlocked(ctx.user.id, false)
-        ctx.reply("You're now able to receive dicks via DMs <:moans:583453348984913933>")
+        ctx.reply("You're now able to receive dicks via DMs <:moans:583453348984913933>", true)
     }
 }
