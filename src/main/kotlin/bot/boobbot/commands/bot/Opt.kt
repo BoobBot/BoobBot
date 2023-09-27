@@ -13,19 +13,19 @@ class Opt : Command {
         ctx.reply("`bbopt <${subcommands.keys.joinToString("|")}>`")
     }
 
-    @SubCommand(aliases = ["In"], description = "Enable receiving nudes in DMs (send* commands)")
+    @SubCommand(description = "Enable receiving nudes in DMs (send* commands)")
     fun `in`(ctx: Context) {
         BoobBot.database.setUserCanReceiveNudes(ctx.user.id, true)
         ctx.reply("You're now able to receive nudes <:moans:583453348984913933>", ephemeral = true)
     }
 
-    @SubCommand(aliases = ["Out"], description = "Disable receiving nudes in DMs (send* commands)")
+    @SubCommand(description = "Disable receiving nudes in DMs (send* commands)")
     fun out(ctx: Context) {
         BoobBot.database.setUserCanReceiveNudes(ctx.user.id, false)
         ctx.reply("You can no longer receive nudes. Whore.", ephemeral = true)
     }
 
-    @SubCommand(aliases = ["Status"], description = "View whether you can currently receive nudes.")
+    @SubCommand(description = "View whether you can currently receive nudes.")
     fun status(ctx: Context) {
         val current = BoobBot.database.getCanUserReceiveNudes(ctx.user.id)
         val s = if (current) "can" else "can't"

@@ -17,13 +17,13 @@ class Anonymity : Command {
         ctx.reply("`bbanonymity <${subcommands.keys.joinToString("|")}>`")
     }
 
-    @SubCommand(aliases = ["On"], description = "Turn on anonymity.")
+    @SubCommand(description = "Turn on anonymity.")
     fun on(ctx: Context) {
         BoobBot.database.setUserAnonymity(ctx.user.id, true)
         ctx.reply("You're now anonymous \uD83D\uDD75")
     }
 
-    @SubCommand(aliases = ["Off"], description = "Turn off anonymity.")
+    @SubCommand(description = "Turn off anonymity.")
     fun off(ctx: Context) {
         BoobBot.database.setUserAnonymity(ctx.user.id, false)
         ctx.reply("You're no longer anonymous 👀")

@@ -69,9 +69,12 @@ class MessageHandler : EventListener {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
 
-            (event.channel as? ThreadChannel)?.let {
-                @Suppress("USELESS_ELVIS")
-                it.parentChannel ?: return
+            val channel = event.channel
+            // IntelliJ insists this is useless because parentChannel can't be null, however this version of JDA
+            // doesn't handle a certain type of Thread properly, in which case, parentChannel *can* be null.
+            @Suppress("SENSELESS_COMPARISON")
+            if (channel is ThreadChannel && channel.parentChannel == null) {
+                return
             }
 
             if (!event.channel.canTalk()) {
@@ -100,7 +103,7 @@ class MessageHandler : EventListener {
         }
 
         val commandString = args.removeAt(0)
-        val command = BoobBot.commands.findCommand(commandString)
+        val command = BoobBot.commands.findCommand(commandString.lowercase())
 
         if (command == null) {
             if (!event.channelType.isGuild) {
