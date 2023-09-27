@@ -92,7 +92,7 @@ class MessageHandler : EventListener {
         val acceptablePrefixes = MessageContext.BOT_MENTIONS// + prefixTrigger
         val trigger = acceptablePrefixes.firstOrNull { messageContent.lowercase().startsWith(it) }
             ?: return
-        val args = messageContent.substring(trigger.length).trim().split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
+        val args = messageContent.substring(trigger.length).trim().split("[ \\t]+".toRegex()).dropLastWhile { it.isEmpty() }.toMutableList()
 
         if (trigger in MessageContext.BOT_MENTIONS && args.isEmpty()) {
             val prefix = event.jda.selfUser.asMention
