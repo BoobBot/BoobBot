@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.interfaces.Command
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -21,6 +22,7 @@ class SubCommandWrapper(
     private val kls: Command
 ) {
 
+    @OptIn(DelicateCoroutinesApi::class)
     @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
     fun execute(ctx: Context, vararg additionalArgs: Any?) {
         if (async) {

@@ -30,8 +30,8 @@ repositories {
         url 'https://m2.dv8tion.net/releases'
     }
     mavenCentral()
-    maven { url "https://jitpack.io" }
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 

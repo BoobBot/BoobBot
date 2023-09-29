@@ -68,7 +68,7 @@ class Fish : Command {
 
         val results = (1..attempts).map { fishAttempt(bait) }
 
-        val totalFishValue = results.sumBy { fishValues[it] ?: 0 }
+        val totalFishValue = results.sumOf { fishValues[it] ?: 0 }
 
         u.balance += totalFishValue
 

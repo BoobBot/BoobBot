@@ -1,6 +1,7 @@
 package bot.boobbot.entities.framework.interfaces
 
 import bot.boobbot.BoobBot
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
@@ -9,6 +10,7 @@ interface AsyncUserContextCommand : UserContextCommand {
 
     suspend fun executeAsync(event: UserContextInteractionEvent)
 
+    @OptIn(DelicateCoroutinesApi::class)
     @Suppress("DeferredResultUnused", "EXPERIMENTAL_API_USAGE")
     override fun execute(event: UserContextInteractionEvent) {
         GlobalScope.async {
