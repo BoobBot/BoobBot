@@ -25,7 +25,7 @@ import java.awt.Color
 @Option(name = "category", description = "The image category to use.", choices = [Choice("Dick", "dick"), Choice("Boobs", "boobs"), Choice("Ass", "ass")])
 class Magik : AsyncCommand {
     companion object {
-        private val baseUrl = "https://memes.subspace.gg/api/magik".toHttpUrlOrNull()!!
+        private val baseUrl = "https://memes.boob.bot/api/magik".toHttpUrlOrNull()!!
         private val categories = mapOf(
             "dick" to "penis",
             "boobs" to "boobs",

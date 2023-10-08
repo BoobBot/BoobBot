@@ -11,7 +11,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 abstract class MemeAvatarCommand(private val category: String) : AsyncCommand {
 
-    private val endpointUrl = "https://memes.subspace.gg/api/$category"
+    private val endpointUrl = "https://memes.boob.bot/api/$category"
     private val urlBuilder
         get() = endpointUrl.toHttpUrlOrNull()!!.newBuilder()
 
