@@ -8,6 +8,7 @@ import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Utils
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import net.dv8tion.jda.api.JDAInfo
+import kotlin.math.roundToInt
 
 @CommandProperties(description = "Displays bot info.", groupByCategory = true)
 class Info : Command {
@@ -23,14 +24,13 @@ class Info : Command {
                 ctx.selfUser.effectiveAvatarUrl
             )
             setColor(Colors.getEffectiveColor(ctx.member))
-            setDescription(
+            addField("Bot Information", "WS Latency:\n${averageShardLatency.roundToInt()}ms\nShards: $shards/$shardsOnline", true)
+            addField("Library Information",
                 """
-                    JDA: ${JDAInfo.VERSION}
-                    LP: ${PlayerLibrary.VERSION}
-                    SHARDS: $shards/$shardsOnline
-                    PING: ${averageShardLatency}ms
-                """.trimIndent() // PYTHON TIME POGGERS
-            )
+                    [`JDA ${JDAInfo.VERSION}`](${JDAInfo.GITHUB})
+                    [`LavaPlayer ${PlayerLibrary.VERSION}`](https://github.com/sedmelluq/lavaplayer)
+                """.trimIndent(),
+                true)
         }
     }
 
