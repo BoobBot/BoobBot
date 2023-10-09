@@ -28,10 +28,13 @@ import okhttp3.Protocol
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class CustomShardManager(private val token: String, sm: ShardManager) : ShardManager by sm, EventListener {
+class CustomShardManager(private val token: String, sm: ShardManager, shardCount: Int) : ShardManager by sm, EventListener {
     var guildCount = 0L
         private set
     var userCount = 0L
+        private set
+
+    var shardCount = shardCount
         private set
 
     val allShardsConnected: Boolean
@@ -61,6 +64,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
     override fun onEvent(event: GenericEvent) {
         if (event is ReadyEvent && allShardsConnected && !readyFired) {
             readyFired = true
+
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("discord.gg/bra || @BoobBot help"))
             BoobBot.log.info(Formats.readyFormat)
             WebhookManager.sendShard(null) {
@@ -68,6 +72,10 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
                 setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
                 addField("Ready Info", "```\n${Formats.readyFormat}```", false)
+            }
+
+            if (shardCount == -1) {
+                shardCount = shardsTotal
             }
         }
     }
@@ -136,7 +144,7 @@ class CustomShardManager(private val token: String, sm: ShardManager) : ShardMan
                 .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)
 
-            return CustomShardManager(token, sm.build())
+            return CustomShardManager(token, sm.build(), shardCount)
         }
 
         fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0

@@ -8,7 +8,8 @@ class SessionInfo(
     val recommendedShards: Int,
     val sessionLimitTotal: Int,
     val sessionLimitRemaining: Int,
-    val sessionResetAfter: String
+    val sessionResetAfter: String,
+    val maxConcurrency: Int
 ) {
     companion object {
         fun from(token: String): SessionInfo? {
@@ -33,12 +34,14 @@ class SessionInfo(
             val sessionLimitRemaining = session.getInt("remaining")
             val sessionResetAfter = session.getLong("reset_after")
             val sessionResetFormatted = Utils.fTime(sessionResetAfter)
+            val maxConcurrency = session.getInt("max_concurrency")
 
             return SessionInfo(
                 recommendedShards,
                 sessionLimitTotal,
                 sessionLimitRemaining,
-                sessionResetFormatted
+                sessionResetFormatted,
+                maxConcurrency
             )
         }
     }

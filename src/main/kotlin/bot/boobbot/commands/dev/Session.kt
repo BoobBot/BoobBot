@@ -12,11 +12,19 @@ class Session : Command {
         val sessionInfo = BoobBot.shardManager.retrieveSessionInfo()
             ?: return ctx.reply("fuck, some error")
 
+        val guildCount = BoobBot.shardManager.guildCache.size()
+        val shardCount = BoobBot.shardManager.shardCount
+
         ctx.reply {
-            setDescription("Session resets in ${sessionInfo.sessionResetAfter}")
-            addField("Recommended Shards", sessionInfo.recommendedShards.toString(), true)
-            addField("Session Limit Total", sessionInfo.sessionLimitTotal.toString(), true)
-            addField("Session Limit Remaining", sessionInfo.sessionLimitRemaining.toString(), true)
+            setColor(0xDC7A23)
+            setDescription("""
+                Sessions Remaining: ${sessionInfo.sessionLimitRemaining}/${sessionInfo.sessionLimitTotal}
+                Session Concurrency: ${sessionInfo.maxConcurrency}x
+                Resets After: ${sessionInfo.sessionResetAfter}
+                
+                Avg. Guilds Per Shard: ${(guildCount / shardCount)}
+                Recommended Shards: ${sessionInfo.recommendedShards}
+                """)
         }
     }
 }
