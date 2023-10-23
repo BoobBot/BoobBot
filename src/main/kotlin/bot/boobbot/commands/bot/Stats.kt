@@ -42,7 +42,7 @@ class Stats : Command {
 
         val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
-        val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
+        val sysCpuUsage = dpFormatter.format(osBean.cpuLoad * 100)
 
         val metrics = JSONObject(BoobBot.metrics.render().get())
         val comsUsed =

@@ -1,11 +1,7 @@
 package bot.boobbot.utils
 
-import club.minnced.discord.webhook.send.WebhookEmbed
-import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.future.await
-import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.RestAction
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import okhttp3.Response
 import org.json.JSONObject
 import java.net.URI
@@ -22,26 +18,6 @@ fun String.toUriOrNull(): URI? {
         return null
     }
 }
-
-fun MessageEmbed.toWebhookEmbed(): WebhookEmbed {
-    return WebhookEmbed(
-        this.timestamp,
-        this.colorRaw,
-        this.description,
-        this.thumbnail?.url,
-        this.image?.url,
-        if (this.footer != null) WebhookEmbed.EmbedFooter(this.footer!!.text ?: "", this.footer!!.iconUrl) else null,
-        WebhookEmbed.EmbedTitle(this.title ?: "", this.url),
-        if (this.author != null) WebhookEmbed.EmbedAuthor(
-            this.author!!.name ?: "",
-            this.author!!.iconUrl,
-            this.author!!.url
-        ) else null,
-        this.fields.map { WebhookEmbed.EmbedField(it.isInline, it.name ?: "", it.value ?: "") }
-    )
-}
-
-fun MessageEmbed.asMessage() = MessageCreateBuilder().setEmbeds(this).build()
 
 fun Response.json(): JSONObject? {
     return body?.takeIf { isSuccessful }?.use { JSONObject(it.string()) }

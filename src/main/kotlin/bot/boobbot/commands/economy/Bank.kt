@@ -106,6 +106,6 @@ class Bank : Command {
         user.save()
         user2.save()
 
-        ctx.reply("Transferred $$amount to ${to.asTag}, You now have $${user.bankBalance} in the bank.")
+        ctx.reply("Transferred $$amount to **${to.name}**, You now have $${user.bankBalance} in the bank.")
     }
 }

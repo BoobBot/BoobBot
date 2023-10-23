@@ -72,7 +72,7 @@ class ApiServer {
 
         val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
         val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
-        val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
+        val sysCpuUsage = dpFormatter.format(osBean.cpuLoad * 100)
         val players = BoobBot.musicManagers.values.filter { it.player.playingTrack != null }.size
 
         val beans = ManagementFactory.getGarbageCollectorMXBeans()

@@ -3,7 +3,6 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.impl.MessageOptions
 import bot.boobbot.entities.misc.DSLMessageBuilder
-import club.minnced.discord.webhook.send.WebhookMessage.files
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message

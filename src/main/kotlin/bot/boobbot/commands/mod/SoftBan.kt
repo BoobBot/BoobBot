@@ -61,7 +61,7 @@ class SoftBan : AsyncCommand, ModCommand() {
         val invite = generateInvite(ctx).awaitSuppressed()
         val extraMsg = invite?.let { "\nHere is an invite, don't be a dick.\n${it.url}" } ?: ""
         val banMsg = """
-            You have been soft-banned in **${ctx.guild.name}** by **${ctx.user.asTag}** for: $auditReason
+            You have been soft-banned in **${ctx.guild.name}** by **${ctx.user.name}** for: $auditReason
             $extraMsg
         """.trimIndent()
 

@@ -40,7 +40,6 @@ dependencies {
     implementation ("net.dv8tion:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
-    implementation "club.minnced:discord-webhooks:$webhooks_version"
 
     /* Audio */
     implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
@@ -85,6 +84,7 @@ dependencies {
     implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "org.jsoup:jsoup:$jsoup_version"
+    implementation "org.json:json:$json_version"
 }
 
 shadowJar {

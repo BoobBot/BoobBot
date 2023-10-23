@@ -49,7 +49,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
     private val anonymousUser: User = UserImpl(0L, sm.shards.first() as JDAImpl)
         .setBot(false)
         .setName("Hidden User")
-        .setDiscriminator("0000")
+        .setDiscriminator(0)
 
     init {
         sm.addEventListener(this)

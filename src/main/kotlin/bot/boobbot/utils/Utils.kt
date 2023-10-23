@@ -96,7 +96,7 @@ object Utils {
 
         val message = "[%s/%s (%s)] %s (%s): %s"
         val origin = if (m.isFromGuild) "${m.guild.name} (${m.guild.id})" else "DM"
-        BoobBot.log.info(message.format(origin, m.channel.name, m.channel.id, m.author.asTag, m.author.id, m.contentDisplay))
+        BoobBot.log.info(message.format(origin, m.channel.name, m.channel.id, m.author.name, m.author.id, m.contentDisplay))
     }
 
     fun fTime(milliseconds: Long): String {

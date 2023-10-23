@@ -53,7 +53,7 @@ class Rep : Command {
             .apply { rep += 1 }
             .save()
 
-        ctx.reply("You gave ${target.asTag} a rep point, Good job! Seems you're not completely useless after all.")
+        ctx.reply("You gave **${target.name}** a rep point, Good job! Seems you're not completely useless after all.")
     }
 
 }

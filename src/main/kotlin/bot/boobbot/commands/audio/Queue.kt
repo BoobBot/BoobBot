@@ -42,7 +42,7 @@ class Queue : VoiceCommand {
                     **Title**: ${abbreviate(getTrackTitle(it), 50)}
                     **Duration:** ${Utils.fTime(it.info.length)}
                     **Source:** ${getTrackSource(it)}
-                    **Requester:** ${it.getUserData(User::class.java).asTag}
+                    **Requester:** ${it.getUserData(User::class.java).name}
                 """.trimIndent()
             }
         }
@@ -55,7 +55,7 @@ class Queue : VoiceCommand {
                 **Title:** ${abbreviate(getTrackTitle(track))}
                 **Duration:** ${Utils.fTime(track.info.length)}
                 **Source:** ${getTrackSource(track)}
-                **Requester:** ${track.getUserData(User::class.java).asTag}
+                **Requester:** ${track.getUserData(User::class.java).name}
             """.trimIndent(), false
             )
             addField("Queue", queueStr, false)

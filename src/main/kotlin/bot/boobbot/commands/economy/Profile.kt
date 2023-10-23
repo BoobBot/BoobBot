@@ -25,7 +25,7 @@ class Profile : Command {
         val e = ((u.level + 1).toDouble() * 10).pow(2.0).toInt()
 
         ctx.reply {
-            setAuthor("Profile for : ${user.asTag}", user.avatarUrl, user.avatarUrl)
+            setAuthor("Profile for: ${user.name}", user.avatarUrl, user.avatarUrl)
             setColor(Colors.getEffectiveColor(ctx.member))
             addField(
                 Formats.info("**Level**"),

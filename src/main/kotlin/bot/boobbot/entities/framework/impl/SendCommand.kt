@@ -28,14 +28,14 @@ abstract class SendCommand(private val category: String, private val endpoint: S
         val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
 
         if (!isUserReceivingNudes) {
-            return ctx.reply(Formats.error("wtf, **${user.asTag}** opted out of receiving nudes. What a whore. Tell them to opt back in with `@BoobBot opt in`"))
+            return ctx.reply(Formats.error("wtf, **${user.name}** opted out of receiving nudes. What a whore. Tell them to opt back in with `@BoobBot opt in`"))
         }
 
         if (category == "dicks") {
             val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.id)
 
             if (isUserCockBlocked) {
-                return ctx.reply(Formats.error("wtf, **${user.asTag}** is cockblocked. Whore."))
+                return ctx.reply(Formats.error("wtf, **${user.name}** is cockblocked. Whore."))
             }
         }
 
@@ -44,7 +44,7 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             ?: return ctx.reply(Formats.error("wtf, api down?"))
 
         ctx.dmUserAsync(user, "${Formats.LEWD_EMOTE} $url")
-            ?: return ctx.reply(Formats.error("wtf, I can't DM **${user.asTag}**?"))
+            ?: return ctx.reply(Formats.error("wtf, I can't DM **${user.name}**?"))
 
         ctx.reply(Formats.info("Good job ${ctx.user.asMention}"))
     }
