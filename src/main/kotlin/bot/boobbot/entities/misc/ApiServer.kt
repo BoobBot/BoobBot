@@ -6,10 +6,9 @@ import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Stats
 import bot.boobbot.utils.TimerUtil
-import bot.boobbot.utils.Utils
 import com.google.gson.Gson
-import com.sun.management.OperatingSystemMXBean
 import de.mxro.metrics.jre.Metrics
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -31,7 +30,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.util.*
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
@@ -39,14 +37,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
 import net.dv8tion.jda.api.utils.data.DataArray
 import net.dv8tion.jda.api.utils.data.DataObject
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
-import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
-import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
-import kotlin.math.max
-
 
 class ApiServer {
     private val clientSettings = OAuthServerSettings.OAuth2ServerSettings(
@@ -61,44 +55,27 @@ class ApiServer {
         defaultScopes = listOf("email", "identify") // what scopes to explicitly request
     )
 
+    private val httpClient = HttpClient(Apache)
+
     private fun getStats(): JSONObject {
-        val rUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
-        val rPercent = dpFormatter.format(rUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
-        val usedMB = dpFormatter.format(rUsedRaw.toDouble() / 1048576)
-
-        val shards = BoobBot.shardManager.shardsTotal
-        val shardsOnline = BoobBot.shardManager.shards.filter { it.status == JDA.Status.CONNECTED }.size
-        val averageShardLatency = BoobBot.shardManager.averageGatewayPing.toInt()
-
-        val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
-        val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
-        val sysCpuUsage = dpFormatter.format(osBean.cpuLoad * 100)
-        val players = BoobBot.musicManagers.values.filter { it.player.playingTrack != null }.size
-
-        val beans = ManagementFactory.getGarbageCollectorMXBeans()
-        val totalCollections = beans.sumByLong { max(it.collectionCount, 0) }
-        val totalCollectionTime = beans.sumByLong { max(it.collectionTime, 0) }
-        val averageCollectionTime = if (totalCollections > 0 && totalCollectionTime > 0)
-            totalCollectionTime / totalCollections
-        else
-            0
+        val stats = Stats.get()
 
         val jvm = JSONObject()
-            .put("Uptime", Utils.fTime(System.currentTimeMillis() - BoobBot.startTime))
-            .put("JVM_CPU_Usage", procCpuUsage)
-            .put("System_CPU_Usage", sysCpuUsage)
-            .put("RAM_Usage", "${usedMB}MB($rPercent%)")
-            .put("Threads", Thread.activeCount())
-            .put("Total_GC_Count", totalCollections)
-            .put("Total_GC_Time", "${totalCollectionTime}ms")
-            .put("Avg_GC_Cycle", "${dpFormatter.format(averageCollectionTime)}ms")
+            .put("Uptime", stats.uptime)
+            .put("JVM_CPU_Usage", stats.processCpuUsage)
+            .put("System_CPU_Usage", stats.systemCpuUsage)
+            .put("RAM_Usage", "${stats.ramUsedMb}MB(${stats.ramUsedPercent}%)")
+            .put("Threads", stats.threads)
+            .put("Total_GC_Count", stats.totalGarbageCollectionCount)
+            .put("Total_GC_Time", "${stats.totalGarbageCollectionTime}ms")
+            .put("Avg_GC_Cycle", "${stats.averageGarbageCollectionTime}ms")
 
         val bb = JSONObject()
-            .put("Audio_Players", players)
-            .put("Shards_Online", "$shardsOnline/$shards")
-            .put("Guilds", BoobBot.shardManager.guilds.size)
-            .put("Users", BoobBot.shardManager.guilds.sumOf { it.memberCount })
-            .put("Average_Latency", "${averageShardLatency}ms")
+            .put("Audio_Players", stats.audioPlayers)
+            .put("Shards_Online", "${stats.shardsOnline}/${stats.shardsTotal}")
+            .put("Guilds", stats.guildCount)
+            .put("Users", stats.totalMemberCount)
+            .put("Average_Latency", "${stats.averageShardLatency}ms")
 
         return JSONObject().put("bb", bb).put("jvm", jvm)
     }
@@ -200,7 +177,7 @@ class ApiServer {
 
             install(Authentication) {
                 oauth("discord") {
-                    client = HttpClient(Apache)
+                    client = httpClient
                     providerLookup = { clientSettings }
                     urlProvider = { BoobBot.config.OAUTH_REDIRECT_URL }
                 }
@@ -254,10 +231,10 @@ class ApiServer {
                 authenticate("discord") {
                     get("/oauth") {
                         val principal = call.authentication.principal<OAuthAccessTokenResponse.OAuth2>()
-                        val data = HttpClient(Apache).get("https://discordapp.com/api/users/@me") {
+                        val data = httpClient.get("https://discordapp.com/api/users/@me") {
                             header("Authorization", "Bearer ${principal!!.accessToken}")
-                        }
-                            .body<String>()
+                        }.body<String>()
+
                         val s = Gson().fromJson(data, UserSession::class.java)
                         call.sessions.set(s)
                         call.respondRedirect("/admin")
@@ -341,7 +318,8 @@ class ApiServer {
                         .addAll(categorised)
                         .addAll(remaining)
                         .toPrettyString()
-                    val slash_html = "<!DOCTYPE html>\n" +
+
+                    val slashHtml = "<!DOCTYPE html>\n" +
                             "<html>\n" +
                             "<head>\n" +
                             "<title>SLash Commands</title>\n" +
@@ -356,7 +334,8 @@ class ApiServer {
                             "</script>\n" +
                             "</body>\n" +
                             "</html>\n"
-                    call.respondText(slash_html, ContentType.Text.Html)
+
+                    call.respondText(slashHtml, ContentType.Text.Html)
                 }
 
             }
@@ -364,6 +343,6 @@ class ApiServer {
     }
 
     companion object {
-        val dpFormatter = DecimalFormat("0.00")
+        private val dpFormatter = DecimalFormat("0.00")
     }
 }
