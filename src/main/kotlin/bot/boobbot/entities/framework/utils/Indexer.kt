@@ -24,7 +24,8 @@ class Indexer(pkg: String) {
             .map {
                 val category = if (it.properties.groupByCategory) it::class.java.packageName.split('.').last() else null
                 val options = it::class.findAnnotation<Options>()?.value?.toList()
-                    ?: it::class.annotations.filterIsInstance(Option::class.java)
+                    ?: it::class.annotations.filterIsInstance<Option>()
+
                 ExecutableCommand(it, getSubCommands(it).associateBy(SubCommandWrapper::name), it.properties.slashEnabled, category, options)
             }
     }
@@ -35,8 +36,9 @@ class Indexer(pkg: String) {
                 val name = it.name.lowercase()
                 val props = it.findAnnotation<SubCommand>()!!
                 val options = it.findAnnotation<Options>()?.value?.toList()
-                    ?: it.annotations.filterIsInstance(Option::class.java)
-                SubCommandWrapper(name, props.aliases, props.async, props.description, props.donorOnly, options, it.javaMethod!!, kls)
+                    ?: it.annotations.filterIsInstance<Option>()
+
+                SubCommandWrapper(name, props.aliases, it.isSuspend, props.description, props.donorOnly, options, it.javaMethod!!, kls)
             }
     }
 

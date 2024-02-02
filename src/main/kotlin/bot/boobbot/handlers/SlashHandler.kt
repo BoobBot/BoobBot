@@ -9,6 +9,7 @@ import bot.boobbot.utils.Utils
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
+import io.sentry.Sentry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import net.dv8tion.jda.api.Permission
@@ -82,7 +83,7 @@ class SlashHandler : EventListener {
             return
         }
 
-        if (command.properties.guildOnly && !event.channelType.isGuild) {
+        if (command.properties.guildOnly && !event.isFromGuild) {
             return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
         }
 
@@ -114,8 +115,7 @@ class SlashHandler : EventListener {
         }
 
         if (event.isFromGuild && command.properties.userPermissions.isNotEmpty()) {
-            val missing =
-                checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
+            val missing = checkMissingPermissions(event.member!!, event.guildChannel, command.properties.userPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -124,8 +124,7 @@ class SlashHandler : EventListener {
         }
 
         if (event.isFromGuild && command.properties.botPermissions.isNotEmpty()) {
-            val missing =
-                checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
+            val missing = checkMissingPermissions(event.guild!!.selfMember, event.guildChannel, command.properties.botPermissions)
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
@@ -152,6 +151,7 @@ class SlashHandler : EventListener {
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
             event.reply("Error occurred during command processing.").queue()
+            Sentry.capture(e)
         }
     }
 }

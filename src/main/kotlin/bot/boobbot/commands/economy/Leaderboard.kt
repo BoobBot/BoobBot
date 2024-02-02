@@ -15,8 +15,9 @@ class Leaderboard : AsyncCommand {
         sendSubcommandHelp(ctx)
     }
 
-    @SubCommand(aliases = ["richest", "$"], description = "Global economy leaderboard \uD83C\uDFC6", async = true)
+    @SubCommand(aliases = ["richest", "$"], description = "Global economy leaderboard \uD83C\uDFC6")
     suspend fun cash(ctx: Context) {
+        ctx.defer()
         val msg = buildMessage("balance", ctx)
 
          ctx.reply {
@@ -26,8 +27,9 @@ class Leaderboard : AsyncCommand {
         }
     }
 
-    @SubCommand(aliases = ["exp", "xp", "rank"], description = "Global rank leaderboard \uD83C\uDFC6", async = true)
+    @SubCommand(aliases = ["exp", "xp", "rank"], description = "Global rank leaderboard \uD83C\uDFC6")
     suspend fun level(ctx: Context) {
+        ctx.defer()
         val msg = buildMessage("level", ctx)
 
         ctx.reply {
@@ -37,8 +39,9 @@ class Leaderboard : AsyncCommand {
         }
     }
 
-    @SubCommand(aliases = ["reputation"], description = "Global reputation leaderboard \uD83C\uDFC6", async = true)
+    @SubCommand(aliases = ["reputation"], description = "Global reputation leaderboard \uD83C\uDFC6")
     suspend fun rep(ctx: Context) {
+        ctx.defer()
         val msg = buildMessage("rep", ctx)
 
         ctx.reply {
@@ -47,7 +50,6 @@ class Leaderboard : AsyncCommand {
             setFooter("Requested by ${ctx.user.name}", ctx.user.effectiveAvatarUrl)
         }
     }
-
 
     suspend fun buildMessage(key: String, ctx: Context): String {
         val msg = StringBuilder()

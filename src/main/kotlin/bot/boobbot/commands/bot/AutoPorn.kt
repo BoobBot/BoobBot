@@ -6,6 +6,8 @@ import bot.boobbot.entities.framework.annotations.*
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
+import io.sentry.Sentry
+import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
@@ -52,7 +54,7 @@ class AutoPorn : Command {
         ]),
         Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     ])
-    fun set(ctx: Context) {
+    suspend fun set(ctx: Context) {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)
             ?.let(types::get)
             ?: return ctx.reply {
@@ -77,31 +79,43 @@ class AutoPorn : Command {
             return ctx.reply("\uD83D\uDEAB Hey whore, I need `MANAGE_WEBHOOKS` permission to do this")
         }
 
-        channel.createWebhook("BoobBot")
-            .reason("Auto-Porn Setup")
-            .submit()
-            .thenAccept {
-                val url = formatWebhookUrl(it.id, it.token!!)
-                BoobBot.database.setWebhook(ctx.guild.id, url, imageCategory, channel.id)
+        ctx.defer()
 
-                ctx.reply {
-                    setColor(Color.red)
-                    setDescription("Set Auto-Porn channel to ${channel.asMention}")
+        val res = channel.runCatching {
+            createWebhook("BoobBot")
+                .reason("Auto-Porn Setup")
+                .submit()
+                .await()
+        }
+
+        if (res.isFailure) {
+            val error = res.exceptionOrNull()
+                ?: return ctx.reply("Couldn't create a webhook for this channel, but there was no error either wtf?")
+
+            error.printStackTrace()
+            Sentry.capture(error)
+
+            if (error !is ErrorResponseException) {
+                return ctx.reply("An error occurred whilst creating a webhook for autoporn, wtf")
+            }
+
+            when (error.errorCode) {
+                30007 -> ctx.reply("The provided channel has too many webhooks, wtf? delete some whore")
+                else -> {
+                    BoobBot.log.error("Webhook creation error", error)
+                    ctx.reply("Shit, couldn't make a webhook.\n${error.meaning}")
                 }
             }
-            .exceptionally {
-                val erx = it as ErrorResponseException
+        }
 
-                when (erx.errorCode) {
-                    30007 -> ctx.reply("The provided channel has too many webhooks, wtf? delete some whore")
-                    else -> {
-                        BoobBot.log.error("Webhook creation error", it)
-                        ctx.reply("Shit, couldn't make a webhook.\n${it.meaning}")
-                    }
-                }
+        val webhook = res.getOrThrow()
+        val url = formatWebhookUrl(webhook.id, webhook.token!!)
+        BoobBot.database.setWebhook(ctx.guild.id, url, imageCategory, channel.id)
 
-                return@exceptionally null
-            }
+        ctx.reply {
+            setColor(Color.red)
+            setDescription("Set Auto-Porn channel to ${channel.asMention}")
+        }
     }
 
     @SubCommand(aliases = ["disable"], description = "Delete the Auto-Porn configuration for this server.")
