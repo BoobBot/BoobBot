@@ -3,7 +3,6 @@ package bot.boobbot.utils
 import bot.boobbot.BoobBot
 import com.sun.management.OperatingSystemMXBean
 import net.dv8tion.jda.api.JDA
-import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
 import kotlin.math.max

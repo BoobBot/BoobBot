@@ -11,25 +11,15 @@ fun <T> List<T>.discard(amount: Int) = if (amount > 0) this.drop(amount) else th
 
 fun <T> List<T>.separate(): Pair<T, List<T>> = Pair(first(), drop(1))
 
-fun String.toUriOrNull(): URI? {
-    return try {
-        URI(this)
-    } catch (e: Exception) {
-        return null
-    }
-}
+fun String.toUriOrNull() = this.runCatching(::URI).getOrNull()
 
-fun Response.json(): JSONObject? {
-    return body?.takeIf { isSuccessful }?.use { JSONObject(it.string()) }
-}
+inline fun <T> Boolean.ifTrue(body: () -> T?): T? = if (this) body() else null
 
-suspend fun <T> CompletableFuture<T>.awaitSuppressed(): T? {
-    return try {
-        this.await()
-    } catch (e: Exception) {
-        null
-    }
-}
+fun Response.json() = body.use { it.takeIf { isSuccessful }?.string()?.let(::JSONObject) }
+
+inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long) = sumOf(selector)
+
+suspend fun <T> CompletableFuture<T>.awaitSuppressed(): T? = this.runCatching { await() }.getOrNull()
 
 fun <T> CompletableFuture<T>.thenException(block: (Throwable) -> Unit) {
     this.exceptionally {
@@ -46,12 +36,6 @@ fun <T, O> RestAction<T>.intersect(other: List<O>, apply: (T, Int, O) -> RestAct
     return last
 }
 
-fun <T> Collection<T>.ifEmpty(trueValue: String, falseValue: Collection<T>.() -> String): String {
-    if (this.isEmpty()) {
-        return trueValue
-    }
-
-    return falseValue(this)
-}
+fun <T> Collection<T>.ifEmpty(trueValue: String, falseValue: Collection<T>.() -> String) = if (isEmpty()) trueValue else falseValue(this)
 
 fun <K, V> Map<K, V>.joinToString(separator: CharSequence) = "{\n${this.entries.joinToString(separator) { "${it.key}=${it.value}" }}\n}"

@@ -8,6 +8,7 @@ import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Stats
 import bot.boobbot.utils.TimerUtil
+import bot.boobbot.utils.ifTrue
 import com.google.gson.Gson
 import de.mxro.metrics.jre.Metrics
 import io.ktor.client.*
@@ -36,7 +37,6 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
 import net.dv8tion.jda.api.utils.data.DataArray
 import net.dv8tion.jda.api.utils.data.DataObject
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level

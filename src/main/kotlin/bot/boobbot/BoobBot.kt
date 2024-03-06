@@ -11,6 +11,7 @@ import bot.boobbot.entities.registries.CommandRegistry
 import bot.boobbot.entities.registries.UserContextCommandRegistry
 import bot.boobbot.utils.RequestUtil
 import bot.boobbot.utils.Utils
+import bot.boobbot.utils.ifTrue
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.fasterxml.jackson.core.JsonParseException
@@ -30,7 +31,6 @@ import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
 import net.dv8tion.jda.api.requests.RestAction
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.ConnectException

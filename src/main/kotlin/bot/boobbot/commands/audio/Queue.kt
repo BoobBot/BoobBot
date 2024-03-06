@@ -8,10 +8,10 @@ import bot.boobbot.entities.framework.interfaces.VoiceCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
+import bot.boobbot.utils.sumByLong
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.api.entities.User
-import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import java.time.Instant
 
 @CommandProperties(

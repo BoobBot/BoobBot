@@ -91,13 +91,15 @@ shadowJar {
     archiveFileName = "bb.jar"
 }
 
+String jvmTarget = JavaVersion.VERSION_12
+
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = jvmTarget.toString()
 }
 
-configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor 1, 'seconds'
-    resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
+compileJava {
+    sourceCompatibility = jvmTarget
+    targetCompatibility = jvmTarget
 }
 
 def getBuildVersion() {
@@ -109,7 +111,7 @@ def getBuildVersion() {
     return gitVersion.toString().trim()
 }
 
-task writeVersion() {
+tasks.register('writeVersion') {
     new File("src/main/resources", "version.txt").text = getBuildVersion()
 }
 

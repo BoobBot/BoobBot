@@ -10,10 +10,10 @@ import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.ifEmpty
+import bot.boobbot.utils.ifTrue
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
 class Settings : Command {
