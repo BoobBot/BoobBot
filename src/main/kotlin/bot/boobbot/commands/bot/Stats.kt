@@ -7,13 +7,8 @@ import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.internals.CodeblockBuilder
 import bot.boobbot.utils.Stats
-import bot.boobbot.utils.Utils
-import com.sun.management.OperatingSystemMXBean
-import org.jetbrains.kotlin.utils.addToStdlib.sumByLong
 import org.json.JSONObject
-import java.lang.management.ManagementFactory
 import java.text.DecimalFormat
-import kotlin.math.max
 
 @CommandProperties(description = "Overview of BoobBot's process", groupByCategory = true)
 class Stats : Command {

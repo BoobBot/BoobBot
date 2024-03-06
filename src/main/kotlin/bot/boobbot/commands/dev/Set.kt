@@ -5,7 +5,6 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
@@ -42,16 +41,14 @@ class Set : Command {
     }
 
     @SubCommand(aliases = ["game"], description = "Set the bot activity.")
-    @Options([ // TODO: Revisit
-        Option(name = "type", description = "The activity type, or 'clear' to remove."),
-        Option(name = "content", description = "<content>/<url> <content>")
-    ])
+    @Option(name = "type", description = "The activity type, or 'clear' to remove.")
+    @Option(name = "content", description = "<content>/<url> <content>")
     fun activity(ctx: Context) {
         val type = ctx.options.getByNameOrNext("type", Resolver.STRING)
             ?: return ctx.reply("${ctx.prefix}set activity <type> <content...>")
 
         val content = ctx.options.getOptionStringOrGather("content")?.split(' ')
-        val validTypes = Activity.ActivityType.values().map { it.name.lowercase() }
+        val validTypes = Activity.ActivityType.entries.map { it.name.lowercase() }
 
         if (type == "clear") {
             activityResetTask?.cancel(true)

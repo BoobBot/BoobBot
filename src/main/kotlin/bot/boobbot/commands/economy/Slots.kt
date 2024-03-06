@@ -5,7 +5,6 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
@@ -17,11 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     category = Category.ECONOMY,
     groupByCategory = true
 )
-@Options(
-    [
-        Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
-    ]
-)
+@Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
 class Slot : Command {
 
     private val slotEmotes = listOf("🍒", "🍋", "🍊", "🍇", "🔔", "💰")

@@ -4,7 +4,6 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.ModCommand
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
@@ -18,10 +17,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
     botPermissions = [Permission.KICK_MEMBERS],
     groupByCategory = true
 )
-@Options([ // TODO: Revisit
-    Option(name = "target", description = "The user to ban.", type = OptionType.USER),
-    Option(name = "reason", description = "The reason for the action.", required = false)
-])
+@Option(name = "target", description = "The user to ban.", type = OptionType.USER)
+@Option(name = "reason", description = "The reason for the action.", required = false)
 class Kick : ModCommand() {
     override fun execute(ctx: Context) {
         val (user, member, reason) = resolveTargetAndReason(ctx)

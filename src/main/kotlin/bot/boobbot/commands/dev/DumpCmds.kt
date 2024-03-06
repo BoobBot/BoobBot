@@ -5,11 +5,8 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.annotations.SubCommand
-import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.Resolver
-import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.framework.interfaces.Command
 import net.dv8tion.jda.api.interactions.commands.build.*
 import net.dv8tion.jda.api.utils.FileUpload
@@ -46,10 +43,8 @@ class DumpCmds : Command {
     }
 
     @SubCommand(description = "Trace command build information.")
-    @Options([
-        Option(name = "command", description = "Command name to diagnose."),
-        Option(name = "subcommand", description = "Subcommand name to diagnose.", required = false)
-    ])
+    @Option(name = "command", description = "Command name to diagnose.")
+    @Option(name = "subcommand", description = "Subcommand name to diagnose.", required = false)
     fun trace(ctx: Context) {
         val command = ctx.options.getByNameOrNext("command", Resolver.STRING)
             ?: return ctx.reply("Wtf, specify a command whore.")

@@ -1,7 +1,6 @@
 package bot.boobbot.utils
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.misc.ApiServer
 import com.sun.management.OperatingSystemMXBean
 import net.dv8tion.jda.api.JDA
 import org.jetbrains.kotlin.utils.addToStdlib.sumByLong

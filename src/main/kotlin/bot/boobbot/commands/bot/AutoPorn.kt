@@ -2,7 +2,10 @@ package bot.boobbot.commands.bot
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.annotations.*
+import bot.boobbot.entities.framework.annotations.Choice
+import bot.boobbot.entities.framework.annotations.CommandProperties
+import bot.boobbot.entities.framework.annotations.Option
+import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
@@ -43,17 +46,15 @@ class AutoPorn : Command {
     }
 
     @SubCommand(description = "Set the Auto-Porn category and channel.")
-    @Options([ // TODO: Revisit
-        Option(name = "category", description = "The image category.", choices = [
-            Choice("GIF", "gif"),
-            Choice("Boobs", "boobs"),
-            Choice("Ass", "ass"),
-            Choice("Gay", "gay"),
-            Choice("Lesbians", "lesbians"),
-            Choice("Random", "random")
-        ]),
-        Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
+    @Option(name = "category", description = "The image category.", choices = [
+        Choice("GIF", "gif"),
+        Choice("Boobs", "boobs"),
+        Choice("Ass", "ass"),
+        Choice("Gay", "gay"),
+        Choice("Lesbians", "lesbians"),
+        Choice("Random", "random")
     ])
+    @Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     suspend fun set(ctx: Context) {
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)
             ?.let(types::get)

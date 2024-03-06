@@ -5,7 +5,6 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
 import net.dv8tion.jda.api.Permission
@@ -21,23 +20,17 @@ import kotlin.math.roundToInt
 
 
 @CommandProperties(description = "Shipped", category = Category.FUN, groupByCategory = true)
-@Options([ // TODO: Revisit
-    Option(name = "first", description = "The first user to ship.", type = OptionType.USER),
-    Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)
-])
+@Option(name = "first", description = "The first user to ship.", type = OptionType.USER)
+@Option(name = "second", description = "The second user to ship. Defaults to you.", type = OptionType.USER, required = false)
 class Ship : Command {
     override fun execute(ctx: Context) {
         if (!ctx.botCan(Permission.MESSAGE_ATTACH_FILES)) {
             return ctx.reply("I can't send attachments. Fix it, whore.")
         }
 
-//        if (ctx.mentions.isEmpty()) {
-//            print("shipdsdfsdf")
-//            return
-//        }
-
         val user1 = ctx.options.getByNameOrNext("first", Resolver.CONTEXT_AWARE_USER(ctx))
             ?: return ctx.reply("How in the fuck would i know who you want to ship if you don't specify someone?")
+
         val user2 = ctx.options.getByNameOrNext("second", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
 
         if (user1.idLong == ctx.user.idLong && user2.idLong == ctx.user.idLong) {

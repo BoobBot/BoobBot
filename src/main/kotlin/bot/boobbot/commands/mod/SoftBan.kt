@@ -4,7 +4,6 @@ import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
-import bot.boobbot.entities.framework.annotations.Options
 import bot.boobbot.entities.framework.impl.ModCommand
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.awaitSuppressed
@@ -25,10 +24,8 @@ import java.util.concurrent.TimeUnit
     botPermissions = [Permission.BAN_MEMBERS],
     groupByCategory = true
 )
-@Options([ // TODO: Revisit
-    Option(name = "target", description = "The user to ban.", type = OptionType.USER),
-    Option(name = "reason", description = "The reason for the action.", required = false)
-])
+@Option(name = "target", description = "The user to ban.", type = OptionType.USER)
+@Option(name = "reason", description = "The reason for the action.", required = false)
 class SoftBan : AsyncCommand, ModCommand() {
     override suspend fun executeAsync(ctx: Context) {
         ctx.defer()

@@ -6,7 +6,6 @@ import io.sentry.event.Event
 import io.sentry.event.helper.ShouldSendEventCallback
 import io.sentry.event.interfaces.ExceptionInterface
 import io.sentry.event.interfaces.SentryException
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.slf4j.LoggerFactory
 
 class CustomSentryClient(sentryClient: SentryClient) : ShouldSendEventCallback {
@@ -24,10 +23,7 @@ class CustomSentryClient(sentryClient: SentryClient) : ShouldSendEventCallback {
     }
 
     private fun getLastRecordedException(event: Event): SentryException? {
-        return event.sentryInterfaces.values.firstOrNull { it is ExceptionInterface }
-            ?.cast<ExceptionInterface>()
-            ?.exceptions
-            ?.first
+        return (event.sentryInterfaces.values.firstOrNull { it is ExceptionInterface } as? ExceptionInterface)?.exceptions?.first
     }
 
     override fun shouldSend(event: Event): Boolean {
