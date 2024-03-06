@@ -25,10 +25,12 @@ class Custom : Command {
     override fun execute(ctx: Context) = sendSubcommandHelp(ctx)
 
     @SubCommand(description = "Add a custom tag.")
-    @Options([ // TODO: Revisit
-        Option(name = "name", description = "The name of the tag."),
-        Option(name = "content", description = "The tag content.")
-    ])
+    @Option(name = "name", description = "The name of the tag.")
+    @Option(name = "content", description = "The tag content.")
+//    @Options([ // TODO: Revisit
+//        Option(name = "name", description = "The name of the tag."),
+//        Option(name = "content", description = "The tag content.")
+//    ])
     fun add(ctx: Context) {
         if (!ctx.userCan(Permission.MANAGE_SERVER)) {
             return ctx.reply("You don't have `MANAGE_SERVER` permission, whore.")

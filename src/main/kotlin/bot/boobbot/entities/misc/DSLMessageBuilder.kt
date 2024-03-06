@@ -1,7 +1,9 @@
 package bot.boobbot.entities.misc
 
+import bot.boobbot.entities.framework.Context
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.ItemComponent
 import net.dv8tion.jda.api.interactions.components.buttons.Button
@@ -11,7 +13,7 @@ import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 
-class DSLMessageBuilder {
+class DSLMessageBuilder(private val ctx: Context) {
     private val builder = MessageCreateBuilder()
     private val embeds = mutableListOf<MessageEmbed>()
     private val actionRows = mutableListOf<ActionRow>()
@@ -51,12 +53,21 @@ class DSLMessageBuilder {
             components.add(StringSelectMenu.create(id).apply(sm).build())
         }
 
-        fun button(style: ButtonStyle, idOrUrl: String, label: String) {
+        fun button(style: ButtonStyle, idOrUrl: String, label: String, builder: ButtonBuilder.() -> Unit = {}) {
             components.add(Button.of(style, idOrUrl, label))
+            builder(ButtonBuilder(idOrUrl))
         }
 
         fun build(): ActionRow {
             return ActionRow.of(components)
+        }
+    }
+
+    inner class ButtonBuilder(private val id: String) {
+        fun clicked(timeout: Long,
+                    predicate: (ButtonInteractionEvent) -> Boolean = { it.componentId == id },
+                    event: (ButtonInteractionEvent?) -> Unit) {
+            ctx.onButtonInteraction(id, predicate, timeout, event)
         }
     }
 }

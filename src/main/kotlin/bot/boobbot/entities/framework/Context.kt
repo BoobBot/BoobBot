@@ -38,6 +38,12 @@ abstract class Context(val mentionTrigger: Boolean,
     val channelType = channel.type
     val isFromGuild = channelType.isGuild
 
+    val asSlash: SlashContext?
+        get() = this as? SlashContext
+
+    val asMessage: MessageContext?
+        get() = this as? MessageContext
+
     val guild: Guild
         get() = _guild ?: throw IllegalStateException("Guild is not available.")
 

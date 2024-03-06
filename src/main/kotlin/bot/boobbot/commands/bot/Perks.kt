@@ -77,18 +77,15 @@ class Perks : Command {
             ctx.member!!.isOwner -> ctx.reply("You own this server, whore, so it's already premium.")
             BoobBot.database.getPremiumServers(ctx.user.idLong).size > PREMIUM_SERVERS -> ctx.reply("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
             else -> {
-                val predicate = { e: ButtonInteractionEvent -> e.componentId == "ps:accept:${ctx.user.id}" || e.componentId == "ps:cancel:${ctx.user.id}" }
-                val waiterSetup = ctx.onButtonInteraction("ps:${ctx.user.id}", predicate, 20000) {
-                    if (it == null) {
-                        return@onButtonInteraction ctx.reply("Fine, whore. The server won't be added.")
+                val waiterSetup = ctx.onButtonInteraction("ps:${ctx.user.id}", { it.componentId == "ps:accept:${ctx.user.id}" || it.componentId == "ps:cancel:${ctx.user.id}" }, 20000) {
+                    when {
+                        it == null -> ctx.reply("Fine, whore. The server won't be added.")
+                        it.componentId == "ps:cancel:${ctx.user.id}" -> it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
+                        else -> {
+                            BoobBot.database.setPremiumServer(ctx.guild.id, ctx.user.idLong)
+                            it.editComponents().setContent("Server added, whore.").queue()
+                        }
                     }
-
-                    if (it.componentId == "ps:cancel:${ctx.user.id}") {
-                        return@onButtonInteraction it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
-                    }
-
-                    BoobBot.database.setPremiumServer(ctx.guild.id, ctx.user.idLong)
-                    it.editComponents().setContent("Server added, whore.").queue()
                 }
 
                 if (!waiterSetup) {
@@ -126,7 +123,7 @@ class Perks : Command {
                 return@onMenuInteraction it.editComponents().setContent("Fine, whore. No servers will be removed.").queue()
             }
 
-            val selected = (it as StringSelectInteractionEvent).selectedOptions[0] // TODO: test
+            val selected = (it as StringSelectInteractionEvent).selectedOptions[0]
             BoobBot.database.removePremiumServer(selected.value)
             it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
         }

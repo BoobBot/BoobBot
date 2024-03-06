@@ -55,7 +55,7 @@ class SlashContext(val event: SlashCommandInteractionEvent) : Context(false, mut
 
     override fun reply(ephemeral: Boolean, embed: EmbedBuilder.() -> Unit) = message(ephemeral) { embed(embed) }
 
-    override fun message(ephemeral: Boolean, message: DSLMessageBuilder.() -> Unit) = reply(DSLMessageBuilder().apply(message).build(), ephemeral, null, null)
+    override fun message(ephemeral: Boolean, message: DSLMessageBuilder.() -> Unit) = reply(DSLMessageBuilder(this).apply(message).build(), ephemeral, null, null)
 
     fun reply(content: String, ephemeral: Boolean = false, success: ((InteractionHook) -> Unit)?, failure: ((Throwable) -> Unit)) = reply(MessageCreateData.fromContent(content), ephemeral, success, failure)
 
