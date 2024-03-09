@@ -3,6 +3,7 @@ package bot.boobbot.entities.internals
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
+import bot.boobbot.entities.db.WebhookConfiguration
 import com.google.gson.Gson
 import com.mongodb.BasicDBObject
 import com.mongodb.ConnectionString
@@ -51,19 +52,19 @@ class Database {
     /**
      * Webhooks/Autoporn
      */
-    fun getWebhooks(guildId: String, channelId: String? = null): List<Document> {
+    fun getWebhooks(guildId: String): List<WebhookConfiguration> {
         allReads++
 
         val legacy = getWebhookAndMigrate(guildId)
 
         if (legacy != null) {
-            return legacy.let(::listOf)
+            return legacy.let { listOf(WebhookConfiguration(it.getString("category"), it.getLong("channelId"), it.getString("webhook"))) }
         }
 
-        val predicate = channelId?.let { and(eq("_id", guildId), eq("webhooks.channelId", channelId)) }
-            ?: eq("_id", guildId)
-
-        return webhooksv2.find(predicate).toList()
+        return webhooksv2.find(eq("_id", guildId))
+            .firstOrNull()?.getList("webhooks", Document::class.java)
+            ?.map { deserialize(it.toJson()) }
+            ?: emptyList()
     }
 
     @Deprecated("Use getWebhook(guildId, channelId)", replaceWith = ReplaceWith("getWebhook(guildId, channelId)"))
@@ -95,11 +96,18 @@ class Database {
         webhooks.deleteOne(eq("_id", guildId))
     }
 
-    fun deleteWebhookV2(guildId: String, channelId: String) {
-        webhooks.updateOne(
-            and(eq("_id", guildId), eq("webhooks.channelId", channelId)),
-            Updates.pull("webhooks", Document("channelId", channelId))
+    fun deleteWebhookV2(guildId: String, channelId: String, category: String? = null) {
+        val predicates = category?.let { and(eq("channelId", channelId), eq("category", it)) }
+            ?: eq("channelId", channelId)
+
+        webhooksv2.updateOne(
+            eq("_id", guildId),
+            Updates.pull("webhooks", predicates)
         )
+    }
+
+    fun clearWebhooks(guildId: String) {
+        webhooksv2.deleteOne(eq("_id", guildId))
     }
 
 

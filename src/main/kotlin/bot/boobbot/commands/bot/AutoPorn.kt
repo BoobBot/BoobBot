@@ -23,7 +23,8 @@ import java.awt.Color
     description = "AutoPorn, Sub-commands: set, delete, status",
     nsfw = true,
     guildOnly = true,
-    donorOnly = true
+    donorOnly = true,
+    userPermissions = [Permission.MANAGE_SERVER]
 )
 class AutoPorn : Command {
     private val types = mapOf(
@@ -39,14 +40,11 @@ class AutoPorn : Command {
     private fun formatWebhookUrl(channelId: String, token: String) = "https://discordapp.com/api/webhooks/%s/%s".format(channelId, token)
 
     override fun execute(ctx: Context) {
-        if (!ctx.userCan(Permission.MANAGE_CHANNEL)) {
-            return ctx.reply("\uD83D\uDEAB Hey whore, you lack the `MANAGE_CHANNEL` permission needed to do this")
-        }
-
         sendSubcommandHelp(ctx)
     }
 
-    @SubCommand(description = "Set the Auto-Porn category and channel.")
+    @SubCommand(description = "Add a Auto-Porn schedule.")
+    @Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
     @Option(name = "category", description = "The image category.", choices = [
         Choice("GIF", "gif"),
         Choice("Boobs", "boobs"),
@@ -55,8 +53,13 @@ class AutoPorn : Command {
         Choice("Lesbians", "lesbians"),
         Choice("Random", "random")
     ])
-    @Option(name = "channel", description = "The channel to post to.", type = OptionType.CHANNEL)
-    suspend fun set(ctx: Context) {
+    suspend fun add(ctx: Context) {
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.id)
+
+        if (hooks.size >= MAX_CONFIGURATIONS_PER_GUILD) {
+            return ctx.reply("This server has **${hooks.size}** auto-porn configurations (maximum **${MAX_CONFIGURATIONS_PER_GUILD}**). Delete some or fuck off.")
+        }
+
         val imageCategory = ctx.options.getByNameOrNext("category", Resolver.STRING)
             ?.let(types::get)
             ?: return ctx.reply {
@@ -75,6 +78,10 @@ class AutoPorn : Command {
                 setColor(Color.red)
                 setDescription(Formats.error("That channel isn't marked NSFW you fuck"))
             }
+        }
+
+        if (hooks.any { it.channelId == channel.idLong && it.category == imageCategory }) {
+            return ctx.reply("You already have `$imageCategory` posting to ${channel.asMention} whore.")
         }
 
         if (!ctx.selfMember!!.hasPermission(channel, Permission.MANAGE_WEBHOOKS)) {
@@ -116,12 +123,26 @@ class AutoPorn : Command {
 
         ctx.reply {
             setColor(Color.red)
-            setDescription("Set Auto-Porn channel to ${channel.asMention}")
+            setDescription("Added `$imageCategory` to ${channel.asMention} auto-porn schedule, whore.\nYou can remove this with `/autoporn delete ${channel.asMention} $imageCategory`")
         }
+    }
+
+    @SubCommand(description = "Clear all Auto-Porn configurations for this server.")
+    fun clear(ctx: Context) {
+        BoobBot.database.clearWebhooks(ctx.guild.id)
+        ctx.reply("Auto-Porn configurations cleared, whore.")
     }
 
     @SubCommand(aliases = ["disable"], description = "Delete an Auto-Porn configuration for this server.")
     @Option("channel", description = "The channel to remove the configuration for.", type = OptionType.CHANNEL)
+    @Option(name = "category", description = "The type of post to remove. Omit to remove ALL configurations.", choices = [
+        Choice("GIF", "gif"),
+        Choice("Boobs", "boobs"),
+        Choice("Ass", "ass"),
+        Choice("Gay", "gay"),
+        Choice("Lesbians", "lesbians"),
+        Choice("Random", "random")
+    ])
     fun delete(ctx: Context) {
         val hooks = BoobBot.database.getWebhooks(ctx.guild.id).takeIf { it.isNotEmpty() }
             ?: return ctx.reply {
@@ -132,11 +153,17 @@ class AutoPorn : Command {
         val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild))
             ?: return ctx.reply("You need to mention the channel that you want to disable auto-porn for, whore.")
 
-        if (!hooks.any { it.getString("channelId") == channel.id }) {
-            return ctx.reply("That channel doesn't have an auto-porn configuration, whore. Use `/autoporn status` to see which channels are set up or fuck off.")
-        }
+        val category = ctx.options.getByNameOrNext("category", Resolver.STRING)
+            ?.let(types::get)
+            ?: return ctx.reply {
+                setColor(Color.red)
+                setDescription(Formats.error("Invalid Category\nCategories: $typeString"))
+            }
 
-        BoobBot.database.deleteWebhookV2(ctx.guild.id, channel.id)
+        val toDelete = hooks.firstOrNull { it.channelId == channel.idLong && it.category == category }
+            ?: return ctx.reply("No matching auto-porn configuration found, whore. Use `/autoporn status` to see which channels are set up or fuck off.")
+
+        BoobBot.database.deleteWebhookV2(ctx.guild.id, toDelete.channelId.toString(), category)
 
         ctx.reply {
             setColor(Color.red)
@@ -153,18 +180,16 @@ class AutoPorn : Command {
             }
 
         val statuses = buildString {
-            for ((index, doc) in hooks.withIndex()) {
-                val channelId = doc.getString("channelId")
-                val category = doc.getString("category")
-                val channel = ctx.guild.getTextChannelById(channelId)
+            for ((index, config) in hooks.withIndex()) {
+                val channel = ctx.guild.getTextChannelById(config.channelId)
 
-                append("`${index + 1}.` ")
-                append(category)
-                append(" -> ")
+                append("`${index + 1}.` Posting `")
+                append(config.category)
+                append("` to ")
 
                 if (channel == null) {
                     // delete V2 as the get call should've migrated this for us.
-                    BoobBot.database.deleteWebhookV2(ctx.guild.id, channelId)
+                    BoobBot.database.deleteWebhookV2(ctx.guild.id, config.channelId.toString())
                     appendLine("Deleted Channel\n*This entry has been automatically deleted.*\n")
                 } else {
                     appendLine(channel.asMention)
@@ -178,5 +203,9 @@ class AutoPorn : Command {
             setTitle("Auto-Porn Statuses")
             setDescription(statuses)
         }
+    }
+
+    companion object {
+        private const val MAX_CONFIGURATIONS_PER_GUILD = 5
     }
 }

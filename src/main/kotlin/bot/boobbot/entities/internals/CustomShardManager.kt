@@ -93,6 +93,10 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 .build()
 
             val disabledIntents = EnumSet.of(
+                // Disable moderation
+                GatewayIntent.AUTO_MODERATION_CONFIGURATION,
+                GatewayIntent.AUTO_MODERATION_EXECUTION,
+                GatewayIntent.GUILD_MODERATION,
                 // Disable typing
                 GatewayIntent.GUILD_MESSAGE_TYPING,
                 GatewayIntent.DIRECT_MESSAGE_TYPING,
@@ -116,8 +120,10 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 CacheFlag.ACTIVITY,
                 CacheFlag.CLIENT_STATUS,
                 CacheFlag.EMOJI,
+                CacheFlag.FORUM_TAGS,
                 CacheFlag.ONLINE_STATUS,
                 CacheFlag.ROLE_TAGS,
+                CacheFlag.SCHEDULED_EVENTS,
                 CacheFlag.STICKER
             )
 
