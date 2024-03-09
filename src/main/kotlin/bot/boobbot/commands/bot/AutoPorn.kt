@@ -123,7 +123,7 @@ class AutoPorn : Command {
 
         ctx.reply {
             setColor(Color.red)
-            setDescription("Added `$imageCategory` to ${channel.asMention} auto-porn schedule, whore.\nYou can remove this with `/autoporn delete ${channel.asMention} $imageCategory`")
+            setDescription("Added `$imageCategory` to ${channel.asMention} auto-porn schedule, whore.\nYou can remove this with `/autoporn delete #${channel.name} $imageCategory`")
         }
     }
 
