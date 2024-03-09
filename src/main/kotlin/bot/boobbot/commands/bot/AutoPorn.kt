@@ -7,6 +7,7 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
+import bot.boobbot.entities.framework.impl.Resolver.Companion
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import io.sentry.Sentry
@@ -119,46 +120,63 @@ class AutoPorn : Command {
         }
     }
 
-    @SubCommand(aliases = ["disable"], description = "Delete the Auto-Porn configuration for this server.")
+    @SubCommand(aliases = ["disable"], description = "Delete an Auto-Porn configuration for this server.")
+    @Option("channel", description = "The channel to remove the configuration for.", type = OptionType.CHANNEL)
     fun delete(ctx: Context) {
-        if (BoobBot.database.getWebhook(ctx.guild.id) == null) {
-            return ctx.reply {
-                setColor(Color.red)
-                setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
-            }
-        }
-
-        BoobBot.database.deleteWebhook(ctx.guild.id)
-        ctx.reply {
-            setColor(Color.red)
-            setDescription("Auto-Porn is now disabled for this server")
-        }
-    }
-
-    @SubCommand(description = "View the Auto-Porn configuration for this server.")
-    fun status(ctx: Context) {
-        val wh = BoobBot.database.getWebhook(ctx.guild.id)
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.id).takeIf { it.isNotEmpty() }
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
             }
 
-        val channel = ctx.guild.getTextChannelById(wh.getString("channelId"))
+        val channel = ctx.options.getByNameOrNext("channel", Resolver.localGuildChannel(ctx.guild))
+            ?: return ctx.reply("You need to mention the channel that you want to disable auto-porn for, whore.")
 
-        if (channel == null) {
-            BoobBot.database.deleteWebhook(ctx.guild.id)
-
-            return ctx.reply {
-                setColor(Color.red)
-                setDescription("The channel used for Auto-Porn no longer exists, wtf?")
-            }
+        if (!hooks.any { it.getString("channelId") == channel.id }) {
+            return ctx.reply("That channel doesn't have an auto-porn configuration, whore. Use `/autoporn status` to see which channels are set up or fuck off.")
         }
 
-        val category = wh.getString("category")
+        BoobBot.database.deleteWebhookV2(ctx.guild.id, channel.id)
 
         ctx.reply {
             setColor(Color.red)
-            setDescription("Auto-Porn is set up for ${channel.asMention} (**$category**)")
+            setDescription("I've disabled auto-porn for that channel, whore.")
+        }
+    }
+
+    @SubCommand(description = "View the Auto-Porn configuration for this server.")
+    fun status(ctx: Context) {
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.id).takeIf { it.isNotEmpty() }
+            ?: return ctx.reply {
+                setColor(Color.red)
+                setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
+            }
+
+        val statuses = buildString {
+            for ((index, doc) in hooks.withIndex()) {
+                val channelId = doc.getString("channelId")
+                val category = doc.getString("category")
+                val channel = ctx.guild.getTextChannelById(channelId)
+
+                append("`${index + 1}.` ")
+                append(category)
+                append(" -> ")
+
+                if (channel == null) {
+                    // delete V2 as the get call should've migrated this for us.
+                    BoobBot.database.deleteWebhookV2(ctx.guild.id, channelId)
+                    appendLine("Deleted Channel\n*This entry has been automatically deleted.*\n")
+                } else {
+                    appendLine(channel.asMention)
+                    appendLine()
+                }
+            }
+        }
+
+        ctx.reply {
+            setColor(Color.red)
+            setTitle("Auto-Porn Statuses")
+            setDescription(statuses)
         }
     }
 }

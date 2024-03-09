@@ -9,6 +9,7 @@ import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
@@ -29,7 +30,7 @@ class Database {
             applyToConnectionPoolSettings {
                 it.maxSize(BoobBot.config.SHARD_TOTAL)
             }
-            this.applyToSocketSettings {
+            applyToSocketSettings {
                 it.connectTimeout(10, TimeUnit.SECONDS)
                 it.readTimeout(10, TimeUnit.SECONDS)
             }
@@ -42,6 +43,7 @@ class Database {
 
     /** Tables **/
     private val webhooks = autoPorn.getCollection("webhooks")
+    private val webhooksv2 = autoPorn.getCollection("webhooksv2")
     private val guilds = bb.getCollection("guilds")
     private val users = bb.getCollection("users")
     
@@ -49,10 +51,32 @@ class Database {
     /**
      * Webhooks/Autoporn
      */
-    fun getWebhook(guildId: String): Document? {
+    fun getWebhooks(guildId: String, channelId: String? = null): List<Document> {
         allReads++
-        return webhooks.find(BasicDBObject("_id", guildId))
-            .firstOrNull()
+
+        val legacy = getWebhookAndMigrate(guildId)
+
+        if (legacy != null) {
+            return legacy.let(::listOf)
+        }
+
+        val predicate = channelId?.let { and(eq("_id", guildId), eq("webhooks.channelId", channelId)) }
+            ?: eq("_id", guildId)
+
+        return webhooksv2.find(predicate).toList()
+    }
+
+    @Deprecated("Use getWebhook(guildId, channelId)", replaceWith = ReplaceWith("getWebhook(guildId, channelId)"))
+    fun getWebhookAndMigrate(guildId: String): Document? {
+        allReads++
+        val document = webhooks.find(BasicDBObject("_id", guildId)).firstOrNull()
+
+        if (document != null) {
+            deleteWebhook(guildId)
+            setWebhook(guildId, document.getString("webhook"), document.getString("category"), document.getString("channelId"))
+        }
+
+        return document
     }
 
     fun setWebhook(guildId: String, webhookUrl: String, category: String, channelId: String) {
@@ -60,15 +84,22 @@ class Database {
             .append("category", category)
             .append("channelId", channelId)
 
-        webhooks.updateOne(
+        webhooksv2.updateOne(
             eq("_id", guildId),
-            Document("\$set", doc),
+            Updates.push("webhooks", doc),
             UpdateOptions().upsert(true)
         )
     }
 
     fun deleteWebhook(guildId: String) {
         webhooks.deleteOne(eq("_id", guildId))
+    }
+
+    fun deleteWebhookV2(guildId: String, channelId: String) {
+        webhooks.updateOne(
+            and(eq("_id", guildId), eq("webhooks.channelId", channelId)),
+            Updates.pull("webhooks", Document("channelId", channelId))
+        )
     }
 
 
