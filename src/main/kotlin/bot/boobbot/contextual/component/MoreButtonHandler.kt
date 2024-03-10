@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
+import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 import okhttp3.Headers
@@ -14,6 +15,8 @@ class MoreButtonHandler : BaseButtonHandler("more:") {
 
     override suspend fun onButtonInteraction(event: ButtonInteractionEvent) {
         val category = event.componentId.split(':').last()
+
+        event.deferReply().submit().await()
 
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
             ?: return event.reply("\uD83D\uDEAB oh? something broken af").queue()
