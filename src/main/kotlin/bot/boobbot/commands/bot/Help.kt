@@ -42,13 +42,15 @@ class Help : Command {
         val embed = builder(ctx)
 
         val content = StringBuilder()
+        val categories = Category.entries.sortedWith(compareBy({ it.nsfw }, { it.name }))
+        val longestCategoryNameLength = categories.maxOf { it.name.length }
 
-        for (category in Category.values().sortedWith(compareBy({ it.nsfw }, { it.name }))) {
+        for (category in categories) {
             if (category === Category.DEV && !Config.OWNERS.contains(ctx.user.idLong)) {
                 continue
             }
 
-            content.append("`${padEnd(category.name.lowercase(), 14)}:` ")
+            content.append("`${category.name.lowercase().padEnd(longestCategoryNameLength)}:` ")
 
             if (category.nsfw && ctx.channelType.isGuild && ctx.textChannel?.isNSFW != true) {
                 content.append("Unavailable. Move to an NSFW channel.\n")
@@ -64,25 +66,24 @@ class Help : Command {
     }
 
     private fun sendCategoryCommands(ctx: Context, category: Category, dm: Boolean) {
+        val categoryCommands = BoobBot.commands.values.filter { it.properties.category == category }
+        val longestCommandNameLength = categoryCommands.maxOf { it.name.length }
         val prefix = ctx.prefix
+        val commandList = categoryCommands.joinToString("\n") {
+            "`$prefix${it.name.padEnd(longestCommandNameLength)}:` ${it.properties.description}" + if (it.properties.donorOnly) " <:p_:475801484282429450>" else ""
+        }
 
-        val categoryCommands = BoobBot.commands.values
-            .filter { it.properties.category == category }
-            .joinToString("\n") {
-                "`$prefix${padEnd(it.name)}:` ${it.properties.description}" + if (it.properties.donorOnly) " <:p_:475801484282429450>" else ""
-            }
         val embed = builder(ctx)
-            .setDescription("Commands in **${category.name.lowercase()}**\n$categoryCommands")
-        //.addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
+            .setDescription("Commands in **${category.name.lowercase()}**\n$commandList")
+//            .addField("Commands in **${category.name.toLowerCase()}**", categoryCommands, false)
         send(ctx, embed, dm)
     }
 
     private fun sendCommandHelp(ctx: Context, command: ExecutableCommand, dm: Boolean) {
-        val prefix = ctx.prefix
         val aliases = command.properties.aliases.takeUnless { it.isEmpty() }?.joinToString(", ") ?: "None"
         val info = String.format(
             "Command:\n**%s%s**\nAliases:\n**%s**\nDescription:\n**%s**%s",
-            prefix, command.name, aliases, command.properties.description,
+            ctx.prefix, command.name, aliases, command.properties.description,
             if (command.properties.donorOnly) "\n\n**<:p_:475801484282429450> Patreon only**" else ""
         )
         val embed = builder(ctx).addField(Formats.info("Info"), info, false)
@@ -112,6 +113,5 @@ class Help : Command {
             .setTimestamp(Instant.now())
     }
 
-    private fun getCategoryByName(category: String) = Category.values().firstOrNull { it.name.equals(category, true) }
-    private fun padEnd(str: String, length: Int = 15) = str + "\u200B ".repeat(length - str.length)
+    private fun getCategoryByName(category: String) = Category.entries.firstOrNull { it.name.equals(category, true) }
 }
