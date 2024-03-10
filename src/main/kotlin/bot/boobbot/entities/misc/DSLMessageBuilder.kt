@@ -1,5 +1,6 @@
 package bot.boobbot.entities.misc
 
+import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -13,7 +14,7 @@ import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
 
-class DSLMessageBuilder(private val ctx: Context) {
+class DSLMessageBuilder {
     private val builder = MessageCreateBuilder()
     private val embeds = mutableListOf<MessageEmbed>()
     private val actionRows = mutableListOf<ActionRow>()
@@ -67,7 +68,7 @@ class DSLMessageBuilder(private val ctx: Context) {
         fun clicked(timeout: Long,
                     predicate: (ButtonInteractionEvent) -> Boolean = { it.componentId == id },
                     event: (ButtonInteractionEvent?) -> Unit) {
-            ctx.onButtonInteraction(id, predicate, timeout, event)
+            BoobBot.waiter.waitForButton(id, predicate, timeout, event)
         }
     }
 }

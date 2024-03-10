@@ -37,7 +37,7 @@ class MessageContext(val message: Message, args: List<String>) : Context(true, m
 
     override fun message(ephemeral: Boolean, message: DSLMessageBuilder.() -> Unit) = message(message, defaultReplyOptions)
 
-    fun message(m: DSLMessageBuilder.() -> Unit, sendOptions: MessageCreateAction.() -> Unit) = send(DSLMessageBuilder(this).apply(m).build(), sendOptions)
+    fun message(m: DSLMessageBuilder.() -> Unit, sendOptions: MessageCreateAction.() -> Unit) = send(DSLMessageBuilder().apply(m).build(), sendOptions)
 
     private fun send(message: MessageCreateData, options: MessageCreateAction.() -> Unit) {
         if (!botCan(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {

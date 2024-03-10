@@ -1,29 +1,30 @@
-package bot.boobbot.entities.framework.impl
+package bot.boobbot.contextual.component
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Context
-import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-import okhttp3.Headers.Companion.headersOf
+import okhttp3.Headers
 import java.time.Instant
 
-abstract class BbApiCommand(private val category: String) : AsyncCommand {
-    protected val headers = headersOf("Key", BoobBot.config.BB_API_KEY)
+class MoreButtonHandler : BaseButtonHandler("more:") {
+    private val headers = Headers.headersOf("Key", BoobBot.config.BB_API_KEY)
 
-    override suspend fun executeAsync(ctx: Context) {
+    override suspend fun onButtonInteraction(event: ButtonInteractionEvent) {
+        val category = event.componentId.split(':').last()
+
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
-            ?: return ctx.reply("\uD83D\uDEAB oh? something broken af")
+            ?: return event.reply("\uD83D\uDEAB oh? something broken af").queue()
 
         val link = res.getString("url")
-        val requester = BoobBot.shardManager.authorOrAnonymous(ctx)
+        val requester = BoobBot.shardManager.authorOrAnonymous(event.user)
 
-        ctx.message {
+        event.message {
             embed {
                 setTitle("${Formats.LEWD_EMOTE} Click me!", "https://discord.boob.bot")
-                setColor(Colors.getEffectiveColor(ctx.member))
+                setColor(Colors.getEffectiveColor(event.member))
                 setImage(link)
                 setFooter("Requested by ${requester.name}", requester.effectiveAvatarUrl)
                 setTimestamp(Instant.now())

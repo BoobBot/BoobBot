@@ -2,10 +2,7 @@ package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import bot.boobbot.handlers.EventHandler
-import bot.boobbot.handlers.MessageHandler
-import bot.boobbot.handlers.SlashHandler
-import bot.boobbot.handlers.UserContextHandler
+import bot.boobbot.handlers.*
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.WebhookManager
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
@@ -80,8 +77,10 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
         }
     }
 
-    fun authorOrAnonymous(ctx: Context): User {
-        return anonymousUser.takeIf { BoobBot.database.getUserAnonymity(ctx.user.id) } ?: ctx.user
+    fun authorOrAnonymous(ctx: Context): User = authorOrAnonymous(ctx.user)
+
+    fun authorOrAnonymous(user: User): User {
+        return anonymousUser.takeIf { BoobBot.database.getUserAnonymity(user.id) } ?: user
     }
 
     fun retrieveSessionInfo() = SessionInfo.from(token)
@@ -141,7 +140,8 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                     MessageHandler(),
                     EventHandler(),
                     UserContextHandler(),
-                    SlashHandler()
+                    SlashHandler(),
+                    ComponentHandler()
                 )
                 .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
