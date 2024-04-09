@@ -97,6 +97,7 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
             .addParameter("include", "user")
             .addParameter("fields[member]", "full_name,email,last_charge_status,currently_entitled_amount_cents,patron_status")
             .addParameter("fields[user]", "social_connections")
+            .addParameter("page[size]", "1000")
             .build()
 
         return getPageOfPledge(url.toString(), cb)
