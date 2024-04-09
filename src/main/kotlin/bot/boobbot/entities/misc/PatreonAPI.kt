@@ -130,9 +130,9 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
     }
 
     private fun getNextPage(json: JSONObject): String? {
-        val links = json.getJSONObject("links")
+        val links = json.optJSONObject("links")
 
-        if (!links.has("next") || links.isNull("next")) {
+        if (links == null || !links.has("next") || links.isNull("next")) {
             return null
         }
 
