@@ -21,8 +21,6 @@ import java.awt.Color
 
 class EventHandler : EventListener {
     private var avatar: String? = "https://boob.bot/android-chrome-192x192.png"
-    var readyCount = 0
-    var shardWebhookMessage = ""
 
     override fun onEvent(event: GenericEvent) {
         when (event) {
@@ -38,48 +36,31 @@ class EventHandler : EventListener {
     }
 
     private fun onReady(event: ReadyEvent) {
-        readyCount++
-        shardWebhookMessage += "`Ready on shard: ${event.jda.shardInfo.shardId} Ping: ${event.jda.gatewayPing}ms Status: ${event.jda.status}`\n"
         BoobBot.metrics.record(Metrics.happened("Ready"))
         BoobBot.log.info("Ready on shard: ${event.jda.shardInfo.shardId}, Ping: ${event.jda.gatewayPing}ms, Status: ${event.jda.status}")
-        if (readyCount == 16) {
-            readyCount = 0
-            WebhookManager.sendShard(avatar) {
-                setTitle("Ready info", BoobBot.inviteUrl)
-                setDescription(shardWebhookMessage)
-            }
-            shardWebhookMessage = ""
-        }
+
+        WebhookManager.queueShardStatusUpdate(event.jda.shardInfo.shardId, event.jda.status, event.jda.gatewayPing)
     }
 
     private fun onReconnect(event: SessionRecreateEvent) {
         BoobBot.metrics.record(Metrics.happened("Reconnected"))
         BoobBot.log.info("Reconnected on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        WebhookManager.sendShard(avatar) {
-            setTitle("SHARD RECONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.gatewayPing}ms")
-        }
+        WebhookManager.queueShardStatusUpdate(event.jda.shardInfo.shardId, event.jda.status, event.jda.gatewayPing)
     }
 
     private fun onResume(event: SessionResumeEvent) {
         BoobBot.metrics.record(Metrics.happened("Resumed"))
         BoobBot.log.info("Resumed on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        WebhookManager.sendShard(avatar) {
-            setTitle("SHARD RESUMED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.gatewayPing}ms")
-        }
+        WebhookManager.queueShardStatusUpdate(event.jda.shardInfo.shardId, event.jda.status, event.jda.gatewayPing)
     }
 
     private fun onDisconnect(event: SessionDisconnectEvent) {
         BoobBot.metrics.record(Metrics.happened("Disconnect"))
         BoobBot.log.info("Disconnect on shard: ${event.jda.shardInfo.shardId}, Status: ${event.jda.status}")
 
-        WebhookManager.sendShard(avatar) {
-            setTitle("SHARD DISCONNECTED [${event.jda.shardInfo.shardId}]")
-            setDescription("Ping: ${event.jda.gatewayPing}ms") // will probably be -1 or something lol
-        }
+        WebhookManager.queueShardStatusUpdate(event.jda.shardInfo.shardId, event.jda.status, event.jda.gatewayPing)
     }
 
     private fun onHttpRequest() = BoobBot.metrics.record(Metrics.happened("HttpRequest"))

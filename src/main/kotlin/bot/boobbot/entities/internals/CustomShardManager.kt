@@ -64,12 +64,6 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
 
             BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("discord.gg/bra || @BoobBot help"))
             BoobBot.log.info(Formats.readyFormat)
-            WebhookManager.sendShard(null) {
-                setTitle("ALL SHARDS CONNECTED", BoobBot.inviteUrl)
-                setDescription("Average Shard Ping: ${BoobBot.shardManager.averageGatewayPing}ms")
-                setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
-                addField("Ready Info", "```\n${Formats.readyFormat}```", false)
-            }
 
             if (shardCount == -1) {
                 shardCount = shardsTotal
