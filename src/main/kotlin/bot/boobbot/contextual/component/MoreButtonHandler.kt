@@ -21,7 +21,7 @@ class MoreButtonHandler : BaseButtonHandler("more:") {
     override suspend fun onButtonInteraction(event: ButtonInteractionEvent) {
         val category = event.componentId.split(':').last()
 
-        event.deferEdit().submit().await()
+        event.deferReply().submit().await()
 
         val res = BoobBot.requestUtil.get("https://boob.bot/api/v2/img/$category", headers).await()?.json()
             ?: return event.reply("\uD83D\uDEAB oh? something broken af").queue()
