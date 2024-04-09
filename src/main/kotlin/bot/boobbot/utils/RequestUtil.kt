@@ -45,7 +45,7 @@ class RequestUtil {
         }
 
         fun queue(success: (Response?) -> Unit) {
-            submit().thenAccept(success).thenException { success(null) }
+            submit().thenAccept(success).thenException { it.printStackTrace(); success(null) }
         }
 
         suspend fun await(): Response? = submit().await()

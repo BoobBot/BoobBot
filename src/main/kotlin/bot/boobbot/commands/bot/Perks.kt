@@ -6,6 +6,7 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.misc.DonorType
+import bot.boobbot.entities.misc.PatronStatus
 import bot.boobbot.utils.Colors
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
@@ -52,11 +53,13 @@ class Perks : Command {
             val pledge = it.firstOrNull { u -> u.discordId != null && u.discordId == ctx.user.idLong }
                 ?: return@thenAccept ctx.reply("Unable to find your subscription. Make sure your Discord account is linked to your Patreon account, whore.")
 
-            if (pledge.isDeclined) {
+            if (pledge.status == PatronStatus.FORMER_PATRON) {
+                return@thenAccept ctx.reply("You don't appear to be currently subscribed, whore.")
+            } else if (pledge.status == PatronStatus.DECLINED_PATRON) {
                 return@thenAccept ctx.reply("Your payment appears to have been declined. Fix it before attempting to claim your perks, whore.")
             }
 
-            val pledgeAmount = pledge.pledgeCents.toDouble() / 100
+            val pledgeAmount = pledge.entitledAmountCents.toDouble() / 100
             val pledgeFriendly = String.format("%1$,.2f", pledgeAmount)
             ctx.reply("Welcome to the club, whore. Your tier: `${BoobBot.pApi.getDonorType(pledgeAmount)}` ($$pledgeFriendly)")
             BoobBot.database.setDonor(ctx.user.id, pledgeAmount)

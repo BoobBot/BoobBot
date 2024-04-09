@@ -8,27 +8,26 @@ import okhttp3.Request
 import org.apache.http.client.utils.URIBuilder
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
-import java.net.URI
-import java.net.URLDecoder
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class PatreonAPI(private val accessToken: String) {
-
+class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = true) {
     /**
      * Scheduler stuff
      */
     private val monitor = Executors.newSingleThreadScheduledExecutor { Thread(it, "Pledge-Monitor") }
 
     init {
-        monitor.scheduleAtFixedRate({
-            try {
-                monitorPledges()
-            } catch (e: Throwable) {
-                log.error("Error in Patreon monitor", e)
-            }
-        }, 0, 1, TimeUnit.DAYS)
+        if (enableMonitoring) {
+            monitor.scheduleAtFixedRate({
+                try {
+                    monitorPledges()
+                } catch (e: Throwable) {
+                    log.error("Error in Patreon monitor", e)
+                }
+            }, 0, 1, TimeUnit.DAYS)
+        }
     }
 
     fun getDonorType(userId: String): DonorType {
@@ -59,7 +58,7 @@ class PatreonAPI(private val accessToken: String) {
                 val idLong = id.toLong()
                 val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
 
-                if (user == null || user.isDeclined) {
+                if (user == null || user.status != PatronStatus.ACTIVE_PATRON) {
                     BoobBot.database.removeDonor(id)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
@@ -68,7 +67,7 @@ class PatreonAPI(private val accessToken: String) {
                     continue
                 }
 
-                val amount = user.pledgeCents.toDouble() / 100
+                val amount = user.entitledAmountCents.toDouble() / 100
 
                 if (pledge != amount) {
                     BoobBot.database.setDonor(id, amount)
@@ -91,18 +90,20 @@ class PatreonAPI(private val accessToken: String) {
      * Functional stuff
      */
 
-    fun fetchPledgesOfCampaign(campaignId: String) = CompletableFuture<List<PatreonUser>>().also { f -> getPageOfPledge(campaignId) { f.complete(it) } }
+    fun fetchPledgesOfCampaign(campaignId: String) = CompletableFuture<List<PatreonUser>>().also { f -> getPageOfPledge0(campaignId) { f.complete(it) } }
 
-    private fun getPageOfPledge(
-        campaignId: String, offset: String? = null,
-        users: MutableList<PatreonUser> = mutableListOf(), cb: (List<PatreonUser>) -> Unit
-    ) {
-        val url = URIBuilder("$BASE_URL/campaigns/$campaignId/pledges")
-            .addParameter("include", "pledge,patron")
-            .also { url -> offset?.let { url.addParameter("page[cursor]", offset) } }
+    private fun getPageOfPledge0(campaignId: String, cb: (List<PatreonUser>) -> Unit) {
+        val url = URIBuilder("$BASE_URL/campaigns/$campaignId/members")
+            .addParameter("include", "user")
+            .addParameter("fields[member]", "full_name,email,last_charge_status,currently_entitled_amount_cents,patron_status")
+            .addParameter("fields[user]", "social_connections")
             .build()
 
-        val request = createRequest(url.toString())
+        return getPageOfPledge(url.toString(), cb)
+    }
+
+    private fun getPageOfPledge(url: String, cb: (List<PatreonUser>) -> Unit, users: MutableList<PatreonUser> = mutableListOf()) {
+        val request = createRequest(url)
 
         BoobBot.requestUtil.makeRequest(request).queue {
             if (it == null || !it.isSuccessful) {
@@ -113,38 +114,30 @@ class PatreonAPI(private val accessToken: String) {
             }
 
             val json = it.json() ?: return@queue cb(users)
-            val pledges = json.getJSONArray("data")
+            val members = json.getJSONArray("data")
 
             json.getJSONArray("included").forEachIndexed { index, user ->
                 val obj = user as JSONObject
 
                 if (obj.getString("type") == "user") {
-                    users.add(buildUser(obj, pledges.getJSONObject(index)))
+                    users.add(buildUser(obj, members.getJSONObject(index)))
                 }
             }
 
-            val nextPage = getNextPage(json) ?: return@queue cb(users)
-            getPageOfPledge(campaignId, nextPage, users, cb)
+            val nextPageUrl = getNextPage(json) ?: return@queue cb(users)
+            getPageOfPledge(nextPageUrl, cb, users)
         }
     }
 
     private fun getNextPage(json: JSONObject): String? {
         val links = json.getJSONObject("links")
 
-        if (!links.has("next")) {
+        if (!links.has("next") || links.isNull("next")) {
             return null
         }
 
-        return parseQueryString(links.getString("next"))["page[cursor]"]
+        return links.getString("next")
     }
-
-    private fun parseQueryString(url: String): Map<String, String> {
-        return URI(url).query.split("&")
-            .map { it.split("=") }
-            .associate { Pair(decode(it[0]), decode(it[1])) }
-    }
-
-    private fun decode(s: String) = URLDecoder.decode(s, Charsets.UTF_8)
 
     private fun createRequest(url: String): Request {
         return Request.Builder()
@@ -154,39 +147,51 @@ class PatreonAPI(private val accessToken: String) {
             .build()
     }
 
-    private fun buildUser(user: JSONObject, pledge: JSONObject): PatreonUser {
+    private fun buildUser(user: JSONObject, member: JSONObject): PatreonUser {
+        val memberAttr = member.getJSONObject("attributes")
         val userAttr = user.getJSONObject("attributes")
-        val pledgeAttr = pledge.getJSONObject("attributes")
 
-        val connections = userAttr.getJSONObject("social_connections")
-        val discordId = if (!connections.isNull("discord")) {
-            connections.getJSONObject("discord").getLong("user_id")
-        } else {
-            null
-        }
+        val connections = userAttr.optJSONObject("social_connections")
+        val discordId = connections?.optJSONObject("discord")?.getLong("user_id")
+
+        // patron_status: String? = [declined_patron, active_patron, former_patron]
+        // email: String?
+        // last_charge_status: String? = [Paid, Declined]
 
         return PatreonUser(
-            userAttr.get("first_name").toString(),
-            userAttr.get("last_name").toString(),
-            userAttr.getString("email"),
-            pledgeAttr.getInt("amount_cents"),
-            !pledgeAttr.isNull("declined_since"),
+            memberAttr.optString("full_name"),
+            memberAttr.optString("email"),
+            memberAttr.getInt("currently_entitled_amount_cents"),
+            memberAttr.optString("last_charge_status"),
+            PatronStatus.from(memberAttr.optString("patron_status")),
             discordId
         )
     }
 
     inner class PatreonUser(
-        val firstName: String,
-        val lastName: String,
-        val email: String,
-        val pledgeCents: Int,
-        val isDeclined: Boolean,
+        val fullName: String?,
+        val email: String?,
+        /** If this isn't 0, it's the price of the tier the user is signed up to. */
+        val entitledAmountCents: Int,
+        val lastChargeStatus: String,
+        val status: PatronStatus,
         val discordId: Long?
     )
 
     companion object {
-        private const val BASE_URL = "https://www.patreon.com/api/oauth2/api"
+        private const val BASE_URL = "https://www.patreon.com/api/oauth2/v2"
         private val log = LoggerFactory.getLogger(PatreonAPI::class.java)
+    }
+}
+
+enum class PatronStatus {
+    UNKNOWN,
+    DECLINED_PATRON,
+    FORMER_PATRON,
+    ACTIVE_PATRON;
+
+    companion object {
+        fun from(type: String?) = PatronStatus.entries.firstOrNull { it.name.lowercase() == type } ?: UNKNOWN
     }
 }
 
@@ -199,8 +204,8 @@ enum class DonorType(val tier: Int) {
     companion object {
         fun which(pledgeAmount: Double): DonorType {
             return when {
-                pledgeAmount >= 23 -> SERVER_OWNER
-                pledgeAmount >= 4 -> SUPPORTER
+                pledgeAmount >= 30 -> SERVER_OWNER
+                pledgeAmount >= 5 -> SUPPORTER
                 else -> NONE
             }
         }
