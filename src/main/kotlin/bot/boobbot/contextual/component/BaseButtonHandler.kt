@@ -1,9 +1,7 @@
 package bot.boobbot.contextual.component
 
 import bot.boobbot.entities.misc.DSLMessageBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.hooks.EventListener
@@ -24,6 +22,6 @@ abstract class BaseButtonHandler(private val componentId: String) : EventListene
     }
 
     companion object {
-        private val IoScope = CoroutineScope(Dispatchers.IO)
+        private val IoScope = CoroutineScope(Dispatchers.IO) + SupervisorJob()
     }
 }

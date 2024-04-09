@@ -12,6 +12,8 @@ import de.mxro.metrics.jre.Metrics
 import io.sentry.Sentry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.plus
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel
@@ -26,7 +28,7 @@ class SlashHandler : EventListener {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Slash-Executor-${threadCounter.getAndIncrement()}")
     }
-    private val asyncScope = CoroutineScope(Dispatchers.Default)
+    private val asyncScope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
 
     override fun onEvent(event: GenericEvent) {
         when (event) {

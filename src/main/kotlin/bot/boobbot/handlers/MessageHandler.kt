@@ -14,9 +14,7 @@ import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
 import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel
@@ -35,7 +33,7 @@ class MessageHandler : EventListener {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
-    private val asyncScope = CoroutineScope(Dispatchers.Default)
+    private val asyncScope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
 
     override fun onEvent(event: GenericEvent) {
         when (event) {

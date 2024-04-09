@@ -2,9 +2,7 @@ package bot.boobbot.entities.framework.interfaces
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import net.dv8tion.jda.api.entities.emoji.Emoji
 
 interface AsyncCommand : Command {
@@ -29,6 +27,6 @@ interface AsyncCommand : Command {
     }
 
     companion object {
-        private val IoScope = CoroutineScope(Dispatchers.IO)
+        private val IoScope = CoroutineScope(Dispatchers.IO) + SupervisorJob()
     }
 }
