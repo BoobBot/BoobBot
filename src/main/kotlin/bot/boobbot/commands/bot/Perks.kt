@@ -47,7 +47,7 @@ class Perks : Command {
 
         BoobBot.pApi.fetchPledgesOfCampaign("1928035").thenAccept {
             if (it.isEmpty()) {
-                return@thenAccept ctx.reply("Patreon API returned an invalid response. Report this to https://discord.gg/bra.")
+                return@thenAccept ctx.reply("Patreon API returned an invalid response. Report this to https://discord.gg/boobbot.")
             }
 
             val pledge = it.firstOrNull { u -> u.discordId != null && u.discordId == ctx.user.idLong }

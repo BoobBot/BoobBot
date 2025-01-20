@@ -139,7 +139,7 @@ class Set : Command {
     private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.uppercase())
 
     companion object {
-        private val DEFAULT_ACTIVITY = Activity.playing("discord.gg/bra | @BoobBot help")
+        private val DEFAULT_ACTIVITY = Activity.playing("discord.gg/boobbot | @BoobBot help")
 
         val SCHEDULER: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         private val TIME_PATTERN = "(\\d+)(s|m|h|d)".toPattern()
