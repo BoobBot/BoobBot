@@ -62,7 +62,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
         if (event is ReadyEvent && allShardsConnected && !readyFired) {
             readyFired = true
 
-            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("discord.gg/bra || @BoobBot help"))
+            BoobBot.shardManager.setPresence(OnlineStatus.ONLINE, Activity.playing("@BoobBot help"))
             BoobBot.log.info(Formats.readyFormat)
 
             if (shardCount == -1) {
