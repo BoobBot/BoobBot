@@ -33,7 +33,6 @@ class MessageHandler : EventListener {
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
     }
-    private val asyncScope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
 
     override fun onEvent(event: GenericEvent) {
         when (event) {
@@ -59,10 +58,6 @@ class MessageHandler : EventListener {
         val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
 
         if (event.channelType.isGuild) {
-            if (guild.dropEnabled && event.channelType == ChannelType.TEXT && event.channel.asTextChannel().isNSFW) {
-                asyncScope.launch { BootyDropper().processDrop(event) }
-            }
-
             if (event.message.mentions.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
             }
@@ -204,7 +199,7 @@ class MessageHandler : EventListener {
             return
         }
 
-        val user: User by lazy { BoobBot.database.getUser(event.author.id) }
+        val user = BoobBot.database.getUser(event.author.id)
         user.messagesSent++
 
         if (user.blacklisted) {

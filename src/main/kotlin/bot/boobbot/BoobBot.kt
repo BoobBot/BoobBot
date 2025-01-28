@@ -3,6 +3,7 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
+import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.utils.EventWaiter
 import bot.boobbot.entities.internals.*
 import bot.boobbot.entities.misc.ApiServer
@@ -66,6 +67,7 @@ object BoobBot {
     val config = Config.load()
     val database = Database()
 
+    val dropper = BootyDropper()
     val commands = CommandRegistry()
     val userContextCommands = UserContextCommandRegistry()
     val waiter = EventWaiter()
@@ -130,7 +132,6 @@ object BoobBot {
     private fun setupAudioSystem() {
         playerManager.registerSourceManager(PornHubAudioSourceManager())
         playerManager.registerSourceManager(RedTubeAudioSourceManager())
-        playerManager.registerSourceManager(YoutubeAudioSourceManager())
         playerManager.registerSourceManager(LocalAudioSourceManager())
     }
 

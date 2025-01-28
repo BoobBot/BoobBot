@@ -4,8 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.handlers.*
 import bot.boobbot.utils.Formats
-import bot.boobbot.utils.WebhookManager
-import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
+//import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
@@ -135,9 +134,10 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                     EventHandler(),
                     UserContextHandler(),
                     SlashHandler(),
-                    ComponentHandler()
+                    ComponentHandler(),
+                    BoobBot.dropper
                 )
-                .setAudioSendFactory(NativeAudioSendFactory())
+//                .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
                 .disableCache(disabledCacheFlags)
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
