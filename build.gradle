@@ -42,7 +42,7 @@ dependencies {
 
     /* Audio */
     implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
-    implementation "com.sedmelluq:jda-nas:$nas_version"
+//    implementation "com.sedmelluq:jda-nas:$nas_version"
 
     /* Kotlin Stuff */
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
