@@ -68,7 +68,6 @@ object BoobBot {
     val config = Config.load()
     val database = Database()
 
-    val dropper = BootyDropper()
     val commands = CommandRegistry()
     val userContextCommands = UserContextCommandRegistry()
     val waiter = EventWaiter()

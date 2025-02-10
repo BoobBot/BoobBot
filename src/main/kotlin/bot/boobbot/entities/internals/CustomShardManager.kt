@@ -1,6 +1,7 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.BoobBot
+import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.handlers.*
 import bot.boobbot.utils.Formats
@@ -135,7 +136,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                     UserContextHandler(),
                     SlashHandler(),
                     ComponentHandler(),
-                    BoobBot.dropper
+                    BootyDropper()
                 )
 //                .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
