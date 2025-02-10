@@ -3,7 +3,6 @@ package bot.boobbot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
-import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.utils.EventWaiter
 import bot.boobbot.entities.internals.*
 import bot.boobbot.entities.misc.ApiServer
@@ -18,7 +17,6 @@ import ch.qos.logback.classic.Logger
 import com.fasterxml.jackson.core.JsonParseException
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.mxro.metrics.jre.Metrics
