@@ -87,15 +87,15 @@ class SlashHandler : EventListener {
         }
 
         if (command.properties.guildOnly && !event.isFromGuild) {
-            return event.channel.sendMessage("No, whore you can only use this in a guild").queue()
+            return event.reply("No, whore you can only use this in a guild").queue()
         }
 
         if (command.properties.nsfw && event.isFromGuild && (event.channelType != ChannelType.TEXT || !event.channel.asTextChannel().isNSFW)) {
             BoobBot.requestUtil.get("https://nekos.life/api/v2/img/meow").queue {
                 val j = it?.json()
-                    ?: return@queue event.channel.sendMessage("This channel isn't NSFW, whore.").queue()
+                    ?: return@queue event.reply("This channel isn't NSFW, whore.").queue()
 
-                event.channel.sendMessage(
+                event.reply(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
                             "Confused? Try `/nsfwtoggle` or join the support server ${Constants.SUPPORT_SERVER_URL}\n" +
                             j.getString("url")
@@ -105,11 +105,11 @@ class SlashHandler : EventListener {
         }
 
         if (event.channelType.isGuild && !event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_EMBED_LINKS)) {
-            return event.channel.sendMessage("I do not have permission to use embeds, da fuck?").queue()
+            return event.reply("I do not have permission to use embeds, da fuck?").queue()
         }
 
         if (command.properties.donorOnly && !Utils.checkDonor(event.user, event.guild)) {
-            return event.channel.sendMessage(
+            return event.reply(
                 Formats.error(
                     " Sorry this command is only available to our Patrons.\n<:p_:475801484282429450> "
                             + "Stop being a cheap fuck and join today!\nhttps://www.patreon.com/OfficialBoobBot"
@@ -122,7 +122,7 @@ class SlashHandler : EventListener {
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
-                return event.channel.sendMessage("You need these permissions, whore:\n$fmt").queue()
+                return event.reply("You need these permissions, whore:\n$fmt").queue()
             }
         }
 
@@ -131,7 +131,7 @@ class SlashHandler : EventListener {
 
             if (missing.isNotEmpty()) {
                 val fmt = missing.joinToString("`\n `", prefix = "`", postfix = "`", transform = Permission::getName)
-                return event.channel.sendMessage("I need these permissions, whore:\n$fmt").queue()
+                return event.reply("I need these permissions, whore:\n$fmt").queue()
             }
         }
 
