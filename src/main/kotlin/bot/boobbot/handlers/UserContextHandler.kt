@@ -3,6 +3,7 @@ package bot.boobbot.handlers
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
 import de.mxro.metrics.jre.Metrics
@@ -61,7 +62,7 @@ class UserContextHandler : EventListener {
             return
         }
 
-        if (command.properties.developerOnly && !Config.OWNERS.contains(event.member!!.idLong)) {
+        if (command.properties.developerOnly && !BoobBot.owners.contains(event.member!!.idLong)) {
             return
         }
 
@@ -76,7 +77,7 @@ class UserContextHandler : EventListener {
 
                 event.reply(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                            "Confused? Try `/nsfwtoggle` or join the support server https://discord.gg/wFfFRb3Qbr\n" +
+                            "Confused? Try `/nsfwtoggle` or join the support server ${Constants.SUPPORT_SERVER_URL}\n" +
                             j.getString("url")
                 ).queue()
             }

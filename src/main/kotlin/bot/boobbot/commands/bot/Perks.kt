@@ -8,6 +8,7 @@ import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.entities.misc.DonorType
 import bot.boobbot.entities.misc.PatronStatus
 import bot.boobbot.utils.Colors
+import bot.boobbot.utils.Constants
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
@@ -47,7 +48,7 @@ class Perks : Command {
 
         BoobBot.pApi.fetchPledgesOfCampaign("1928035").thenAccept {
             if (it.isEmpty()) {
-                return@thenAccept ctx.reply("Patreon API returned an invalid response. Report this to https://discord.gg/boobbot.")
+                return@thenAccept ctx.reply("Patreon API returned an invalid response. Report this to ${Constants.SUPPORT_SERVER_URL}.")
             }
 
             val pledge = it.firstOrNull { u -> u.discordId != null && u.discordId == ctx.user.idLong }

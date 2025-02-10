@@ -1,5 +1,6 @@
 package bot.boobbot.entities.framework.interfaces
 
+import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Formats
@@ -19,7 +20,7 @@ interface VoiceCommand : Command {
 
         return ctx.userCan(Permission.MESSAGE_MANAGE)
                 || ctx.user.idLong == user.idLong
-                || Config.OWNERS.contains(ctx.user.idLong)
+                || BoobBot.owners.contains(ctx.user.idLong)
                 || isDJ(ctx.member!!)
                 || isAlone(ctx.member)
     }

@@ -244,7 +244,7 @@ class ApiServer {
                 get("/admin") {
                     val s = call.sessions.get<UserSession>() ?: return@get call.respondRedirect("/oauth")
 
-                    if (!Config.OWNERS.contains(s.id.toLong())) {
+                    if (!BoobBot.owners.contains(s.id.toLong())) {
                         error("401")
                     }
                     call.respondText("{\"user\": ${Gson().toJson(s)}}", ContentType.Application.Json)

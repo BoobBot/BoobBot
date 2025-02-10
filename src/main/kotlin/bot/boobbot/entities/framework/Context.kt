@@ -67,7 +67,7 @@ abstract class Context(val mentionTrigger: Boolean,
     abstract val options: Options
 
     fun permissionCheck(u: User, m: Member?, channel: GuildChannel, vararg permissions: Permission): Boolean {
-        return !isFromGuild || Config.OWNERS.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
+        return !isFromGuild || BoobBot.owners.contains(u.idLong) || m?.hasPermission(channel, *permissions) == true
     }
 
     fun userCan(check: Permission) = guildChannel?.let { permissionCheck(user, member, guildChannel, check) } ?: false

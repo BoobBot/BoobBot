@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.TeamMember
 import net.dv8tion.jda.api.exceptions.ContextException
 import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
@@ -80,6 +81,11 @@ object BoobBot {
     val metrics = Metrics.create()!!
     val pApi = PatreonAPI(config.PATREON_KEY)
 
+    // base owners list.
+    // this is who should always have access to the bot.
+    // additional owners are fetched at runtime, based on team/app owner information.
+    val owners = mutableSetOf(248294452307689473L, 180093157554388993L)
+
     @Throws(Exception::class)
     @JvmStatic
     fun main(args: Array<String>) {
@@ -100,6 +106,14 @@ object BoobBot {
         shardManager = CustomShardManager.create(token, shardCount)
         application = shardManager.retrieveApplicationInfo().complete()
         inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
+
+        owners.add(application.owner.idLong)
+
+        application.team?.members
+            // only adding users who are Developer or higher.
+            ?.filter { it.membershipState == TeamMember.MembershipState.ACCEPTED && TeamMember.RoleType.DEVELOPER >= it.roleType }
+            ?.map { it.user.idLong }
+            ?.let(owners::addAll)
 
         if (isDebug) {
             log.level = Level.DEBUG

@@ -32,7 +32,7 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
 
     fun getDonorType(userId: String): DonorType {
         return when {
-            Config.OWNERS.contains(userId.toLong()) -> DonorType.DEVELOPER
+            BoobBot.owners.contains(userId.toLong()) -> DonorType.DEVELOPER
             else -> DonorType.which(BoobBot.database.getDonor(userId))
         }
     }

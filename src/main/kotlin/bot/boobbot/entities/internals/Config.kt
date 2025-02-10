@@ -28,10 +28,6 @@ class Config(
     val SHARD_TOTAL: Int = this.SHARD_COUNT.toIntOrNull() ?: 1
 
     companion object {
-        val OWNERS = listOf(
-            248294452307689473L, 180093157554388993L
-        )
-
         fun load(path: String = Paths.get("").toAbsolutePath().toString()): Config {
             val dotenv = dotenv {
                 directory = path

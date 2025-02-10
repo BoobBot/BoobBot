@@ -46,7 +46,7 @@ class Help : Command {
         val longestCategoryNameLength = categories.maxOf { it.name.length }
 
         for (category in categories) {
-            if (category == Category.DEV && !Config.OWNERS.contains(ctx.user.idLong)) {
+            if (category == Category.DEV && !BoobBot.owners.contains(ctx.user.idLong)) {
                 continue
             }
 

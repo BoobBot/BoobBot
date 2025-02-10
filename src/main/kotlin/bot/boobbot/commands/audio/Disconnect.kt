@@ -1,5 +1,6 @@
 package bot.boobbot.commands.audio
 
+import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
@@ -17,7 +18,7 @@ import net.dv8tion.jda.api.Permission
 )
 class Disconnect : VoiceCommand {
     override fun execute(ctx: Context) {
-        if (ctx.userCan(Permission.MESSAGE_MANAGE) || Config.OWNERS.contains(ctx.user.idLong) ||
+        if (ctx.userCan(Permission.MESSAGE_MANAGE) || BoobBot.owners.contains(ctx.user.idLong) ||
             isDJ(ctx.member!!) || isAlone(ctx.member)) {
             ctx.audioPlayer.shutdown()
             return ctx.reply(Formats.info("Done, Whore"))

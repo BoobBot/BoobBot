@@ -8,6 +8,7 @@ import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
+import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.discard
 import bot.boobbot.utils.separate
@@ -139,10 +140,10 @@ class Set : Command {
     private fun gameTypeByString(s: String) = Activity.ActivityType.valueOf(s.uppercase())
 
     companion object {
-        private val DEFAULT_ACTIVITY = Activity.playing("discord.gg/boobbot | @BoobBot help")
+        private val DEFAULT_ACTIVITY = Activity.playing("${Constants.SUPPORT_SERVER_URL} | @BoobBot help")
 
         val SCHEDULER: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        private val TIME_PATTERN = "(\\d+)(s|m|h|d)".toPattern()
+        private val TIME_PATTERN = "(\\d+)([smhd])".toPattern()
 
         fun parseTimeToMillis(duration: Long, unit: String): Long? = when(unit) {
             "s" -> duration * 1000

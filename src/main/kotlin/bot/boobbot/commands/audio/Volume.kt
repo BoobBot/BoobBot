@@ -1,5 +1,6 @@
 package bot.boobbot.commands.audio
 
+import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.Category
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
@@ -39,7 +40,7 @@ class Volume : VoiceCommand {
             return ctx.reply(Formats.error("No whore, i can't let you do that"))
         }
 
-        val isBotOwner = Config.OWNERS.contains(ctx.user.idLong)
+        val isBotOwner = BoobBot.owners.contains(ctx.user.idLong)
         val volumeLimit = if (isBotOwner) 1000 else 100
 
         val oldVol = player.player.volume

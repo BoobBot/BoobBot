@@ -22,7 +22,7 @@ object Formats {
     //const val PAYPAL_EMOTE = "<:paypal:486945242369490945>"
     val LING_MSG = String.format(
         "\n%s **Join the Community**: https://discord.boob.bot"
-        + "\n%s **Need Support?**: https://discord.gg/wFfFRb3Qbr"
+        + "\n%s **Need Support?**: ${Constants.SUPPORT_SERVER_URL}"
                 + "\n%s **Add the Bot**: https://bot.boob.bot"
                 + "\n%s **Visit the Website**: https://boob.bot"
                 //+ "\n%s **Paypal**: https://paypal.boob.bot"

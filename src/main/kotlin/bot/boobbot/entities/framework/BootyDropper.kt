@@ -85,7 +85,7 @@ class BootyDropper : EventListener {
         val guild = BoobBot.database.getGuild(event.guild.id)
         val number = random(0, 10000)
 
-        val manualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in Config.OWNERS
+        val manualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in BoobBot.owners
         val shouldDrop = !hasActiveDrop(event.guild.idLong) && guild.dropEnabled && number % 59 == 0
 
         if (shouldDrop || manualDrop) {
@@ -98,7 +98,11 @@ class BootyDropper : EventListener {
     }
 
     private fun processDropInteraction(event: ButtonInteractionEvent) {
-        if (!event.isFromGuild || !event.componentId.startsWith("drop") || !hasActiveDrop(event.guild!!.idLong)) {
+        if (!event.isFromGuild || !event.componentId.startsWith("drop")) {
+            return
+        }
+
+        if (!hasActiveDrop(event.guild!!.idLong)) {
             return event.reply("There is no drop to claim, whore.").setEphemeral(true).queue()
         }
 

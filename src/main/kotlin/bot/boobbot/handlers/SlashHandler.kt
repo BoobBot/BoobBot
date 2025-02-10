@@ -4,6 +4,7 @@ import bot.boobbot.BoobBot
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.framework.SlashContext
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.Utils.checkMissingPermissions
@@ -81,7 +82,7 @@ class SlashHandler : EventListener {
             return
         }
 
-        if (command.properties.developerOnly && !Config.OWNERS.contains(event.user.idLong)) {
+        if (command.properties.developerOnly && !BoobBot.owners.contains(event.user.idLong)) {
             return
         }
 
@@ -96,7 +97,7 @@ class SlashHandler : EventListener {
 
                 event.channel.sendMessage(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                            "Confused? Try `/nsfwtoggle` or join the support server https://discord.gg/boobbot\n" +
+                            "Confused? Try `/nsfwtoggle` or join the support server ${Constants.SUPPORT_SERVER_URL}\n" +
                             j.getString("url")
                 ).queue()
             }

@@ -6,6 +6,7 @@ import bot.boobbot.entities.db.User
 import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.MessageContext
 import bot.boobbot.entities.internals.Config
+import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
 import bot.boobbot.utils.Utils.calculateLewdLevel
@@ -117,7 +118,7 @@ class MessageHandler : EventListener {
             return
         }
 
-        if (command.properties.developerOnly && !Config.OWNERS.contains(event.author.idLong)) {
+        if (command.properties.developerOnly && !BoobBot.owners.contains(event.author.idLong)) {
             return
         }
 
@@ -132,7 +133,7 @@ class MessageHandler : EventListener {
 
                 event.channel.sendMessage(
                     "This isn't an NSFW channel whore, so have some SFW pussy.\n" +
-                            "Confused? Try `/nsfwtoggle` or join the support server https://discord.gg/boobbot\n" +
+                            "Confused? Try `/nsfwtoggle` or join the support server ${Constants.SUPPORT_SERVER_URL}\n" +
                             j.getString("url")
                 ).queue()
             }
