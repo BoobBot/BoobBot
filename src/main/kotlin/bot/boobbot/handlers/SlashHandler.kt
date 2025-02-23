@@ -75,7 +75,7 @@ class SlashHandler : EventListener {
             ?: return event.reply("Command not found").setEphemeral(true).queue()
 
         if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
-            return
+            return event.reply("Command is disabled").setEphemeral(true).queue()
         }
 
         if (!command.properties.enabled) {
