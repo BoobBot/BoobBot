@@ -1,7 +1,6 @@
 package bot.boobbot.entities.internals
 
 import bot.boobbot.entities.db.WebhookConfiguration
-import com.sun.rowset.internal.Row
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.util.concurrent.TimeUnit
