@@ -64,6 +64,7 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                     BoobBot.database.setUserAnonymity(id, false)
 
                     for (guildId in BoobBot.database.getPremiumServers(idLong)) {
+                        // TODO: Also remove autoporn webhooks?
                         BoobBot.database.setPremiumServer(guildId, null)
                     }
 
