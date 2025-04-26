@@ -45,7 +45,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "guildId BIGINT NOT NULL PRIMARY KEY," +
                 "dropEnabled BOOLEAN NOT NULL DEFAULT FALSE," +
                 "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
-                "premiumRedeemer BIGINT NOT NULL DEFAULT 0," +
+                "premiumRedeemer BIGINT DEFAULT NULL," +
                 "INDEX premiumRedeemer(premiumRedeemer);")
 
         // TODO --- we store this separately to guild data so the codebase needs refactoring to account for this.
@@ -253,7 +253,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun getAllDonors() = getAllUsers().associate { it._id to it.pledge }
 
     // TODO this needs testing as MariaDB returns booleans as ints
-    fun isPremiumServer(guildId: String) = findOne("SELECT premiumRedeemer > 0 AS has_premium FROM guilds WHERE guildId = ?", guildId)?.get<Boolean>("has_premium") ?: false
+    fun isPremiumServer(guildId: String) = findOne("SELECT premiumRedeemer IS NOT NULL and premiumRedeemer > 0 AS has_premium FROM guilds WHERE guildId = ?", guildId)?.get<Boolean>("has_premium") ?: false
     fun setPremiumServer(guildId: String, redeemerId: Long) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
     fun getPremiumServers(redeemerId: Long) = find("SELECT guildId FROM guilds WHERE premiumRedeemer = ?", redeemerId).map { it.get<Long>("guildId") }
 
@@ -271,7 +271,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
      * Execute a statement on the database. This method cannot be used to find anything,
      * but is more for setting data.
      */
-    private fun execute(query: String, vararg parameters: Any) {
+    private fun execute(query: String, vararg parameters: Any?) {
         db.connection.use { conn ->
             conn.prepareStatement(query).use {
                 for (i in parameters.indices) {
