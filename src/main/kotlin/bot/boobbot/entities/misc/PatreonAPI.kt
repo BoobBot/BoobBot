@@ -62,6 +62,11 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                     BoobBot.database.setDonor(id, 0.0)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
+
+                    for (guildId in BoobBot.database.getPremiumServers(idLong)) {
+                        BoobBot.database.setPremiumServer(guildId, null)
+                    }
+
                     removed += 1
                     log.debug("User $id removed: ${user?.let { "declined payment" } ?: "not found"}") // user can only exist in this block if they're declined.
                     continue
