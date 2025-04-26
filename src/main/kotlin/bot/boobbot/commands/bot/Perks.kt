@@ -115,7 +115,7 @@ class Perks : Command {
             return ctx.reply("You don't have any premium servers, whore.")
         }
 
-        val guilds = servers.map { (BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server") to it._id }
+        val guilds = servers.map { (BoobBot.shardManager.getGuildById(it.guildId)?.name ?: "Inaccessible Server") to it.guildId }
 
         val predicate = { e: GenericComponentInteractionCreateEvent -> e.componentId == "menu:ps:${ctx.user.id}" || e.componentId == "ps:cancel:${ctx.user.id}" }
         val waiterSetup = ctx.onMenuInteraction("ps:${ctx.user.id}", predicate, 15000) {
@@ -128,7 +128,7 @@ class Perks : Command {
             }
 
             val selected = (it as StringSelectInteractionEvent).selectedOptions[0]
-            BoobBot.database.setPremiumServer(selected.value, -1L)
+            BoobBot.database.setPremiumServer(selected.value, 0L)
             it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
         }
 
@@ -159,7 +159,7 @@ class Perks : Command {
             return ctx.reply("You don't have any premium servers, whore.")
         }
 
-        val guilds = servers.joinToString("`\n`", prefix = "`", postfix = "`") { BoobBot.shardManager.getGuildById(it._id)?.name ?: "Inaccessible Server" }
+        val guilds = servers.joinToString("`\n`", prefix = "`", postfix = "`") { BoobBot.shardManager.getGuildById(it.guildId)?.name ?: "Inaccessible Server" }
 
         ctx.reply {
             setColor(Colors.rndColor)
