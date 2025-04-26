@@ -45,7 +45,8 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "guildId BIGINT NOT NULL PRIMARY KEY," +
                 "dropEnabled BOOLEAN NOT NULL DEFAULT FALSE," +
                 "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
-                "premiumRedeemer BIGINT NOT NULL DEFAULT 0);")
+                "premiumRedeemer BIGINT NOT NULL DEFAULT 0," +
+                "INDEX premiumRedeemer(premiumRedeemer);")
 
         // TODO --- we store this separately to guild data so the codebase needs refactoring to account for this.
         // also needs methods for fetching and setting these.
