@@ -128,7 +128,7 @@ class Database {
         user.lastSaved = Instant.now()
         users.updateOne(
             eq("_id", user._id),
-            Document("\$set", serialize(user)),
+            Document("\$set", serialize(user).toJson()),
             UpdateOptions().upsert(true)
         )
     }
@@ -235,32 +235,18 @@ class Database {
         return getCustomCommands(guildId)[name]
     }
 
-
-    /**
-     * Guild Prefix
-     */
-    fun getPrefix(guildId: String): String? {
-        return getGuild(guildId).prefix
-    }
-
-
     fun getDonor(userId: String) = genericGet(users, userId, "pledge", "0.0")?.toString()?.toDoubleOrNull() ?: 0.0
     fun setDonor(userId: String, pledge: Double) = set(users, userId, "pledge", pledge)
-    fun removeDonor(userId: String) = remove(users, userId)
     fun getAllDonors() = users.find()
         .associateBy({ it.getString("_id") }, { it.getDouble("pledge") })
 
     fun isPremiumServer(guildId: String) = get(guilds, guildId, "redeemer", -1L) != -1L
     fun setPremiumServer(guildId: String, redeemerId: Long) = set(guilds, guildId, "redeemer", redeemerId)
-    fun removePremiumServer(guildId: String) = setPremiumServer(guildId, -1L)
     fun getPremiumServers(redeemerId: Long) = guilds.find(BasicDBObject("redeemer", redeemerId))
         .map { Guild.fromJson(JSONObject(it.toJson())) }
         .toList()
 
     fun getAllUsers(): MongoCollection<Document> = users
-    fun countUsers() = getAllUsers().countDocuments()
-    fun setPrefix(guildId: String, prefix: String) = set(guilds, guildId, "prefix", prefix)
-    fun removePrefix(guildId: String) = remove(guilds, guildId)
 
     fun getCanUserReceiveNudes(userId: String) = get(users, userId, "nudes", false)
     fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = set(users, userId, "nudes", canReceive)

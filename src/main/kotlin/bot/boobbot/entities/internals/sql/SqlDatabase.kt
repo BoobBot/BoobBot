@@ -1,13 +1,17 @@
 package bot.boobbot.entities.internals.sql
 
+import bot.boobbot.entities.db.DisabledCommand
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
 import com.google.gson.Gson
+import com.mongodb.client.MongoCollection
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.bson.Document
 import org.json.JSONObject
+import org.jsoup.internal.StringUtil.StringJoiner
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class SqlDatabase(host: String, port: String, databaseName: String, user: String, auth: String) {
@@ -28,15 +32,61 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
 
     private fun setupTables() {
         execute("CREATE TABLE IF NOT EXISTS webhooks(" +
-                "channelId BIGINT NOT NULL," +
                 "guildId BIGINT NOT NULL," +
+                "channelId BIGINT NOT NULL," +
                 "category VARCHAR(32) NOT NULL," +
                 "webhook VARCHAR(256) NOT NULL," +
+                // we may not have duplicate entries with the same 3 fields.
+                "UNIQUE(channelId, guildId, category)," +
+                // create an index on the fields we're likely to query by (channelId and guildId) so lookups are fast.
                 "INDEX channelId(channelId), INDEX guildId(guildId));")
 
         execute("CREATE TABLE IF NOT EXISTS guilds(" +
                 "guildId BIGINT NOT NULL PRIMARY KEY," +
-                "json LONGTEXT NOT NULL);") // don't want to deal with converting this to proper SQL structure for now.
+                "dropEnabled BOOLEAN NOT NULL DEFAULT FALSE," +
+                "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
+                "premiumRedeemer BIGINT NOT NULL DEFAULT 0);")
+
+        // TODO --- we store this separately to guild data so the codebase needs refactoring to account for this.
+        // also needs methods for fetching and setting these.
+        execute("CREATE TABLE IF NOT EXISTS ignored_channels(" +
+                "guildId BIGINT NOT NULL," +
+                "channelId BIGINT NOT NULL," +
+                "UNIQUE(guildId, channelId)," +
+                "INDEX guildId(guildId), INDEX channelId(channelId)," +
+                // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
+                // it is also deletes from this table.
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
+
+        execute("CREATE TABLE IF NOT EXISTS disabled_commands(" +
+                "guildId BIGINT NOT NULL," +
+                "name VARCHAR(64) NOT NULL," +
+                "UNIQUE(guildId, name)," +
+                "INDEX guildId(guildId), INDEX name(name)," +
+                // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
+                // it is also deletes from this table.
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
+
+        execute("CREATE TABLE IF NOT EXISTS channel_disabled(" +
+                "guildId BIGINT NOT NULL," +
+                "channelId BIGINT NOT NULL," +
+                "name VARCHAR(64) NOT NULL," +
+                "UNIQUE(guildId, channelId, name)," +
+                "INDEX guildId(guildId), INDEX channelId(channelId), INDEX name(name)," +
+                // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
+                // it is also deletes from this table.
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
+
+        execute("CREATE TABLE IF NOT EXISTS mod_mute(" +
+                "guildId BIGINT NOT NULL," +
+                "userId BIGINT NOT NULL," +
+                "name VARCHAR(64) NOT NULL," +
+                "INDEX guildId(guildId), INDEX userId(userId)," +
+                "UNIQUE(guildId, userId)," +
+                // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
+                // it is also deletes from this table.
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
+        // -------------------------------------
 
         execute("CREATE TABLE IF NOT EXISTS users(" +
                 "userId BIGINT NOT NULL PRIMARY KEY," +
@@ -50,7 +100,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun getWebhooks(guildId: String): List<WebhookConfiguration> {
-        return find("SELECT category, channelId, webhook FROM webhooks WHERE guildId = ?", guildId)
+        return find("SELECT channelId, category, webhook FROM webhooks WHERE guildId = ?", guildId)
             .map { WebhookConfiguration(it["category"], it["channelId"], it["webhook"]) }
     }
 
@@ -59,7 +109,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun deleteWebhook(guildId: String, channelId: String, category: String) {
-        execute("DELETE FROM webhooks WHERE channelId = ? AND guildId = ? AND category = ?", channelId, guildId, category)
+        execute("DELETE FROM webhooks WHERE guildId = ? AND channelId = ? AND category = ?", guildId, channelId, category)
     }
 
     fun deleteWebhooks(guildId: String) {
@@ -68,12 +118,28 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
 
     fun getGuild(guildId: String): Guild {
         return findOne("SELECT json FROM guilds WHERE guildId = ?", guildId)
-            ?.get<String>("json")
-            ?.let { Guild.fromJson(JSONObject(it)) }
+            // TODO: test return type of blacklisted as booleans are stored as ints
+            ?.let { Guild(guildId, it["dropEnabled"], it["blacklisted"], it["premiumRedeemer"]) }
             ?: return Guild(guildId)
     }
 
-    // TODO: rest of guilds
+    fun setGuild(guild: Guild) {
+        execute(
+            "INSERT INTO guilds (guildId, dropEnabled, blacklisted, premiumRedeemer) VALUES (?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE dropEnabled = VALUES(dropEnabled), blacklisted = VALUES(blacklisted), premiumRedeemer = VALUES(premiumRedeemer)",
+            // TODO: test whether booleans are coerced to an int
+            guild.id, guild.dropEnabled, guild.blacklisted, guild.premiumRedeemer
+        )
+    }
+
+    fun deleteGuild(guildId: String) {
+        execute("DELETE FROM guilds WHERE guildId = ?", guildId)
+    }
+
+    fun getAllUsers(): List<User> {
+        // TODO this will probably be SUPER expensive, needs sorting.
+        return find("SELECT json FROM users").map { deserialize<User>(it["json"]) }
+    }
 
     fun getUser(userId: String): User {
         return findOne("SELECT json FROM users WHERE userId = ?", userId)
@@ -82,7 +148,15 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             ?: return User(userId)
     }
 
-    // TODO: rest of users
+    fun setUser(user: User) {
+        user.lastSaved = Instant.now()
+        val serialized = serialize(user)
+        execute("INSERT INTO users (userId, json) VALUES (?, ?) ON DUPLICATE KEY UPDATE json = VALUES(json)", user._id, serialized)
+    }
+
+    fun deleteUser(userId: String) {
+        execute("DELETE FROM users WHERE userId = ?", userId)
+    }
 
     fun getCustomCommands(guildId: String): Map<String, String> {
         return find("SELECT name, content FROM custom_commands WHERE guildId = ?", guildId)
@@ -90,11 +164,10 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun setCustomCommand(guildId: String, name: String, content: String) {
-        if (getCustomCommands(guildId).containsKey(name)) {
-            execute("UPDATE custom_commands SET content = ? WHERE guildId = ?", content, guildId)
-        } else {
-            execute("INSERT INTO custom_commands(guildId, name, content) VALUES (?, ?, ?)", guildId, name, content)
-        }
+        execute(
+            "INSERT INTO custom_commands (guildId, name, content) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE content = VALUES(content)",
+            guildId, name, content
+        )
     }
 
     fun deleteCustomCommand(guildId: String, name: String) {
@@ -104,6 +177,94 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun deleteCustomCommands(guildId: String) {
         execute("DELETE FROM custom_commands WHERE guildId = ?", guildId)
     }
+
+    // todo below here.
+    //<editor-fold desc="Disable-able Commands">
+    fun getDisabledCommands(guildId: String): List<String> {
+        return find("SELECT name FROM disabled_commands WHERE guildId = ?", guildId).map { it["name"] }
+    }
+
+    fun disableCommands(guildId: String, commands: List<String>) {
+        val placeholders = StringJoiner(", ")
+        val entries = Array(2 * commands.size) { "" }
+
+        for (index in commands.indices step 2) {
+            // crude way of being able to insert all commands in one INSERT statement.
+            // we add two placeholders for each command, (guildId, command).
+            placeholders.add("(?, ?)")
+            // and then populate an array of entries so we can pass this to the execute command with the spread operator.
+            entries[index] = guildId
+            entries[index + 1] = commands[index]
+        }
+
+        // insert ignore basically allows us to insert as many commands as we can, ignoring any that raise
+        // exceptions (i.e. because of duplicate keys failing the constraint check (UNIQUE(guildId, name)).
+        execute("INSERT IGNORE INTO disabled_commands (guildId, name) VALUES $placeholders", *entries)
+    }
+
+    fun enableCommands(guildId: String, commands: List<String>) {
+        val placeholders = StringJoiner(", ")
+
+        for (item in commands) {
+            placeholders.add("?")
+        }
+
+        execute("DELETE FROM disabled_commands WHERE guildId = ? AND name IN ($placeholders)", guildId, *commands.toTypedArray())
+    }
+
+    fun getDisabledForChannel(guildId: String, channelId: String): List<String> {
+        return find("SELECT name FROM channel_disabled WHERE guildId = ? AND channelId = ?", guildId, channelId)
+            .map { it["name"] }
+    }
+
+    fun disableForChannel(guildId: String, channelId: String, commands: List<String>) {
+        val placeholders = StringJoiner(", ")
+        val entries = Array(3 * commands.size) { "" }
+
+        for (index in commands.indices step 3) {
+            // crude way of being able to insert all commands in one INSERT statement.
+            // we add two placeholders for each command, (guildId, channelId, command).
+            placeholders.add("(?, ?, ?)")
+            // and then populate an array of entries so we can pass this to the execute command with the spread operator.
+            entries[index] = guildId
+            entries[index + 1] = channelId
+            entries[index + 2] = commands[index]
+        }
+
+        // insert ignore basically allows us to insert as many commands as we can, ignoring any that raise
+        // exceptions (i.e. because of duplicate keys failing the constraint check (UNIQUE(guildId, name)).
+        execute("INSERT IGNORE INTO channel_disabled (guildId, channelId, name) VALUES $placeholders", *entries)
+    }
+
+    fun enableForChannel(guildId: String, channelId: String, commands: List<String>) {
+        val placeholders = StringJoiner(", ")
+
+        for (item in commands) {
+            placeholders.add("?")
+        }
+
+        execute("DELETE FROM channel_disabled WHERE guildId = ? AND channelId = ? AND name IN ($placeholders)", guildId, channelId, *commands.toTypedArray())
+    }
+    //</editor-fold>
+
+    fun getDonor(userId: String) = getUser(userId).pledge
+    fun setDonor(userId: String, pledge: Double) = getUser(userId).apply { this.pledge = pledge }.save()
+    fun getAllDonors() = getAllUsers().associate { it._id to it.pledge }
+
+    // TODO this needs testing as MariaDB returns booleans as ints
+    fun isPremiumServer(guildId: String) = findOne("SELECT premiumRedeemer > 0 AS has_premium FROM guilds WHERE guildId = ?", guildId)?.get<Boolean>("has_premium") ?: false
+    fun setPremiumServer(guildId: String, redeemerId: Long) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
+    fun getPremiumServers(redeemerId: Long) = find("SELECT guildId FROM guilds WHERE premiumRedeemer = ?", redeemerId).map { it.get<Long>("guildId") }
+
+    // everything below here is crude and should probably be improved when the user stuff is *properly* done.
+    fun getCanUserReceiveNudes(userId: String) = getUser(userId).nudes
+    fun setUserCanReceiveNudes(userId: String, canReceive: Boolean) = getUser(userId).apply { nudes = canReceive }.save()
+
+    fun getUserCockBlocked(userId: String) = getUser(userId).cockblocked
+    fun setUserCockBlocked(userId: String, cockblocked: Boolean) = getUser(userId).apply { this.cockblocked = cockblocked }.save()
+
+    fun getUserAnonymity(userId: String) = getUser(userId).anonymity
+    fun setUserAnonymity(userId: String, anonymity: Boolean) = getUser(userId).apply { this.anonymity = anonymity }.save()
 
     /**
      * Execute a statement on the database. This method cannot be used to find anything,

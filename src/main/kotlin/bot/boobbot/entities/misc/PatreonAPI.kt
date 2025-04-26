@@ -59,7 +59,7 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                 val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
 
                 if (user == null || user.status != PatronStatus.ACTIVE_PATRON) {
-                    BoobBot.database.removeDonor(id)
+                    BoobBot.database.setDonor(id, 0.0)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
                     removed += 1
