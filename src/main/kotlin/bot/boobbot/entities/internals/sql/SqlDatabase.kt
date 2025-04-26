@@ -254,7 +254,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
 
     // TODO this needs testing as MariaDB returns booleans as ints
     fun isPremiumServer(guildId: String) = findOne("SELECT premiumRedeemer IS NOT NULL and premiumRedeemer > 0 AS has_premium FROM guilds WHERE guildId = ?", guildId)?.get<Boolean>("has_premium") ?: false
-    fun setPremiumServer(guildId: String, redeemerId: Long) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
+    fun setPremiumServer(guildId: String, redeemerId: Long?) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
     fun getPremiumServers(redeemerId: Long) = find("SELECT guildId FROM guilds WHERE premiumRedeemer = ?", redeemerId).map { it.get<Long>("guildId") }
 
     // everything below here is crude and should probably be improved when the user stuff is *properly* done.

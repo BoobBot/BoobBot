@@ -128,7 +128,7 @@ class Perks : Command {
             }
 
             val selected = (it as StringSelectInteractionEvent).selectedOptions[0]
-            BoobBot.database.setPremiumServer(selected.value, 0L)
+            BoobBot.database.setPremiumServer(selected.value, null)
             it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
         }
 
