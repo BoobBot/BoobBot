@@ -128,7 +128,7 @@ class Database {
         user.lastSaved = Instant.now()
         users.updateOne(
             eq("_id", user._id),
-            Document("\$set", serialize(user).toJson()),
+            Document("\$set", serialize(user)),
             UpdateOptions().upsert(true)
         )
     }

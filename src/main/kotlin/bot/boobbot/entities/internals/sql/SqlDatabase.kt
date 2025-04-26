@@ -179,7 +179,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         execute("DELETE FROM custom_commands WHERE guildId = ?", guildId)
     }
 
-    // todo below here.
     //<editor-fold desc="Disable-able Commands">
     fun getDisabledCommands(guildId: String): List<String> {
         return find("SELECT name FROM disabled_commands WHERE guildId = ?", guildId).map { it["name"] }
