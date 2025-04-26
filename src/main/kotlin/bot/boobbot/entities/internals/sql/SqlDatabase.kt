@@ -67,21 +67,19 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun getGuild(guildId: String): Guild {
-        val json = findOne("SELECT json FROM guilds WHERE guildId = ?", guildId)
+        return findOne("SELECT json FROM guilds WHERE guildId = ?", guildId)
             ?.get<String>("json")
+            ?.let { Guild.fromJson(JSONObject(it)) }
             ?: return Guild(guildId)
-
-        return Guild.fromJson(JSONObject(json))
     }
 
-    // TODO: reset of guilds
+    // TODO: rest of guilds
 
     fun getUser(userId: String): User {
-        val json = findOne("SELECT json FROM users WHERE userId = ?", userId)
+        return findOne("SELECT json FROM users WHERE userId = ?", userId)
             ?.get<String>("json")
+            ?.let { deserialize<User>(it) }
             ?: return User(userId)
-
-        return deserialize<User>(json)
     }
 
     // TODO: rest of users
