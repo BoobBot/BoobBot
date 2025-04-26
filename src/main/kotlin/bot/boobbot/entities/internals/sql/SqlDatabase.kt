@@ -1,4 +1,4 @@
-package bot.boobbot.entities.internals
+package bot.boobbot.entities.internals.sql
 
 import bot.boobbot.entities.db.WebhookConfiguration
 import com.zaxxer.hikari.HikariConfig
@@ -21,18 +21,23 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     private fun setupTables() {
-        // TODO
-        // webhooks table should have channelId primary key (UNIQUE(channelId, guildId)) to allow for multiple webhook configs per guild.
-        // actually need to decide whether channelId should be primary key. Users could set up multiple categories for a single channel.
-        // should definitely have two indexes, one for channel ID, one for guild ID. Don't think category needs one
+        execute("CREATE TABLE IF NOT EXISTS webhooks(" +
+                "channelId BIGINT NOT NULL," +
+                "guildId BIGINT NOT NULL," +
+                "category VARCHAR(32) NOT NULL," +
+                "webhook VARCHAR(256) NOT NULL," +
+                "INDEX channelId(channelId), INDEX guildId(guildId));")
+
+        execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
+                "guildId BIGINT NOT NULL," +
+                "name VARCHAR(128) NOT NULL," +
+                "content VARCHAR(4000) NOT NULL," + // max message length is 4000.
+                "UNIQUE(guildId, name));") // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
     }
 
     fun getWebhooks(guildId: String): List<WebhookConfiguration> {
-        val rows = find("SELECT category, channelId, webhook FROM webhooks WHERE guild_id = ?", guildId)
-
-        return rows.map {
-            WebhookConfiguration(it["category"], it["channelId"], it["webhook"])
-        }
+        return find("SELECT category, channelId, webhook FROM webhooks WHERE guildId = ?", guildId)
+            .map { WebhookConfiguration(it["category"], it["channelId"], it["webhook"]) }
     }
 
     fun setWebhook(guildId: String, webhookUrl: String, category: String, channelId: String) {
@@ -40,11 +45,32 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun deleteWebhook(guildId: String, channelId: String, category: String) {
-        execute("DELETE FROM webhooks WHERE channelId = ? AND guild_id = ? AND category = ?", channelId, guildId, category)
+        execute("DELETE FROM webhooks WHERE channelId = ? AND guildId = ? AND category = ?", channelId, guildId, category)
     }
 
     fun deleteWebhooks(guildId: String) {
-        execute("DELETE FROM webhooks WHERE guild_id = ?", guildId)
+        execute("DELETE FROM webhooks WHERE guildId = ?", guildId)
+    }
+
+    fun getCustomCommands(guildId: String): Map<String, String> {
+        return find("SELECT name, content FROM custom_commands WHERE guildId = ?", guildId)
+            .associate { it.get<String>("name") to it["content"] }
+    }
+
+    fun setCustomCommand(guildId: String, name: String, content: String) {
+        if (getCustomCommands(guildId).containsKey(name)) {
+            execute("UPDATE custom_commands SET content = ? WHERE guildId = ?", content, guildId)
+        } else {
+            execute("INSERT INTO custom_commands(guildId, name, content) VALUES (?, ?, ?)", guildId, name, content)
+        }
+    }
+
+    fun deleteCustomCommand(guildId: String, name: String) {
+        execute("DELETE FROM custom_commands WHERE guildId = ? AND name = ?", guildId, name)
+    }
+
+    fun deleteCustomCommands(guildId: String) {
+        execute("DELETE FROM custom_commands WHERE guildId = ?", guildId)
     }
 
     // TODO: user (& premium user stuff, & user toggles (nudes, cockblock & anonymity)
@@ -52,8 +78,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     // TODO: guild (without prefix stuff, we don't have message intent so useless now)
 
     // TODO: disableable commands
-
-    // TODO custom commands
 
     /**
      * Execute a statement on the database. This method cannot be used to find anything,
