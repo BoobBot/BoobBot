@@ -1,12 +1,18 @@
 package bot.boobbot.entities.internals.sql
 
+import bot.boobbot.entities.db.Guild
+import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
+import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.bson.Document
+import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 class SqlDatabase(host: String, port: String, databaseName: String, user: String, auth: String) {
     private val db: HikariDataSource
+    private val gson = Gson()
 
     init {
         val config = HikariConfig().apply {
@@ -27,6 +33,14 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "category VARCHAR(32) NOT NULL," +
                 "webhook VARCHAR(256) NOT NULL," +
                 "INDEX channelId(channelId), INDEX guildId(guildId));")
+
+        execute("CREATE TABLE IF NOT EXISTS guilds(" +
+                "guildId BIGINT NOT NULL PRIMARY KEY," +
+                "json LONGTEXT NOT NULL);") // don't want to deal with converting this to proper SQL structure for now.
+
+        execute("CREATE TABLE IF NOT EXISTS users(" +
+                "userId BIGINT NOT NULL PRIMARY KEY," +
+                "json LONGTEXT NOT NULL);") // don't want to deal with converting this to proper SQL structure for now.
 
         execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "guildId BIGINT NOT NULL," +
@@ -52,6 +66,26 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         execute("DELETE FROM webhooks WHERE guildId = ?", guildId)
     }
 
+    fun getGuild(guildId: String): Guild {
+        val json = findOne("SELECT json FROM guilds WHERE guildId = ?", guildId)
+            ?.get<String>("json")
+            ?: return Guild(guildId)
+
+        return Guild.fromJson(JSONObject(json))
+    }
+
+    // TODO: reset of guilds
+
+    fun getUser(userId: String): User {
+        val json = findOne("SELECT json FROM users WHERE userId = ?", userId)
+            ?.get<String>("json")
+            ?: return User(userId)
+
+        return deserialize<User>(json)
+    }
+
+    // TODO: rest of users
+
     fun getCustomCommands(guildId: String): Map<String, String> {
         return find("SELECT name, content FROM custom_commands WHERE guildId = ?", guildId)
             .associate { it.get<String>("name") to it["content"] }
@@ -72,12 +106,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun deleteCustomCommands(guildId: String) {
         execute("DELETE FROM custom_commands WHERE guildId = ?", guildId)
     }
-
-    // TODO: user (& premium user stuff, & user toggles (nudes, cockblock & anonymity)
-
-    // TODO: guild (without prefix stuff, we don't have message intent so useless now)
-
-    // TODO: disableable commands
 
     /**
      * Execute a statement on the database. This method cannot be used to find anything,
@@ -144,6 +172,9 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             }
         }
     }
+
+    private inline fun <reified T> deserialize(json: String): T = gson.fromJson(json, T::class.java)
+    private fun serialize(entity: Any): Document = Document.parse(gson.toJson(entity))
 
     private inner class Row(private val data: Map<String, Any>) {
         inline operator fun <reified T> get(column: String): T {
