@@ -55,28 +55,23 @@ class Leaderboard : AsyncCommand {
         val msg = StringBuilder()
         var count = 0
 
-        BoobBot.database.getAllUsers().find().sort(BasicDBObject(key, -1)).limit(25).iterator().forEach { u ->
+        for (u in BoobBot.database.getTopUsers(key)) {
             if (count >= 15) {
-                return@forEach
+                break
             }
 
-            try {
-                val user = ctx.jda.retrieveUserById(u.getString("_id")).submit().await()
+            val user = ctx.jda.runCatching { retrieveUserById(u._id).submit().await() }
+                .getOrNull()
+                ?.takeIf { !it.name.contains("Deleted User") && !it.isBot }
 
-                if (user.name.contains("Deleted User")) {
-                    return@forEach
-                }
-
-                if (user.isBot) {
-                    return@forEach BoobBot.database.deleteUser(u.getString("_id"))
-                }
-
-                val label = if (key.contains("balance")) "$key: $" else "$key: "
-                msg.appendLine("${count + 1}:  ***${user.name}***   $label***${u[key]}***")
-                count++
-            } catch (e: Exception) {
-                return@forEach BoobBot.database.deleteUser(u.getString("_id"))
+            if (user == null) {
+                u.delete()
+                continue
             }
+
+            val label = if (key.contains("balance")) "$key: $" else "$key: "
+            msg.appendLine("${count + 1}:  ***${user.name}***   $label***${u[key]}***")
+            count++
         }
 
         return msg.toString()

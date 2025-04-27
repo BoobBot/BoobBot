@@ -56,8 +56,6 @@ class MessageHandler : EventListener {
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
-
         if (event.channelType.isGuild) {
             if (event.message.mentions.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -75,11 +73,11 @@ class MessageHandler : EventListener {
                 return
             }
 
-            if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (BoobBot.database.isIgnoredChannel(event.guild.idLong, event.channel.idLong) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
 
-            if (guild.modMute.contains(event.author.id)) {
+            if (BoobBot.database.isModMuted(event.guild.idLong, event.author.idLong)) {
                 return event.message.delete().reason("mod mute").queue()
             }
         }
@@ -104,13 +102,13 @@ class MessageHandler : EventListener {
                 return
             }
 
-            val customCommand = guild.customCommands.firstOrNull { it.name == commandString }
+            val customCommand = BoobBot.database.getCustomCommands(event.guild.idLong)[commandString]
                 ?: return
 
-            return event.channel.sendMessage(customCommand.content).queue()
+            return event.channel.sendMessage(customCommand).queue()
         }
 
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
+        if (event.isFromGuild && (BoobBot.database.isCommandDisabled(event.guild.idLong, command.name) || BoobBot.database.isCommandDisabledInChannel(event.guild.idLong, event.channel.idLong, command.name))) {
             return
         }
 
@@ -171,7 +169,7 @@ class MessageHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.id) && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.idLong) && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
             event.message.delete().queue()
         }
 
@@ -181,7 +179,7 @@ class MessageHandler : EventListener {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.author.id).let {
+            BoobBot.database.getUser(event.author.idLong).let {
                 if (command.properties.nsfw) it.nsfwCommandsUsed++
                 else it.commandsUsed++
                 it.save()
@@ -200,7 +198,7 @@ class MessageHandler : EventListener {
             return
         }
 
-        val user = BoobBot.database.getUser(event.author.id)
+        val user = BoobBot.database.getUser(event.author.idLong)
         user.messagesSent++
 
         if (user.blacklisted) {

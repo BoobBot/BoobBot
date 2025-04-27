@@ -74,7 +74,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
     fun authorOrAnonymous(ctx: Context): User = authorOrAnonymous(ctx.user)
 
     fun authorOrAnonymous(user: User): User {
-        return anonymousUser.takeIf { BoobBot.database.getUserAnonymity(user.id) } ?: user
+        return anonymousUser.takeIf { BoobBot.database.getUserAnonymity(user.idLong) } ?: user
     }
 
     fun retrieveSessionInfo() = SessionInfo.from(token)

@@ -24,14 +24,14 @@ abstract class SendCommand(private val category: String, private val endpoint: S
             return ctx.reply(Formats.error("Bots can't appreciate $category, whore."))
         }
 
-        val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.id)
+        val isUserReceivingNudes = BoobBot.database.getCanUserReceiveNudes(user.idLong)
 
         if (!isUserReceivingNudes) {
             return ctx.reply(Formats.error("wtf, **${user.name}** opted out of receiving nudes. What a whore. Tell them to opt back in with `@BoobBot opt in`"))
         }
 
         if (category == "dicks") {
-            val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.id)
+            val isUserCockBlocked = BoobBot.database.getUserCockBlocked(user.idLong)
 
             if (isUserCockBlocked) {
                 return ctx.reply(Formats.error("wtf, **${user.name}** is cockblocked. Whore."))

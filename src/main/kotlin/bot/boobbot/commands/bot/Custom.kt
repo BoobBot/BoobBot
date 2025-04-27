@@ -44,7 +44,7 @@ class Custom : Command {
         val tagContent = ctx.options.getOptionStringOrGather("content")
             ?: return ctx.reply("You need to specify tag content, whore.")
 
-        BoobBot.database.addCustomCommand(ctx.guild.id, tagName, tagContent)
+        BoobBot.database.setCustomCommand(ctx.guild.idLong, tagName, tagContent)
         ctx.reply("done whore")
     }
 
@@ -58,17 +58,17 @@ class Custom : Command {
         val tagName = ctx.options.getByNameOrNext("name", Resolver.STRING)
             ?: return ctx.reply("what tag do you want to delete, whore")
 
-        if (BoobBot.database.findCustomCommand(ctx.guild.id, tagName) == null) {
+        if (!BoobBot.database.getCustomCommands(ctx.guild.idLong).containsKey(tagName)) {
             return ctx.reply("wtf, why are you trying to remove a non-existent command?")
         }
 
-        BoobBot.database.removeCustomCommand(ctx.guild.id, tagName)
+        BoobBot.database.deleteCustomCommand(ctx.guild.idLong, tagName)
         ctx.reply("done whore")
     }
 
     @SubCommand(description = "List all custom commands in this server.")
     fun list(ctx: MessageContext) {
-        val allCommands = BoobBot.database.getCustomCommands(ctx.guild.id)
+        val allCommands = BoobBot.database.getCustomCommands(ctx.guild.idLong)
 
         if (allCommands.isEmpty()) {
             return ctx.reply("This server has no custom commands.")
@@ -79,7 +79,7 @@ class Custom : Command {
 
     @SubCommand(description = "Clear all custom commands in this server.")
     fun clear(ctx: MessageContext) {
-        //BoobBot.database.deleteCustomCommands(ctx.guild.id)
+        BoobBot.database.deleteCustomCommands(ctx.guild.idLong)
         ctx.reply("Done, whore.")
     }
 }

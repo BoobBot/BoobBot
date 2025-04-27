@@ -278,9 +278,9 @@ class ApiServer {
                 }
 
                 get("/user/{userId}") {
-                    val userId = call.parameters["userId"]
-                    if (userId.isNullOrBlank()) call.respondText("{\"msg\": 404}", ContentType.Application.Json)
-                    val user = BoobBot.database.getUser(userId!!)
+                    val userId = call.parameters["userId"]?.toLongOrNull()
+                        ?: return@get call.respondText("{\"msg\": 404}", ContentType.Application.Json)
+                    val user = BoobBot.database.getUser(userId)
                     call.respondText("{\"user\": ${Gson().toJson(user)}}", ContentType.Application.Json)
                 }
 

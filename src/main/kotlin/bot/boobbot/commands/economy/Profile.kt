@@ -20,7 +20,7 @@ class Profile : Command {
 
     override fun execute(ctx: Context) {
         val user = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
-        val u = BoobBot.database.getUser(user.id)
+        val u = BoobBot.database.getUser(user.idLong)
         val e = ((u.level + 1).toDouble() * 10).pow(2.0).toInt()
 
         ctx.reply {

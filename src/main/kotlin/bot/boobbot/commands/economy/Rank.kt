@@ -18,7 +18,7 @@ class Rank : Command {
 
     override fun execute(ctx: Context) {
         val user = ctx.options.getByNameOrNext("user", Resolver.CONTEXT_AWARE_USER(ctx)) ?: ctx.user
-        val u = BoobBot.database.getUser(user.id)
+        val u = BoobBot.database.getUser(user.idLong)
 
         ctx.reply {
             setColor(Colors.getEffectiveColor(ctx.member))

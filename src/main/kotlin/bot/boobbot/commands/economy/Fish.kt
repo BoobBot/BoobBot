@@ -46,7 +46,7 @@ class Fish : Command {
             return ctx.reply(Formats.error("You can only fish between 1 and 10 times at a time."))
         }
 
-        val u = BoobBot.database.getUser(ctx.user.id)
+        val u = BoobBot.database.getUser(ctx.user.idLong)
 
         val baitCost = if (bait == "worm") 10 else 20
         val totalCost = baitCost * attempts

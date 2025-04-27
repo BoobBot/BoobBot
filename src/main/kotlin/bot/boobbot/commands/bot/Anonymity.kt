@@ -19,13 +19,13 @@ class Anonymity : Command {
 
     @SubCommand(description = "Turn on anonymity.")
     fun on(ctx: Context) {
-        BoobBot.database.setUserAnonymity(ctx.user.id, true)
+        BoobBot.database.setUserAnonymity(ctx.user.idLong, true)
         ctx.reply("You're now anonymous \uD83D\uDD75")
     }
 
     @SubCommand(description = "Turn off anonymity.")
     fun off(ctx: Context) {
-        BoobBot.database.setUserAnonymity(ctx.user.id, false)
+        BoobBot.database.setUserAnonymity(ctx.user.idLong, false)
         ctx.reply("You're no longer anonymous 👀")
     }
 

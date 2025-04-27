@@ -26,6 +26,8 @@ enum SqlDataType {
     TEXT,
     /** String with up to 4,294,967,295 characters */
     LONGTEXT,
+    /** Raw JSON string */
+    JSON,
     /**
      * String with variable length up to 65,535 characters.
      * When creating columns, can be combined with (<number>) to denote a maximum size.

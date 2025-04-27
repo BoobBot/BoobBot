@@ -33,7 +33,7 @@ class Rep : Command {
             return ctx.reply("aww how sad you wanna rep yourself, well fucking don't. Go find a friend whore.")
         }
 
-        val author = BoobBot.database.getUser(ctx.user.id)
+        val author = BoobBot.database.getUser(ctx.user.idLong)
         val now = Instant.now()
         val lastRep = author.lastRep
 
@@ -48,7 +48,7 @@ class Rep : Command {
         author.lastRep = now
         author.save()
 
-        BoobBot.database.getUser(target.id)
+        BoobBot.database.getUser(target.idLong)
             .apply { rep += 1 }
             .save()
 

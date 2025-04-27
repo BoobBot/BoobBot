@@ -82,7 +82,7 @@ class BootyDropper : EventListener {
             return
         }
 
-        val guild = BoobBot.database.getGuild(event.guild.id)
+        val guild = BoobBot.database.getGuild(event.guild.idLong)
         val number = random(0, 10000)
 
         val manualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in BoobBot.owners
@@ -234,7 +234,7 @@ class BootyDropper : EventListener {
                 return
             }
 
-            val userData = BoobBot.database.getUser(user.id)
+            val userData = BoobBot.database.getUser(user.idLong)
             val found = random(1, 4)
             userData.balance += found
             userData.save()

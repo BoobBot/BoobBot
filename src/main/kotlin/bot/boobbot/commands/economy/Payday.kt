@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit
 class Payday : Command {
 
     override fun execute(ctx: Context) {
-        val user = BoobBot.database.getUser(ctx.user.id)
+        val user = BoobBot.database.getUser(ctx.user.idLong)
         val lastDaily = user.lastDaily
 
         if (lastDaily != null) {

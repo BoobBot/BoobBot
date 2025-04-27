@@ -63,7 +63,7 @@ class Perks : Command {
             val pledgeAmount = pledge.entitledAmountCents.toDouble() / 100
             val pledgeFriendly = String.format("%1$,.2f", pledgeAmount)
             ctx.reply("Welcome to the club, whore. Your tier: `${BoobBot.pApi.getDonorType(pledgeAmount)}` ($$pledgeFriendly)")
-            BoobBot.database.setDonor(ctx.user.id, pledgeAmount)
+            BoobBot.database.setDonor(ctx.user.idLong, pledgeAmount)
         }
     }
 
@@ -73,11 +73,11 @@ class Perks : Command {
             return ctx.reply("Run this command in a guild, whore.")
         }
 
-        val guildId = ctx.guild.id
+        val guildId = ctx.guild.idLong
 
         when {
             BoobBot.database.isPremiumServer(guildId) -> ctx.reply("This server is already premium, whore.")
-            BoobBot.pApi.getDonorType(ctx.user.id) < DonorType.SERVER_OWNER -> ctx.reply("You need to be subscribed to the Server Owner tier, whore.\nJoin here: <https://www.patreon.com/join/OfficialBoobBot/checkout?rid=3186958>")
+            BoobBot.pApi.getDonorType(ctx.user.idLong) < DonorType.SERVER_OWNER -> ctx.reply("You need to be subscribed to the Server Owner tier, whore.\nJoin here: <https://www.patreon.com/join/OfficialBoobBot/checkout?rid=3186958>")
             ctx.member!!.isOwner -> ctx.reply("You own this server, whore, so it's already premium.")
             BoobBot.database.getPremiumServers(ctx.user.idLong).size > PREMIUM_SERVERS -> ctx.reply("You've hit the maximum number of premium servers. Remove some or fuck off, whore.")
             else -> {
@@ -86,7 +86,7 @@ class Perks : Command {
                         it == null -> ctx.reply("Fine, whore. The server won't be added.")
                         it.componentId == "ps:cancel:${ctx.user.id}" -> it.editComponents().setContent("Fine, whore. The server won't be added.").queue()
                         else -> {
-                            BoobBot.database.setPremiumServer(ctx.guild.id, ctx.user.idLong)
+                            BoobBot.database.setPremiumServer(guildId, ctx.user.idLong)
                             it.editComponents().setContent("Server added, whore.").queue()
                         }
                     }
@@ -115,7 +115,7 @@ class Perks : Command {
             return ctx.reply("You don't have any premium servers, whore.")
         }
 
-        val guilds = servers.map { (BoobBot.shardManager.getGuildById(it.guildId)?.name ?: "Inaccessible Server") to it.guildId }
+        val guilds = servers.map { (BoobBot.shardManager.getGuildById(it)?.name ?: "Inaccessible Server") to it }
 
         val predicate = { e: GenericComponentInteractionCreateEvent -> e.componentId == "menu:ps:${ctx.user.id}" || e.componentId == "ps:cancel:${ctx.user.id}" }
         val waiterSetup = ctx.onMenuInteraction("ps:${ctx.user.id}", predicate, 15000) {
@@ -128,7 +128,7 @@ class Perks : Command {
             }
 
             val selected = (it as StringSelectInteractionEvent).selectedOptions[0]
-            BoobBot.database.setPremiumServer(selected.value, null)
+            BoobBot.database.setPremiumServer(selected.value.toLong(), null)
             it.editComponents().setContent("Removed **${selected.label}**, whore.").queue()
         }
 
@@ -141,7 +141,7 @@ class Perks : Command {
             row {
                 menu("menu:ps:${ctx.user.id}") {
                     for ((name, id) in guilds) {
-                        addOption(name, id)
+                        addOption(name, id.toString())
                     }
                 }
             }
@@ -159,7 +159,7 @@ class Perks : Command {
             return ctx.reply("You don't have any premium servers, whore.")
         }
 
-        val guilds = servers.joinToString("`\n`", prefix = "`", postfix = "`") { BoobBot.shardManager.getGuildById(it.guildId)?.name ?: "Inaccessible Server" }
+        val guilds = servers.joinToString("`\n`", prefix = "`", postfix = "`") { BoobBot.shardManager.getGuildById(it)?.name ?: "Inaccessible Server" }
 
         ctx.reply {
             setColor(Colors.rndColor)

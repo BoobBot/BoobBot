@@ -57,9 +57,11 @@ object Utils {
     )
 
     fun checkDonor(user: JDAUser, guild: Guild?): Boolean {
-        return BoobBot.pApi.getDonorType(user.id).tier >= 1 // Supporter, Server Owner, Developer
-                || (guild != null && BoobBot.pApi.getDonorType(guild.ownerId) == DonorType.SERVER_OWNER)
-                || (guild != null && BoobBot.database.isPremiumServer(guild.id))
+        val pApi = BoobBot.pApi
+        val db = BoobBot.database
+
+        return pApi.getDonorType(user.idLong).tier >= 1 // Supporter, Server Owner, Developer
+                || guild != null && (pApi.getDonorType(guild.ownerIdLong) == DonorType.SERVER_OWNER || db.isPremiumServer(guild.idLong))
     }
 
     fun checkDonor(msg: Message): Boolean = checkDonor(msg.author, msg.guild)

@@ -45,7 +45,7 @@ class Eval : Command {
             "sm" to BoobBot.shardManager,
             "colors" to Colors,
             "utils" to Utils,
-            "self" to BoobBot.database.getUser(ctx.user.id)
+            "self" to BoobBot.database.getUser(ctx.user.idLong)
         )
 
         val bind = engine.createBindings()

@@ -30,9 +30,9 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
         }
     }
 
-    fun getDonorType(userId: String): DonorType {
+    fun getDonorType(userId: Long): DonorType {
         return when {
-            BoobBot.owners.contains(userId.toLong()) -> DonorType.DEVELOPER
+            BoobBot.owners.contains(userId) -> DonorType.DEVELOPER
             else -> DonorType.which(BoobBot.database.getDonor(userId))
         }
     }
@@ -50,20 +50,23 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                 return@thenAccept log.warn("Scheduled pledge clean failed: No users to check")
             }
 
-            val allDonors = BoobBot.database.getAllDonors()
+            var processed = 0
             var removed = 0
             var adjusted = 0
 
-            for ((id, pledge) in allDonors) {
-                val idLong = id.toLong()
-                val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
+            for (row in BoobBot.database.iterate("SELECT userId, JSON_UNQUOTE(JSON_EXTRACT(json, '$.pledge')) as pledge FROM users")) {
+                processed++
+
+                val id: Long = row["userId"]
+                val pledge: Double = row["pledge"]
+                val user = users.firstOrNull { it.discordId != null && it.discordId == id }
 
                 if (user == null || user.status != PatronStatus.ACTIVE_PATRON) {
                     BoobBot.database.setDonor(id, 0.0)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
 
-                    for (guildId in BoobBot.database.getPremiumServers(idLong)) {
+                    for (guildId in BoobBot.database.getPremiumServers(id)) {
                         // TODO: Also remove autoporn webhooks?
                         BoobBot.database.setPremiumServer(guildId, null)
                     }
@@ -83,7 +86,7 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
             }
 
             val taskElapsedTime = timer.elapsedFormatted()
-            log.info("Patreon cleanup task completed in $taskElapsedTime (fetch took $fetchElapsedTime). Adjusted $adjusted/${allDonors.size}. Removed $removed.")
+            log.info("Patreon cleanup task completed in $taskElapsedTime (fetch took $fetchElapsedTime). Adjusted $adjusted/$processed. Removed $removed.")
 
             // The above only handles users that have registered into the system.
             // To register into the system, users can run `bbperks` to receive their rewards after
