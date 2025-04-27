@@ -118,7 +118,7 @@ class AutoPorn : Command {
 
         val webhook = res.getOrThrow()
         val url = formatWebhookUrl(webhook.id, webhook.token!!)
-        BoobBot.database.setWebhook(ctx.guild.idLong, url, imageCategory, channel.idLong)
+        BoobBot.database.setWebhook(ctx.guild.idLong, channel.idLong, imageCategory, url)
 
         ctx.reply {
             setColor(Color.red)

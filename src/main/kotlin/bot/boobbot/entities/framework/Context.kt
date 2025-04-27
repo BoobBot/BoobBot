@@ -31,6 +31,7 @@ abstract class Context(val mentionTrigger: Boolean,
     val prefix = if (isSlashContext) "/" else "@${jda.selfUser.name} "
     val guildData = BoobBot.database.getGuild(guild.idLong).also {
         if (it.isNew) {
+            println("creating new guild data")
             it.save()
         }
     }

@@ -24,7 +24,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             jdbcUrl = "jdbc:mariadb://$host:$port/$databaseName"
             username = user
             password = auth
-            leakDetectionThreshold = TimeUnit.MINUTES.toMillis(1)
+            leakDetectionThreshold = TimeUnit.SECONDS.toMillis(10)
             driverClassName = "org.mariadb.jdbc.Driver"
         }
         db = HikariDataSource(config)
@@ -85,8 +85,8 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "guildId BIGINT NOT NULL," +
                 "name VARCHAR(128) NOT NULL," +
                 "content VARCHAR(4000) NOT NULL," + // max message length is 4000.
-                "UNIQUE(guildId, name)" +
-                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);") // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
+                "UNIQUE(guildId, name)," + // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
 
         execute("CREATE TABLE IF NOT EXISTS users(" +
                 "userId BIGINT PRIMARY KEY NOT NULL," +
@@ -99,8 +99,8 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             .map { WebhookConfiguration(it["category"], it["channelId"], it["webhook"]) }
     }
 
-    fun setWebhook(guildId: Long, webhookUrl: String, category: String, channelId: Long) {
-        execute("INSERT INTO webhooks VALUES (?, ?, ?, ?)", channelId, guildId, category, webhookUrl)
+    fun setWebhook(guildId: Long, channelId: Long, category: String, webhookUrl: String) {
+        execute("INSERT INTO webhooks (guildId, channelId, category, webhook) VALUES (?, ?, ?, ?)", guildId, channelId, category, webhookUrl)
     }
 
     fun deleteWebhooks(guildId: Long) {
