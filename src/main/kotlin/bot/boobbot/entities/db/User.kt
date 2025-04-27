@@ -4,7 +4,7 @@ import bot.boobbot.BoobBot
 import java.time.Instant
 
 data class User(
-    val _id: String,
+    val _id: Long,
     var balance: Long = 0,
     var bankBalance: Int = 0,
     var blacklisted: Boolean = false,
@@ -30,6 +30,15 @@ data class User(
     var nudes: Boolean = false,
     var pledge: Double = 0.0
 ) {
+    operator fun get(key: String): Any {
+        return when (key) {
+            "balance" -> balance
+            "rep" -> rep
+            "level" -> level
+            else -> throw UnsupportedOperationException("Unsupported key $key")
+        }
+    }
+
     fun save() = BoobBot.database.setUser(this)
     fun delete() = BoobBot.database.deleteUser(this._id)
 }

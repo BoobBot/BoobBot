@@ -5,6 +5,7 @@ import bot.boobbot.audio.sources.pornhub.PornHubAudioSourceManager
 import bot.boobbot.audio.sources.redtube.RedTubeAudioSourceManager
 import bot.boobbot.entities.framework.utils.EventWaiter
 import bot.boobbot.entities.internals.*
+import bot.boobbot.entities.internals.sql.SqlDatabase
 import bot.boobbot.entities.misc.ApiServer
 import bot.boobbot.entities.misc.PatreonAPI
 import bot.boobbot.entities.registries.CommandRegistry
@@ -64,7 +65,7 @@ object BoobBot {
     }
 
     val config = Config.load()
-    val database = Database()
+    val database = SqlDatabase(config.DB_HOST, config.DB_PORT, config.DB_NAME, config.DB_USER, config.DB_AUTH)
 
     val commands = CommandRegistry()
     val userContextCommands = UserContextCommandRegistry()

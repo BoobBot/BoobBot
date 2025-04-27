@@ -8,7 +8,6 @@ import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
 import bot.boobbot.entities.framework.interfaces.Command
-import net.dv8tion.jda.api.interactions.commands.build.*
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.data.DataArray
 

@@ -46,16 +46,14 @@ class ModMute : ModCommand() {
             }
         }
 
-        val g = BoobBot.database.getGuild(ctx.guild.id)
-        val isMuted = g.modMute.contains(user.id)
-        val status = if (isMuted) "Un-muted" else "Muted"
+        val isMuted = BoobBot.database.isModMuted(ctx.guild.idLong, user.idLong)
 
         if (isMuted) {
-            g.modMute.remove(user.id)
+            BoobBot.database.deleteModMute(ctx.guild.idLong, user.idLong)
+            ctx.reply("Un-muted ${user.asMention}")
         } else {
-            g.modMute.add(user.id)
+            BoobBot.database.setModMute(ctx.guild.idLong, user.idLong)
+            ctx.reply("Muted ${user.asMention}")
         }
-        g.save()
-        ctx.reply("$status ${user.asMention}.")
     }
 }

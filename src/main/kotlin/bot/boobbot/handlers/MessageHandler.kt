@@ -1,11 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
-import bot.boobbot.entities.db.User
-import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.MessageContext
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -15,7 +11,6 @@ import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
 import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
-import kotlinx.coroutines.*
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel
@@ -56,8 +51,6 @@ class MessageHandler : EventListener {
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild.id) }
-
         if (event.channelType.isGuild) {
             if (event.message.mentions.mentionsEveryone()) {
                 BoobBot.metrics.record(Metrics.happened("atEveryoneSeen"))
@@ -75,11 +68,11 @@ class MessageHandler : EventListener {
                 return
             }
 
-            if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (BoobBot.database.isIgnoredChannel(event.guild.idLong, event.channel.idLong) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
 
-            if (guild.modMute.contains(event.author.id)) {
+            if (BoobBot.database.isModMuted(event.guild.idLong, event.author.idLong)) {
                 return event.message.delete().reason("mod mute").queue()
             }
         }
@@ -104,13 +97,13 @@ class MessageHandler : EventListener {
                 return
             }
 
-            val customCommand = guild.customCommands.firstOrNull { it.name == commandString }
+            val customCommand = BoobBot.database.getCustomCommands(event.guild.idLong)[commandString]
                 ?: return
 
-            return event.channel.sendMessage(customCommand.content).queue()
+            return event.channel.sendMessage(customCommand).queue()
         }
 
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
+        if (event.isFromGuild && (BoobBot.database.isCommandDisabled(event.guild.idLong, command.name) || BoobBot.database.isCommandDisabledInChannel(event.guild.idLong, event.channel.idLong, command.name))) {
             return
         }
 
@@ -171,7 +164,7 @@ class MessageHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.id) && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.author.idLong) && event.guild.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
             event.message.delete().queue()
         }
 
@@ -181,7 +174,7 @@ class MessageHandler : EventListener {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.author.id).let {
+            BoobBot.database.getUser(event.author.idLong).let {
                 if (command.properties.nsfw) it.nsfwCommandsUsed++
                 else it.commandsUsed++
                 it.save()
@@ -200,7 +193,7 @@ class MessageHandler : EventListener {
             return
         }
 
-        val user = BoobBot.database.getUser(event.author.id)
+        val user = BoobBot.database.getUser(event.author.idLong)
         user.messagesSent++
 
         if (user.blacklisted) {

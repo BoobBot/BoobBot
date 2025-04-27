@@ -69,7 +69,6 @@ dependencies {
     implementation "io.github.cdimascio:java-dotenv:5.2.2"
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
     implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
     implementation "io.ktor:ktor-server-websockets-jvm:$ktor_version"
     implementation "io.ktor:ktor-serialization-gson:$ktor_version"
@@ -84,6 +83,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation "org.jsoup:jsoup:$jsoup_version"
     implementation "org.json:json:$json_version"
+
+    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
+    implementation "org.mariadb.jdbc:mariadb-java-client:3.3.3"
+    implementation "com.zaxxer:HikariCP:5.1.0"
 }
 
 shadowJar {

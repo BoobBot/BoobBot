@@ -27,7 +27,7 @@ class Bank : Command {
             return ctx.reply("wtf are you doing?")
         }
 
-        val user = BoobBot.database.getUser(ctx.user.id)
+        val user = BoobBot.database.getUser(ctx.user.idLong)
 
         if (amount > user.balance) {
             return ctx.reply("wtf whore, you only have ${user.balance}")
@@ -50,7 +50,7 @@ class Bank : Command {
             return ctx.reply("wtf are you doing?")
         }
 
-        val user = BoobBot.database.getUser(ctx.user.id)
+        val user = BoobBot.database.getUser(ctx.user.idLong)
 
         if (amount > user.bankBalance) {
             return ctx.reply("wtf whore, you only have ${user.bankBalance}")
@@ -65,7 +65,7 @@ class Bank : Command {
 
     @SubCommand(aliases = ["bal"], description = "check your funds. \uD83D\uDCB3")
     fun balance(ctx: Context) {
-        val user = BoobBot.database.getUser(ctx.user.id)
+        val user = BoobBot.database.getUser(ctx.user.idLong)
         ctx.reply("You are carrying $${user.balance} and have $${user.bankBalance} in the bank.")
     }
 
@@ -83,7 +83,7 @@ class Bank : Command {
             return ctx.reply("wtf are you doing?")
         }
 
-        val user = BoobBot.database.getUser(ctx.user.id)
+        val user = BoobBot.database.getUser(ctx.user.idLong)
 
         if (to.idLong == ctx.user.idLong) {
             user.bankBalance -= 10
@@ -95,7 +95,7 @@ class Bank : Command {
             return ctx.reply("wtf whore, you only have $${user.bankBalance} in your bank account")
         }
 
-        val user2 = BoobBot.database.getUser(to.id)
+        val user2 = BoobBot.database.getUser(to.idLong)
 
         user.bankBalance -= amount
         user2.bankBalance += amount

@@ -1,7 +1,6 @@
 package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.TimerUtil
 import bot.boobbot.utils.json
 import okhttp3.Request
@@ -30,9 +29,9 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
         }
     }
 
-    fun getDonorType(userId: String): DonorType {
+    fun getDonorType(userId: Long): DonorType {
         return when {
-            BoobBot.owners.contains(userId.toLong()) -> DonorType.DEVELOPER
+            BoobBot.owners.contains(userId) -> DonorType.DEVELOPER
             else -> DonorType.which(BoobBot.database.getDonor(userId))
         }
     }
@@ -50,38 +49,49 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                 return@thenAccept log.warn("Scheduled pledge clean failed: No users to check")
             }
 
-            val allDonors = BoobBot.database.getAllDonors()
+            var processed = 0
             var removed = 0
             var adjusted = 0
 
-            for ((id, pledge) in allDonors) {
-                val idLong = id.toLong()
-                val user = users.firstOrNull { it.discordId != null && it.discordId == idLong }
+            for (row in BoobBot.database.iterate("SELECT userId, CAST(JSON_UNQUOTE(JSON_EXTRACT(json, '$.pledge')) AS DOUBLE) as pledge FROM users")) {
+                processed++
 
-                if (user == null || user.status != PatronStatus.ACTIVE_PATRON) {
-                    BoobBot.database.removeDonor(id)
+                val id: Long = row["userId"]
+                val pledge: Double = row["pledge"]
+                val user = users.firstOrNull { it.discordId != null && it.discordId == id }
+                val pledgedAmount = user?.entitledAmountCents?.toDouble()?.div(100) ?: 0.0
+
+                if ((user == null || user.status != PatronStatus.ACTIVE_PATRON) && pledge != pledgedAmount) {
+                    BoobBot.database.setDonor(id, 0.0)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
+
+                    for (guildId in BoobBot.database.getPremiumServers(id)) {
+                        BoobBot.database.setPremiumServer(guildId, null)
+                        BoobBot.database.deleteWebhooks(guildId)
+                    }
+
                     removed += 1
                     log.debug("User $id removed: ${user?.let { "declined payment" } ?: "not found"}") // user can only exist in this block if they're declined.
                     continue
                 }
 
-                val amount = user.entitledAmountCents.toDouble() / 100
-
-                if (pledge != amount) {
-                    BoobBot.database.setDonor(id, amount)
+                if (pledge != pledgedAmount) {
+                    BoobBot.database.setDonor(id, pledgedAmount)
                     adjusted += 1
-                    log.debug("User $id adjusted: $amount -> $pledge")
+                    log.debug("User $id adjusted: $pledgedAmount -> $pledge")
                 }
             }
 
             val taskElapsedTime = timer.elapsedFormatted()
-            log.info("Patreon cleanup task completed in $taskElapsedTime (fetch took $fetchElapsedTime). Adjusted $adjusted/${allDonors.size}. Removed $removed.")
+            log.info("Patreon cleanup task completed in $taskElapsedTime (fetch took $fetchElapsedTime). Adjusted $adjusted/$processed. Removed $removed.")
 
             // The above only handles users that have registered into the system.
             // To register into the system, users can run `bbperks` to receive their rewards after
             // pledging on Patreon.
+        }.exceptionally {
+            it.printStackTrace()
+            return@exceptionally null
         }
     }
 

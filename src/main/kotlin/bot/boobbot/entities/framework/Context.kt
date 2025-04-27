@@ -3,7 +3,6 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.entities.framework.interfaces.Options
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
@@ -30,7 +29,11 @@ abstract class Context(val mentionTrigger: Boolean,
                        val channel: MessageChannelUnion,
                        val _guild: Guild?) {
     val prefix = if (isSlashContext) "/" else "@${jda.selfUser.name} "
-    val guildData: bot.boobbot.entities.db.Guild by lazy { BoobBot.database.getGuild(guild.id) }
+    val guildData = BoobBot.database.getGuild(guild.idLong).also {
+        if (it.isNew) {
+            it.save()
+        }
+    }
 
     val selfUser = jda.selfUser
     val selfMember = _guild?.selfMember

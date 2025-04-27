@@ -1,8 +1,6 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.json
@@ -36,8 +34,6 @@ class UserContextHandler : EventListener {
     }
 
     private fun processUserContextEvent(event: UserContextInteractionEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
-
         if (event.channel == null) {
             return
         }
@@ -47,14 +43,14 @@ class UserContextHandler : EventListener {
                 return
             }
 
-            if (guild.ignoredChannels.contains(event.channel!!.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (BoobBot.database.isIgnoredChannel(event.guild!!.idLong, event.channel!!.idLong) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
         }
 
         val command = BoobBot.userContextCommands.findCommand(event.name.lowercase()) ?: return
 
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel!!.id })) {
+        if (event.isFromGuild && (BoobBot.database.isCommandDisabled(event.guild!!.idLong, command.name) || BoobBot.database.isCommandDisabledInChannel(event.guild!!.idLong, event.channel!!.idLong, command.name))) {
             return
         }
 

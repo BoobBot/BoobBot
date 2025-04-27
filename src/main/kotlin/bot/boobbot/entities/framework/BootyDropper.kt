@@ -2,7 +2,6 @@ package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.internals.BoundedThreadPool
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
@@ -17,7 +16,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.requests.ErrorResponse
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder
-import net.dv8tion.jda.api.utils.messages.MessageEditData
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.awt.Font
@@ -82,7 +80,7 @@ class BootyDropper : EventListener {
             return
         }
 
-        val guild = BoobBot.database.getGuild(event.guild.id)
+        val guild = BoobBot.database.getGuild(event.guild.idLong)
         val number = random(0, 10000)
 
         val manualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in BoobBot.owners
@@ -234,7 +232,7 @@ class BootyDropper : EventListener {
                 return
             }
 
-            val userData = BoobBot.database.getUser(user.id)
+            val userData = BoobBot.database.getUser(user.idLong)
             val found = random(1, 4)
             userData.balance += found
             userData.save()

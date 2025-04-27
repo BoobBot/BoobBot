@@ -1,7 +1,6 @@
 package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.framework.Context
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent

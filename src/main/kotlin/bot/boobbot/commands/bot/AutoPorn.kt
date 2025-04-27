@@ -7,7 +7,6 @@ import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.impl.Resolver
-import bot.boobbot.entities.framework.impl.Resolver.Companion
 import bot.boobbot.entities.framework.interfaces.Command
 import bot.boobbot.utils.Formats
 import io.sentry.Sentry
@@ -54,7 +53,7 @@ class AutoPorn : Command {
         Choice("Random", "random")
     ])
     suspend fun add(ctx: Context) {
-        val hooks = BoobBot.database.getWebhooks(ctx.guild.id)
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.idLong)
 
         if (hooks.size >= MAX_CONFIGURATIONS_PER_GUILD) {
             return ctx.reply("This server has **${hooks.size}** auto-porn configurations (maximum **${MAX_CONFIGURATIONS_PER_GUILD}**). Delete some or fuck off.")
@@ -119,7 +118,7 @@ class AutoPorn : Command {
 
         val webhook = res.getOrThrow()
         val url = formatWebhookUrl(webhook.id, webhook.token!!)
-        BoobBot.database.setWebhook(ctx.guild.id, url, imageCategory, channel.id)
+        BoobBot.database.setWebhook(ctx.guild.idLong, channel.idLong, imageCategory, url)
 
         ctx.reply {
             setColor(Color.red)
@@ -129,7 +128,7 @@ class AutoPorn : Command {
 
     @SubCommand(description = "Clear all Auto-Porn configurations for this server.")
     fun clear(ctx: Context) {
-        BoobBot.database.clearWebhooks(ctx.guild.id)
+        BoobBot.database.deleteWebhooks(ctx.guild.idLong)
         ctx.reply("Auto-Porn configurations cleared, whore.")
     }
 
@@ -144,7 +143,7 @@ class AutoPorn : Command {
         Choice("Random", "random")
     ])
     fun delete(ctx: Context) {
-        val hooks = BoobBot.database.getWebhooks(ctx.guild.id).takeIf { it.isNotEmpty() }
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.idLong).takeIf { it.isNotEmpty() }
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
@@ -163,7 +162,7 @@ class AutoPorn : Command {
         val toDelete = hooks.firstOrNull { it.channelId == channel.idLong && it.category == category }
             ?: return ctx.reply("No matching auto-porn configuration found, whore. Use `/autoporn status` to see which channels are set up or fuck off.")
 
-        BoobBot.database.deleteWebhookV2(ctx.guild.id, toDelete.channelId.toString(), category)
+        BoobBot.database.deleteWebhook(ctx.guild.idLong, toDelete.channelId, category)
 
         ctx.reply {
             setColor(Color.red)
@@ -173,7 +172,7 @@ class AutoPorn : Command {
 
     @SubCommand(description = "View the Auto-Porn configuration for this server.")
     fun status(ctx: Context) {
-        val hooks = BoobBot.database.getWebhooks(ctx.guild.id).takeIf { it.isNotEmpty() }
+        val hooks = BoobBot.database.getWebhooks(ctx.guild.idLong).takeIf { it.isNotEmpty() }
             ?: return ctx.reply {
                 setColor(Color.red)
                 setDescription("Wtf, this server doesn't even have Auto-Porn set up?")
@@ -189,7 +188,7 @@ class AutoPorn : Command {
 
                 if (channel == null) {
                     // delete V2 as the get call should've migrated this for us.
-                    BoobBot.database.deleteWebhookV2(ctx.guild.id, config.channelId.toString())
+                    BoobBot.database.deleteWebhook(ctx.guild.idLong, config.channelId)
                     appendLine("Deleted Channel\n*This entry has been automatically deleted.*\n")
                 } else {
                     appendLine(channel.asMention)

@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import org.apache.http.HttpHost
 import org.json.JSONObject
+import java.io.Closeable
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -57,9 +58,11 @@ object Utils {
     )
 
     fun checkDonor(user: JDAUser, guild: Guild?): Boolean {
-        return BoobBot.pApi.getDonorType(user.id).tier >= 1 // Supporter, Server Owner, Developer
-                || (guild != null && BoobBot.pApi.getDonorType(guild.ownerId) == DonorType.SERVER_OWNER)
-                || (guild != null && BoobBot.database.isPremiumServer(guild.id))
+        val pApi = BoobBot.pApi
+        val db = BoobBot.database
+
+        return pApi.getDonorType(user.idLong).tier >= 1 // Supporter, Server Owner, Developer
+                || guild != null && (pApi.getDonorType(guild.ownerIdLong) == DonorType.SERVER_OWNER || db.isPremiumServer(guild.idLong))
     }
 
     fun checkDonor(msg: Message): Boolean = checkDonor(msg.author, msg.guild)
@@ -132,5 +135,11 @@ object Utils {
         permissions: Array<Permission>
     ): List<Permission> {
         return permissions.filter { !target.hasPermission(channel, it) }
+    }
+
+    fun closeQuietly(vararg closeable: Closeable) {
+        for (c in closeable) {
+            c.runCatching { close() }
+        }
     }
 }

@@ -25,7 +25,7 @@ class Slot : Command {
         val amount = ctx.options.getByNameOrNext("bet", Resolver.INTEGER)?.takeIf { it in 1..500 }
             ?: return ctx.reply(Formats.error("Hey whore, Only bets of 1 - 500 are allowed"))
 
-        val u = BoobBot.database.getUser(ctx.user.id)
+        val u = BoobBot.database.getUser(ctx.user.idLong)
 
         if (amount > u.balance) {
             return ctx.reply(Formats.error("Hey Whore, You don't have enough money to do this, your balance is $${u.balance}"))

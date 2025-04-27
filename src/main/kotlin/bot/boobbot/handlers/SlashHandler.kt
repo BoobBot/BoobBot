@@ -1,9 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.framework.SlashContext
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -50,8 +48,6 @@ class SlashHandler : EventListener {
     }
 
     private fun processSlashEvent(event: SlashCommandInteractionEvent) {
-        val guild: Guild by lazy { BoobBot.database.getGuild(event.guild!!.id) }
-
         if (event.channelType.isGuild) {
             (event.channel as? ThreadChannel)?.let {
                 @Suppress("USELESS_ELVIS")
@@ -62,7 +58,7 @@ class SlashHandler : EventListener {
                 return
             }
 
-            if (guild.ignoredChannels.contains(event.channel.id) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
+            if (BoobBot.database.isIgnoredChannel(event.guild!!.idLong, event.channel.idLong) && !event.member!!.hasPermission(Permission.MESSAGE_MANAGE)) {
                 return
             }
         }
@@ -74,7 +70,7 @@ class SlashHandler : EventListener {
             ?: BoobBot.commands.findCommand(commandString) ?: BoobBot.commands.findCommand(commandGroupName.toString())
             ?: return event.reply("Command not found").setEphemeral(true).queue()
 
-        if (event.isFromGuild && (guild.disabled.contains(command.name) || guild.channelDisabled.any { it.name == command.name && it.channelId == event.channel.id })) {
+        if (event.isFromGuild && (BoobBot.database.isCommandDisabled(event.guild!!.idLong, command.name) || BoobBot.database.isCommandDisabledInChannel(event.guild!!.idLong, event.channel.idLong, command.name))) {
             return event.reply("Command is disabled").setEphemeral(true).queue()
         }
 
@@ -135,7 +131,7 @@ class SlashHandler : EventListener {
             }
         }
 
-        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.id) && event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
+        if (event.channelType.isGuild && BoobBot.database.getUserAnonymity(event.user.idLong) && event.guild!!.selfMember.hasPermission(event.guildChannel, Permission.MESSAGE_MANAGE)) {
             //event.message.delete().queue()
             // TODO maybe set ephemeral reply?
         }
@@ -146,7 +142,7 @@ class SlashHandler : EventListener {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.user.id).let {
+            BoobBot.database.getUser(event.user.idLong).let {
                 if (command.properties.nsfw) it.nsfwCommandsUsed++
                 else it.commandsUsed++
                 it.save()
