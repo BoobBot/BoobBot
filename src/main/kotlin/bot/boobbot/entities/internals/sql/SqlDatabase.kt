@@ -41,7 +41,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "UNIQUE(channelId, guildId, category));")
 
         execute("CREATE TABLE IF NOT EXISTS guilds(" +
-                "guildId BIGINT NOT NULL PRIMARY KEY," +
+                "guildId BIGINT PRIMARY KEY NOT NULL," +
                 "dropEnabled BOOLEAN NOT NULL DEFAULT FALSE," +
                 "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
                 "premiumRedeemer BIGINT DEFAULT NULL," +
@@ -82,7 +82,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         // -------------------------------------
 
         execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId BIGINT NOT NULL PRIMARY KEY," +
+                "userId BIGINT PRIMARY KEY NOT NULL," +
                 "json JSON NOT NULL," + // don't want to deal with converting this to proper SQL structure for now.
                 "CHECK (JSON_VALID(json)));")
 
@@ -116,8 +116,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
 
     fun getGuild(guildId: Long): Guild {
         return findOne("SELECT dropEnabled, blacklisted, premiumRedeemer FROM guilds WHERE guildId = ?", guildId)
-            // TODO: test return type of blacklisted as booleans are stored as ints
-            ?.let { Guild(guildId, it["dropEnabled"], it["blacklisted"], it["premiumRedeemer"]) }
+            ?.let { Guild(guildId, it["dropEnabled"], it["blacklisted"], it.getOrNull("premiumRedeemer")) }
             ?: return Guild.new(guildId)
     }
 
@@ -125,7 +124,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         execute(
             "INSERT INTO guilds (guildId, dropEnabled, blacklisted, premiumRedeemer) VALUES (?, ?, ?, ?) " +
                     "ON DUPLICATE KEY UPDATE dropEnabled = VALUES(dropEnabled), blacklisted = VALUES(blacklisted), premiumRedeemer = VALUES(premiumRedeemer)",
-            // TODO: test whether booleans are coerced to an int
             guild.id, guild.dropEnabled, guild.blacklisted, guild.premiumRedeemer
         )
     }
@@ -363,7 +361,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     private fun buildRow(result: ResultSet): Row {
-        val data = mutableMapOf<String, Any>()
+        val data = mutableMapOf<String, Any?>()
 
         for (i in 1..result.metaData.columnCount) {
             data[result.metaData.getColumnName(i)] = result.getObject(i)
@@ -375,16 +373,16 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     private inline fun <reified T> deserialize(json: String): T = gson.fromJson(json, T::class.java)
     private fun serialize(entity: Any) = gson.toJson(entity)
 
-    inner class Row(val dataDoNotAccessDirectly: Map<String, Any>) {
+    inner class Row(val dataDoNotAccessDirectly: Map<String, Any?>) {
         inline operator fun <reified T> get(column: String): T {
             return dataDoNotAccessDirectly[column]
-                ?.let { it as? T ?: throw IllegalStateException("Database type does not match ${T::class.simpleName}") }
-                ?: throw IllegalStateException("Key does not exist")
+                ?.let { it as? T ?: throw IllegalStateException("Database type does not match ${T::class.simpleName} (got type ${it::class.java.simpleName})") }
+                ?: throw IllegalStateException("Key $column does not exist")
         }
 
         inline fun <reified T> getOrNull(column: String): T? {
             return dataDoNotAccessDirectly[column]?.let {
-                it as? T ?: throw IllegalStateException("Database type does not match ${T::class.simpleName}")
+                it as? T ?: throw IllegalStateException("Database type does not match ${T::class.simpleName} (got type ${it::class.java.simpleName})")
             }
         }
     }
