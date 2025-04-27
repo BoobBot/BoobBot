@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel
 import org.apache.http.HttpHost
 import org.json.JSONObject
+import java.io.Closeable
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -134,5 +135,11 @@ object Utils {
         permissions: Array<Permission>
     ): List<Permission> {
         return permissions.filter { !target.hasPermission(channel, it) }
+    }
+
+    fun closeQuietly(vararg closeable: Closeable) {
+        for (c in closeable) {
+            c.runCatching { close() }
+        }
     }
 }

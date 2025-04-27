@@ -118,7 +118,7 @@ class Perks : Command {
         val guilds = servers.map { (BoobBot.shardManager.getGuildById(it)?.name ?: "Inaccessible Server") to it }
 
         val predicate = { e: GenericComponentInteractionCreateEvent -> e.componentId == "menu:ps:${ctx.user.id}" || e.componentId == "ps:cancel:${ctx.user.id}" }
-        val waiterSetup = ctx.onMenuInteraction("ps:${ctx.user.id}", predicate, 15000) {
+        val waiterSetup = ctx.onMenuInteraction("ps:${ctx.user.id}", predicate, 30000) {
             if (it == null) {
                 return@onMenuInteraction ctx.reply("Fine, whore. No servers will be removed.")
             }
@@ -137,7 +137,7 @@ class Perks : Command {
         }
 
         ctx.message {
-            content("Select the server you want to remove from the list below.\nThis prompt will time out in 15 seconds.")
+            content("Select the server you want to remove from the list below.\nThis prompt will time out in 30 seconds.")
             row {
                 menu("menu:ps:${ctx.user.id}") {
                     for ((name, id) in guilds) {

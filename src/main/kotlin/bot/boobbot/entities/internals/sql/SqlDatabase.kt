@@ -3,6 +3,7 @@ package bot.boobbot.entities.internals.sql
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
+import bot.boobbot.utils.Utils
 import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -23,7 +24,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             jdbcUrl = "jdbc:mariadb://$host:$port/$databaseName"
             username = user
             password = auth
-            leakDetectionThreshold = TimeUnit.SECONDS.toMillis(5)
+            leakDetectionThreshold = TimeUnit.MINUTES.toMillis(1)
             driverClassName = "org.mariadb.jdbc.Driver"
         }
         db = HikariDataSource(config)
@@ -37,9 +38,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "category VARCHAR(32) NOT NULL," +
                 "webhook VARCHAR(256) NOT NULL," +
                 // we may not have duplicate entries with the same 3 fields.
-                "UNIQUE(channelId, guildId, category)," +
-                // create an index on the fields we're likely to query by (channelId and guildId) so lookups are fast.
-                "INDEX channelId(channelId), INDEX guildId(guildId));")
+                "UNIQUE(channelId, guildId, category));")
 
         execute("CREATE TABLE IF NOT EXISTS guilds(" +
                 "guildId BIGINT NOT NULL PRIMARY KEY," +
@@ -48,13 +47,10 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "premiumRedeemer BIGINT DEFAULT NULL," +
                 "INDEX premiumRedeemer(premiumRedeemer));")
 
-        // TODO --- we store this separately to guild data so the codebase needs refactoring to account for this.
-        // also needs methods for fetching and setting these.
         execute("CREATE TABLE IF NOT EXISTS ignored_channels(" +
                 "guildId BIGINT NOT NULL," +
                 "channelId BIGINT NOT NULL," +
                 "UNIQUE(guildId, channelId)," +
-                "INDEX guildId(guildId), INDEX channelId(channelId)," +
                 // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
                 // it is also deletes from this table.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
@@ -63,7 +59,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "guildId BIGINT NOT NULL," +
                 "name VARCHAR(64) NOT NULL," +
                 "UNIQUE(guildId, name)," +
-                "INDEX guildId(guildId), INDEX name(name)," +
                 // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
                 // it is also deletes from this table.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
@@ -73,7 +68,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "channelId BIGINT NOT NULL," +
                 "name VARCHAR(64) NOT NULL," +
                 "UNIQUE(guildId, channelId, name)," +
-                "INDEX guildId(guildId), INDEX channelId(channelId), INDEX name(name)," +
                 // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
                 // it is also deletes from this table.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
@@ -82,7 +76,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "guildId BIGINT NOT NULL," +
                 "userId BIGINT NOT NULL," +
                 "INDEX guildId(guildId), INDEX userId(userId)," +
-                "UNIQUE(guildId, userId)," +
                 // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
                 // it is also deletes from this table.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
@@ -125,7 +118,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         return findOne("SELECT dropEnabled, blacklisted, premiumRedeemer FROM guilds WHERE guildId = ?", guildId)
             // TODO: test return type of blacklisted as booleans are stored as ints
             ?.let { Guild(guildId, it["dropEnabled"], it["blacklisted"], it["premiumRedeemer"]) }
-            ?: return Guild(guildId)
+            ?: return Guild.new(guildId)
     }
 
     fun setGuild(guild: Guild) {
@@ -285,8 +278,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun getDonor(userId: Long) = getUser(userId).pledge
     fun setDonor(userId: Long, pledge: Double) = getUser(userId).apply { this.pledge = pledge }.save()
 
-    // TODO this needs testing as MariaDB returns booleans as ints
-    fun isPremiumServer(guildId: Long) = findOne("SELECT 1 FROM guilds WHERE guildId = ? WHERE premiumRedeemer IS NOT NULL and premiumRedeemer > 0", guildId) != null
+    fun isPremiumServer(guildId: Long) = findOne("SELECT 1 FROM guilds WHERE guildId = ? AND premiumRedeemer IS NOT NULL AND premiumRedeemer > 0", guildId) != null
     fun setPremiumServer(guildId: Long, redeemerId: Long?) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
     fun getPremiumServers(redeemerId: Long) = find("SELECT guildId FROM guilds WHERE premiumRedeemer = ?", redeemerId).map { it.get<Long>("guildId") }
 
@@ -342,13 +334,19 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
     }
 
-    fun iterate(query: String, vararg parameters: Any?): Sequence<Row> = sequence {
-        db.connection.use { conn ->
-            buildPreparedStatement(conn, query, *parameters).use {
-                it.executeQuery().use { result ->
-                    while (result.next()) {
-                        yield(buildRow(result))
-                    }
+    fun iterate(query: String, vararg parameters: Any?): Sequence<Row> {
+        val connection = db.connection
+        val statement = buildPreparedStatement(connection, query, *parameters)
+        val result = statement.executeQuery()
+
+        return generateSequence {
+            when (result.next()) {
+                true -> buildRow(result)
+                else -> {
+                    result.close()
+                    statement.close()
+                    connection.close()
+                    null
                 }
             }
         }
@@ -375,7 +373,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     private inline fun <reified T> deserialize(json: String): T = gson.fromJson(json, T::class.java)
-    private fun serialize(entity: Any): Document = Document.parse(gson.toJson(entity))
+    private fun serialize(entity: Any) = gson.toJson(entity)
 
     inner class Row(val dataDoNotAccessDirectly: Map<String, Any>) {
         inline operator fun <reified T> get(column: String): T {

@@ -53,14 +53,15 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
             var removed = 0
             var adjusted = 0
 
-            for (row in BoobBot.database.iterate("SELECT userId, JSON_UNQUOTE(JSON_EXTRACT(json, '$.pledge')) as pledge FROM users")) {
+            for (row in BoobBot.database.iterate("SELECT userId, CAST(JSON_UNQUOTE(JSON_EXTRACT(json, '$.pledge')) AS DOUBLE) as pledge FROM users")) {
                 processed++
 
                 val id: Long = row["userId"]
                 val pledge: Double = row["pledge"]
                 val user = users.firstOrNull { it.discordId != null && it.discordId == id }
+                val pledgedAmount = user?.entitledAmountCents?.toDouble()?.div(100) ?: 0.0
 
-                if (user == null || user.status != PatronStatus.ACTIVE_PATRON) {
+                if ((user == null || user.status != PatronStatus.ACTIVE_PATRON) && pledge != pledgedAmount) {
                     BoobBot.database.setDonor(id, 0.0)
                     BoobBot.database.setUserCockBlocked(id, false)
                     BoobBot.database.setUserAnonymity(id, false)
@@ -75,12 +76,10 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                     continue
                 }
 
-                val amount = user.entitledAmountCents.toDouble() / 100
-
-                if (pledge != amount) {
-                    BoobBot.database.setDonor(id, amount)
+                if (pledge != pledgedAmount) {
+                    BoobBot.database.setDonor(id, pledgedAmount)
                     adjusted += 1
-                    log.debug("User $id adjusted: $amount -> $pledge")
+                    log.debug("User $id adjusted: $pledgedAmount -> $pledge")
                 }
             }
 
@@ -90,6 +89,9 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
             // The above only handles users that have registered into the system.
             // To register into the system, users can run `bbperks` to receive their rewards after
             // pledging on Patreon.
+        }.exceptionally {
+            it.printStackTrace()
+            return@exceptionally null
         }
     }
 

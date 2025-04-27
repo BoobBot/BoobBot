@@ -8,6 +8,15 @@ data class Guild(
     var blacklisted: Boolean = false,
     var premiumRedeemer: Long? = null
 ) {
+    var isNew = false
+        private set
+
+    companion object {
+        fun new(id: Long): Guild {
+            return Guild(id).also { it.isNew = true }
+        }
+    }
+
     fun save() = BoobBot.database.setGuild(this)
     fun delete() = BoobBot.database.deleteGuild(id)
 }

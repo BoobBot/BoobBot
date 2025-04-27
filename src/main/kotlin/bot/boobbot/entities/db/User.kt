@@ -30,8 +30,8 @@ data class User(
     var nudes: Boolean = false,
     var pledge: Double = 0.0
 ) {
-    operator fun get(key: String) {
-        when (key) {
+    operator fun get(key: String): Any {
+        return when (key) {
             "balance" -> balance
             "rep" -> rep
             "level" -> level

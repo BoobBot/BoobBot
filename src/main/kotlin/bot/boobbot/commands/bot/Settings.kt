@@ -14,6 +14,7 @@ import bot.boobbot.utils.ifTrue
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
+import org.checkerframework.checker.units.qual.g
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
 class Settings : Command {
@@ -191,12 +192,12 @@ class Settings : Command {
 
     @SubCommand(aliases = ["economytoggle"], description = "Toggles economy drops.")
     fun economyEnable(ctx: Context) {
-        val g = BoobBot.database.getGuild(ctx.guild.idLong)
+        val data = ctx.guildData.apply {
+            dropEnabled = !dropEnabled
+            save()
+        }
 
-        g.dropEnabled = !g.dropEnabled
-        g.save()
-
-        val dropStatus = if (g.dropEnabled) "enabled" else "disabled"
+        val dropStatus = if (data.dropEnabled) "enabled" else "disabled"
         ctx.reply("Drops are now $dropStatus for this server.")
     }
 
