@@ -1,7 +1,6 @@
 package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.TimerUtil
 import bot.boobbot.utils.json
 import okhttp3.Request
@@ -67,8 +66,8 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
                     BoobBot.database.setUserAnonymity(id, false)
 
                     for (guildId in BoobBot.database.getPremiumServers(id)) {
-                        // TODO: Also remove autoporn webhooks?
                         BoobBot.database.setPremiumServer(guildId, null)
+                        BoobBot.database.deleteWebhooks(guildId)
                     }
 
                     removed += 1

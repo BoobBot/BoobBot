@@ -6,10 +6,8 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ModCommand
-import io.ktor.client.utils.EmptyContent.status
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import org.checkerframework.checker.units.qual.g
 
 @CommandProperties(
     description = "Mute an Admin.",

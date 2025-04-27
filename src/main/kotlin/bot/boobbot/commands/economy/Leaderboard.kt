@@ -5,7 +5,6 @@ import bot.boobbot.entities.framework.Context
 import bot.boobbot.entities.framework.annotations.CommandProperties
 import bot.boobbot.entities.framework.annotations.SubCommand
 import bot.boobbot.entities.framework.interfaces.AsyncCommand
-import com.mongodb.BasicDBObject
 import kotlinx.coroutines.future.await
 
 @CommandProperties(description = "Global leaderboards \uD83C\uDFC6", aliases = ["lb"], guildOnly = true, groupByCategory = true)

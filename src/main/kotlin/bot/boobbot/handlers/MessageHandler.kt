@@ -1,11 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
-import bot.boobbot.entities.db.User
-import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.MessageContext
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils
@@ -15,7 +11,6 @@ import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
 import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
-import kotlinx.coroutines.*
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.ChannelType
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel

@@ -1,9 +1,7 @@
 package bot.boobbot.handlers
 
 import bot.boobbot.BoobBot
-import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.framework.SlashContext
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.Constants
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.Utils

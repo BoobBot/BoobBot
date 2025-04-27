@@ -6,7 +6,6 @@ import bot.boobbot.entities.db.WebhookConfiguration
 import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import kotlinx.coroutines.yield
 import org.bson.Document
 import org.jsoup.internal.StringUtil.StringJoiner
 import java.sql.Connection

@@ -2,7 +2,6 @@ package bot.boobbot.entities.framework
 
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.internals.BoundedThreadPool
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.utils.json
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
@@ -17,7 +16,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.requests.ErrorResponse
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder
-import net.dv8tion.jda.api.utils.messages.MessageEditData
 import okhttp3.Headers.Companion.headersOf
 import java.awt.Color
 import java.awt.Font

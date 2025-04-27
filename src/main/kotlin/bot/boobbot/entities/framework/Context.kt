@@ -3,7 +3,6 @@ package bot.boobbot.entities.framework
 import bot.boobbot.BoobBot
 import bot.boobbot.audio.GuildMusicManager
 import bot.boobbot.entities.framework.interfaces.Options
-import bot.boobbot.entities.internals.Config
 import bot.boobbot.entities.misc.DSLMessageBuilder
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
