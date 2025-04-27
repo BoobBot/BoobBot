@@ -14,7 +14,6 @@ import bot.boobbot.utils.ifTrue
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import org.checkerframework.checker.units.qual.g
 
 @CommandProperties(description = "Manage BoobBot's settings for this server", guildOnly = true)
 class Settings : Command {
