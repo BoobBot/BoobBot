@@ -32,20 +32,21 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     private fun setupTables() {
-        execute("CREATE TABLE IF NOT EXISTS webhooks(" +
-                "guildId BIGINT NOT NULL," +
-                "channelId BIGINT NOT NULL," +
-                "category VARCHAR(32) NOT NULL," +
-                "webhook VARCHAR(256) NOT NULL," +
-                // we may not have duplicate entries with the same 3 fields.
-                "UNIQUE(channelId, guildId, category));")
-
         execute("CREATE TABLE IF NOT EXISTS guilds(" +
                 "guildId BIGINT PRIMARY KEY NOT NULL," +
                 "dropEnabled BOOLEAN NOT NULL DEFAULT FALSE," +
                 "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
                 "premiumRedeemer BIGINT DEFAULT NULL," +
                 "INDEX premiumRedeemer(premiumRedeemer));")
+
+        execute("CREATE TABLE IF NOT EXISTS webhooks(" +
+                "guildId BIGINT NOT NULL," +
+                "channelId BIGINT NOT NULL," +
+                "category VARCHAR(32) NOT NULL," +
+                "webhook VARCHAR(256) NOT NULL," +
+                // we may not have duplicate entries with the same 3 fields.
+                "UNIQUE(channelId, guildId, category)," +
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
 
         execute("CREATE TABLE IF NOT EXISTS ignored_channels(" +
                 "guildId BIGINT NOT NULL," +
@@ -79,18 +80,18 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 // joins this table up to `guilds` so that whenever a guild is removed from `guilds`,
                 // it is also deletes from this table.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
-        // -------------------------------------
-
-        execute("CREATE TABLE IF NOT EXISTS users(" +
-                "userId BIGINT PRIMARY KEY NOT NULL," +
-                "json JSON NOT NULL," + // don't want to deal with converting this to proper SQL structure for now.
-                "CHECK (JSON_VALID(json)));")
 
         execute("CREATE TABLE IF NOT EXISTS custom_commands(" +
                 "guildId BIGINT NOT NULL," +
                 "name VARCHAR(128) NOT NULL," +
                 "content VARCHAR(4000) NOT NULL," + // max message length is 4000.
-                "UNIQUE(guildId, name));") // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
+                "UNIQUE(guildId, name)" +
+                "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);") // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
+
+        execute("CREATE TABLE IF NOT EXISTS users(" +
+                "userId BIGINT PRIMARY KEY NOT NULL," +
+                "json JSON NOT NULL," + // don't want to deal with converting this to proper SQL structure for now.
+                "CHECK (JSON_VALID(json)));")
     }
 
     fun getWebhooks(guildId: Long): List<WebhookConfiguration> {
