@@ -76,6 +76,7 @@ class EventHandler : EventListener {
     private fun onGuildLeave(event: GuildLeaveEvent) {
         BoobBot.metrics.record(Metrics.happened("GuildLeave"))
         BoobBot.getMusicManager(event.guild)?.shutdown()
+        BoobBot.database.deleteGuild(event.guild.idLong)
 
         WebhookManager.sendLeave {
             buildGuildEmbed(this, event.guild, false)
