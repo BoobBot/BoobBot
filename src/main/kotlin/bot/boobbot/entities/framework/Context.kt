@@ -29,9 +29,12 @@ abstract class Context(val mentionTrigger: Boolean,
                        val channel: MessageChannelUnion,
                        val _guild: Guild?) {
     val prefix = if (isSlashContext) "/" else "@${jda.selfUser.name} "
-    val guildData = BoobBot.database.getGuild(guild.idLong).also {
-        if (it.isNew) {
-            it.save()
+
+    val guildData: bot.boobbot.entities.db.Guild by lazy {
+        BoobBot.database.getGuild(guild.idLong).also {
+            if (it.isNew) {
+                it.save()
+            }
         }
     }
 
