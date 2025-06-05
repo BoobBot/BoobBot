@@ -3,11 +3,9 @@ package bot.boobbot.entities.internals.sql
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
-import bot.boobbot.utils.Utils
 import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.bson.Document
 import org.jsoup.internal.StringUtil.StringJoiner
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -24,6 +22,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             jdbcUrl = "jdbc:mariadb://$host:$port/$databaseName"
             username = user
             password = auth
+            maximumPoolSize = 100
             leakDetectionThreshold = TimeUnit.SECONDS.toMillis(10)
             driverClassName = "org.mariadb.jdbc.Driver"
         }
@@ -339,14 +338,21 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         val result = statement.executeQuery()
 
         return generateSequence {
-            when (result.next()) {
-                true -> buildRow(result)
-                else -> {
-                    result.close()
-                    statement.close()
-                    connection.close()
-                    null
+            try {
+                when (result.next()) {
+                    true -> buildRow(result)
+                    else -> {
+                        result.close()
+                        statement.close()
+                        connection.close()
+                        null
+                    }
                 }
+            } catch (t: Throwable) {
+                result.close()
+                statement.close()
+                connection.close()
+                null
             }
         }
     }
