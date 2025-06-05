@@ -9,7 +9,6 @@ import bot.boobbot.utils.Utils.calculateLewdLevel
 import bot.boobbot.utils.Utils.checkMissingPermissions
 import bot.boobbot.utils.Utils.random
 import bot.boobbot.utils.json
-import com.google.common.primitives.Ints.max
 import de.mxro.metrics.jre.Metrics
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.channel.ChannelType
@@ -21,13 +20,20 @@ import net.dv8tion.jda.api.hooks.EventListener
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
 class MessageHandler : EventListener {
-    private val threadCounter = AtomicInteger()
+    private val commandThreadCounter = AtomicInteger()
+    private val eventThreadCounter = AtomicInteger()
+
     private val commandExecutorPool = Executors.newCachedThreadPool {
-        Thread(it, "Command-Executor-${threadCounter.getAndIncrement()}")
+        Thread(it, "Command-Executor-${commandThreadCounter.getAndIncrement()}")
+    }
+
+    private val eventExecutorPool = Executors.newCachedThreadPool() {
+        Thread(it, "Event-Executor-${eventThreadCounter.getAndIncrement()}")
     }
 
     override fun onEvent(event: GenericEvent) {
@@ -47,7 +53,9 @@ class MessageHandler : EventListener {
             processMessageEvent(event)
         }
 
-        processUser(event)
+//        eventExecutorPool.execute {
+//            processUser(event)
+//        }
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
@@ -203,28 +211,27 @@ class MessageHandler : EventListener {
         if (user.inJail) {
             user.jailRemaining = max(user.jailRemaining - 1, 0)
             user.inJail = user.jailRemaining > 0
-            user.save()
-            return
-        }
-
-        if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
-            val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-            user.lewdPoints += min(tagSize, 5)
-            user.nsfwMessagesSent++
-        }
-
-        if (user.coolDownCount >= random(0, 10)) {
-            user.coolDownCount = random(0, 10)
-            user.experience++
-
-            if (user.bonusXp > 0) {
-                user.experience++ // extra XP
-                user.bonusXp = user.bonusXp - 1
+        } else {
+            if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
+                val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
+                user.lewdPoints += min(tagSize, 5)
+                user.nsfwMessagesSent++
             }
+
+            if (user.coolDownCount >= random(0, 10)) {
+                user.coolDownCount = random(0, 10)
+                user.experience++
+
+                if (user.bonusXp > 0) {
+                    user.experience++ // extra XP
+                    user.bonusXp -= 1
+                }
+            }
+
+            user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
+            user.lewdLevel = calculateLewdLevel(user)
         }
 
-        user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-        user.lewdLevel = calculateLewdLevel(user)
         user.save()
     }
 }
