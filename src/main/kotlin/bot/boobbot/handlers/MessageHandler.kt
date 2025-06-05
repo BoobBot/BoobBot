@@ -32,7 +32,7 @@ class MessageHandler : EventListener {
         Thread(it, "Command-Executor-${commandThreadCounter.getAndIncrement()}")
     }
 
-    private val eventExecutorPool = Executors.newCachedThreadPool() {
+    private val eventExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Event-Executor-${eventThreadCounter.getAndIncrement()}")
     }
 

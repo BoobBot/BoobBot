@@ -53,6 +53,8 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
             var removed = 0
             var adjusted = 0
 
+            // this will fire a "leak detected" warning but is normal. It's just because this bit is long-running and the detection threshold is >10 seconds.
+            // the alternative is to store all rows in memory which seems kinda disgusting.
             for (row in BoobBot.database.iterate("SELECT userId, CAST(JSON_UNQUOTE(JSON_EXTRACT(json, '$.pledge')) AS DOUBLE) as pledge FROM users")) {
                 processed++
 
