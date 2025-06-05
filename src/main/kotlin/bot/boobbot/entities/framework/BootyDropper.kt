@@ -80,16 +80,15 @@ class BootyDropper : EventListener {
             return
         }
 
-        val guild = BoobBot.database.getGuild(event.guild.idLong)
         val number = random(0, 10000)
 
-        val manualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in BoobBot.owners
-        val shouldDrop = !hasActiveDrop(event.guild.idLong) && guild.dropEnabled && number % 59 == 0
+        val isManualDrop = event.message.contentRaw.startsWith(">coin") && event.message.author.idLong in BoobBot.owners
+        val shouldDrop = isManualDrop || (!hasActiveDrop(event.guild.idLong) && BoobBot.database.getGuild(event.guild.idLong).dropEnabled && number % 59 == 0)
 
-        if (shouldDrop || manualDrop) {
+        if (shouldDrop) {
             dropThreads.execute { spawnDrop(event) }
 
-            if (manualDrop) {
+            if (isManualDrop) {
                 event.message.delete().reason("User initiated drop").queue(null, DEFAULT_IGNORE)
             }
         }
