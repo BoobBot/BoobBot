@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        //jcenter()
     }
 
     dependencies {
@@ -86,7 +85,7 @@ dependencies {
 
     implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
     implementation "org.mariadb.jdbc:mariadb-java-client:3.3.3"
-    implementation "com.zaxxer:HikariCP:5.1.0"
+    implementation "com.zaxxer:HikariCP:6.3.0"
 }
 
 shadowJar {

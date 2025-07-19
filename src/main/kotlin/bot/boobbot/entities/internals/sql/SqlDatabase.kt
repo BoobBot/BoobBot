@@ -3,19 +3,26 @@ package bot.boobbot.entities.internals.sql
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
+import bot.boobbot.entities.internals.adapters.InstantAdapter
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.html.InputType
+import org.jetbrains.kotlin.konan.file.use
 import org.jsoup.internal.StringUtil.StringJoiner
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.time.Instant
 import java.util.concurrent.TimeUnit
+import javax.sound.midi.Sequence
 
 class SqlDatabase(host: String, port: String, databaseName: String, user: String, auth: String) {
     private val db: HikariDataSource
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(Instant::class.java, InstantAdapter())
+        .create()
 
     init {
         val config = HikariConfig().apply {
