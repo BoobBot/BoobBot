@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
+        classpath "com.github.johnrengelman:shadow:$shadow_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -13,7 +13,7 @@ buildscript {
 plugins {
     id "idea"
     id "application"
-    id "com.github.johnrengelman.shadow" version "6.0.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
     id "org.jetbrains.kotlin.jvm" version "1.2.70"
 }
 
@@ -92,7 +92,7 @@ shadowJar {
     archiveFileName = "bb.jar"
 }
 
-String jvmTarget = JavaVersion.VERSION_12
+String jvmTarget = JavaVersion.VERSION_21
 
 compileKotlin {
     kotlinOptions.jvmTarget = jvmTarget.toString()
