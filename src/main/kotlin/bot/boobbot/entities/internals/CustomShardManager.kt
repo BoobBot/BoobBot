@@ -149,8 +149,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)
 
-            throw UnsupportedOperationException()
-//            return CustomShardManager(token, sm.build(), shardCount)
+            return CustomShardManager(token, sm.build(), shardCount)
         }
 
         fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0

@@ -135,7 +135,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "lastSaved TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
                 "level INT NOT NULL DEFAULT 0," +
                 "lewdLevel INT NOT NULL DEFAULT 0," +
-                "lewdPoints INT NOT NULL DEFAULT 0," +
+                "lewdPoints BIGINT NOT NULL DEFAULT 0," +
                 "messagesSent BIGINT NOT NULL DEFAULT 0," +
                 "nsfwCommandsUsed BIGINT NOT NULL DEFAULT 0," +
                 "nsfwMessagesSent BIGINT NOT NULL DEFAULT 0," +

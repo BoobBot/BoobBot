@@ -218,7 +218,7 @@ class MessageHandler : EventListener {
             }
 
             if (user.coolDownCount >= random(0, 10)) {
-                user.coolDownCount = random(0, 10)
+                user.coolDownCount = random(0, 10).toLong()
                 user.experience++
 
                 if (user.bonusXp > 0) {

@@ -3,7 +3,6 @@ package bot.boobbot.utils
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Response
-import okio.use
 import org.json.JSONObject
 import java.net.URI
 import java.sql.Timestamp

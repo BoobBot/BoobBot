@@ -178,10 +178,10 @@ object Formats {
 
     fun monospaced(items: List<String>) = items.joinToString("`, `", prefix = "`", postfix = "`")
 
-    fun progressPercentage(remain: Int, total: Int): String {
+    fun progressPercentage(remain: Long, total: Long): String {
         require(remain <= total)
         val maxBareSize = 10 // 10unit for 100%
-        val remainPercent = 100 * remain / total / maxBareSize
+        val remainPercent = (100 * remain / total / maxBareSize).toInt()
         val defaultChar = '◯'
         val icon = "⬤"
         val bar = String(CharArray(maxBareSize)).replace('\u0000', defaultChar) + "]"
