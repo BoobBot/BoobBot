@@ -28,6 +28,8 @@ class MessageHandler : EventListener {
     private val commandThreadCounter = AtomicInteger()
     private val eventThreadCounter = AtomicInteger()
 
+    private var processUserMessageEvents = true
+
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${commandThreadCounter.getAndIncrement()}")
     }
@@ -49,13 +51,23 @@ class MessageHandler : EventListener {
             return
         }
 
+        if (event.message.contentRaw.contains("toggleuserprocess") && event.author.idLong in BoobBot.owners) {
+            processUserMessageEvents = !processUserMessageEvents
+
+            event.channel.sendMessage("Event processing: $processUserMessageEvents")
+                .setMessageReference(event.message)
+                .queue()
+        }
+
         commandExecutorPool.execute {
             processMessageEvent(event)
         }
 
-//        eventExecutorPool.execute {
-//            processUser(event)
-//        }
+        if (processUserMessageEvents) {
+            eventExecutorPool.execute {
+                processUser(event)
+            }
+        }
     }
 
     private fun processMessageEvent(event: MessageReceivedEvent) {
