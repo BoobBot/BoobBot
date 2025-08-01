@@ -28,15 +28,15 @@ class Fish : Command {
     )
 
     private val fishValues = mapOf(
-        "common" to 20,
-        "uncommon" to 50,
-        "rare" to 100
+        "common" to 20L,
+        "uncommon" to 50L,
+        "rare" to 100L
     )
 
     override fun execute(ctx: Context) {
         val bait = ctx.options.getByNameOrNext("bait", Resolver.STRING)?.lowercase()
             ?: return ctx.reply(Formats.error("Pick `worm` or `lure`, whore."))
-        val attempts = ctx.options.getByNameOrNext("attempts", Resolver.INTEGER) ?: 1
+        val attempts = ctx.options.getByNameOrNext("attempts", Resolver.LONG) ?: 1
 
         if (bait !in listOf("worm", "lure")) {
             return ctx.reply(Formats.error("Invalid bait type. Choose either `worm` or `lure`."))
@@ -51,19 +51,16 @@ class Fish : Command {
         val baitCost = if (bait == "worm") 10 else 20
         val totalCost = baitCost * attempts
 
-        if (totalCost > u.balance) {
+        if (u.balance < totalCost) {
             return ctx.reply(Formats.error("You don't have enough money to go fishing with this bait."))
         }
 
         u.balance -= totalCost
 
         val results = (1..attempts).map { fishAttempt(bait) }
-
         val totalFishValue = results.sumOf { fishValues[it] ?: 0 }
 
         u.balance += totalFishValue
-
-        u.save()
 
         val formattedResults = results.joinToString(" ") { fishEmotes[it] ?: "❓" }
         ctx.message { content(Formats.info("Fishing Results:\n$formattedResults\nTotal Fish Value: $$totalFishValue")) }

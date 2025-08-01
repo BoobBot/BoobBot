@@ -142,14 +142,17 @@ class SlashHandler : EventListener {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.user.idLong).let {
-                if (command.properties.nsfw) it.nsfwCommandsUsed++
-                else it.commandsUsed++
-                it.save()
-            }
+            val key = if (command.properties.nsfw) "nsfwCommandsUsed" else "commandsUsed"
+            BoobBot.database.execute("INSERT INTO users_v2 (userId, $key) VALUES (?, ?) ON DUPLICATE KEY UPDATE $key = $key + 1", event.user.idLong, 1)
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
-            event.reply("Error occurred during command processing.").queue()
+
+            if (event.isAcknowledged) {
+                event.channel.sendMessage("Error occurred during command processing.").queue()
+            } else {
+                event.reply("Error occurred during command processing.").queue()
+            }
+
             Sentry.capture(e)
         }
     }

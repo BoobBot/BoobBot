@@ -6,12 +6,10 @@ import bot.boobbot.entities.db.WebhookConfiguration
 import bot.boobbot.utils.toTimestamp
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.json.JSONObject
 import org.jsoup.internal.StringUtil.StringJoiner
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
-import java.sql.Timestamp
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
@@ -29,18 +27,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
         db = HikariDataSource(config)
         setupTables()
-    }
-
-    private fun parseTimestamp(json: JSONObject, key: String): Timestamp {
-        if (json.has(key) && !json.isNull(key) && json.get(key) is JSONObject) {
-            val instantObj = json.getJSONObject(key)
-            val seconds = instantObj.getLong("seconds")
-            val nanos = instantObj.getLong("nanos")
-
-            return Instant.ofEpochSecond(seconds, nanos).toTimestamp()
-        }
-
-        return SQL_EPOCH_SECOND
     }
 
     private fun setupTables() {
@@ -198,22 +184,23 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             .map(User::fromDatabaseRow)
     }
 
-    fun getUser(userId: Long): User {
+    /**
+     * Retrieve a user from the database.
+     * @param partial If true, this will return a user object without reading from the database.
+     *                Useful for operations that don't need to read values first.
+     */
+    fun getUser(userId: Long, partial: Boolean = false): User {
+        if (partial) {
+            return User.withDefaults(userId)
+        }
+
         return findOne("SELECT * FROM users_v2 WHERE userId = ?", userId)
             ?.let(User::fromDatabaseRow)
             ?: return User.withDefaults(userId)
     }
 
-    fun setUser(user: User) {
-        if (!user.inDatabase) {
-            // just insert user ID, the columns have default values
-            execute("INSERT INTO users_v2 (userId) VALUES (?)", user._id)
-        }
-
-        execute(
-            "UPDATE users_v2 SET balance = ?, bankBalance = ?, blacklisted = ?, bonusXp = ?, commandsUsed = ?, coolDownCount = ?, experience = ?, jailRemaining = ?, lastDaily = ?, lastRep = ?, level = ?, lewdLevel = ?, lewdPoints = ?, messagesSent = ?, nsfwCommandsUsed = ?, nsfwMessagesSent = ?, protected = ?, rep = ?, anonymity = ?, cockblocked = ?, nudes = ?, pledge = ?",
-            user.balance, user.bankBalance, user.blacklisted, user.bonusXp, user.commandsUsed, user.coolDownCount, user.experience, user.jailRemaining, user.lastDaily.toTimestamp(), user.lastRep.toTimestamp(), user.level, user.lewdLevel, user.lewdPoints, user.messagesSent, user.nsfwCommandsUsed, user.nsfwMessagesSent, user.protected, user.rep, user.anonymity, user.cockblocked, user.nudes, user.pledge
-        )
+    fun createUser(userId: Long) {
+        execute("INSERT IGNORE INTO users_v2 (userId) VALUES (?)", userId)
     }
 
     fun deleteUser(userId: Long) {
@@ -313,7 +300,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     //</editor-fold>
 
     fun getDonor(userId: Long) = getUser(userId).pledge
-    fun setDonor(userId: Long, pledge: Double) = getUser(userId).apply { this.pledge = pledge }.save()
+    fun setDonor(userId: Long, pledge: Double) = getUser(userId, partial = true).apply { this.pledge.set(pledge) }
 
     fun isPremiumServer(guildId: Long) = findOne("SELECT 1 FROM guilds WHERE guildId = ? AND premiumRedeemer IS NOT NULL AND premiumRedeemer > 0", guildId) != null
     fun setPremiumServer(guildId: Long, redeemerId: Long?) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
@@ -321,19 +308,18 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
 
     // everything below here is crude and should probably be improved when the user stuff is *properly* done.
     fun getCanUserReceiveNudes(userId: Long) = getUser(userId).nudes
-    fun setUserCanReceiveNudes(userId: Long, canReceive: Boolean) = getUser(userId).apply { nudes = canReceive }.save()
+    fun setUserCanReceiveNudes(userId: Long, nudes: Boolean) = getUser(userId, partial = true).apply { this.nudes = nudes }
 
     fun getUserCockBlocked(userId: Long) = getUser(userId).cockblocked
-    fun setUserCockBlocked(userId: Long, cockblocked: Boolean) = getUser(userId).apply { this.cockblocked = cockblocked }.save()
+    fun setUserCockBlocked(userId: Long, cockblocked: Boolean) = getUser(userId, partial = true).apply { this.cockblocked = cockblocked }
 
     fun getUserAnonymity(userId: Long) = getUser(userId).anonymity
-    fun setUserAnonymity(userId: Long, anonymity: Boolean) = getUser(userId).apply { this.anonymity = anonymity }.save()
+    fun setUserAnonymity(userId: Long, anonymity: Boolean) = getUser(userId, partial = true).apply { this.anonymity = anonymity }
 
     /**
-     * Execute a statement on the database. This method cannot be used to find anything,
-     * but is more for setting data.
+     * Execute a statement on the database. This method cannot be used to find anything, but rather for setting data.
      */
-    private fun execute(query: String, vararg parameters: Any?) {
+    fun execute(query: String, vararg parameters: Any?) {
         db.connection.use { conn ->
             buildPreparedStatement(conn, query, *parameters).use {
                 it.executeUpdate()
@@ -341,7 +327,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
     }
 
-    private fun find(query: String, vararg parameters: Any): List<Row> {
+    fun find(query: String, vararg parameters: Any): List<Row> {
         db.connection.use { conn ->
             buildPreparedStatement(conn, query, *parameters).use {
                 it.executeQuery().use { result ->
@@ -357,7 +343,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
     }
 
-    private fun findOne(query: String, vararg parameters: Any): Row? {
+    fun findOne(query: String, vararg parameters: Any): Row? {
         db.connection.use { conn ->
             buildPreparedStatement(conn, query, *parameters).use {
                 it.executeQuery().use { result ->

@@ -59,12 +59,12 @@ class Leaderboard : AsyncCommand {
                 break
             }
 
-            val user = ctx.jda.runCatching { retrieveUserById(u._id).submit().await() }
+            val user = ctx.jda.runCatching { retrieveUserById(u.id).submit().await() }
                 .getOrNull()
                 ?.takeIf { !it.name.contains("Deleted User") && !it.isBot }
 
             if (user == null) {
-                u.delete()
+                BoobBot.database.deleteUser(u.id)
                 continue
             }
 

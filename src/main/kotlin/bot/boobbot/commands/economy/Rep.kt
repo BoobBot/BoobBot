@@ -33,24 +33,18 @@ class Rep : Command {
             return ctx.reply("aww how sad you wanna rep yourself, well fucking don't. Go find a friend whore.")
         }
 
-        val author = BoobBot.database.getUser(ctx.user.idLong)
+        val author = BoobBot.database.getUser(ctx.user.idLong, partial = true)
         val now = Instant.now()
         val lastRep = author.lastRep
 
-        if (lastRep != null) {
-            val t = lastRep.plus(12, ChronoUnit.HOURS)
-            val x = t.toEpochMilli() - now.toEpochMilli()
-            if (!t.isBefore(now)) {
-                return ctx.reply("You already gave rep today whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
-            }
+        val t = lastRep.plus(12, ChronoUnit.HOURS)
+        val x = t.toEpochMilli() - now.toEpochMilli()
+        if (!t.isBefore(now)) {
+            return ctx.reply("You already gave rep today whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
         }
 
         author.lastRep = now
-        author.save()
-
-        BoobBot.database.getUser(target.idLong)
-            .apply { rep += 1 }
-            .save()
+        BoobBot.database.getUser(target.idLong, partial = true).rep += 1
 
         ctx.reply("You gave **${target.name}** a rep point, Good job! Seems you're not completely useless after all.")
     }

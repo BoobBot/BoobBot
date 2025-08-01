@@ -69,8 +69,8 @@ class ApiServer {
             .put("RAM_Usage", "${stats.ramUsedMb}MB(${stats.ramUsedPercent}%)")
             .put("Threads", stats.threads)
             .put("Total_GC_Count", stats.totalGarbageCollectionCount)
-            .put("Total_GC_Time", "${stats.totalGarbageCollectionTime}ms")
-            .put("Avg_GC_Cycle", "${stats.averageGarbageCollectionTime}ms")
+            .put("Total_GC_Time", stats.totalGarbageCollectionTime)
+            .put("Avg_GC_Cycle", stats.averageGarbageCollectionTime)
 
         val bb = JSONObject()
             .put("Audio_Players", stats.audioPlayers)

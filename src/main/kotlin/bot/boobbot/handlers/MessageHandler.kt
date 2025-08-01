@@ -28,7 +28,7 @@ class MessageHandler : EventListener {
     private val commandThreadCounter = AtomicInteger()
     private val eventThreadCounter = AtomicInteger()
 
-    private var processUserMessageEvents = true
+    private var processUserMessageEvents = false
 
     private val commandExecutorPool = Executors.newCachedThreadPool {
         Thread(it, "Command-Executor-${commandThreadCounter.getAndIncrement()}")
@@ -194,11 +194,8 @@ class MessageHandler : EventListener {
             BoobBot.metrics.record(Metrics.happened("command"))
             BoobBot.metrics.record(Metrics.happened(command.name))
 
-            BoobBot.database.getUser(event.author.idLong).let {
-                if (command.properties.nsfw) it.nsfwCommandsUsed++
-                else it.commandsUsed++
-                it.save()
-            }
+            val key = if (command.properties.nsfw) "nsfwCommandsUsed" else "commandsUsed"
+            BoobBot.database.execute("INSERT INTO users_v2 (userId, $key) VALUES (?, ?) ON DUPLICATE KEY UPDATE $key = $key + 1", event.author.idLong, 1)
         } catch (e: Exception) {
             BoobBot.log.error("Command `${command.name}` encountered an error during execution", e)
 
@@ -214,35 +211,33 @@ class MessageHandler : EventListener {
         }
 
         val user = BoobBot.database.getUser(event.author.idLong)
-        user.messagesSent++
+        user.messagesSent += 1
 
         if (user.blacklisted) {
             return
         }
 
         if (user.jailRemaining > 0) {
-            user.jailRemaining = max(user.jailRemaining - 1, 0)
+            user.jailRemaining.set(max(user.jailRemaining - 1, 0))
         } else {
             if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
                 val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }
-                user.lewdPoints += min(tagSize, 5)
-                user.nsfwMessagesSent++
+                user.lewdPoints += min(tagSize, 5).toLong()
+                user.nsfwMessagesSent += 1
             }
 
             if (user.coolDownCount >= random(0, 10)) {
-                user.coolDownCount = random(0, 10).toLong()
-                user.experience++
+                user.coolDownCount.set(random(0, 10))
+                user.experience += 1
 
                 if (user.bonusXp > 0) {
-                    user.experience++ // extra XP
+                    user.experience += 1 // extra XP
                     user.bonusXp -= 1
                 }
             }
 
-            user.level = floor(0.1 * sqrt(user.experience.toDouble())).toInt()
-            user.lewdLevel = calculateLewdLevel(user)
+            user.level.set(floor(0.1 * sqrt(user.experience.value.toDouble())).toInt())
+            user.lewdLevel.set(calculateLewdLevel(user))
         }
-
-        user.save()
     }
 }

@@ -22,12 +22,12 @@ class Coin : Command {
             ctx.options.getByNameOrNext("side", Resolver.STRING)?.lowercase()?.takeIf { it == "heads" || it == "tails" }
                 ?: return ctx.reply(Formats.error("Specify `heads` or `tails`, whore."))
 
-        val amount = ctx.options.getByNameOrNext("bet", Resolver.INTEGER)?.takeIf { it in 1..500 }
+        val amount = ctx.options.getByNameOrNext("bet", Resolver.LONG)?.takeIf { it in 1..500 }
             ?: return ctx.reply(Formats.error("Hey whore, Only bets of 1 - 500 are allowed"))
 
         val u = BoobBot.database.getUser(ctx.user.idLong)
 
-        if (amount > u.balance) {
+        if (u.balance < amount) {
             return ctx.reply(Formats.error("Hey Whore, You don't have enough money to do this lul, you balance is $${u.balance}"))
         }
 
@@ -45,7 +45,6 @@ class Coin : Command {
             " You Lost $$amount"
         }
 
-        u.save()
         ctx.message { content(Formats.info("`${res.first}`" + msg)) }
         ctx.channel.sendMessage(res.second).queue()
     }

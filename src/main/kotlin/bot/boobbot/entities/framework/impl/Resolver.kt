@@ -74,6 +74,7 @@ class Resolver<T>(private val mapping: Mapping<T>, private val parser: Parser<T>
 
         val STRING = Resolver(OptionMapping::getAsString) { it.takeIf { it.isNotEmpty() } }
         val INTEGER = Resolver(OptionMapping::getAsInt, String::toIntOrNull)
+        val LONG = Resolver(OptionMapping::getAsLong, String::toLongOrNull)
         val USER = Resolver(OptionMapping::getAsUser) { arg ->
             when {
                 arg.length > 1 && arg.startsWith('@') -> {

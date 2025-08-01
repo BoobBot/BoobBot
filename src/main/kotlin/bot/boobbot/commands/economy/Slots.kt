@@ -12,22 +12,22 @@ import net.dv8tion.jda.api.interactions.commands.OptionType
 
 @CommandProperties(
     description = "Play the slot machine.",
-    aliases = ["slots"],
+    aliases = ["slot"],
     category = Category.ECONOMY,
     groupByCategory = true
 )
 @Option(name = "bet", description = "Bet amount, 1-500.", type = OptionType.INTEGER)
-class Slot : Command {
+class Slots : Command {
 
     private val slotEmotes = listOf("🍒", "🍋", "🍊", "🍇", "🔔", "💰")
 
     override fun execute(ctx: Context) {
-        val amount = ctx.options.getByNameOrNext("bet", Resolver.INTEGER)?.takeIf { it in 1..500 }
+        val amount = ctx.options.getByNameOrNext("bet", Resolver.LONG)?.takeIf { it in 1..500 }
             ?: return ctx.reply(Formats.error("Hey whore, Only bets of 1 - 500 are allowed"))
 
         val u = BoobBot.database.getUser(ctx.user.idLong)
 
-        if (amount > u.balance) {
+        if (u.balance < amount) {
             return ctx.reply(Formats.error("Hey Whore, You don't have enough money to do this, your balance is $${u.balance}"))
         }
 
@@ -43,7 +43,6 @@ class Slot : Command {
             " You lost $$amount. 💸"
         }
 
-        u.save()
         val formattedResults = results.joinToString(" ")
         ctx.message { content(Formats.info("Slot Results: $formattedResults$msg")) }
     }

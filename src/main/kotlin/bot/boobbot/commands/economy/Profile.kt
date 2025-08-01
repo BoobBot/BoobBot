@@ -29,7 +29,7 @@ class Profile : Command {
             addField(
                 Formats.info("**Level**"),
                 "**Current Level**: ${u.level}\n**Next Level**: ${(u.level + 1)} " +
-                        "`${progressPercentage(u.experience, e)}`\n" +
+                        "`${progressPercentage(u.experience.value, e)}`\n" +
                         "**Experience**: ${u.experience}/$e\n**Lewd Level**: ${u.lewdLevel}\n" +
                         "**Lewd Points**: ${u.lewdPoints}\n",
                 false
@@ -37,15 +37,15 @@ class Profile : Command {
             addField(
                 Formats.info("**Balance Information**"), "" +
                         "**Current Balance**: ${u.balance}$\n" +
-                        "**Total Assets**: ${(u.balance + u.bankBalance)}$", false
+                        "**Total Assets**: ${(u.balance.value + u.bankBalance.value)}$", false
             )
 
             addField(
                 Formats.info("**General Information**"),
                 "**Protected**: ${u.protected}\n" +
                         "**Jailed**: ${u.jailRemaining > 0}\n" +
-                        "**Commands Used**:\nsfw: ${u.commandsUsed}\nnsfw: ${u.nsfwCommandsUsed}\ntotal: ${(u.commandsUsed + u.nsfwCommandsUsed)}\n" +
-                        "**Messages Sent**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent + u.nsfwMessagesSent)}\n",
+                        "**Commands Used**:\nsfw: ${u.commandsUsed}\nnsfw: ${u.nsfwCommandsUsed}\ntotal: ${(u.commandsUsed.value + u.nsfwCommandsUsed.value)}\n" +
+                        "**Messages Sent**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent.value + u.nsfwMessagesSent.value)}\n",
                 false
             )
         }

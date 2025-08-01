@@ -231,10 +231,9 @@ class BootyDropper : EventListener {
                 return
             }
 
-            val userData = BoobBot.database.getUser(user.idLong)
-            val found = random(1, 4)
+            val userData = BoobBot.database.getUser(user.idLong, partial = true)
+            val found = random(1, 4).toLong()
             userData.balance += found
-            userData.save()
 
             dropMessage.delete().queue(null, DEFAULT_IGNORE)
 

@@ -20,7 +20,7 @@ class Bank : Command {
     @SubCommand(aliases = ["dep"], description = "deposit funds. \uD83D\uDCB0")
     @Option(name = "amount", description = "The amount to deposit.", type = OptionType.INTEGER)
     fun deposit(ctx: Context) {
-        val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
+        val amount = ctx.options.getByNameOrNext("amount", Resolver.LONG)
             ?: return ctx.reply("wtf, i don't mind-read. Specify how much to deposit, whore.")
 
         if (amount < 0) {
@@ -29,13 +29,12 @@ class Bank : Command {
 
         val user = BoobBot.database.getUser(ctx.user.idLong)
 
-        if (amount > user.balance) {
+        if (user.balance < amount) {
             return ctx.reply("wtf whore, you only have ${user.balance}")
         }
 
         user.balance -= amount
         user.bankBalance += amount
-        user.save()
 
         ctx.reply("Deposited $$amount, You now have $${user.bankBalance} in the bank.")
     }
@@ -43,7 +42,7 @@ class Bank : Command {
     @SubCommand(aliases = ["with"], description = "withdraw funds. \uD83D\uDCB8")
     @Option(name = "amount", description = "The amount to withdraw.", type = OptionType.INTEGER)
     fun withdraw(ctx: Context) {
-        val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
+        val amount = ctx.options.getByNameOrNext("amount", Resolver.LONG)
             ?: return ctx.reply("wtf, i don't mind-read. Specify how much to withdraw, whore.")
 
         if (amount < 0) {
@@ -52,13 +51,12 @@ class Bank : Command {
 
         val user = BoobBot.database.getUser(ctx.user.idLong)
 
-        if (amount > user.bankBalance) {
+        if (user.bankBalance < amount) {
             return ctx.reply("wtf whore, you only have ${user.bankBalance}")
         }
 
         user.bankBalance -= amount
         user.balance += amount
-        user.save()
 
         ctx.reply("Withdrew $$amount, You now have $${user.bankBalance} in the bank.")
     }
@@ -73,7 +71,7 @@ class Bank : Command {
     @Option(name = "amount", description = "The amount to transfer.", type = OptionType.INTEGER)
     @Option(name = "to", description = "The user to transfer to.", type = OptionType.USER)
     fun transfer(ctx: Context) {
-        val amount = ctx.options.getByNameOrNext("amount", Resolver.INTEGER)
+        val amount = ctx.options.getByNameOrNext("amount", Resolver.LONG)
             ?: return ctx.reply("wtf, i don't mind read. Specify how much to deposit, whore.")
 
         val to = ctx.options.getByNameOrNext("to", Resolver.CONTEXT_AWARE_USER(ctx))
@@ -87,11 +85,10 @@ class Bank : Command {
 
         if (to.idLong == ctx.user.idLong) {
             user.bankBalance -= 10
-            user.save()
             return ctx.reply("Don't be a whore, you cant transfer to yourself. I took $10 from you for trying.")
         }
 
-        if (amount > user.bankBalance) {
+        if (user.bankBalance < amount) {
             return ctx.reply("wtf whore, you only have $${user.bankBalance} in your bank account")
         }
 
@@ -99,8 +96,6 @@ class Bank : Command {
 
         user.bankBalance -= amount
         user2.bankBalance += amount
-        user.save()
-        user2.save()
 
         ctx.reply("Transferred $$amount to **${to.name}**, You now have $${user.bankBalance} in the bank.")
     }

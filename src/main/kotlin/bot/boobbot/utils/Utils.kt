@@ -127,7 +127,7 @@ object Utils {
         return floor(0.1 * sqrt(calculateLewdPoints)).toInt()
     }
 
-    fun random(lower: Int, upper: Int) = rand.nextInt(upper - lower) + lower
+    fun random(lower: Int, upper: Int) = (rand.nextInt(upper - lower) + lower).toLong()
 
     fun checkMissingPermissions(
         target: Member,
