@@ -29,26 +29,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
         db = HikariDataSource(config)
         setupTables()
-
-        migrateUsers()
-    }
-
-    private fun migrateUsers() {
-        for (row in iterate("SELECT userId, json FROM users")) {
-            val userId: Long = row["userId"]
-            val json = JSONObject(row.get<String>("json"))
-            println("migrate $userId")
-
-            val lastDaily = parseTimestamp(json, "lastDaily")
-            val lastRep = parseTimestamp(json, "lastRep")
-            val lastSaved = parseTimestamp(json, "lastSaved")
-
-            execute("INSERT INTO users_v2 (userId, balance, bankBalance, blacklisted, bonusXp, commandsUsed, coolDownCount, experience, jailRemaining, lastDaily, lastRep, lastSaved, level, lewdLevel, lewdPoints, messagesSent, nsfwCommandsUsed, nsfwMessagesSent, protected, rep, anonymity, cockblocked, nudes, pledge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                    "ON DUPLICATE KEY UPDATE balance = VALUES(balance), bankBalance = VALUES(bankBalance), blacklisted = VALUES(blacklisted), bonusXp = VALUES(bonusXp), commandsUsed = VALUES(commandsUsed), coolDownCount = VALUES(coolDownCount), experience = VALUES(experience), jailRemaining = VALUES(jailRemaining), lastDaily = VALUES(lastDaily), lastRep = VALUES(lastRep), lastSaved = VALUES(lastSaved), level = VALUES(level), lewdLevel = VALUES(lewdLevel), lewdPoints = VALUES(lewdPoints), messagesSent = VALUES(messagesSent), nsfwCommandsUsed = VALUES(nsfwCommandsUsed), nsfwMessagesSent = VALUES(nsfwMessagesSent), protected = VALUES(protected), rep = VALUES(rep), anonymity = VALUES(anonymity), cockblocked = VALUES(cockblocked), nudes = VALUES(nudes), pledge = VALUES(pledge)",
-                userId, json["balance"], json["bankBalance"], json["blacklisted"], json["bonusXp"], json["commandsUsed"], json["coolDownCount"], json["experience"], json["jailRemaining"], lastDaily, lastRep, lastSaved, json["level"], json["lewdLevel"], json["lewdPoints"], json["messagesSent"], json["nsfwCommandsUsed"], json["nsfwMessagesSent"], json["protected"], json["rep"], json["anonymity"], json["cockblocked"], json["nudes"], json["pledge"])
-
-            execute("DELETE FROM users WHERE userId = ?", userId)
-        }
     }
 
     private fun parseTimestamp(json: JSONObject, key: String): Timestamp {
