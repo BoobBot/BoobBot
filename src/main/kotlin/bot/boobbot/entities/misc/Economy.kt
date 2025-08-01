@@ -24,7 +24,6 @@ package bot.boobbot.entities.misc
 //    var balance: Int,
 //    var bonusXp: Int?,
 //    var protected: Boolean?,
-//    var inJail: Boolean,
 //    var jailRemaining: Int,
 //    var coolDownCount: Int,
 //    // guild lvl for roles
@@ -89,11 +88,8 @@ package bot.boobbot.entities.misc
 //    if (user.blacklisted) {
 //        return
 //    }
-//    if (user.inJail) {
+//    if (user.jailRemaining > 0) {
 //        user.jailRemaining = min(user.jailRemaining - 1, 0)
-//        if (user.jailRemaining == 0) {
-//            user.inJail = false
-//        }
 //        //TODO save user
 //        return
 //    }

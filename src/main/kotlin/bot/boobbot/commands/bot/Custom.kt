@@ -16,8 +16,7 @@ import net.dv8tion.jda.api.Permission
     aliases = ["cc"],
     description = "Custom commands",
     guildOnly = true,
-    groupByCategory = true,
-    slashEnabled = false  // TODO: revisit this?
+    groupByCategory = true
 )
 class Custom : Command {
     override fun execute(ctx: Context) = sendSubcommandHelp(ctx)

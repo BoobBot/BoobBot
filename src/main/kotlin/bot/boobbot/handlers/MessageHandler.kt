@@ -208,9 +208,8 @@ class MessageHandler : EventListener {
             return
         }
 
-        if (user.inJail) {
+        if (user.jailRemaining > 0) {
             user.jailRemaining = max(user.jailRemaining - 1, 0)
-            user.inJail = user.jailRemaining > 0
         } else {
             if (event.channelType == ChannelType.TEXT && event.message.channel.asTextChannel().isNSFW) {
                 val tagSize = Formats.tag.count { event.message.contentDisplay.contains(it) }

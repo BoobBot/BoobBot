@@ -100,7 +100,11 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
                 GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                 // Disable events for the following:
-                GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+                GatewayIntent.DIRECT_MESSAGE_POLLS,
+                GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                GatewayIntent.GUILD_EXPRESSIONS,
+                GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                GatewayIntent.GUILD_MESSAGE_POLLS,
                 GatewayIntent.GUILD_MODERATION,
                 GatewayIntent.GUILD_INVITES,
                 GatewayIntent.GUILD_WEBHOOKS,
@@ -117,7 +121,7 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 CacheFlag.ONLINE_STATUS,
                 CacheFlag.ROLE_TAGS,
                 CacheFlag.SCHEDULED_EVENTS,
-                CacheFlag.STICKER
+                CacheFlag.STICKER,
             )
 
             val allIntents = GatewayIntent.ALL_INTENTS
@@ -145,7 +149,8 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)
 
-            return CustomShardManager(token, sm.build(), shardCount)
+            throw UnsupportedOperationException()
+//            return CustomShardManager(token, sm.build(), shardCount)
         }
 
         fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0

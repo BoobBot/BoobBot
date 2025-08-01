@@ -5,6 +5,8 @@ import bot.boobbot.entities.framework.annotations.Option
 import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.entities.framework.utils.Indexer
+import bot.boobbot.entities.misc.ApiServer
+import bot.boobbot.entities.misc.ApiServer.Companion.getContexts
 import net.dv8tion.jda.api.interactions.commands.build.*
 
 class CommandRegistry : HashMap<String, ExecutableCommand>() {
@@ -41,7 +43,7 @@ class CommandRegistry : HashMap<String, ExecutableCommand>() {
 
         val slash = Commands.slash(category, "$category commands")
             .also {
-                it.isGuildOnly = entry.value.all { props -> props.properties.guildOnly }
+                it.setContexts(getContexts(entry.value.all { props -> props.properties.guildOnly }))
                 it.isNSFW = entry.value.any { props -> props.properties.nsfw }
             }
 
@@ -67,7 +69,7 @@ class CommandRegistry : HashMap<String, ExecutableCommand>() {
     fun buildCommand(cmd: ExecutableCommand): SlashCommandData {
         return Commands.slash(cmd.name.lowercase(), cmd.properties.description)
             .also {
-                it.isGuildOnly = cmd.properties.guildOnly
+                it.setContexts(getContexts(cmd.properties.guildOnly))
                 it.isNSFW = cmd.properties.nsfw
                 it.addOptions(buildOptions(cmd.options))
                 it.addSubcommands(cmd.subcommands.values.map(::buildSubcommand))

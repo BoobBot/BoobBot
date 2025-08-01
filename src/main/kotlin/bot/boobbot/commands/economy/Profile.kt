@@ -43,7 +43,7 @@ class Profile : Command {
             addField(
                 Formats.info("**General Information**"),
                 "**Protected**: ${u.protected}\n" +
-                        "**Jailed**: ${u.inJail}\n" +
+                        "**Jailed**: ${u.jailRemaining > 0}\n" +
                         "**Commands Used**:\nsfw: ${u.commandsUsed}\nnsfw: ${u.nsfwCommandsUsed}\ntotal: ${(u.commandsUsed + u.nsfwCommandsUsed)}\n" +
                         "**Messages Sent**:\nsfw: ${u.messagesSent}\nnsfw: ${u.nsfwMessagesSent}\ntotal: ${(u.messagesSent + u.nsfwMessagesSent)}\n",
                 false

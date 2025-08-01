@@ -3,8 +3,11 @@ package bot.boobbot.utils
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.requests.RestAction
 import okhttp3.Response
+import okio.use
 import org.json.JSONObject
 import java.net.URI
+import java.sql.Timestamp
+import java.time.Instant
 import java.util.concurrent.CompletableFuture
 
 fun <T> List<T>.discard(amount: Int) = if (amount > 0) this.drop(amount) else this
@@ -39,3 +42,7 @@ fun <T, O> RestAction<T>.intersect(other: List<O>, apply: (T, Int, O) -> RestAct
 fun <T> Collection<T>.ifEmpty(trueValue: String, falseValue: Collection<T>.() -> String) = if (isEmpty()) trueValue else falseValue(this)
 
 fun <K, V> Map<K, V>.joinToString(separator: CharSequence) = "{\n${this.entries.joinToString(separator) { "${it.key}=${it.value}" }}\n}"
+
+fun Instant?.toTimestamp(): Timestamp {
+    return this?.let(Timestamp::from) ?: Timestamp(0)
+}

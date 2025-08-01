@@ -13,17 +13,16 @@ import java.time.temporal.ChronoUnit
 
 @CommandProperties(aliases = ["daily", "pd"], description = "Basic daily income.", category = Category.ECONOMY, groupByCategory = true)
 class Payday : Command {
-
     override fun execute(ctx: Context) {
         val user = BoobBot.database.getUser(ctx.user.idLong)
         val lastDaily = user.lastDaily
 
         if (lastDaily != null) {
-            val t = lastDaily.plus(6, ChronoUnit.HOURS)
+            val nextClaim = lastDaily.plus(6, ChronoUnit.HOURS)
             val now = Instant.now()
-            val x = t.toEpochMilli() - now.toEpochMilli()
-            if (!t.isBefore(now)) {
-                return ctx.reply("You have to work for it, whore.\nFuck off and try again in ${getRemainingCoolDown(x)}")
+            val cooldown = nextClaim.toEpochMilli() - now.toEpochMilli()
+            if (!nextClaim.isBefore(now)) {
+                return ctx.reply("You have to work for it, whore.\nFuck off and try again in ${getRemainingCoolDown(cooldown)}")
             }
         }
 

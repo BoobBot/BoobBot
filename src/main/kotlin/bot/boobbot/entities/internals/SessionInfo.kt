@@ -2,6 +2,7 @@ package bot.boobbot.entities.internals
 
 import bot.boobbot.utils.Utils
 import org.json.JSONObject
+import java.net.URI
 import java.net.URL
 
 class SessionInfo(
@@ -14,7 +15,7 @@ class SessionInfo(
     companion object {
         fun from(token: String): SessionInfo? {
             return try {
-                val url = URL("https://discordapp.com/api/gateway/bot")
+                val url = URI("https://discordapp.com/api/gateway/bot").toURL()
                 val connection = url.openConnection()
                 connection.setRequestProperty("Authorization", "Bot $token")
 

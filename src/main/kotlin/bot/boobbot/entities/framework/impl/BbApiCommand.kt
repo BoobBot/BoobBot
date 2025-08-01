@@ -6,7 +6,7 @@ import bot.boobbot.entities.framework.interfaces.AsyncCommand
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
+import net.dv8tion.jda.api.components.buttons.ButtonStyle
 import okhttp3.Headers.Companion.headersOf
 import java.time.Instant
 

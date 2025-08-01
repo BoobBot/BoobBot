@@ -9,10 +9,10 @@ import bot.boobbot.entities.misc.DonorType
 import bot.boobbot.entities.misc.PatronStatus
 import bot.boobbot.utils.Colors
 import bot.boobbot.utils.Constants
+import net.dv8tion.jda.api.components.buttons.ButtonStyle
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
 
 @CommandProperties(description = "Receive your rewards after subscribing on Patreon.", groupByCategory = true)
 class Perks : Command {

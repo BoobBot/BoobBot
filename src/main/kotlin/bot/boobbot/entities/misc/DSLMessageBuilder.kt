@@ -2,13 +2,13 @@ package bot.boobbot.entities.misc
 
 import bot.boobbot.BoobBot
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.components.actionrow.ActionRow
+import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent
+import net.dv8tion.jda.api.components.buttons.Button
+import net.dv8tion.jda.api.components.buttons.ButtonStyle
+import net.dv8tion.jda.api.components.selections.StringSelectMenu
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
-import net.dv8tion.jda.api.interactions.components.ActionRow
-import net.dv8tion.jda.api.interactions.components.ItemComponent
-import net.dv8tion.jda.api.interactions.components.buttons.Button
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
 import net.dv8tion.jda.api.utils.messages.MessageCreateData
@@ -47,7 +47,7 @@ class DSLMessageBuilder {
     }
 
     inner class ActionRowBuilder {
-        private val components = mutableListOf<ItemComponent>()
+        private val components = mutableListOf<ActionRowChildComponent>()
 
         fun menu(id: String, sm: StringSelectMenu.Builder.() -> Unit) {
             components.add(StringSelectMenu.create(id).apply(sm).build())

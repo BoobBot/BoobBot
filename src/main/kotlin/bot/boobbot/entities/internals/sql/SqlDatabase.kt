@@ -3,23 +3,20 @@ package bot.boobbot.entities.internals.sql
 import bot.boobbot.entities.db.Guild
 import bot.boobbot.entities.db.User
 import bot.boobbot.entities.db.WebhookConfiguration
-import bot.boobbot.entities.internals.adapters.InstantAdapter
-import com.google.gson.GsonBuilder
+import bot.boobbot.utils.toTimestamp
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.jetbrains.kotlin.konan.file.use
+import org.json.JSONObject
 import org.jsoup.internal.StringUtil.StringJoiner
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.Timestamp
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class SqlDatabase(host: String, port: String, databaseName: String, user: String, auth: String) {
     private val db: HikariDataSource
-    private val gson = GsonBuilder()
-        .registerTypeAdapter(Instant::class.java, InstantAdapter())
-        .create()
 
     init {
         val config = HikariConfig().apply {
@@ -32,6 +29,38 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         }
         db = HikariDataSource(config)
         setupTables()
+
+        migrateUsers()
+    }
+
+    private fun migrateUsers() {
+        for (row in iterate("SELECT userId, json FROM users")) {
+            val userId: Long = row["userId"]
+            val json = JSONObject(row.get<String>("json"))
+            println("migrate $userId")
+
+            val lastDaily = parseTimestamp(json, "lastDaily")
+            val lastRep = parseTimestamp(json, "lastRep")
+            val lastSaved = parseTimestamp(json, "lastSaved")
+
+            execute("INSERT INTO users_v2 (userId, balance, bankBalance, blacklisted, bonusXp, commandsUsed, coolDownCount, experience, jailRemaining, lastDaily, lastRep, lastSaved, level, lewdLevel, lewdPoints, messagesSent, nsfwCommandsUsed, nsfwMessagesSent, protected, rep, anonymity, cockblocked, nudes, pledge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE balance = VALUES(balance), bankBalance = VALUES(bankBalance), blacklisted = VALUES(blacklisted), bonusXp = VALUES(bonusXp), commandsUsed = VALUES(commandsUsed), coolDownCount = VALUES(coolDownCount), experience = VALUES(experience), jailRemaining = VALUES(jailRemaining), lastDaily = VALUES(lastDaily), lastRep = VALUES(lastRep), lastSaved = VALUES(lastSaved), level = VALUES(level), lewdLevel = VALUES(lewdLevel), lewdPoints = VALUES(lewdPoints), messagesSent = VALUES(messagesSent), nsfwCommandsUsed = VALUES(nsfwCommandsUsed), nsfwMessagesSent = VALUES(nsfwMessagesSent), protected = VALUES(protected), rep = VALUES(rep), anonymity = VALUES(anonymity), cockblocked = VALUES(cockblocked), nudes = VALUES(nudes), pledge = VALUES(pledge)",
+                userId, json["balance"], json["bankBalance"], json["blacklisted"], json["bonusXp"], json["commandsUsed"], json["coolDownCount"], json["experience"], json["jailRemaining"], lastDaily, lastRep, lastSaved, json["level"], json["lewdLevel"], json["lewdPoints"], json["messagesSent"], json["nsfwCommandsUsed"], json["nsfwMessagesSent"], json["protected"], json["rep"], json["anonymity"], json["cockblocked"], json["nudes"], json["pledge"])
+
+            execute("DELETE FROM users WHERE userId = ?", userId)
+        }
+    }
+
+    private fun parseTimestamp(json: JSONObject, key: String): Timestamp {
+        if (json.has(key) && !json.isNull(key) && json.get(key) is JSONObject) {
+            val instantObj = json.getJSONObject(key)
+            val seconds = instantObj.getLong("seconds")
+            val nanos = instantObj.getLong("nanos")
+
+            return Instant.ofEpochSecond(seconds, nanos).toTimestamp()
+        }
+
+        return SQL_EPOCH_SECOND
     }
 
     private fun setupTables() {
@@ -91,10 +120,31 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "UNIQUE(guildId, name)," + // set a unique constraint to ensure we don't have entries with duplicate guildId and name values.
                 "FOREIGN KEY (guildId) REFERENCES guilds(guildId) ON DELETE CASCADE);")
 
-        execute("CREATE TABLE IF NOT EXISTS users(" +
+        execute("CREATE TABLE IF NOT EXISTS users_v2(" +
                 "userId BIGINT PRIMARY KEY NOT NULL," +
-                "json JSON NOT NULL," + // don't want to deal with converting this to proper SQL structure for now.
-                "CHECK (JSON_VALID(json)));")
+                "balance BIGINT NOT NULL DEFAULT 0," +
+                "bankBalance BIGINT NOT NULL DEFAULT 0," +
+                "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
+                "bonusXp INT NOT NULL DEFAULT 0," +
+                "commandsUsed BIGINT NOT NULL DEFAULT 0," +
+                "coolDownCount BIGINT NOT NULL DEFAULT 0," +
+                "experience BIGINT NOT NULL DEFAULT 0," +
+                "jailRemaining INT NOT NULL DEFAULT 0," +
+                "lastDaily TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01'," +
+                "lastRep TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01'," +
+                "lastSaved TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
+                "level INT NOT NULL DEFAULT 0," +
+                "lewdLevel INT NOT NULL DEFAULT 0," +
+                "lewdPoints INT NOT NULL DEFAULT 0," +
+                "messagesSent BIGINT NOT NULL DEFAULT 0," +
+                "nsfwCommandsUsed BIGINT NOT NULL DEFAULT 0," +
+                "nsfwMessagesSent BIGINT NOT NULL DEFAULT 0," +
+                "protected BOOLEAN NOT NULL DEFAULT FALSE," +
+                "rep BIGINT NOT NULL DEFAULT 0," +
+                "anonymity BOOLEAN NOT NULL DEFAULT FALSE," +
+                "cockblocked BOOLEAN NOT NULL DEFAULT FALSE," +
+                "nudes BOOLEAN NOT NULL DEFAULT FALSE," +
+                "pledge DOUBLE NOT NULL DEFAULT 0.0);")
     }
 
     fun getWebhooks(guildId: Long): List<WebhookConfiguration> {
@@ -164,25 +214,30 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
      * @param by "balance", "level", "rep"
      */
     fun getTopUsers(by: String, limit: Int = 25): List<User> {
-        return find("SELECT json, CAST(JSON_UNQUOTE(JSON_EXTRACT(json, '$.$by')) AS UNSIGNED) AS $by FROM users ORDER BY $by DESC LIMIT $limit")
-            .map { deserialize<User>(it["json"]) }
+        return find("SELECT * FROM users_v2 ORDER BY $by DESC LIMIT $limit")
+            .map(User::fromDatabaseRow)
     }
 
     fun getUser(userId: Long): User {
-        return findOne("SELECT json FROM users WHERE userId = ?", userId)
-            ?.get<String>("json")
-            ?.let { deserialize<User>(it) }
-            ?: return User(userId)
+        return findOne("SELECT * FROM users_v2 WHERE userId = ?", userId)
+            ?.let(User::fromDatabaseRow)
+            ?: return User.withDefaults(userId)
     }
 
     fun setUser(user: User) {
-        user.lastSaved = Instant.now()
-        val serialized = serialize(user)
-        execute("INSERT INTO users (userId, json) VALUES (?, ?) ON DUPLICATE KEY UPDATE json = VALUES(json)", user._id, serialized)
+        if (!user.inDatabase) {
+            // just insert user ID, the columns have default values
+            execute("INSERT INTO users_v2 (userId) VALUES (?)", user._id)
+        }
+
+        execute(
+            "UPDATE users_v2 SET balance = ?, bankBalance = ?, blacklisted = ?, bonusXp = ?, commandsUsed = ?, coolDownCount = ?, experience = ?, jailRemaining = ?, lastDaily = ?, lastRep = ?, level = ?, lewdLevel = ?, lewdPoints = ?, messagesSent = ?, nsfwCommandsUsed = ?, nsfwMessagesSent = ?, protected = ?, rep = ?, anonymity = ?, cockblocked = ?, nudes = ?, pledge = ?",
+            user.balance, user.bankBalance, user.blacklisted, user.bonusXp, user.commandsUsed, user.coolDownCount, user.experience, user.jailRemaining, user.lastDaily.toTimestamp(), user.lastRep.toTimestamp(), user.level, user.lewdLevel, user.lewdPoints, user.messagesSent, user.nsfwCommandsUsed, user.nsfwMessagesSent, user.protected, user.rep, user.anonymity, user.cockblocked, user.nudes, user.pledge
+        )
     }
 
     fun deleteUser(userId: Long) {
-        execute("DELETE FROM users WHERE userId = ?", userId)
+        execute("DELETE FROM users_v2 WHERE userId = ?", userId)
     }
 
     fun getCustomCommands(guildId: Long): Map<String, String> {
@@ -381,9 +436,6 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
         return Row(data)
     }
 
-    private inline fun <reified T> deserialize(json: String): T = gson.fromJson(json, T::class.java)
-    private fun serialize(entity: Any) = gson.toJson(entity)
-
     inner class Row(val dataDoNotAccessDirectly: Map<String, Any?>) {
         inline operator fun <reified T> get(column: String): T {
             return dataDoNotAccessDirectly[column]
@@ -396,5 +448,10 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 it as? T ?: throw IllegalStateException("Database type does not match ${T::class.simpleName} (got type ${it::class.java.simpleName})")
             }
         }
+    }
+
+    companion object {
+        // Some SQL servers don't like 1970-01-01 00:00:00, but will accept '... 00:00:01', so we just default to this.
+        val SQL_EPOCH_SECOND = Instant.ofEpochSecond(1).toTimestamp()
     }
 }

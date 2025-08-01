@@ -3,6 +3,7 @@ package bot.boobbot.entities.registries
 import bot.boobbot.BoobBot
 import bot.boobbot.entities.framework.impl.ExecutableUserContextCommand
 import bot.boobbot.entities.framework.utils.UserContextIndexer
+import bot.boobbot.entities.misc.ApiServer.Companion.getContexts
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
@@ -21,7 +22,7 @@ class UserContextCommandRegistry : HashMap<String, ExecutableUserContextCommand>
     fun export(): List<CommandData> {
         return this.values.map {
             Commands.user(it.name)
-                .setGuildOnly(it.properties.guildOnly)
+                .setContexts(getContexts(it.properties.guildOnly))
                 .setNSFW(it.properties.nsfw)
         }
     }

@@ -7,7 +7,6 @@ import bot.boobbot.entities.framework.impl.ExecutableCommand
 import bot.boobbot.entities.framework.impl.SubCommandWrapper
 import bot.boobbot.utils.Stats
 import bot.boobbot.utils.TimerUtil
-import bot.boobbot.utils.ifTrue
 import com.google.gson.Gson
 import de.mxro.metrics.jre.Metrics
 import io.ktor.client.*
@@ -21,7 +20,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.autohead.*
-import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
@@ -30,12 +29,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.util.*
-import net.dv8tion.jda.api.interactions.commands.build.Commands
+import kotlinx.serialization.Serializable
+import net.dv8tion.jda.api.interactions.InteractionContextType
+import net.dv8tion.jda.api.interactions.commands.build.Commands.slash
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData
 import net.dv8tion.jda.api.utils.data.DataArray
 import net.dv8tion.jda.api.utils.data.DataObject
+import org.jetbrains.kotlin.utils.addToStdlib.ifFalse
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.event.Level
@@ -55,6 +57,7 @@ class ApiServer {
     )
 
     private val httpClient = HttpClient(Apache)
+    private val gson = Gson()
 
     private fun getStats(): JSONObject {
         val stats = Stats.get()
@@ -99,11 +102,14 @@ class ApiServer {
     private fun buildCommand(cmd: ExecutableCommand): DataObject {
         val isNsfw = cmd.properties.nsfw
 
-        val slash = Commands.slash(cmd.name.lowercase(), cmd.properties.description)
-            .also { it.isGuildOnly = cmd.properties.guildOnly }
-            .also { buildOptions(cmd.options).also(it::addOptions) }
+        val slash = slash(cmd.name.lowercase(), cmd.properties.description)
+            .also {
+                it.setContexts(getContexts(cmd.properties.guildOnly))
+                it.isNSFW = isNsfw
+                buildOptions(cmd.options).also(it::addOptions)
+            }
             .toData()
-            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+//            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
 
         if (cmd.subcommands.isNotEmpty()) {
             slash.getArray("options").addAll(cmd.subcommands.values.map(::buildSubcommand))
@@ -122,10 +128,13 @@ class ApiServer {
         val isNsfw = entry.value.any { it.properties.nsfw }
         val isGuildOnly = entry.value.all { it.properties.guildOnly }
 
-        val slash = Commands.slash(category, "$category commands")
-            .also { it.isGuildOnly = isGuildOnly }
+        val slash = slash(category, "$category commands")
+            .also {
+                it.setContexts(getContexts(isGuildOnly))
+                it.isNSFW = isNsfw
+            }
             .toData()
-            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
+//            .also { data -> isNsfw.ifTrue { data.put("nsfw", true) } }
 
         for (cmd in cmds) {
             if (cmd.subcommands.isNotEmpty()) {
@@ -163,6 +172,7 @@ class ApiServer {
         }
     }
 
+    @Serializable
     class UserSession(val id: String, val avatar: String, val username: String, val discriminator: String)
 
     fun startServer() {
@@ -234,7 +244,7 @@ class ApiServer {
                             header("Authorization", "Bearer ${principal!!.accessToken}")
                         }.body<String>()
 
-                        val s = Gson().fromJson(data, UserSession::class.java)
+                        val s = gson.fromJson(data, UserSession::class.java)
                         call.sessions.set(s)
                         call.respondRedirect("/admin")
                     }
@@ -246,7 +256,7 @@ class ApiServer {
                     if (!BoobBot.owners.contains(s.id.toLong())) {
                         error("401")
                     }
-                    call.respondText("{\"user\": ${Gson().toJson(s)}}", ContentType.Application.Json)
+                    call.respondText("{\"user\": ${gson.toJson(s)}}", ContentType.Application.Json)
 
                 }
 
@@ -280,7 +290,7 @@ class ApiServer {
                     val userId = call.parameters["userId"]?.toLongOrNull()
                         ?: return@get call.respondText("{\"msg\": 404}", ContentType.Application.Json)
                     val user = BoobBot.database.getUser(userId)
-                    call.respondText("{\"user\": ${Gson().toJson(user)}}", ContentType.Application.Json)
+                    call.respondText("{\"user\": ${gson.toJson(user)}}", ContentType.Application.Json)
                 }
 
                 get("/commands") {
@@ -343,5 +353,12 @@ class ApiServer {
 
     companion object {
         private val dpFormatter = DecimalFormat("0.00")
+
+        fun getContexts(guildOnly: Boolean): Set<InteractionContextType> {
+            return buildSet {
+                add(InteractionContextType.GUILD)
+                guildOnly.ifFalse { add(InteractionContextType.BOT_DM) }
+            }
+        }
     }
 }

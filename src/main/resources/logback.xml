@@ -39,8 +39,7 @@
             <level>DEBUG</level>
         </filter>
         <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
-                <expression>return message.contains("Event");</expression>
+            <evaluator class="bot.boobbot.entities.internals.LoggingFilter">
             </evaluator>
             <OnMismatch>DENY</OnMismatch>
             <OnMatch>NEUTRAL</OnMatch>

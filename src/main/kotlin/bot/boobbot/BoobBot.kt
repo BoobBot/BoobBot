@@ -21,7 +21,6 @@ import com.sedmelluq.discord.lavaplayer.source.local.LocalAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.mxro.metrics.jre.Metrics
-import io.ktor.util.*
 import io.sentry.connection.ConnectionException
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.ApplicationInfo

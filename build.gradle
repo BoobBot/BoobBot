@@ -14,7 +14,8 @@ plugins {
     id "idea"
     id "application"
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "org.jetbrains.kotlin.jvm" version "1.2.70"
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
+    id "org.jetbrains.kotlin.plugin.serialization" version "$kotlin_version"
 }
 
 
@@ -34,40 +35,41 @@ repositories {
 
 
 dependencies {
-    /* Discord Stuff */
+    // Discord
     implementation ("net.dv8tion:JDA:$jda_version") {
         exclude module: 'opus-java'
     }
 
-    /* Audio */
+    // Audio
     implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
 //    implementation "com.sedmelluq:jda-nas:$nas_version"
 
-    /* Kotlin Stuff */
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coro_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlin_coro_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 
-    /* Logging */
-    implementation "ch.qos.logback:logback-classic:$logback_version"
+    // Logging
+    implementation "ch.qos.logback:logback-classic:1.5.18"
+    implementation 'org.codehaus.janino:janino:3.1.12'
     implementation "io.sentry:sentry-logback:$sentry_version"
-    implementation 'org.codehaus.janino:janino:3.1.9'
 
-    /* Webserver */
-    implementation "com.google.code.gson:gson:2.9.1"
-
-    /* Eval */
+    // Eval
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.8.22"
     implementation "org.jetbrains.kotlin:kotlin-script-util:1.8.22"
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.8.22"
     implementation "org.jetbrains.kotlin:kotlin-scripting-jsr223:1.8.22"
 
-    /* Misc */
+    // Misc
     implementation "com.github.SvenWoltmann:color-thief-java:$color_thief_version"
     implementation "org.reflections:reflections:$reflections_version"
     implementation "io.github.cdimascio:java-dotenv:5.2.2"
     implementation "org.javadelight:delight-metrics:0.0.6"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // Webserver
+    implementation "com.google.code.gson:gson:2.13.1"
     implementation "io.ktor:ktor-server-netty-jvm:$ktor_version"
     implementation "io.ktor:ktor-server-websockets-jvm:$ktor_version"
     implementation "io.ktor:ktor-serialization-gson:$ktor_version"
@@ -83,7 +85,7 @@ dependencies {
     implementation "org.jsoup:jsoup:$jsoup_version"
     implementation "org.json:json:$json_version"
 
-    implementation 'org.mongodb:mongodb-driver-sync:4.7.1'
+    // Database
     implementation "org.mariadb.jdbc:mariadb-java-client:3.3.3"
     implementation "com.zaxxer:HikariCP:6.3.0"
 }

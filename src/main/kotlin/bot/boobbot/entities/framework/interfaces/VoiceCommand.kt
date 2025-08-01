@@ -42,7 +42,7 @@ interface VoiceCommand : Command {
             val error = checkVoiceChannelPermissions(voiceChannel, nsfwCheck)
 
             return if (error == null) {
-                audioManager.openAudioConnection(memberVoice.channel)
+                audioManager.openAudioConnection(memberVoice.channel!!)
                 true
             } else {
                 ctx.reply(Formats.error(error))

@@ -6,9 +6,9 @@ import bot.boobbot.utils.Formats
 import bot.boobbot.utils.json
 import kotlinx.coroutines.future.await
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.components.actionrow.ActionRow
+import net.dv8tion.jda.api.components.buttons.Button
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent
-import net.dv8tion.jda.api.interactions.components.ActionRow
-import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder
 import okhttp3.Headers
 import java.time.Instant
