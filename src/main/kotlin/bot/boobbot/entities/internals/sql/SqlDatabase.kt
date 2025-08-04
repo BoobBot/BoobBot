@@ -93,7 +93,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "blacklisted BOOLEAN NOT NULL DEFAULT FALSE," +
                 "bonusXp INT NOT NULL DEFAULT 0," +
                 "commandsUsed BIGINT NOT NULL DEFAULT 0," +
-                "coolDownCount BIGINT NOT NULL DEFAULT 0," +
+                "coolDownCount BIGINT NOT NULL DEFAULT 5," +
                 "experience BIGINT NOT NULL DEFAULT 0," +
                 "jailRemaining INT NOT NULL DEFAULT 0," +
                 "lastDaily TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01'," +
