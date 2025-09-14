@@ -110,7 +110,8 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "anonymity BOOLEAN NOT NULL DEFAULT FALSE," +
                 "cockblocked BOOLEAN NOT NULL DEFAULT FALSE," +
                 "nudes BOOLEAN NOT NULL DEFAULT FALSE," +
-                "pledge DOUBLE NOT NULL DEFAULT 0.0);")
+                "pledge DOUBLE NOT NULL DEFAULT 0.0," +
+                "pledge_override BOOLEAN NOT NULL DEFAULT FALSE);")
     }
 
     fun getWebhooks(guildId: Long): List<WebhookConfiguration> {

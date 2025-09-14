@@ -55,11 +55,17 @@ class PatreonAPI(private val accessToken: String, enableMonitoring: Boolean = tr
 
             // this will fire a "leak detected" warning but is normal. It's just because this bit is long-running and the detection threshold is >10 seconds.
             // the alternative is to store all rows in memory which seems kinda disgusting.
-            for (row in BoobBot.database.iterate("SELECT userId, pledge FROM users_v2")) {
+            for (row in BoobBot.database.iterate("SELECT userId, pledge, pledge_override FROM users_v2")) {
                 processed++
 
                 val id: Long = row["userId"]
                 val pledge: Double = row["pledge"]
+                val pledgeOverride: Boolean = row["pledge_override"]
+
+                if (pledgeOverride) {
+                    continue
+                }
+
                 val user = users.firstOrNull { it.discordId != null && it.discordId == id }
                 val pledgedAmount = user?.entitledAmountCents?.toDouble()?.div(100) ?: 0.0
 
