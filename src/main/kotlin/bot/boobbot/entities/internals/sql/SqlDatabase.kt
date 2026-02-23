@@ -114,12 +114,21 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
                 "pledge_override BOOLEAN NOT NULL DEFAULT FALSE);")
     }
 
+    fun requireGuildData(guildId: Long) {
+        val row = findOne("SELECT guildId FROM guilds WHERE guildId = ?", guildId)
+
+        if (row == null) {
+            Guild.new(guildId).save()
+        }
+    }
+
     fun getWebhooks(guildId: Long): List<WebhookConfiguration> {
         return find("SELECT channelId, category, webhook FROM webhooks WHERE guildId = ?", guildId)
             .map { WebhookConfiguration(it["category"], it["channelId"], it["webhook"]) }
     }
 
     fun setWebhook(guildId: Long, channelId: Long, category: String, webhookUrl: String) {
+        requireGuildData(guildId)
         execute("INSERT INTO webhooks (guildId, channelId, category, webhook) VALUES (?, ?, ?, ?)", guildId, channelId, category, webhookUrl)
     }
 
@@ -160,6 +169,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun setIgnoredChannel(guildId: Long, channelId: Long) {
+        requireGuildData(guildId)
         execute("INSERT IGNORE INTO ignored_channels (guildId, channelId) VALUES (?, ?)", guildId, channelId)
     }
 
@@ -170,6 +180,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun isModMuted(guildId: Long, userId: Long) = findOne("SELECT 1 FROM mod_mute WHERE guildId = ? AND userId = ?", guildId, userId) != null
 
     fun setModMute(guildId: Long, userId: Long) {
+        requireGuildData(guildId)
         execute("INSERT IGNORE INTO mod_mute (guildId, userId) VALUES (?, ?)", guildId, userId)
     }
 
@@ -214,6 +225,8 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     }
 
     fun setCustomCommand(guildId: Long, name: String, content: String) {
+        requireGuildData(guildId)
+
         execute(
             "INSERT INTO custom_commands (guildId, name, content) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE content = VALUES(content)",
             guildId, name, content
@@ -248,6 +261,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             entries[index + 1] = commands[index]
         }
 
+        requireGuildData(guildId)
         // insert ignore basically allows us to insert as many commands as we can, ignoring any that raise
         // exceptions (i.e. because of duplicate keys failing the constraint check (UNIQUE(guildId, name)).
         execute("INSERT IGNORE INTO disabled_commands (guildId, name) VALUES $placeholders", *entries)
@@ -284,6 +298,7 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
             entries[index + 2] = commands[index]
         }
 
+        requireGuildData(guildId)
         // insert ignore basically allows us to insert as many commands as we can, ignoring any that raise
         // exceptions (i.e. because of duplicate keys failing the constraint check (UNIQUE(guildId, name)).
         execute("INSERT IGNORE INTO channel_disabled (guildId, channelId, name) VALUES $placeholders", *entries)
@@ -304,7 +319,12 @@ class SqlDatabase(host: String, port: String, databaseName: String, user: String
     fun setDonor(userId: Long, pledge: Double) = getUser(userId, partial = true).apply { this.pledge.set(pledge) }
 
     fun isPremiumServer(guildId: Long) = findOne("SELECT 1 FROM guilds WHERE guildId = ? AND premiumRedeemer IS NOT NULL AND premiumRedeemer > 0", guildId) != null
-    fun setPremiumServer(guildId: Long, redeemerId: Long?) = execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
+
+    fun setPremiumServer(guildId: Long, redeemerId: Long?) {
+        requireGuildData(guildId)
+        execute("UPDATE guilds SET premiumRedeemer = ? WHERE guildId = ?", redeemerId, guildId)
+    }
+
     fun getPremiumServers(redeemerId: Long) = find("SELECT guildId FROM guilds WHERE premiumRedeemer = ?", redeemerId).map { it.get<Long>("guildId") }
 
     // everything below here is crude and should probably be improved when the user stuff is *properly* done.
