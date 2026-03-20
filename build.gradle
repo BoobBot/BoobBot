@@ -25,11 +25,15 @@ mainClassName = "bot.boobbot.BoobBot"
 
 
 repositories {
+    mavenCentral()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
-    mavenCentral()
+    maven {
+        name 'lavalink'
+        url 'https://maven.lavalink.dev/snapshots'
+    }
     maven { url "https://jitpack.io" }
 }
 
@@ -42,6 +46,10 @@ dependencies {
 
     // Audio
     implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
+    implementation "moe.kyokobot.libdave:impl-jni:0.1.3"
+    implementation "moe.kyokobot.libdave:adapter-jda:0.1.3"
+    implementation "moe.kyokobot.libdave:natives-linux-x86-64:0.1.3"
+
 //    implementation "com.sedmelluq:jda-nas:$nas_version"
 
     // Kotlin

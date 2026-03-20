@@ -8,6 +8,7 @@ import bot.boobbot.utils.Formats
 //import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
+import net.dv8tion.jda.api.audio.AudioModuleConfig
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.User
@@ -148,6 +149,10 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                     SlashHandler(),
                     ComponentHandler(),
                     BootyDropper()
+                )
+                .setAudioModuleConfig(
+                    AudioModuleConfig()
+                        .withDaveSessionFactory(LDJDADaveSessionFactory(NativeDaveFactory()))
                 )
 //                .setAudioSendFactory(NativeAudioSendFactory())
                 .setHttpClient(jdaHttp)
