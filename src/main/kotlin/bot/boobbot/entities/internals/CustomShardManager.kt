@@ -5,6 +5,8 @@ import bot.boobbot.entities.framework.BootyDropper
 import bot.boobbot.entities.framework.Context
 import bot.boobbot.handlers.*
 import bot.boobbot.utils.Formats
+import moe.kyokobot.libdave.NativeDaveFactory
+import moe.kyokobot.libdave.jda.LDJDADaveSessionFactory
 //import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus

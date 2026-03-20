@@ -46,9 +46,9 @@ dependencies {
 
     // Audio
     implementation "com.github.devoxin.lavaplayer:lavaplayer:$lp_version"
-    implementation "moe.kyokobot.libdave:impl-jni:0.1.3"
-    implementation "moe.kyokobot.libdave:adapter-jda:0.1.3"
-    implementation "moe.kyokobot.libdave:natives-linux-x86-64:0.1.3"
+    implementation "moe.kyokobot.libdave:impl-jni:0.1.2"
+    implementation "moe.kyokobot.libdave:adapter-jda:0.1.2"
+    implementation "moe.kyokobot.libdave:natives-linux-x86-64:0.1.2"
 
 //    implementation "com.sedmelluq:jda-nas:$nas_version"
 
