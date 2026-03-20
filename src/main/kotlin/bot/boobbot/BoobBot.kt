@@ -45,10 +45,12 @@ object BoobBot {
     val log = LoggerFactory.getLogger(BoobBot::class.java) as Logger
     val startTime = System.currentTimeMillis()
 
-    private lateinit var application: ApplicationInfo
     val selfId: Long
-        get() = application.idLong
-    lateinit var inviteUrl: String
+        get() = shardManager.selfId
+
+    val inviteUrl by lazy {
+        "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
+    }
 
     var isDebug = false
         private set
@@ -101,12 +103,10 @@ object BoobBot {
         )
 
         shardManager = CustomShardManager.create(token, shardCount)
-        application = shardManager.retrieveApplicationInfo().complete()
-        inviteUrl = "https://discordapp.com/oauth2/authorize?permissions=8&client_id=$selfId&scope=bot"
 
-        owners.add(application.owner.idLong)
+        owners.add(shardManager.application.owner.idLong)
 
-        application.team?.members
+        shardManager.application.team?.members
             // only adding users who are Developer or higher.
             ?.filter { it.membershipState == TeamMember.MembershipState.ACCEPTED && TeamMember.RoleType.DEVELOPER >= it.roleType }
             ?.map { it.user.idLong }

@@ -9,6 +9,7 @@ import bot.boobbot.utils.Formats
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.ApplicationInfo
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.session.ReadyEvent
@@ -26,6 +27,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class CustomShardManager(private val token: String, sm: ShardManager, shardCount: Int) : ShardManager by sm, EventListener {
+    val selfId: Long = String(Base64.getDecoder().decode(token.split(".")[0])).toLong()
+
+    val application: ApplicationInfo by lazy {
+        sm.retrieveApplicationInfo().complete()
+    }
+
     var guildCount = 0L
         private set
     var userCount = 0L
@@ -148,8 +155,9 @@ class CustomShardManager(private val token: String, sm: ShardManager, shardCount
                 .setMemberCachePolicy(MemberCachePolicy.VOICE)
                 .setSessionController(CustomSessionController(16))
                 .setBulkDeleteSplittingEnabled(false)
+                .build()
 
-            return CustomShardManager(token, sm.build(), shardCount)
+            return CustomShardManager(token, sm, shardCount)
         }
 
         fun retrieveRemainingSessionCount(token: String) = SessionInfo.from(token)?.sessionLimitRemaining ?: 0

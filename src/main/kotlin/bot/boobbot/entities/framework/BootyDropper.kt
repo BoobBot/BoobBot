@@ -161,19 +161,19 @@ class BootyDropper : EventListener {
     }
 
     private fun generateButtons(dropKey: String, count: Int = 10): List<ActionRow> {
-        val buttons = arrayOfNulls<Button>(count)
+        val buttons = mutableListOf<Button>()
         val targetIndex = random.nextInt(count)
 
         for (i in 0 until count) {
             val label = dropKey.takeIf { i == targetIndex }
                 ?: generateDropKey(not = dropKey)
 
-            buttons[i] = Button.primary("drop:$i", label)
+            buttons.add(Button.primary("drop:$i", label))
         }
 
         // splits our buttons into multiple rows, each holding the maximum number of components
         // as defined by their type (i.e. rows of 5 buttons)
-        return ActionRow.partitionOf(*buttons)
+        return ActionRow.partitionOf(buttons)
     }
 
     /**
